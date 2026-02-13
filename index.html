@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1b2838">
+<title>Sube Pies</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#141e2b;--bg2:#1b2838;--bg3:#243447;--bg4:#2d4055;--rock:#d4a574;--rockD:#8b6842;--green:#4ecdc4;--greenD:#2ea89f;--red:#ff6b6b;--yellow:#ffe66d;--blue:#4a9eff;--purple:#a78bfa;--text:#e8e0d8;--text2:#8a9bb0;--text3:#5a6a7a;--R:16px;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;padding-bottom:75px;}
+h1,h2,h3{font-family:'Bebas Neue',sans-serif;letter-spacing:1.5px;}
+body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;background:linear-gradient(180deg,#1e3045,#1b2838 60%,var(--bg));z-index:-1;opacity:.7;}
+.nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid rgba(255,255,255,.05);display:flex;z-index:100;backdrop-filter:blur(20px);padding-bottom:env(safe-area-inset-bottom);}
+.nb{flex:1;padding:8px 0 6px;text-align:center;color:var(--text3);font-size:10px;cursor:pointer;border:none;background:none;font-family:'Nunito';transition:.2s;}.nb.on{color:var(--rock);}.nb svg{display:block;margin:0 auto 2px;width:22px;height:22px;}.nb.on svg{filter:drop-shadow(0 0 5px rgba(212,165,116,.4));}
+.page{display:none;padding:16px;animation:fu .3s ease;}.page.on{display:block;}@keyframes fu{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}.hdr h1{font-size:26px;color:var(--rock);}
+.card{background:var(--bg2);border-radius:var(--R);padding:14px;border:1px solid rgba(255,255,255,.04);margin-bottom:12px;}.ct{font-family:'Bebas Neue';font-size:14px;color:var(--text2);letter-spacing:2px;margin-bottom:10px;}
+.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;}.st{background:var(--bg2);border-radius:12px;padding:12px 10px;text-align:center;border:1px solid rgba(255,255,255,.04);}.st .v{font-family:'Bebas Neue';font-size:32px;line-height:1;}.st .l{font-size:10px;color:var(--text2);margin-top:2px;}.st.a .v{color:var(--rock);}.st.b .v{color:var(--green);}.st.c .v{color:var(--yellow);}
+.cn{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}.cn button{background:none;border:none;color:var(--text2);font-size:20px;cursor:pointer;padding:4px 10px;}.cn .mo{font-family:'Bebas Neue';font-size:18px;color:var(--text);}
+.cg{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}.cdh{text-align:center;font-size:10px;color:var(--text3);padding:4px 0;}
+.cd{text-align:center;padding:6px 2px;border-radius:8px;font-size:12px;cursor:pointer;transition:.2s;color:var(--text3);position:relative;font-weight:400;}
+.cd:hover{background:var(--bg3);}.cd.tod{outline:2px solid var(--text2);outline-offset:-2px;}
+.cd.hr{color:var(--rock);font-weight:700;}.cd.hc{color:var(--green);font-weight:700;}
+.cd.hb{background:linear-gradient(135deg,var(--rock),var(--green));color:#000;font-weight:700;border-radius:8px;}
+.cd.ht{text-decoration:underline;text-decoration-color:var(--yellow);text-underline-offset:3px;}
+.cd.sel{background:var(--rock)!important;color:#000!important;font-weight:700;}.cd.emp{cursor:default;}
+.gsw{display:flex;gap:0;margin-bottom:10px;background:var(--bg3);border-radius:8px;padding:2px;flex-wrap:wrap;}
+.gs{flex:1;padding:5px 2px;text-align:center;border-radius:6px;font-size:10px;cursor:pointer;color:var(--text2);border:none;background:none;font-family:'Nunito';transition:.2s;min-width:0;white-space:nowrap;}.gs.on{background:var(--rock);color:#000;font-weight:700;}
+.gb{display:flex;flex-direction:column;gap:5px;}.gr{display:flex;align-items:center;gap:6px;}.grn{font-family:'Bebas Neue';font-size:14px;width:32px;text-align:right;color:var(--text2);}.grb{flex:1;height:18px;background:var(--bg3);border-radius:9px;overflow:hidden;}.grf{height:100%;border-radius:9px;display:flex;align-items:center;padding-left:6px;font-size:10px;font-weight:700;min-width:20px;transition:width .8s ease;}.grf.rc{background:linear-gradient(90deg,var(--rockD),var(--rock));}.grf.ro{background:linear-gradient(90deg,var(--greenD),var(--green));color:#000;}
+.via{background:var(--bg2);border-radius:var(--R);padding:14px;margin-bottom:10px;border-left:3px solid var(--rock);border:1px solid rgba(255,255,255,.04);cursor:pointer;transition:.2s;}.via:active{transform:scale(.98);}.via.enc{border-left-color:var(--green);}.vt{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}.vg{font-family:'Bebas Neue';font-size:24px;color:var(--rock);}.via.enc .vg{color:var(--green);}.vd{font-size:11px;color:var(--text3);}.vn{font-size:14px;font-weight:600;margin-bottom:4px;}.vl{font-size:12px;color:var(--text2);margin-bottom:6px;}.vts{display:flex;flex-wrap:wrap;gap:4px;}.tg{display:inline-block;padding:2px 8px;border-radius:6px;font-size:10px;background:var(--bg3);color:var(--text2);}.tg.e{background:rgba(78,205,196,.15);color:var(--green);}.tg.r{background:rgba(212,165,116,.15);color:var(--rock);}.tg.t{background:rgba(74,158,255,.15);color:var(--blue);}
+.trn{background:var(--bg2);border-radius:var(--R);padding:14px;margin-bottom:10px;border-left:3px solid var(--yellow);border:1px solid rgba(255,255,255,.04);}.tt{font-family:'Bebas Neue';font-size:20px;color:var(--yellow);}.td{font-size:13px;color:var(--text2);margin-top:4px;}
+.mc{background:var(--bg2);border-radius:var(--R);overflow:hidden;height:300px;position:relative;border:1px solid rgba(255,255,255,.04);margin-bottom:12px;}.ms{width:100%;height:100%;}.mp{cursor:pointer;transition:.2s;}.mp:hover{filter:drop-shadow(0 0 6px var(--rock));}.mtt{position:absolute;background:var(--bg3);border:1px solid var(--rock);border-radius:10px;padding:10px;font-size:12px;z-index:10;pointer-events:none;min-width:140px;}
+.mbg{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);z-index:200;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px);}.mbg.sh{display:flex;}.mdl{background:var(--bg2);border-radius:20px 20px 0 0;width:100%;max-width:500px;max-height:85vh;overflow-y:auto;padding:20px;animation:su .3s ease;}@keyframes su{from{transform:translateY(100%)}to{transform:none}}.mdl h2{font-size:22px;color:var(--rock);margin-bottom:16px;}.mx{float:right;background:none;border:none;color:var(--text2);font-size:24px;cursor:pointer;}
+.fl{margin-bottom:14px;}.fl label{display:block;font-size:12px;color:var(--text2);margin-bottom:4px;font-weight:600;}.fl input,.fl textarea,.fl select{width:100%;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:10px 12px;color:var(--text);font-size:14px;font-family:'Nunito';outline:none;transition:border .2s;}.fl input:focus,.fl textarea:focus,.fl select:focus{border-color:var(--rock);}.fl textarea{resize:vertical;min-height:60px;}
+.btn{width:100%;padding:12px;border:none;border-radius:12px;font-size:15px;font-family:'Nunito';font-weight:700;cursor:pointer;transition:.2s;}.bp{background:var(--rock);color:#000;}.bp:active{transform:scale(.97);}.bg{background:none;border:1px solid var(--text3);color:var(--text2);margin-top:8px;}
+.chs{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px;}.ch{white-space:nowrap;padding:5px 12px;border-radius:16px;font-size:11px;cursor:pointer;border:1px solid rgba(255,255,255,.08);background:var(--bg2);color:var(--text2);transition:.2s;font-family:'Nunito';}.ch.on{background:var(--rock);color:#000;border-color:var(--rock);}
+.tbs{display:flex;gap:0;margin-bottom:14px;background:var(--bg3);border-radius:10px;padding:2px;}.tb{flex:1;padding:7px;text-align:center;border-radius:8px;font-size:12px;cursor:pointer;color:var(--text2);border:none;background:none;font-family:'Nunito';transition:.2s;}.tb.on{background:var(--rock);color:#000;font-weight:700;}
+.sb{display:flex;align-items:center;gap:6px;margin-bottom:12px;}.sb label{font-size:11px;color:var(--text3);}.sb select{background:var(--bg3);border:1px solid rgba(255,255,255,.08);color:var(--text);font-size:12px;padding:5px 8px;border-radius:8px;font-family:'Nunito';outline:none;}
+.eg{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;}.eb{padding:10px;text-align:center;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;cursor:pointer;font-size:12px;color:var(--text2);font-family:'Nunito';transition:.2s;}.eb.on{border-color:var(--rock);color:var(--rock);background:rgba(212,165,116,.1);}.eb .ic{font-size:20px;margin-bottom:4px;}
+.ep{display:grid;grid-template-columns:1fr 1fr;gap:8px;}.ep .fl{margin-bottom:8px;}.ep input,.ep select{padding:8px 10px;font-size:13px;}
+.ws{background:var(--bg3);border-radius:10px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:8px;}.ws .wn{font-family:'Bebas Neue';font-size:18px;color:var(--rock);min-width:20px;}.ws .wd{flex:1;font-size:12px;}.ws .wr{background:none;border:none;color:var(--red);font-size:16px;cursor:pointer;}
+.wi{background:var(--bg2);border-radius:var(--R);padding:14px;margin-bottom:10px;border:1px solid rgba(255,255,255,.04);}.wit{font-family:'Bebas Neue';font-size:18px;color:var(--purple);}.wis{font-size:12px;color:var(--text2);margin-top:6px;}.wiss{padding:3px 0;border-bottom:1px solid rgba(255,255,255,.03);}.wib{margin-top:10px;padding:8px 14px;background:var(--bg3);border:1px solid var(--purple);border-radius:8px;color:var(--purple);font-size:12px;cursor:pointer;font-family:'Nunito';}
+.sc{text-align:center;padding:24px 14px;}.sbb{background:var(--rock);color:#000;border:none;padding:14px 32px;border-radius:25px;font-size:15px;cursor:pointer;font-family:'Nunito';font-weight:700;transition:.2s;}.sbb:active{transform:scale(.95);}.sbb.ok{background:var(--green);}
+</style>
+</head>
+<body>
+<div id="ph" class="page on">
+<div class="hdr"><div><h1>SUBE PIES</h1><div style="font-size:11px;color:var(--text2)">Diario de escalada</div></div><button class="sbb" style="font-size:12px;padding:8px 14px" onclick="go('sync')">📡</button></div>
+<div class="stats"><div class="st a"><div class="v" id="sV">0</div><div class="l">Vías / año</div></div><div class="st b"><div class="v" id="sE">0</div><div class="l">Encadenes / año</div></div><div class="st c"><div class="v" id="sT">0</div><div class="l">Entrenos / año</div></div></div>
+<div class="card"><div class="cn"><button onclick="cN(-1)">◀</button><span class="mo" id="cM"></span><button onclick="cN(1)">▶</button></div><div class="cg" id="cG"></div><div id="cD" style="margin-top:10px"></div></div>
+<div class="card"><div class="ct">DISTRIBUCIÓN DE GRADOS (AÑO)</div><div class="gsw" id="gS"></div><div class="gb" id="gB"></div></div>
+</div>
+<div id="pv" class="page"><div class="hdr"><h1>VÍAS</h1><button class="bp btn" style="width:auto;padding:8px 14px;font-size:12px;border-radius:10px" onclick="addR()">+ Añadir</button></div><div class="chs" id="rF"></div><div class="sb"><label>Ordenar:</label><select id="rS" onchange="drR()"><option value="date">Fecha ↓</option><option value="dateA">Fecha ↑</option><option value="grD">Grado ↓</option><option value="grA">Grado ↑</option><option value="lugar">Lugar</option><option value="amigo">Compañero</option></select></div><div id="rL"></div></div>
+<div id="pm" class="page"><div class="hdr"><h1>MAPA — ROCA</h1></div><div class="mc" id="mB"><svg class="ms" id="mSvg" viewBox="0 0 500 450"></svg><div class="mtt" id="mT" style="display:none"></div></div><div id="mRt"></div></div>
+<div id="pt" class="page"><div class="hdr"><h1>ENTRENOS</h1></div><div class="tbs" id="tT"></div><div id="tH"></div><div id="tP" style="display:none"><button class="btn bp" onclick="openWo()" style="margin-bottom:14px">+ Crear entreno</button><div id="wL"></div></div></div>
+<div id="ps" class="page"><div class="hdr"><h1>SYNC</h1></div><div class="card sc"><div style="font-size:52px;margin-bottom:10px">⛰️</div><div style="font-size:14px;color:var(--text2);margin-bottom:14px" id="bT">Conecta tu ESP32 por Bluetooth</div><button class="sbb" id="bB" onclick="doBT()">Conectar ESP32</button></div><div class="card"><div class="ct">ALMACENAMIENTO</div><p style="font-size:13px;color:var(--text2)"><span style="font-family:'Bebas Neue';font-size:24px;color:var(--green)" id="sN">0</span> registros</p></div></div>
+<div class="mbg" id="mR1"><div class="mdl"><button class="mx" onclick="cm('mR1')">✕</button><h2 id="mRT">VÍA</h2><div class="fl"><label>Nombre</label><input id="iN" placeholder="Ej: Diedro mágico"></div><div class="fl"><label>Lugar</label><input id="iL" placeholder="Ej: Atauri"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div class="fl"><label>Tipo lugar</label><select id="iLT"><option value="roca">Roca</option><option value="roco">Rocódromo</option></select></div><div class="fl"><label>Tipo vía</label><select id="iTP"><option>Cuerda</option><option>Bloque</option><option>AutoAseg</option><option>Largos</option></select></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px"><div class="fl"><label>Grado</label><select id="iG"></select></div><div class="fl"><label>Intento</label><select id="iI"></select></div><div class="fl"><label>Encadenado</label><select id="iE"><option value="1">Sí</option><option value="0">No</option></select></div></div><div class="fl"><label>Sensaciones</label><textarea id="iNo" placeholder="Beta, condiciones..."></textarea></div><div class="fl"><label>Compañeros</label><input id="iA" placeholder="Mikel, Ane, Jon"></div><div class="fl"><label>Fecha</label><input type="date" id="iF"></div><button class="btn bp" onclick="svR()">Guardar</button><button class="btn bg" onclick="cm('mR1')">Cancelar</button></div></div>
+<div class="mbg" id="mW1"><div class="mdl"><button class="mx" onclick="cm('mW1')">✕</button><h2>CREAR ENTRENO</h2><div class="fl"><label>Nombre</label><input id="wN" placeholder="Fuerza dedos martes"></div><div class="ct">PASOS</div><div id="wS"></div><div class="ct" style="margin-top:14px">AÑADIR EJERCICIO</div><div class="eg" id="eG"></div><div id="eP" style="display:none"></div><button class="btn bg" id="eA" style="display:none;margin-bottom:14px" onclick="addEj()">+ Añadir al entreno</button><hr style="border:none;border-top:1px solid var(--bg4);margin:14px 0"><button class="btn bp" onclick="svW()">Guardar entreno</button><button class="btn bg" onclick="cm('mW1')">Cancelar</button></div></div>
+<nav class="nav">
+<button class="nb on" onclick="go('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h3m10-11v10a1 1 0 01-1 1h-3m-4 0v-6"/></svg>Inicio</button>
+<button class="nb" onclick="go('routes')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>Vías</button>
+<button class="nb" onclick="go('map')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Mapa</button>
+<button class="nb" onclick="go('train')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>Entrenos</button>
+<button class="nb" onclick="go('sync')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 7h12l-4-4M16 17H4l4 4"/></svg>Sync</button>
+</nav>
+<script>
+const G=["V","6a","6a+","6b","6b+","6c","6c+","7a","7a+","7b","7b+","7c","7c+","8a","8a+","8b","8b+","8c","8c+","9a","9a+","9b","9b+","9c"];
+const CT=["1234321","1-3-5","112233","1-max"],AN=["90gr","120gr","Lock-off"],AG=["Regleta","Cazo","Pinza","Romo"];
+function ld(k,d){try{const v=localStorage.getItem('sp_'+k);return v?JSON.parse(v):d}catch(e){return d}}
+function sv2(k,v){localStorage.setItem('sp_'+k,JSON.stringify(v))}
+let R=ld('r',[
+{id:1,date:"2026-02-11",lugar:"roca",tipo:"Cuerda",grado:"7a+",intento:2,enc:true,nombre:"Diedro mágico",sitio:"Atauri",notas:"Buenas sensaciones",amigos:"Mikel, Ane"},
+{id:2,date:"2026-02-11",lugar:"roca",tipo:"Cuerda",grado:"7b",intento:3,enc:false,nombre:"El espolón",sitio:"Atauri",amigos:"Mikel"},
+{id:3,date:"2026-02-10",lugar:"roco",tipo:"Bloque",grado:"6c+",intento:1,enc:true,sitio:"Sharma BCN"},
+{id:4,date:"2026-02-10",lugar:"roco",tipo:"Bloque",grado:"7a",intento:1,enc:true,sitio:"Sharma BCN"},
+{id:5,date:"2026-02-09",lugar:"roca",tipo:"Largos",grado:"6b+",intento:1,enc:true,nombre:"Rabadá-Navarro",sitio:"Riglos",notas:"Espectacular",amigos:"Jon, Ane",largos:4,tipoLargo:"Clasica"},
+{id:6,date:"2026-02-08",lugar:"roco",tipo:"Bloque",grado:"7b",intento:4,enc:false,sitio:"Rocópolis Bilbao"},
+{id:7,date:"2026-02-07",lugar:"roco",tipo:"Cuerda",grado:"7a",intento:1,enc:true,sitio:"Rocópolis Bilbao"},
+{id:8,date:"2026-02-06",lugar:"roca",tipo:"Cuerda",grado:"7b+",intento:3,enc:false,nombre:"Murciana",sitio:"Etxauri",amigos:"Mikel"},
+{id:9,date:"2026-02-05",lugar:"roco",tipo:"Bloque",grado:"7a+",intento:2,enc:true,sitio:"Sharma BCN"},
+{id:10,date:"2026-02-03",lugar:"roca",tipo:"Cuerda",grado:"7c",intento:5,enc:false,nombre:"Txipi txapa",sitio:"Etxauri",amigos:"Ane"},
+{id:11,date:"2026-02-02",lugar:"roco",tipo:"Bloque",grado:"7b",intento:3,enc:true,sitio:"Rocópolis Bilbao"},
+{id:12,date:"2026-02-01",lugar:"roca",tipo:"Cuerda",grado:"7a",intento:1,enc:true,nombre:"Garganta profunda",sitio:"Atauri",notas:"Flash!",amigos:"Mikel, Jon"},
+{id:13,date:"2026-01-28",lugar:"roco",tipo:"AutoAseg",grado:"6c",intento:1,enc:true,sitio:"Rocópolis Bilbao"},
+{id:14,date:"2026-01-25",lugar:"roco",tipo:"Cuerda",grado:"7a+",intento:2,enc:false,sitio:"Sharma BCN"},
+{id:15,date:"2026-01-20",lugar:"roca",tipo:"Cuerda",grado:"7a",intento:1,enc:true,nombre:"Pilar del sol",sitio:"Atauri",amigos:"Mikel"},
+]);
+let Tr=ld('t',[
+{id:1,date:"2026-02-11",tipo:"Regletas",detail:"4x6 7s/3s 20mm"},
+{id:2,date:"2026-02-10",tipo:"Campus",detail:"4ser 1234321 20mm"},
+{id:3,date:"2026-02-09",tipo:"Bloqueos",detail:"3x3 10s 90gr 20mm 5kg"},
+{id:4,date:"2026-02-08",tipo:"Regletas",detail:"4x6 7s/3s 18mm"},
+{id:5,date:"2026-02-07",tipo:"Rebotes",detail:"3x8 5s 14mm"},
+{id:6,date:"2026-02-05",tipo:"Regletas",detail:"4x6 7s/3s 20mm +3kg"},
+{id:7,date:"2026-02-03",tipo:"Bloqueos",detail:"3x3 10s Lock-off Cazo"},
+{id:8,date:"2026-01-30",tipo:"Regletas",detail:"5x5 10s/5s 16mm +5kg"},
+{id:9,date:"2026-01-27",tipo:"Campus",detail:"3ser 1-3-5 20mm"},
+{id:10,date:"2026-01-22",tipo:"Travesias",detail:"3x 30mov"},
+]);
+let W=ld('w',[
+{id:1,name:"Calentamiento + Fuerza",steps:[
+{tipo:"temporizador",p:{min:5,seg:0},txt:"Temporizador 5:00 — Calentamiento"},
+{tipo:"regletas",p:{col:7,des:5,rep:4,ser:3,ds:120,peso:0,reg:35},txt:"Regletas 3x4 7s/5s 35mm"},
+{tipo:"regletas",p:{col:7,des:3,rep:6,ser:4,ds:180,peso:0,reg:20},txt:"Regletas 4x6 7s/3s 20mm"},
+{tipo:"campus",p:{t:0,des:60,ser:4,ds:180,reg:20},txt:"Campus 4ser 1234321 20mm"},
+{tipo:"temporizador",p:{min:10,seg:0},txt:"Temporizador 10:00 — Estiramientos"},
+]},
+]);
+const ZN=[{n:"Atauri",x:218,y:95},{n:"Etxauri",x:240,y:92},{n:"Riglos",x:274,y:110},{n:"Siurana",x:310,y:138},{n:"Rodellar",x:280,y:118},{n:"Oliana",x:308,y:132},{n:"Chulilla",x:290,y:160}];
+let cY=2026,cMo=1,cSl=null,gM='cr',rFl='all',tTb='hist',eRt=null,cE=null,wSt=[],nId=100;
+const PG={home:'ph',routes:'pv',map:'pm',train:'pt',sync:'ps'},PK=Object.keys(PG);
+function go(id){Object.values(PG).forEach(p=>document.getElementById(p).classList.remove('on'));document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));document.getElementById(PG[id]).classList.add('on');document.querySelectorAll('.nb')[PK.indexOf(id)].classList.add('on');({home:rH,routes:drR,map:drM,train:drTr,sync:drS})[id]();}
+
+// HOME — stats anuales
+function rH(){
+  const y=new Date().getFullYear();
+  const yr=R.filter(r=>new Date(r.date).getFullYear()===y);
+  const yt=Tr.filter(t=>new Date(t.date).getFullYear()===y);
+  document.getElementById('sV').textContent=yr.length;
+  document.getElementById('sE').textContent=yr.filter(r=>r.enc).length;
+  document.getElementById('sT').textContent=yt.length;
+  rCal();rGr();
+  // Grade switch: Cuerda Roca, Bloque Roco, Cuerda Roco, Auto Roco
+  const gms=[['cr','Cuerda Roca'],['br','Bloq Roco'],['cro','Cuerda Roco'],['ar','Auto Roco']];
+  let gs='';gms.forEach(([k,lb])=>{gs+=`<button class="gs${gM===k?' on':''}" onclick="gM='${k}';document.querySelectorAll('.gs').forEach(b=>b.classList.remove('on'));this.classList.add('on');rGr()">${lb}</button>`;});
+  document.getElementById('gS').innerHTML=gs;
+}
+
+// CALENDAR — colores en los números
+function rCal(){
+  const mN=["ENERO","FEBRERO","MARZO","ABRIL","MAYO","JUNIO","JULIO","AGOSTO","SEPTIEMBRE","OCTUBRE","NOVIEMBRE","DICIEMBRE"];
+  document.getElementById('cM').textContent=mN[cMo]+' '+cY;
+  const f=new Date(cY,cMo,1);let sd=f.getDay();if(sd===0)sd=7;sd--;
+  const dm=new Date(cY,cMo+1,0).getDate(),td=new Date();
+  let h='';['L','M','X','J','V','S','D'].forEach(d=>{h+=`<div class="cdh">${d}</div>`;});
+  for(let i=0;i<sd;i++)h+='<div class="cd emp"></div>';
+  for(let d=1;d<=dm;d++){
+    const ds=`${cY}-${String(cMo+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const dr=R.filter(r=>r.date===ds);
+    const hr=dr.some(r=>r.lugar==='roca'),hc=dr.some(r=>r.lugar==='roco');
+    const ht=Tr.some(t=>t.date===ds);
+    const it=d===td.getDate()&&cMo===td.getMonth()&&cY===td.getFullYear();
+    let c='cd';
+    if(it)c+=' tod';
+    if(hr&&hc)c+=' hb';else if(hr)c+=' hr';else if(hc)c+=' hc';
+    if(ht)c+=' ht';
+    if(cSl===ds)c+=' sel';
+    h+=`<div class="${c}" onclick="cSl=cSl==='${ds}'?null:'${ds}';rCal()">${d}</div>`;
+  }
+  document.getElementById('cG').innerHTML=h;
+  if(cSl){
+    const dr=R.filter(r=>r.date===cSl),dt=Tr.filter(t=>t.date===cSl),dd=new Date(cSl);
+    let dh=`<div style="font-size:12px;color:var(--text2);margin-bottom:6px">${dd.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'})}</div>`;
+    if(!dr.length&&!dt.length)dh+='<div style="font-size:12px;color:var(--text3)">Sin actividad</div>';
+    dr.forEach(r=>{dh+=`<div style="font-size:12px;margin:2px 0"><span style="color:${r.enc?'var(--green)':'var(--rock)'};font-family:'Bebas Neue';font-size:16px">${r.grado}</span> ${r.tipo} ${r.enc?'✓':''}${r.nombre?' · '+r.nombre:''}</div>`;});
+    dt.forEach(t=>{dh+=`<div style="font-size:12px;margin:2px 0;color:var(--yellow)">🏋 ${t.tipo} ${t.detail}</div>`;});
+    document.getElementById('cD').innerHTML=dh;
+  }else document.getElementById('cD').innerHTML='';
+}
+function cN(d){cMo+=d;if(cMo>11){cMo=0;cY++;}if(cMo<0){cMo=11;cY--;}rCal();}
+
+// GRADE — anual, filtros específicos
+function rGr(){
+  const y=new Date().getFullYear();
+  const yr=R.filter(r=>new Date(r.date).getFullYear()===y);
+  let f;
+  if(gM==='cr')f=yr.filter(r=>r.lugar==='roca'&&r.tipo==='Cuerda');
+  else if(gM==='br')f=yr.filter(r=>r.lugar==='roco'&&r.tipo==='Bloque');
+  else if(gM==='cro')f=yr.filter(r=>r.lugar==='roco'&&r.tipo==='Cuerda');
+  else if(gM==='ar')f=yr.filter(r=>r.lugar==='roco'&&r.tipo==='AutoAseg');
+  else f=yr;
+  const c={};f.forEach(r=>{c[r.grado]=(c[r.grado]||0)+1;});
+  const s=Object.entries(c).sort((a,b)=>G.indexOf(b[0])-G.indexOf(a[0]));
+  const mx=Math.max(...s.map(x=>x[1]),1);
+  const cc=(gM==='br'||gM==='cro'||gM==='ar')?'ro':'rc';
+  let h='';s.slice(0,8).forEach(([g,n])=>{h+=`<div class="gr"><div class="grn">${g}</div><div class="grb"><div class="grf ${cc}" style="width:${(n/mx)*100}%">${n}</div></div></div>`;});
+  document.getElementById('gB').innerHTML=h||'<div style="color:var(--text3);font-size:12px;padding:10px">Sin datos</div>';
+}
+
+// ROUTES
+function drR(){
+  let fc='';[['all','Todas'],['roca','Roca'],['roco','Rocódromo'],['enc','Encadenadas'],['cuerda','Cuerda'],['bloque','Bloque']].forEach(([k,lb])=>{fc+=`<button class="ch${rFl===k?' on':''}" onclick="rFl='${k}';drR()">${lb}</button>`;});
+  document.getElementById('rF').innerHTML=fc;
+  let fl=R.slice();
+  if(rFl==='roca')fl=fl.filter(r=>r.lugar==='roca');if(rFl==='roco')fl=fl.filter(r=>r.lugar==='roco');
+  if(rFl==='enc')fl=fl.filter(r=>r.enc);if(rFl==='cuerda')fl=fl.filter(r=>r.tipo==='Cuerda');if(rFl==='bloque')fl=fl.filter(r=>r.tipo==='Bloque');
+  const so=document.getElementById('rS').value;
+  if(so==='date')fl.sort((a,b)=>b.date.localeCompare(a.date));if(so==='dateA')fl.sort((a,b)=>a.date.localeCompare(b.date));
+  if(so==='grD')fl.sort((a,b)=>G.indexOf(b.grado)-G.indexOf(a.grado));if(so==='grA')fl.sort((a,b)=>G.indexOf(a.grado)-G.indexOf(b.grado));
+  if(so==='lugar')fl.sort((a,b)=>(a.sitio||'').localeCompare(b.sitio||''));if(so==='amigo')fl.sort((a,b)=>(a.amigos||'').localeCompare(b.amigos||''));
+  let h='',ld2='';const byD=so==='date'||so==='dateA';
+  fl.forEach(r=>{if(byD&&r.date!==ld2){h+=`<div style="font-family:'Bebas Neue';font-size:13px;color:var(--text3);margin:14px 0 6px;letter-spacing:2px">${new Date(r.date).toLocaleDateString('es-ES',{weekday:'short',day:'numeric',month:'short'}).toUpperCase()}</div>`;ld2=r.date;}h+=vc(r);});
+  document.getElementById('rL').innerHTML=h||'<div style="text-align:center;color:var(--text3);padding:30px">Sin vías</div>';
+}
+function vc(r){return `<div class="via ${r.enc?'enc':''}" onclick="edR(${r.id})"><div class="vt"><div class="vg">${r.grado}</div><div class="vd">${new Date(r.date).toLocaleDateString('es-ES',{day:'numeric',month:'short'})}</div></div>${r.nombre?`<div class="vn">${r.nombre}</div>`:''}${r.sitio?`<div class="vl">📍 ${r.sitio}</div>`:''}<div class="vts"><span class="tg r">${r.lugar==='roca'?'Roca':'Roco'}</span><span class="tg t">${r.tipo}</span><span class="tg">Int:${r.intento}</span>${r.enc?'<span class="tg e">Enc ✓</span>':''}${r.largos?`<span class="tg">${r.largos}L ${r.tipoLargo}</span>`:''}${r.amigos?`<span class="tg">👥 ${r.amigos}</span>`:''}${r.notas?'<span class="tg">💬</span>':''}</div></div>`;}
+function pSel(){const g=document.getElementById('iG');g.innerHTML='';G.forEach(x=>{g.innerHTML+=`<option>${x}</option>`;});const i=document.getElementById('iI');i.innerHTML='';for(let j=1;j<=9;j++)i.innerHTML+=`<option>${j}</option>`;}
+function addR(){eRt=null;document.getElementById('mRT').textContent='NUEVA VÍA';pSel();['iN','iL','iNo','iA'].forEach(id=>document.getElementById(id).value='');document.getElementById('iF').value=new Date().toISOString().split('T')[0];document.getElementById('iG').value='7a';document.getElementById('iE').value='0';document.getElementById('mR1').classList.add('sh');}
+function edR(id){const r=R.find(x=>x.id===id);if(!r)return;eRt=id;document.getElementById('mRT').textContent='EDITAR VÍA';pSel();document.getElementById('iN').value=r.nombre||'';document.getElementById('iL').value=r.sitio||'';document.getElementById('iLT').value=r.lugar;document.getElementById('iTP').value=r.tipo;document.getElementById('iG').value=r.grado;document.getElementById('iI').value=r.intento;document.getElementById('iE').value=r.enc?'1':'0';document.getElementById('iNo').value=r.notas||'';document.getElementById('iA').value=r.amigos||'';document.getElementById('iF').value=r.date;document.getElementById('mR1').classList.add('sh');}
+function svR(){const d={id:eRt||++nId,date:document.getElementById('iF').value,lugar:document.getElementById('iLT').value,tipo:document.getElementById('iTP').value,grado:document.getElementById('iG').value,intento:parseInt(document.getElementById('iI').value),enc:document.getElementById('iE').value==='1',nombre:document.getElementById('iN').value,sitio:document.getElementById('iL').value,notas:document.getElementById('iNo').value,amigos:document.getElementById('iA').value};if(eRt){const i=R.findIndex(r=>r.id===eRt);if(i>=0)R[i]={...R[i],...d};}else R.unshift(d);sv2('r',R);cm('mR1');drR();}
+function cm(id){document.getElementById(id).classList.remove('sh');}
+
+// MAP solo roca
+function drM(){let s=`<defs><linearGradient id="mg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#243447"/><stop offset="100%" stop-color="#1b2838"/></linearGradient></defs><rect width="500" height="450" fill="url(#mg)"/><path d="M160,70 L180,55 L220,52 L260,48 L290,52 L320,50 L350,55 L370,65 L380,80 L375,100 L380,120 L370,140 L360,155 L345,165 L325,170 L305,165 L285,170 L265,175 L250,180 L240,175 L225,180 L210,178 L195,175 L180,170 L165,158 L155,140 L148,120 L150,100 L155,85 Z" fill="none" stroke="var(--rock)" stroke-width="1.5" opacity=".3"/>`;
+  const rr=R.filter(r=>r.lugar==='roca'),lc={};
+  rr.forEach(r=>{if(!r.sitio)return;const z=ZN.find(z=>r.sitio.toLowerCase().includes(z.n.toLowerCase()));if(z){if(!lc[z.n])lc[z.n]={z,rs:[],e:0};lc[z.n].rs.push(r);if(r.enc)lc[z.n].e++;}});
+  Object.values(lc).forEach(l=>{const sz=Math.min(6+l.rs.length*2,16);s+=`<circle class="mp" cx="${l.z.x}" cy="${l.z.y}" r="${sz}" fill="var(--rock)" opacity=".8" onmouseenter="mH(event,'${l.z.n}',${l.rs.length},${l.e})" onmouseleave="mL()" onclick="mC('${l.z.n}')"/><text x="${l.z.x}" y="${l.z.y+sz+12}" text-anchor="middle" fill="var(--text2)" font-size="10" font-family="Nunito">${l.z.n}</text>`;});
+  document.getElementById('mSvg').innerHTML=s;document.getElementById('mRt').innerHTML='<div style="color:var(--text3);font-size:12px;text-align:center;padding:10px">Pulsa un punto del mapa</div>';}
+function mH(e,n,t,en){const tp=document.getElementById('mT');tp.innerHTML=`<div style="font-family:'Bebas Neue';font-size:16px;color:var(--rock)">${n}</div><div style="font-size:11px;color:var(--text2)">${t} vías · ${en} enc.</div>`;tp.style.display='block';const r=document.getElementById('mB').getBoundingClientRect();tp.style.left=(e.clientX-r.left+10)+'px';tp.style.top=(e.clientY-r.top-40)+'px';}
+function mL(){document.getElementById('mT').style.display='none';}
+function mC(n){const zr=R.filter(r=>r.lugar==='roca'&&r.sitio&&r.sitio.toLowerCase().includes(n.toLowerCase()));let h=`<div style="font-family:'Bebas Neue';font-size:18px;color:var(--rock);margin:10px 0">${n} — ${zr.length} vías</div>`;zr.forEach(r=>{h+=vc(r);});document.getElementById('mRt').innerHTML=h;}
+
+// TRAINS
+function drTr(){let tb='';[['hist','Historial'],['plan','Programados']].forEach(([k,lb])=>{tb+=`<button class="tb${tTb===k?' on':''}" onclick="tTb='${k}';drTr()">${lb}</button>`;});document.getElementById('tT').innerHTML=tb;
+  if(tTb==='hist'){document.getElementById('tH').style.display='block';document.getElementById('tP').style.display='none';let h='';Tr.forEach(t=>{h+=`<div class="trn"><div style="display:flex;justify-content:space-between"><div class="tt">${t.tipo}</div><div style="font-size:11px;color:var(--text3)">${new Date(t.date).toLocaleDateString('es-ES',{day:'numeric',month:'short'})}</div></div><div class="td">${t.detail}</div></div>`;});document.getElementById('tH').innerHTML=h;}
+  else{document.getElementById('tH').style.display='none';document.getElementById('tP').style.display='block';let h='';W.forEach(w=>{h+=`<div class="wi"><div class="wit">${w.name}</div><div class="wis">`;w.steps.forEach((s,i)=>{h+=`<div class="wiss">${i+1}. ${s.txt}</div>`;});h+=`</div><button class="wib" onclick="alert('📡 Enviar por BT (próximamente)')">📡 Enviar a ESP32</button></div>`;});document.getElementById('wL').innerHTML=h;}}
+
+// WORKOUT BUILDER
+function openWo(){wSt=[];cE=null;document.getElementById('wN').value='';document.getElementById('eP').style.display='none';document.getElementById('eA').style.display='none';
+  let eg='';[['regletas','🤏','Regletas'],['campus','🧗','Campus'],['rebotes','💥','Rebotes'],['bloqueos','💪','Bloqueos'],['travesia','🔄','Travesía'],['temporizador','⏱️','Timer'],['libre','📝','Libre']].forEach(([k,ic,lb])=>{eg+=`<div class="eb" data-e="${k}" onclick="sE('${k}')"><div class="ic">${ic}</div>${lb}</div>`;});
+  document.getElementById('eG').innerHTML=eg;rWS();document.getElementById('mW1').classList.add('sh');}
+function rWS(){let h='';if(!wSt.length)h='<div style="color:var(--text3);font-size:12px;padding:8px">Añade ejercicios abajo</div>';wSt.forEach((s,i)=>{h+=`<div class="ws"><div class="wn">${i+1}</div><div class="wd">${s.txt}</div><button class="wr" onclick="wSt.splice(${i},1);rWS()">✕</button></div>`;});document.getElementById('wS').innerHTML=h;}
+function fld(id,lb,v){return `<div class="fl"><label>${lb}</label><input id="${id}" type="number" value="${v}"></div>`;}
+function sE(t){cE=t;document.querySelectorAll('.eb').forEach(b=>b.classList.remove('on'));document.querySelector(`.eb[data-e="${t}"]`).classList.add('on');document.getElementById('eA').style.display='block';const p=document.getElementById('eP');p.style.display='block';let h='<div class="ep">';
+  if(t==='regletas')h+=fld('xC','Colgado s',7)+fld('xD','Descanso s',3)+fld('xR','Reps',6)+fld('xS','Series',4)+fld('xDS','Desc.serie',180)+fld('xP','Peso kg',0)+fld('xRg','Regleta mm',20);
+  else if(t==='campus'){h+=`<div class="fl"><label>Tipo</label><select id="xCT">${CT.map((c,i)=>`<option value="${i}">${c}</option>`).join('')}</select></div>`;h+=fld('xD','Descanso',60)+fld('xS','Series',4)+fld('xDS','Desc.serie',180)+fld('xRg','Regleta mm',20);}
+  else if(t==='rebotes')h+=fld('xT','Tiempo s',5)+fld('xD','Descanso',5)+fld('xR','Reps',8)+fld('xS','Series',3)+fld('xDS','Desc.serie',120)+fld('xRg','Regleta mm',14);
+  else if(t==='bloqueos'){h+=`<div class="fl"><label>Ángulo</label><select id="xAn">${AN.map((a,i)=>`<option value="${i}">${a}</option>`).join('')}</select></div><div class="fl"><label>Agarre</label><select id="xAg">${AG.map((a,i)=>`<option value="${i}">${a}</option>`).join('')}</select></div>`;h+=fld('xT','Tiempo s',10)+fld('xD','Descanso',30)+fld('xR','Reps',3)+fld('xS','Series',3)+fld('xDS','Desc.serie',180)+fld('xP','Peso kg',0)+fld('xRg','Regleta mm',20);}
+  else if(t==='travesia'){h+=`<div class="fl"><label>Modo</label><select id="xTM"><option value="0">Movimientos</option><option value="1">Tiempo</option></select></div>`;h+=fld('xMv','Movimientos',30)+fld('xTi','Tiempo s',180)+fld('xD','Descanso',180)+fld('xS','Series',3);}
+  else if(t==='temporizador')h+=fld('xMi','Minutos',3)+fld('xSe','Segundos',0);
+  else if(t==='libre')h+=`<div class="fl" style="grid-column:1/-1"><label>Descripción</label><input id="xLb" placeholder="10x gomas hombros"></div>`;
+  h+='</div>';p.innerHTML=h;}
+function gv(id){const e=document.getElementById(id);return e?parseInt(e.value)||0:0;}
+function addEj(){if(!cE)return;let s={tipo:cE,p:{},txt:''};
+  if(cE==='regletas'){const p={col:gv('xC'),des:gv('xD'),rep:gv('xR'),ser:gv('xS'),ds:gv('xDS'),peso:gv('xP'),reg:gv('xRg')};s.p=p;s.txt=`Regletas ${p.ser}x${p.rep} ${p.col}s/${p.des}s ${p.reg}mm${p.peso>0?' +'+p.peso+'kg':''}`;}
+  else if(cE==='campus'){const ti=gv('xCT'),p={t:ti,des:gv('xD'),ser:gv('xS'),ds:gv('xDS'),reg:gv('xRg')};s.p=p;s.txt=`Campus ${p.ser}ser ${CT[ti]} ${p.reg}mm`;}
+  else if(cE==='rebotes'){const p={tie:gv('xT'),des:gv('xD'),rep:gv('xR'),ser:gv('xS'),ds:gv('xDS'),reg:gv('xRg')};s.p=p;s.txt=`Rebotes ${p.ser}x${p.rep} ${p.tie}s ${p.reg}mm`;}
+  else if(cE==='bloqueos'){const ai=gv('xAn'),ag=gv('xAg'),p={ang:ai,agarre:ag,tie:gv('xT'),des:gv('xD'),rep:gv('xR'),ser:gv('xS'),ds:gv('xDS'),peso:gv('xP'),reg:gv('xRg')};s.p=p;s.txt=`Bloqueos ${p.ser}x${p.rep} ${p.tie}s ${AN[ai]} ${AG[ag]}${p.peso>0?' +'+p.peso+'kg':''}`;}
+  else if(cE==='travesia'){const m=gv('xTM'),p={modo:m,mov:gv('xMv'),ti:gv('xTi'),des:gv('xD'),ser:gv('xS')};s.p=p;s.txt=m===0?`Travesía ${p.ser}x ${p.mov}mov`:`Travesía ${p.ser}x ${p.ti}s`;}
+  else if(cE==='temporizador'){const p={min:gv('xMi'),seg:gv('xSe')};s.p=p;s.txt=`Timer ${p.min}:${String(p.seg).padStart(2,'0')}`;}
+  else if(cE==='libre'){const t=(document.getElementById('xLb').value||'').trim();if(!t)return;s.p={text:t};s.txt=t;}
+  wSt.push(s);rWS();cE=null;document.querySelectorAll('.eb').forEach(b=>b.classList.remove('on'));document.getElementById('eP').style.display='none';document.getElementById('eA').style.display='none';}
+function svW(){const n=(document.getElementById('wN').value||'').trim();if(!n||!wSt.length){alert('Pon nombre y ejercicios');return;}W.push({id:++nId,name:n,steps:[...wSt]});sv2('w',W);cm('mW1');tTb='plan';drTr();}
+
+// SYNC
+function drS(){document.getElementById('sN').textContent=R.length+Tr.length;}
+async function doBT(){const b=document.getElementById('bB'),t=document.getElementById('bT');if(!navigator.bluetooth){t.textContent='Usa Chrome en Android';return;}try{t.textContent='Buscando...';b.textContent='...';const d=await navigator.bluetooth.requestDevice({filters:[{namePrefix:'SubePies'}],optionalServices:['0000ffe0-0000-1000-8000-00805f9b34fb']});await d.gatt.connect();b.textContent='Conectado ✓';b.classList.add('ok');t.textContent='Conectado a '+d.name;}catch(e){t.textContent='No conectado';b.textContent='Conectar ESP32';}}
+
+rH();
+</script>
+</body>
+</html>
