@@ -20,7 +20,7 @@ h1,h2,h3{font-family:'Bebas Neue',sans-serif;letter-spacing:1.5px;}
 body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;background:linear-gradient(180deg,#1e3045,#1b2838 60%,var(--bg));z-index:-1;opacity:.7;}
 .nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid rgba(255,255,255,.05);display:flex;z-index:100;backdrop-filter:blur(20px);padding-bottom:env(safe-area-inset-bottom);}
 .nb{flex:1;padding:8px 0 6px;text-align:center;color:var(--text3);font-size:9px;cursor:pointer;border:none;background:none;font-family:'Nunito';transition:.2s;}.nb.on{color:var(--rock);}.nb svg{display:block;margin:0 auto 2px;width:20px;height:20px;}.nb.on svg{filter:drop-shadow(0 0 5px rgba(212,165,116,.4));}
-.page{display:none;padding:16px;animation:fu .3s ease;}.page.on{display:block;}@keyframes fu{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.page{display:none;padding:16px;animation:fu .3s ease;}.page.on{display:block;}#ph.on{display:flex!important;}@keyframes fu{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 .hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}.hdr h1{font-size:24px;color:var(--rock);}
 .card{background:var(--bg2);border-radius:var(--R);padding:14px;border:1px solid rgba(255,255,255,.04);margin-bottom:12px;}.ct{font-family:'Bebas Neue';font-size:14px;color:var(--text2);letter-spacing:2px;margin-bottom:10px;}
 .stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;}.st{background:var(--bg2);border-radius:12px;padding:10px 8px;text-align:center;border:1px solid rgba(255,255,255,.04);}.st .v{font-family:'Bebas Neue';font-size:28px;line-height:1;}.st .l{font-size:9px;color:var(--text2);margin-top:2px;}.st.a .v{color:var(--rock);}.st.b .v{color:var(--green);}.st.c .v{color:var(--yellow);}
@@ -69,12 +69,12 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <div id="loadPage" class="load-full"><div class="spinner" style="width:40px;height:40px;border-width:3px"></div></div>
 <div id="loginPage" style="display:none"><div style="font-size:60px;margin-bottom:10px">⛰️</div><div class="login-logo">SUBE PIES</div><div style="color:var(--text2);font-size:14px;margin-bottom:30px">Diario de escalada</div><button class="goog-btn" onclick="loginGoogle()"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg">Entrar con Google</button></div>
 <div id="appWrap" style="display:none">
-<!-- HOME --><div id="ph" class="page on">
-<div class="hdr"><div><h1>SUBE PIES</h1><div class="usr-bar"><img class="usr-pic" id="uPic"><span class="usr-name" id="uName"></span><button class="usr-out" onclick="logout()">Salir</button></div></div><button class="sbb" style="font-size:11px;padding:6px 12px" onclick="go('sync')">📡</button></div>
-<div class="stats"><div class="st a"><div class="v" id="sV">0</div><div class="l" id="sVl">Vías / año</div></div><div class="st b"><div class="v" id="sE">0</div><div class="l" id="sEl">Encadenes</div></div><div class="st c"><div class="v" id="sT">0</div><div class="l" id="sTl">Entrenos</div></div></div>
-<div class="gsw" id="sPer" style="margin-bottom:14px"></div>
-<div class="card"><div class="cn"><button onclick="cNav(-1)">◀</button><span class="mo" id="cM"></span><button onclick="cNav(1)">▶</button></div><div class="cg" id="cG"></div><div id="cD" style="margin-top:10px"></div></div>
-<div class="card"><div class="ct">DISTRIBUCIÓN DE GRADOS</div><div class="gsw" id="gPer"></div><div class="gsw" id="gS"></div><div class="gb" id="gB"></div></div>
+<!-- HOME --><div id="ph" class="page on" style="height:calc(100vh - 75px);overflow:hidden;display:flex;flex-direction:column">
+<div class="hdr" style="flex-shrink:0"><div><h1>SUBE PIES</h1><div class="usr-bar"><img class="usr-pic" id="uPic"><span class="usr-name" id="uName"></span><button class="usr-out" onclick="logout()">Salir</button></div></div><button class="sbb" style="font-size:11px;padding:6px 12px" onclick="go('sync')">📡</button></div>
+<div class="gsw" id="sPer" style="margin-bottom:8px;flex-shrink:0"></div>
+<div class="stats" style="flex-shrink:0;margin-bottom:8px"><div class="st a"><div class="v" id="sV">0</div><div class="l" id="sVl">Vías / año</div></div><div class="st b"><div class="v" id="sE">0</div><div class="l" id="sEl">Encadenes</div></div><div class="st c"><div class="v" id="sT">0</div><div class="l" id="sTl">Entrenos</div></div></div>
+<div class="card" style="flex-shrink:0;padding:10px;margin-bottom:8px"><div class="cn" style="margin-bottom:6px"><button onclick="cNav(-1)">◀</button><span class="mo" id="cM"></span><button onclick="cNav(1)">▶</button></div><div class="cg" id="cG"></div><div id="cD" style="margin-top:6px"></div></div>
+<div class="card" style="flex:1;min-height:0;overflow-y:auto;padding:10px;margin-bottom:0"><div class="ct" style="margin-bottom:6px">DISTRIBUCIÓN DE GRADOS</div><div class="gsw" id="gPer" style="margin-bottom:6px"></div><div class="gsw" id="gS" style="margin-bottom:6px"></div><div class="gb" id="gB"></div></div>
 </div>
 <!-- VÍAS --><div id="pv" class="page"><div class="hdr"><h1>VÍAS</h1><button class="bp btn" style="width:auto;padding:6px 12px;font-size:11px;border-radius:10px" onclick="addR()">+ Añadir</button></div><div class="chs" id="rF"></div><div class="sb"><label>Ordenar:</label><select id="rS" onchange="drR()"><option value="date">Fecha ↓</option><option value="dateA">Fecha ↑</option><option value="grD">Grado ↓</option><option value="grA">Grado ↑</option><option value="lugar">Lugar</option><option value="amigo">Compañero</option></select></div><div id="rL"></div></div>
 <!-- MAPA --><div id="pm" class="page"><div class="hdr"><h1>MAPA — ROCA</h1></div><div class="map-stats"><div class="st a"><div class="v" id="mTotal">0</div><div class="l">Total vías</div></div><div class="st b"><div class="v" id="mEnc">0</div><div class="l">Encadenadas</div></div><div class="st"><div class="v" style="color:var(--blue)" id="mZonas">0</div><div class="l">Zonas</div></div></div><div class="map-search"><input id="mapQ" placeholder="🔍 Buscar zona..." oninput="filterMap()"><button class="bp btn" style="width:auto;padding:8px 12px;font-size:11px;border-radius:10px" onclick="openNewCrag()">+ Zona</button></div><div id="mapDiv"></div><div id="mapResults" style="display:none"></div><div id="mRt"></div></div>
@@ -114,7 +114,7 @@ async function loadData(){if(!U)return;const uid=U.uid;
   q=await db.collection('users').doc(uid).collection('workouts').get();W=[];q.forEach(d=>{W.push({id:d.id,...d.data()});});
   q=await db.collection('users').doc(uid).collection('friends').get();friends=[];q.forEach(d=>{friends.push({id:d.id,...d.data()});});
   q=await db.collection('users').doc(uid).collection('plans').get();plans=[];q.forEach(d=>{plans.push({id:d.id,...d.data()});});
-  q=await db.collection('users').doc(uid).collection('crags').get();userCrags=[];q.forEach(d=>{userCrags.push({id:d.id,...d.data()});});
+  q=await db.collection('crags').get();userCrags=[];q.forEach(d=>{userCrags.push({id:d.id,...d.data()});});
   updDL();}
 function updDL(){const s=new Set();R.forEach(r=>{if(r.sitio)s.add(r.sitio);});let dl='';[...CRAGS.keys(),...userCrags.map(c=>c.name),...s].forEach(n=>{dl+=`<option value="${n}">`;});document.getElementById('dlZ').innerHTML=dl;}
 
@@ -126,7 +126,7 @@ async function saveTrain(data){if(!U)return;const ref=await db.collection('users
 async function saveWorkout(data){if(!U)return;const ref=await db.collection('users').doc(U.uid).collection('workouts').add(data);data.id=ref.id;W.push(data);}
 async function delWorkout(id){if(!U)return;await db.collection('users').doc(U.uid).collection('workouts').doc(id).delete();W=W.filter(w=>w.id!==id);}
 async function savePlan(data){if(!U)return;const ref=await db.collection('users').doc(U.uid).collection('plans').add(data);data.id=ref.id;plans.push(data);}
-async function saveCrag(data){if(!U)return;const ref=await db.collection('users').doc(U.uid).collection('crags').add(data);data.id=ref.id;userCrags.push(data);updDL();}
+async function saveCrag(data){if(!U)return;const ref=await db.collection('crags').add(data);data.id=ref.id;userCrags.push(data);updDL();}
 
 // CRAGS DB
 const CRAGS=new Map([["Atauri",[42.77,-2.52]],["Etxauri",[42.83,-1.87]],["Riglos",[42.35,-0.72]],["Siurana",[41.25,0.93]],["Margalef",[41.28,0.75]],["Rodellar",[42.27,-0.08]],["Oliana",[42.07,1.31]],["Chulilla",[39.66,-0.89]],["Montanejos",[40.07,-0.53]],["Sella",[38.63,-0.27]],["Santa Linya",[41.98,0.76]],["Terradets",[42.07,0.84]],["El Chorro",[36.92,-4.77]],["Archidona",[37.09,-4.39]],["San Bartolo",[36.08,-5.63]],["Oñati",[42.98,-2.41]],["Araotz",[42.97,-2.41]],["Leitza",[43.09,-1.90]],["Tres Ponts",[42.12,1.15]],["Kalymnos",[36.96,26.98]],["Leonidio",[37.16,22.86]],["Fontainebleau",[48.40,2.63]],["Ceüse",[44.50,5.95]],["Verdon",[43.75,6.40]],["Buoux",[43.82,5.38]],["Finale Ligure",[44.17,8.34]],["Arco",[45.92,10.88]],["Loja",[37.17,-4.15]],["Teverga",[43.15,-6.08]],["Peñón de Ifach",[38.63,0.08]],["Albarracín",[40.41,-1.44]],["Cuenca",[40.06,-2.13]],["La Pedriza",[40.75,-3.87]],["Patones",[40.87,-3.57]],["Geyikbayiri",[37.15,30.48]],["Railay",[8.01,98.84]],["El Potrero Chico",[25.95,-100.47]],["Berdejo",[41.63,-1.93]],["Calcena",[41.63,-1.70]],["Morata de Jalón",[41.48,-1.47]],["Baltzola",[43.14,-2.63]],["Aizkorri",[42.95,-2.35]]]);
@@ -142,22 +142,21 @@ const PG={home:'ph',routes:'pv',map:'pm',train:'pt',friends:'pf',sync:'ps'},PK=O
 function go(id){Object.values(PG).forEach(p=>document.getElementById(p).classList.remove('on'));document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));document.getElementById(PG[id]).classList.add('on');document.querySelectorAll('.nb')[PK.indexOf(id)].classList.add('on');({home:rH,routes:drR,map:drM,train:drTr,friends:drFr,sync:drS})[id]();}
 
 // HOME
-function rH(){const y=new Date().getFullYear(),yr=R.filter(r=>new Date(r.date).getFullYear()===y);
-  // Stats period toggle
-  let sp='';[['year','Año'],['life','Siempre']].forEach(([k,lb])=>{sp+=`<button class="gp${sPer===k?' on':''}" onclick="sPer='${k}';rH()">${lb}</button>`;});
+function rH(){updStats();rCal();updGrToggles();}
+function updStats(){const y=new Date().getFullYear(),yr=R.filter(r=>new Date(r.date).getFullYear()===y);
+  let sp='';[['year','Año'],['life','Siempre']].forEach(([k,lb])=>{sp+=`<button class="gp${sPer===k?' on':''}" onclick="sPer='${k}';updStats()">${lb}</button>`;});
   document.getElementById('sPer').innerHTML=sp;
   const sr=sPer==='year'?yr:R;const st=sPer==='year'?Tr.filter(t=>new Date(t.date).getFullYear()===y):Tr;
   document.getElementById('sV').textContent=sr.length;document.getElementById('sE').textContent=sr.filter(r=>r.enc).length;
   document.getElementById('sT').textContent=st.length;
   document.getElementById('sVl').textContent=sPer==='year'?'Vías / año':'Vías total';
-  document.getElementById('sEl').textContent=sPer==='year'?'Encadenes / año':'Encadenes total';
-  document.getElementById('sTl').textContent=sPer==='year'?'Entrenos / año':'Entrenos total';
-  rCal();rGr();
-  // Grade period toggle
-  let gp='';[['year','Año'],['life','Siempre']].forEach(([k,lb])=>{gp+=`<button class="gp${gPer===k?' on':''}" onclick="gPer='${k}';rGr()">${lb}</button>`;});
+  document.getElementById('sEl').textContent=sPer==='year'?'Enc / año':'Enc total';
+  document.getElementById('sTl').textContent=sPer==='year'?'Entrenos / año':'Entrenos total';}
+function updGrToggles(){
+  let gp='';[['year','Año'],['life','Siempre']].forEach(([k,lb])=>{gp+=`<button class="gp${gPer===k?' on':''}" onclick="gPer='${k}';rGr();updGrToggles()">${lb}</button>`;});
   document.getElementById('gPer').innerHTML=gp;
-  let gs='';[['all','Todas'],['cr','Cuerda Roca'],['br','Bloq Roco'],['cro','Cuerda Roco'],['ar','Auto Roco']].forEach(([k,lb])=>{gs+=`<button class="gs${gM===k?' on':''}" onclick="gM='${k}';document.querySelectorAll('#gS .gs').forEach(b=>b.classList.remove('on'));this.classList.add('on');rGr()">${lb}</button>`;});
-  document.getElementById('gS').innerHTML=gs;}
+  let gs='';[['all','Todas'],['cr','Cuerda Roca'],['br','Bloq Roco'],['cro','Cuerda Roco'],['ar','Auto Roco']].forEach(([k,lb])=>{gs+=`<button class="gs${gM===k?' on':''}" onclick="gM='${k}';rGr();updGrToggles()">${lb}</button>`;});
+  document.getElementById('gS').innerHTML=gs;rGr();}
 function rCal(){const mN=["ENERO","FEBRERO","MARZO","ABRIL","MAYO","JUNIO","JULIO","AGOSTO","SEPTIEMBRE","OCTUBRE","NOVIEMBRE","DICIEMBRE"];
   document.getElementById('cM').textContent=mN[cMo]+' '+cY;const f=new Date(cY,cMo,1);let sd=f.getDay();if(sd===0)sd=7;sd--;const dm=new Date(cY,cMo+1,0).getDate(),td=new Date();
   let h='';['L','M','X','J','V','S','D'].forEach(d=>{h+=`<div class="cdh">${d}</div>`;});
