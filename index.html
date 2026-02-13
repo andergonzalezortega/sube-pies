@@ -70,9 +70,10 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <div id="appWrap" style="display:none">
 <!-- HOME --><div id="ph" class="page on">
 <div class="hdr"><div><h1>SUBE PIES</h1><div class="usr-bar"><img class="usr-pic" id="uPic"><span class="usr-name" id="uName"></span><button class="usr-out" onclick="logout()">Salir</button></div></div><button class="sbb" style="font-size:11px;padding:6px 12px" onclick="go('sync')">📡</button></div>
-<div class="stats"><div class="st a"><div class="v" id="sV">0</div><div class="l">Vías / año</div></div><div class="st b"><div class="v" id="sE">0</div><div class="l">Encadenes</div></div><div class="st c"><div class="v" id="sT">0</div><div class="l">Entrenos</div></div></div>
+<div class="stats"><div class="st a"><div class="v" id="sV">0</div><div class="l" id="sVl">Vías / año</div></div><div class="st b"><div class="v" id="sE">0</div><div class="l" id="sEl">Encadenes</div></div><div class="st c"><div class="v" id="sT">0</div><div class="l" id="sTl">Entrenos</div></div></div>
+<div class="gsw" id="sPer" style="margin-bottom:14px"></div>
 <div class="card"><div class="cn"><button onclick="cNav(-1)">◀</button><span class="mo" id="cM"></span><button onclick="cNav(1)">▶</button></div><div class="cg" id="cG"></div><div id="cD" style="margin-top:10px"></div></div>
-<div class="card"><div class="ct">DISTRIBUCIÓN DE GRADOS (AÑO)</div><div class="gsw" id="gS"></div><div class="gb" id="gB"></div></div>
+<div class="card"><div class="ct">DISTRIBUCIÓN DE GRADOS</div><div class="gsw" id="gPer"></div><div class="gsw" id="gS"></div><div class="gb" id="gB"></div></div>
 </div>
 <!-- VÍAS --><div id="pv" class="page"><div class="hdr"><h1>VÍAS</h1><button class="bp btn" style="width:auto;padding:6px 12px;font-size:11px;border-radius:10px" onclick="addR()">+ Añadir</button></div><div class="chs" id="rF"></div><div class="sb"><label>Ordenar:</label><select id="rS" onchange="drR()"><option value="date">Fecha ↓</option><option value="dateA">Fecha ↑</option><option value="grD">Grado ↓</option><option value="grA">Grado ↑</option><option value="lugar">Lugar</option><option value="amigo">Compañero</option></select></div><div id="rL"></div></div>
 <!-- MAPA --><div id="pm" class="page"><div class="hdr"><h1>MAPA — ROCA</h1></div><div class="map-stats"><div class="st a"><div class="v" id="mTotal">0</div><div class="l">Total vías</div></div><div class="st b"><div class="v" id="mEnc">0</div><div class="l">Encadenadas</div></div><div class="st"><div class="v" style="color:var(--blue)" id="mZonas">0</div><div class="l">Zonas</div></div></div><div class="map-search"><input id="mapQ" placeholder="🔍 Buscar zona..." oninput="filterMap()"><button class="bp btn" style="width:auto;padding:8px 12px;font-size:11px;border-radius:10px" onclick="openNewCrag()">+ Zona</button></div><div id="mapDiv"></div><div id="mapResults" style="display:none"></div><div id="mRt"></div></div>
@@ -83,7 +84,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <!-- MODAL ROUTE --><div class="mbg" id="mR1"><div class="mdl"><button class="mx" onclick="cm('mR1')">✕</button><h2 id="mRT">VÍA</h2><div class="fl"><label>Nombre</label><input id="iN" placeholder="Diedro mágico"></div><div class="fl"><label>Lugar</label><input id="iL" placeholder="Atauri, Galdames..." list="dlZ"><datalist id="dlZ"></datalist></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="fl"><label>Tipo lugar</label><select id="iLT"><option value="roca">Roca</option><option value="roco">Rocódromo</option></select></div><div class="fl"><label>Tipo vía</label><select id="iTP"><option>Cuerda</option><option>Bloque</option><option>AutoAseg</option><option>Largos</option></select></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px"><div class="fl"><label>Grado</label><select id="iG"></select></div><div class="fl"><label>Intento</label><select id="iI"></select></div><div class="fl"><label>Encadenado</label><select id="iE"><option value="1">Sí</option><option value="0">No</option></select></div></div><div class="fl"><label>Sensaciones</label><textarea id="iNo" placeholder="Beta, condiciones..."></textarea></div><div class="fl"><label>Compañeros</label><input id="iA" placeholder="Mikel, Ane, Jon"></div><div class="fl"><label>Fecha</label><input type="date" id="iFe"></div><button class="btn bp" onclick="svR()">Guardar</button><button class="btn bdel" id="btnDelR" style="display:none" onclick="delR()">🗑️ Eliminar vía</button><button class="btn bg2" onclick="cm('mR1')">Cancelar</button></div></div>
 <!-- MODAL WORKOUT --><div class="mbg" id="mW1"><div class="mdl"><button class="mx" onclick="cm('mW1')">✕</button><h2>CREAR ENTRENO</h2><div class="fl"><label>Nombre</label><input id="wNm" placeholder="Fuerza dedos"></div><div class="fl"><label>Fecha programada (opcional)</label><input type="date" id="wDt"></div><div class="ct">PASOS</div><div id="wS"></div><div class="ct" style="margin-top:12px">AÑADIR EJERCICIO</div><div class="eg" id="eG"></div><div id="eP" style="display:none"></div><button class="btn bg2" id="eA" style="display:none;margin-bottom:12px" onclick="addEj()">+ Añadir</button><hr style="border:none;border-top:1px solid var(--bg4);margin:12px 0"><button class="btn bp" onclick="svW()">Guardar</button><button class="btn bg2" onclick="cm('mW1')">Cancelar</button></div></div>
 <!-- MODAL PLAN --><div class="mbg" id="mPl"><div class="mdl"><button class="mx" onclick="cm('mPl')">✕</button><h2>PLANIFICAR DÍA</h2><div class="fl"><label>Fecha</label><input type="date" id="plDt"></div><div class="fl"><label>Lugar</label><input id="plLg" placeholder="Atauri" list="dlZ"></div><div class="fl"><label>Tipo</label><select id="plTp"><option value="roca">Roca</option><option value="roco">Rocódromo</option></select></div><div class="fl"><label>Notas</label><input id="plNo" placeholder="Plan del día..."></div><button class="btn bp" onclick="svPlan()">Guardar</button><button class="btn bg2" onclick="cm('mPl')">Cancelar</button></div></div>
-<!-- MODAL NEW CRAG --><div class="mbg" id="mNC"><div class="mdl"><button class="mx" onclick="cm('mNC')">✕</button><h2>NUEVA ZONA</h2><p style="font-size:12px;color:var(--text2);margin-bottom:12px">Para zonas que no estén en la base de datos. Copia las coordenadas desde Google Maps (click derecho → copiar coordenadas).</p><div class="fl"><label>Nombre</label><input id="ncNm" placeholder="Galdames"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="fl"><label>Latitud</label><input id="ncLat" type="number" step="any" placeholder="43.27085"></div><div class="fl"><label>Longitud</label><input id="ncLng" type="number" step="any" placeholder="-3.10228"></div></div><button class="btn bp" onclick="svNewCrag()">Guardar zona</button><button class="btn bg2" onclick="cm('mNC')">Cancelar</button></div></div>
+<!-- MODAL NEW CRAG --><div class="mbg" id="mNC"><div class="mdl"><button class="mx" onclick="cm('mNC')">✕</button><h2>NUEVA ZONA</h2><p style="font-size:12px;color:var(--text2);margin-bottom:12px">En Google Maps, busca el sitio → pulsa largo en el mapa → copia las coordenadas que aparecen abajo.</p><div class="fl"><label>Nombre de la zona</label><input id="ncNm" placeholder="Galdames"></div><div class="fl"><label>Coordenadas (pega desde Google Maps)</label><input id="ncCoords" placeholder="43.270854, -3.102539"><small>Formato: latitud, longitud</small></div><button class="btn bp" onclick="svNewCrag()">Guardar zona</button><button class="btn bg2" onclick="cm('mNC')">Cancelar</button></div></div>
 <!-- NAV --><nav class="nav">
 <button class="nb on" onclick="go('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h3m10-11v10a1 1 0 01-1 1h-3m-4 0v-6"/></svg>Inicio</button>
 <button class="nb" onclick="go('routes')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>Vías</button>
@@ -135,15 +136,26 @@ function getCragCoords(name){if(!name)return null;const nl=name.toLowerCase();
 
 const G=["V","6a","6a+","6b","6b+","6c","6c+","7a","7a+","7b","7b+","7c","7c+","8a","8a+","8b","8b+","8c","8c+","9a","9a+","9b","9b+","9c"];
 const CT=["1234321","1-3-5","112233","1-max"],AN=["90gr","120gr","Lock-off"],AG=["Regleta","Cazo","Pinza","Romo"];
-let cY=2026,cMo=1,cSl=null,gM='cr',rFl='all',tTb='hist',eRt=null,cE=null,wSt=[],leafMap=null,markers=[];
+let cY=2026,cMo=1,cSl=null,gM='cr',gPer='year',sPer='year',rFl='all',tTb='hist',eRt=null,cE=null,wSt=[],leafMap=null,markers=[];
 const PG={home:'ph',routes:'pv',map:'pm',train:'pt',friends:'pf',sync:'ps'},PK=Object.keys(PG);
 function go(id){Object.values(PG).forEach(p=>document.getElementById(p).classList.remove('on'));document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));document.getElementById(PG[id]).classList.add('on');document.querySelectorAll('.nb')[PK.indexOf(id)].classList.add('on');({home:rH,routes:drR,map:drM,train:drTr,friends:drFr,sync:drS})[id]();}
 
 // HOME
 function rH(){const y=new Date().getFullYear(),yr=R.filter(r=>new Date(r.date).getFullYear()===y);
-  document.getElementById('sV').textContent=yr.length;document.getElementById('sE').textContent=yr.filter(r=>r.enc).length;
-  document.getElementById('sT').textContent=Tr.filter(t=>new Date(t.date).getFullYear()===y).length;rCal();rGr();
-  let gs='';[['cr','Cuerda Roca'],['br','Bloq Roco'],['cro','Cuerda Roco'],['ar','Auto Roco']].forEach(([k,lb])=>{gs+=`<button class="gs${gM===k?' on':''}" onclick="gM='${k}';document.querySelectorAll('.gs').forEach(b=>b.classList.remove('on'));this.classList.add('on');rGr()">${lb}</button>`;});
+  // Stats period toggle
+  let sp='';[['year','Año'],['life','Siempre']].forEach(([k,lb])=>{sp+=`<button class="gs${sPer===k?' on':''}" onclick="sPer='${k}';rH()">${lb}</button>`;});
+  document.getElementById('sPer').innerHTML=sp;
+  const sr=sPer==='year'?yr:R;const st=sPer==='year'?Tr.filter(t=>new Date(t.date).getFullYear()===y):Tr;
+  document.getElementById('sV').textContent=sr.length;document.getElementById('sE').textContent=sr.filter(r=>r.enc).length;
+  document.getElementById('sT').textContent=st.length;
+  document.getElementById('sVl').textContent=sPer==='year'?'Vías / año':'Vías total';
+  document.getElementById('sEl').textContent=sPer==='year'?'Encadenes / año':'Encadenes total';
+  document.getElementById('sTl').textContent=sPer==='year'?'Entrenos / año':'Entrenos total';
+  rCal();rGr();
+  // Grade period toggle
+  let gp='';[['year','Año'],['life','Siempre']].forEach(([k,lb])=>{gp+=`<button class="gs${gPer===k?' on':''}" onclick="gPer='${k}';rGr()">${lb}</button>`;});
+  document.getElementById('gPer').innerHTML=gp;
+  let gs='';[['all','Todas'],['cr','Cuerda Roca'],['br','Bloq Roco'],['cro','Cuerda Roco'],['ar','Auto Roco']].forEach(([k,lb])=>{gs+=`<button class="gs${gM===k?' on':''}" onclick="gM='${k}';document.querySelectorAll('#gS .gs').forEach(b=>b.classList.remove('on'));this.classList.add('on');rGr()">${lb}</button>`;});
   document.getElementById('gS').innerHTML=gs;}
 function rCal(){const mN=["ENERO","FEBRERO","MARZO","ABRIL","MAYO","JUNIO","JULIO","AGOSTO","SEPTIEMBRE","OCTUBRE","NOVIEMBRE","DICIEMBRE"];
   document.getElementById('cM').textContent=mN[cMo]+' '+cY;const f=new Date(cY,cMo,1);let sd=f.getDay();if(sd===0)sd=7;sd--;const dm=new Date(cY,cMo+1,0).getDate(),td=new Date();
@@ -168,11 +180,19 @@ function rCal(){const mN=["ENERO","FEBRERO","MARZO","ABRIL","MAYO","JUNIO","JULI
     det+=`<button style="margin-top:6px;background:var(--bg3);border:1px solid var(--blue);border-radius:8px;color:var(--blue);padding:5px 12px;font-size:11px;cursor:pointer;font-family:Nunito" onclick="openPlan('${cSl}')">+ Planificar</button>`;}
   document.getElementById('cD').innerHTML=det;}
 function cNav(d){cMo+=d;if(cMo>11){cMo=0;cY++;}if(cMo<0){cMo=11;cY--;}rCal();}
-function rGr(){const y=new Date().getFullYear(),yr=R.filter(r=>new Date(r.date).getFullYear()===y);
-  let f;if(gM==='cr')f=yr.filter(r=>r.lugar==='roca'&&r.tipo==='Cuerda');else if(gM==='br')f=yr.filter(r=>r.lugar==='roco'&&r.tipo==='Bloque');else if(gM==='cro')f=yr.filter(r=>r.lugar==='roco'&&r.tipo==='Cuerda');else f=yr.filter(r=>r.lugar==='roco'&&r.tipo==='AutoAseg');
+function rGr(){const y=new Date().getFullYear();
+  const base=gPer==='year'?R.filter(r=>new Date(r.date).getFullYear()===y):R;
+  let f;
+  if(gM==='all')f=base;
+  else if(gM==='cr')f=base.filter(r=>r.lugar==='roca'&&r.tipo==='Cuerda');
+  else if(gM==='br')f=base.filter(r=>r.lugar==='roco'&&r.tipo==='Bloque');
+  else if(gM==='cro')f=base.filter(r=>r.lugar==='roco'&&r.tipo==='Cuerda');
+  else f=base.filter(r=>r.lugar==='roco'&&r.tipo==='AutoAseg');
   const c={};f.forEach(r=>{c[r.grado]=(c[r.grado]||0)+1;});const s=Object.entries(c).sort((a,b)=>G.indexOf(b[0])-G.indexOf(a[0]));
-  const mx=Math.max(...s.map(x=>x[1]),1),cc=(gM==='br'||gM==='cro'||gM==='ar')?'ro':'rc';
-  let h='';s.slice(0,8).forEach(([g,n])=>{h+=`<div class="gr"><div class="grn">${g}</div><div class="grb"><div class="grf ${cc}" style="width:${(n/mx)*100}%">${n}</div></div></div>`;});
+  const mx=Math.max(...s.map(x=>x[1]),1);
+  const cc=(gM==='br'||gM==='cro'||gM==='ar')?'ro':(gM==='all'?'rc':'rc');
+  let h=`<div style="font-size:11px;color:var(--text2);margin-bottom:6px">${f.length} vías${gPer==='year'?' este año':' en total'}</div>`;
+  s.slice(0,10).forEach(([g,n])=>{h+=`<div class="gr"><div class="grn">${g}</div><div class="grb"><div class="grf ${cc}" style="width:${(n/mx)*100}%">${n}</div></div></div>`;});
   document.getElementById('gB').innerHTML=h||'<div style="color:var(--text3);font-size:12px;padding:10px">Sin datos</div>';}
 function openPlan(dt){document.getElementById('plDt').value=dt;document.getElementById('plLg').value='';document.getElementById('plNo').value='';document.getElementById('mPl').classList.add('sh');}
 async function svPlan(){await savePlan({date:document.getElementById('plDt').value,lugar:document.getElementById('plLg').value,tipo:document.getElementById('plTp').value,notas:document.getElementById('plNo').value});cm('mPl');rCal();}
@@ -190,7 +210,7 @@ function addR(){eRt=null;document.getElementById('mRT').textContent='NUEVA VÍA'
 function edR(id){const r=R.find(x=>x.id===id);if(!r)return;eRt=id;document.getElementById('mRT').textContent='EDITAR VÍA';pSel();document.getElementById('iN').value=r.nombre||'';document.getElementById('iL').value=r.sitio||'';document.getElementById('iLT').value=r.lugar;document.getElementById('iTP').value=r.tipo;document.getElementById('iG').value=r.grado;document.getElementById('iI').value=r.intento||1;document.getElementById('iE').value=r.enc?'1':'0';document.getElementById('iNo').value=r.notas||'';document.getElementById('iA').value=r.amigos||'';document.getElementById('iFe').value=r.date;document.getElementById('btnDelR').style.display='block';document.getElementById('mR1').classList.add('sh');}
 async function svR(){const d={date:document.getElementById('iFe').value,lugar:document.getElementById('iLT').value,tipo:document.getElementById('iTP').value,grado:document.getElementById('iG').value,intento:parseInt(document.getElementById('iI').value),enc:document.getElementById('iE').value==='1',nombre:document.getElementById('iN').value,sitio:document.getElementById('iL').value,notas:document.getElementById('iNo').value,amigos:document.getElementById('iA').value};if(eRt)d.id=eRt;await saveRoute(d);cm('mR1');drR();}
 async function delR(){if(!eRt||!confirm('¿Eliminar esta vía?'))return;await deleteRoute(eRt);cm('mR1');drR();}
-function cm(id){document.getElementById(id).classList.remove('sh');}
+function cm(id){document.getElementById(id).classList.remove('sh');if(id==='mNC')document.getElementById('mapDiv').style.display='block';}
 
 // MAP
 function drM(){const rr=R.filter(r=>r.lugar==='roca');document.getElementById('mTotal').textContent=rr.length;document.getElementById('mEnc').textContent=rr.filter(r=>r.enc).length;
@@ -212,10 +232,14 @@ function filterMap(){const q=document.getElementById('mapQ').value.trim().toLowe
   else if(match.length>1){let h='';match.forEach(l=>{h+=`<div class="fr-card" style="cursor:pointer" onclick="leafMap.setView([${l.lat},${l.lng}],10);showZone(mapLocs['${l.name}'])"><div class="fr-info"><div class="fr-name" style="color:var(--rock)">${l.name}</div><div class="fr-email">${l.rs.length} vías</div></div></div>`;});
     document.getElementById('mapResults').innerHTML=h;document.getElementById('mapResults').style.display='block';window.mapLocs={};match.forEach(l=>{window.mapLocs[l.name]=l;});}
   else{document.getElementById('mapResults').innerHTML='<div style="color:var(--text3);font-size:11px;padding:8px">No encontrado</div>';document.getElementById('mapResults').style.display='block';}}
-function openNewCrag(){document.getElementById('ncNm').value='';document.getElementById('ncLat').value='';document.getElementById('ncLng').value='';document.getElementById('mNC').classList.add('sh');}
-async function svNewCrag(){const nm=document.getElementById('ncNm').value.trim(),lat=parseFloat(document.getElementById('ncLat').value),lng=parseFloat(document.getElementById('ncLng').value);
-  if(!nm||isNaN(lat)||isNaN(lng)){alert('Rellena nombre y coordenadas');return;}
-  await saveCrag({name:nm,lat,lng});cm('mNC');alert(nm+' añadida ✓');drM();}
+function openNewCrag(){document.getElementById('ncNm').value='';document.getElementById('ncCoords').value='';document.getElementById('mapDiv').style.display='none';document.getElementById('mNC').classList.add('sh');}
+async function svNewCrag(){const nm=document.getElementById('ncNm').value.trim(),raw=document.getElementById('ncCoords').value.trim();
+  if(!nm||!raw){alert('Rellena nombre y coordenadas');return;}
+  const parts=raw.split(/[,\s]+/).filter(x=>x.length>0);
+  if(parts.length<2){alert('Pega las coordenadas de Google Maps. Ej: 43.270854, -3.102539');return;}
+  const lat=parseFloat(parts[0]),lng=parseFloat(parts[1]);
+  if(isNaN(lat)||isNaN(lng)||lat<-90||lat>90||lng<-180||lng>180){alert('Coordenadas no válidas');return;}
+  await saveCrag({name:nm,lat,lng});cm('mNC');document.getElementById('mapDiv').style.display='block';drM();}
 
 // TRAINS
 function drTr(){let tb='';[['hist','Historial'],['plan','Programados']].forEach(([k,lb])=>{tb+=`<button class="tb${tTb===k?' on':''}" onclick="tTb='${k}';drTr()">${lb}</button>`;});document.getElementById('tT').innerHTML=tb;
