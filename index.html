@@ -6,6 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#1b2838">
 <title>Sube Pies</title>
+<link rel="manifest" href="data:application/json,{}">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -25,51 +26,47 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 .stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;}.st{background:var(--bg2);border-radius:12px;padding:10px 8px;text-align:center;border:1px solid rgba(255,255,255,.04);}.st .v{font-family:'Bebas Neue';font-size:28px;line-height:1;}.st .l{font-size:9px;color:var(--text2);margin-top:2px;}.st.a .v{color:var(--rock);}.st.b .v{color:var(--green);}.st.c .v{color:var(--yellow);}
 .cn{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}.cn button{background:none;border:none;color:var(--text2);font-size:20px;cursor:pointer;padding:4px 10px;}.cn .mo{font-family:'Bebas Neue';font-size:18px;color:var(--text);}
 .cg{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}.cdh{text-align:center;font-size:10px;color:var(--text3);padding:4px 0;}
-.cd{text-align:center;padding:6px 2px;border-radius:8px;font-size:12px;cursor:pointer;transition:.2s;color:var(--text3);font-weight:400;}
+.cd{text-align:center;padding:6px 2px;border-radius:8px;font-size:12px;cursor:pointer;color:var(--text3);font-weight:400;}
 .cd:hover{background:var(--bg3);}.cd.tod{outline:2px solid var(--text2);outline-offset:-2px;}
 .cd.hr{color:var(--rock);font-weight:700;}.cd.hc{color:var(--green);font-weight:700;}
 .cd.hb{background:linear-gradient(135deg,var(--rock),var(--green));color:#000;font-weight:700;}
 .cd.ht{text-decoration:underline;text-decoration-color:var(--yellow);text-underline-offset:3px;}
-.cd.plan{border:1.5px dashed var(--blue);color:var(--blue);}
+.cd.plan{border:1.5px dashed var(--blue);color:var(--blue);}.cd.hw{border:1.5px dashed var(--purple);}
 .cd.sel{background:var(--rock)!important;color:#000!important;font-weight:700;}.cd.emp{cursor:default;}
 .gsw{display:flex;gap:0;margin-bottom:10px;background:var(--bg3);border-radius:8px;padding:2px;flex-wrap:wrap;}
-.gs{flex:1;padding:5px 2px;text-align:center;border-radius:6px;font-size:10px;cursor:pointer;color:var(--text2);border:none;background:none;font-family:'Nunito';transition:.2s;min-width:0;}.gs.on{background:var(--rock);color:#000;font-weight:700;}
-.gb{display:flex;flex-direction:column;gap:5px;}.gr{display:flex;align-items:center;gap:6px;}.grn{font-family:'Bebas Neue';font-size:14px;width:32px;text-align:right;color:var(--text2);}.grb{flex:1;height:18px;background:var(--bg3);border-radius:9px;overflow:hidden;}.grf{height:100%;border-radius:9px;display:flex;align-items:center;padding-left:6px;font-size:10px;font-weight:700;min-width:20px;transition:width .8s ease;}.grf.rc{background:linear-gradient(90deg,var(--rockD),var(--rock));}.grf.ro{background:linear-gradient(90deg,var(--greenD),var(--green));color:#000;}
-.via{background:var(--bg2);border-radius:var(--R);padding:12px;margin-bottom:8px;border-left:3px solid var(--rock);border:1px solid rgba(255,255,255,.04);cursor:pointer;transition:.2s;}.via:active{transform:scale(.98);}.via.enc{border-left-color:var(--green);}.vt{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}.vg{font-family:'Bebas Neue';font-size:22px;color:var(--rock);}.via.enc .vg{color:var(--green);}.vd{font-size:11px;color:var(--text3);}.vn{font-size:13px;font-weight:600;margin-bottom:3px;}.vl{font-size:11px;color:var(--text2);margin-bottom:5px;}.vts{display:flex;flex-wrap:wrap;gap:3px;}.tg{display:inline-block;padding:2px 7px;border-radius:6px;font-size:9px;background:var(--bg3);color:var(--text2);}.tg.e{background:rgba(78,205,196,.15);color:var(--green);}.tg.r{background:rgba(212,165,116,.15);color:var(--rock);}.tg.t{background:rgba(74,158,255,.15);color:var(--blue);}
+.gs{flex:1;padding:5px 2px;text-align:center;border-radius:6px;font-size:10px;cursor:pointer;color:var(--text2);border:none;background:none;font-family:'Nunito';min-width:0;}.gs.on{background:var(--rock);color:#000;font-weight:700;}
+.gb{display:flex;flex-direction:column;gap:5px;}.gr{display:flex;align-items:center;gap:6px;}.grn{font-family:'Bebas Neue';font-size:14px;width:32px;text-align:right;color:var(--text2);}.grb{flex:1;height:18px;background:var(--bg3);border-radius:9px;overflow:hidden;}.grf{height:100%;border-radius:9px;display:flex;align-items:center;padding-left:6px;font-size:10px;font-weight:700;min-width:20px;}.grf.rc{background:linear-gradient(90deg,var(--rockD),var(--rock));}.grf.ro{background:linear-gradient(90deg,var(--greenD),var(--green));color:#000;}
+.via{background:var(--bg2);border-radius:var(--R);padding:12px;margin-bottom:8px;border:1px solid rgba(255,255,255,.04);cursor:pointer;}.via:active{transform:scale(.98);}.via.enc .vg{color:var(--green);}.vt{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}.vg{font-family:'Bebas Neue';font-size:22px;color:var(--rock);}.vd{font-size:11px;color:var(--text3);}.vn{font-size:13px;font-weight:600;margin-bottom:3px;}.vl{font-size:11px;color:var(--text2);margin-bottom:5px;}.vts{display:flex;flex-wrap:wrap;gap:3px;}.tg{display:inline-block;padding:2px 7px;border-radius:6px;font-size:9px;background:var(--bg3);color:var(--text2);}.tg.e{background:rgba(78,205,196,.15);color:var(--green);}.tg.r{background:rgba(212,165,116,.15);color:var(--rock);}.tg.t{background:rgba(74,158,255,.15);color:var(--blue);}
 .trn{background:var(--bg2);border-radius:var(--R);padding:12px;margin-bottom:8px;border-left:3px solid var(--yellow);border:1px solid rgba(255,255,255,.04);}.tt2{font-family:'Bebas Neue';font-size:18px;color:var(--yellow);}.td{font-size:12px;color:var(--text2);margin-top:4px;}
 #mapDiv{height:350px;border-radius:var(--R);overflow:hidden;margin-bottom:12px;border:1px solid rgba(255,255,255,.04);}
 .map-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px;}
+.map-search{display:flex;gap:6px;margin-bottom:12px;}.map-search input{flex:1;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px 12px;color:var(--text);font-size:13px;font-family:'Nunito';outline:none;}.map-search input:focus{border-color:var(--rock);}
 .mbg{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);z-index:200;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px);}.mbg.sh{display:flex;}.mdl{background:var(--bg2);border-radius:20px 20px 0 0;width:100%;max-width:500px;max-height:85vh;overflow-y:auto;padding:20px;animation:su .3s ease;}@keyframes su{from{transform:translateY(100%)}to{transform:none}}.mdl h2{font-size:22px;color:var(--rock);margin-bottom:16px;}.mx{float:right;background:none;border:none;color:var(--text2);font-size:24px;cursor:pointer;}
 .fl{margin-bottom:12px;}.fl label{display:block;font-size:11px;color:var(--text2);margin-bottom:3px;font-weight:600;}.fl input,.fl textarea,.fl select{width:100%;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:9px 11px;color:var(--text);font-size:13px;font-family:'Nunito';outline:none;}.fl input:focus,.fl textarea:focus,.fl select:focus{border-color:var(--rock);}.fl textarea{resize:vertical;min-height:50px;}
-.btn{width:100%;padding:11px;border:none;border-radius:12px;font-size:14px;font-family:'Nunito';font-weight:700;cursor:pointer;transition:.2s;}.bp{background:var(--rock);color:#000;}.bp:active{transform:scale(.97);}.bg2{background:none;border:1px solid var(--text3);color:var(--text2);margin-top:8px;}
+.fl small{font-size:10px;color:var(--text3);margin-top:2px;display:block;}
+.btn{width:100%;padding:11px;border:none;border-radius:12px;font-size:14px;font-family:'Nunito';font-weight:700;cursor:pointer;}.bp{background:var(--rock);color:#000;}.bp:active{transform:scale(.97);}.bg2{background:none;border:1px solid var(--text3);color:var(--text2);margin-top:8px;}.bdel{background:var(--red);color:#fff;margin-top:8px;}
 .chs{display:flex;gap:5px;margin-bottom:12px;overflow-x:auto;padding-bottom:4px;}.ch{white-space:nowrap;padding:4px 10px;border-radius:14px;font-size:10px;cursor:pointer;border:1px solid rgba(255,255,255,.08);background:var(--bg2);color:var(--text2);font-family:'Nunito';}.ch.on{background:var(--rock);color:#000;border-color:var(--rock);}
-.tbs{display:flex;gap:0;margin-bottom:12px;background:var(--bg3);border-radius:10px;padding:2px;}.tb{flex:1;padding:6px;text-align:center;border-radius:8px;font-size:11px;cursor:pointer;color:var(--text2);border:none;background:none;font-family:'Nunito';transition:.2s;}.tb.on{background:var(--rock);color:#000;font-weight:700;}
+.tbs{display:flex;gap:0;margin-bottom:12px;background:var(--bg3);border-radius:10px;padding:2px;}.tb{flex:1;padding:6px;text-align:center;border-radius:8px;font-size:11px;cursor:pointer;color:var(--text2);border:none;background:none;font-family:'Nunito';}.tb.on{background:var(--rock);color:#000;font-weight:700;}
 .sb{display:flex;align-items:center;gap:6px;margin-bottom:10px;}.sb label{font-size:10px;color:var(--text3);}.sb select{background:var(--bg3);border:1px solid rgba(255,255,255,.08);color:var(--text);font-size:11px;padding:4px 7px;border-radius:8px;font-family:'Nunito';outline:none;}
-.eg{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;}.eb{padding:8px;text-align:center;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;cursor:pointer;font-size:11px;color:var(--text2);font-family:'Nunito';transition:.2s;}.eb.on{border-color:var(--rock);color:var(--rock);background:rgba(212,165,116,.1);}.eb .ic{font-size:18px;margin-bottom:3px;}
+.eg{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;}.eb{padding:8px;text-align:center;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;cursor:pointer;font-size:11px;color:var(--text2);font-family:'Nunito';}.eb.on{border-color:var(--rock);color:var(--rock);background:rgba(212,165,116,.1);}.eb .ic{font-size:18px;margin-bottom:3px;}
 .ep{display:grid;grid-template-columns:1fr 1fr;gap:6px;}.ep .fl{margin-bottom:6px;}.ep input,.ep select{padding:7px 9px;font-size:12px;}
 .ws{background:var(--bg3);border-radius:10px;padding:8px 10px;margin-bottom:5px;display:flex;align-items:center;gap:6px;}.ws .wn{font-family:'Bebas Neue';font-size:16px;color:var(--rock);min-width:18px;}.ws .wd{flex:1;font-size:11px;}.ws .wr{background:none;border:none;color:var(--red);font-size:14px;cursor:pointer;}
-.wi{background:var(--bg2);border-radius:var(--R);padding:12px;margin-bottom:8px;border:1px solid rgba(255,255,255,.04);position:relative;}.wit{font-family:'Bebas Neue';font-size:16px;color:var(--purple);}.wis{font-size:11px;color:var(--text2);margin-top:5px;}.wiss{padding:2px 0;border-bottom:1px solid rgba(255,255,255,.03);}.wib{margin-top:8px;padding:7px 12px;background:var(--bg3);border:1px solid var(--purple);border-radius:8px;color:var(--purple);font-size:11px;cursor:pointer;font-family:'Nunito';margin-right:6px;display:inline-block;}
+.wi{background:var(--bg2);border-radius:var(--R);padding:12px;margin-bottom:8px;border:1px solid rgba(255,255,255,.04);position:relative;}.wit{font-family:'Bebas Neue';font-size:16px;color:var(--purple);}.wis{font-size:11px;color:var(--text2);margin-top:5px;}.wiss{padding:2px 0;border-bottom:1px solid rgba(255,255,255,.03);}.wib{margin-top:8px;padding:7px 12px;background:var(--bg3);border:1px solid var(--purple);border-radius:8px;color:var(--purple);font-size:11px;cursor:pointer;font-family:'Nunito';display:inline-block;margin-right:4px;}
 .wi-del{position:absolute;top:10px;right:10px;background:none;border:none;color:var(--red);font-size:16px;cursor:pointer;}
 .wi-date{font-size:10px;color:var(--blue);margin-top:4px;}
-.sbb{background:var(--rock);color:#000;border:none;padding:12px 28px;border-radius:25px;font-size:14px;cursor:pointer;font-family:'Nunito';font-weight:700;transition:.2s;}.sbb:active{transform:scale(.95);}.sbb.ok{background:var(--green);}
+.sbb{background:var(--rock);color:#000;border:none;padding:12px 28px;border-radius:25px;font-size:14px;cursor:pointer;font-family:'Nunito';font-weight:700;}.sbb:active{transform:scale(.95);}.sbb.ok{background:var(--green);}
 #loginPage{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:20px;text-align:center;}
 .login-logo{font-family:'Bebas Neue';font-size:48px;color:var(--rock);margin-bottom:4px;}
-.goog-btn{display:flex;align-items:center;gap:12px;background:#fff;color:#333;border:none;padding:14px 28px;border-radius:25px;font-size:15px;font-family:'Nunito';font-weight:700;cursor:pointer;}.goog-btn:active{transform:scale(.95);}
-.goog-btn img{width:20px;height:20px;}
+.goog-btn{display:flex;align-items:center;gap:12px;background:#fff;color:#333;border:none;padding:14px 28px;border-radius:25px;font-size:15px;font-family:'Nunito';font-weight:700;cursor:pointer;}.goog-btn:active{transform:scale(.95);}.goog-btn img{width:20px;height:20px;}
 .usr-bar{display:flex;align-items:center;gap:6px;padding:4px 0;}.usr-pic{width:24px;height:24px;border-radius:50%;border:2px solid var(--rock);}.usr-name{font-size:11px;color:var(--text2);}.usr-out{background:none;border:none;color:var(--text3);font-size:9px;cursor:pointer;text-decoration:underline;}
-.fr-card{display:flex;align-items:center;gap:8px;background:var(--bg3);border-radius:10px;padding:8px;margin-bottom:5px;cursor:pointer;}.fr-card:active{transform:scale(.98);}.fr-pic{width:32px;height:32px;border-radius:50%;border:2px solid var(--rock);}.fr-info{flex:1;}.fr-name{font-size:13px;font-weight:600;}.fr-email{font-size:9px;color:var(--text3);}.fr-rm{background:none;border:none;color:var(--red);font-size:14px;cursor:pointer;}
+.fr-card{display:flex;align-items:center;gap:8px;background:var(--bg3);border-radius:10px;padding:8px;margin-bottom:5px;cursor:pointer;}.fr-pic{width:32px;height:32px;border-radius:50%;border:2px solid var(--rock);}.fr-info{flex:1;}.fr-name{font-size:13px;font-weight:600;}.fr-email{font-size:9px;color:var(--text3);}.fr-rm{background:none;border:none;color:var(--red);font-size:14px;cursor:pointer;}
 .spinner{display:inline-block;width:20px;height:20px;border:2px solid var(--text3);border-top-color:var(--rock);border-radius:50%;animation:spin .6s linear infinite;}@keyframes spin{to{transform:rotate(360deg)}}.load-full{display:flex;align-items:center;justify-content:center;min-height:100vh;}
 .leaflet-popup-content-wrapper{background:var(--bg2)!important;color:var(--text)!important;border-radius:12px!important;border:1px solid var(--rock)!important;}.leaflet-popup-tip{background:var(--bg2)!important;}.leaflet-popup-content{font-family:'Nunito'!important;font-size:12px!important;}
 </style>
 </head>
 <body>
 <div id="loadPage" class="load-full"><div class="spinner" style="width:40px;height:40px;border-width:3px"></div></div>
-<div id="loginPage" style="display:none">
-<div style="font-size:60px;margin-bottom:10px">⛰️</div>
-<div class="login-logo">SUBE PIES</div>
-<div style="color:var(--text2);font-size:14px;margin-bottom:30px">Diario de escalada</div>
-<button class="goog-btn" onclick="loginGoogle()"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="G">Entrar con Google</button>
-</div>
+<div id="loginPage" style="display:none"><div style="font-size:60px;margin-bottom:10px">⛰️</div><div class="login-logo">SUBE PIES</div><div style="color:var(--text2);font-size:14px;margin-bottom:30px">Diario de escalada</div><button class="goog-btn" onclick="loginGoogle()"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg">Entrar con Google</button></div>
 <div id="appWrap" style="display:none">
 <!-- HOME --><div id="ph" class="page on">
 <div class="hdr"><div><h1>SUBE PIES</h1><div class="usr-bar"><img class="usr-pic" id="uPic"><span class="usr-name" id="uName"></span><button class="usr-out" onclick="logout()">Salir</button></div></div><button class="sbb" style="font-size:11px;padding:6px 12px" onclick="go('sync')">📡</button></div>
@@ -78,14 +75,15 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <div class="card"><div class="ct">DISTRIBUCIÓN DE GRADOS (AÑO)</div><div class="gsw" id="gS"></div><div class="gb" id="gB"></div></div>
 </div>
 <!-- VÍAS --><div id="pv" class="page"><div class="hdr"><h1>VÍAS</h1><button class="bp btn" style="width:auto;padding:6px 12px;font-size:11px;border-radius:10px" onclick="addR()">+ Añadir</button></div><div class="chs" id="rF"></div><div class="sb"><label>Ordenar:</label><select id="rS" onchange="drR()"><option value="date">Fecha ↓</option><option value="dateA">Fecha ↑</option><option value="grD">Grado ↓</option><option value="grA">Grado ↑</option><option value="lugar">Lugar</option><option value="amigo">Compañero</option></select></div><div id="rL"></div></div>
-<!-- MAPA --><div id="pm" class="page"><div class="hdr"><h1>MAPA — ROCA</h1></div><div class="map-stats"><div class="st a"><div class="v" id="mTotal">0</div><div class="l">Total vías</div></div><div class="st b"><div class="v" id="mEnc">0</div><div class="l">Encadenadas</div></div><div class="st" style="border:1px solid rgba(255,255,255,.04)"><div class="v" style="color:var(--blue)" id="mZonas">0</div><div class="l">Zonas</div></div></div><div id="mapDiv"></div><div id="mRt"></div></div>
+<!-- MAPA --><div id="pm" class="page"><div class="hdr"><h1>MAPA — ROCA</h1></div><div class="map-stats"><div class="st a"><div class="v" id="mTotal">0</div><div class="l">Total vías</div></div><div class="st b"><div class="v" id="mEnc">0</div><div class="l">Encadenadas</div></div><div class="st"><div class="v" style="color:var(--blue)" id="mZonas">0</div><div class="l">Zonas</div></div></div><div class="map-search"><input id="mapQ" placeholder="🔍 Buscar zona..." oninput="filterMap()"><button class="bp btn" style="width:auto;padding:8px 12px;font-size:11px;border-radius:10px" onclick="openNewCrag()">+ Zona</button></div><div id="mapDiv"></div><div id="mapResults" style="display:none"></div><div id="mRt"></div></div>
 <!-- ENTRENOS --><div id="pt" class="page"><div class="hdr"><h1>ENTRENOS</h1></div><div class="tbs" id="tT"></div><div id="tH"></div><div id="tP" style="display:none"><button class="btn bp" onclick="openWo()" style="margin-bottom:12px">+ Crear entreno</button><div id="wL"></div></div></div>
 <!-- AMIGOS --><div id="pf" class="page"><div class="hdr"><h1>AMIGOS</h1></div><div class="card"><div class="ct">AÑADIR AMIGO</div><div style="display:flex;gap:6px"><input id="frEmail" placeholder="Email del amigo" style="flex:1;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px;color:var(--text);font-size:12px;font-family:Nunito;outline:none"><button class="bp btn" style="width:auto;padding:8px 14px;font-size:12px;border-radius:10px" onclick="addFriend()">+</button></div><div id="frMsg" style="font-size:10px;margin-top:4px"></div></div><div class="ct" style="margin-top:12px">MIS AMIGOS</div><div id="frList"></div><div id="frView" style="display:none;margin-top:12px"><div class="ct" id="frViewTitle"></div><div id="frRoutes"></div></div></div>
-<!-- SYNC --><div id="ps" class="page"><div class="hdr"><h1>SYNC</h1></div><div class="card" style="text-align:center;padding:20px"><div style="font-size:48px;margin-bottom:8px">⛰️</div><div style="font-size:13px;color:var(--text2);margin-bottom:12px" id="bT">Conecta tu ESP32</div><button class="sbb" id="bB" onclick="doBT()">Conectar ESP32</button></div><div class="card"><div class="ct">EXPORTAR DATOS</div><button class="btn bg2" onclick="exportData()" style="margin:0">📥 Descargar JSON</button></div><div class="card"><div class="ct">DATOS</div><p style="font-size:12px;color:var(--text2)"><span style="font-family:'Bebas Neue';font-size:22px;color:var(--green)" id="sN">0</span> registros en la nube</p></div></div>
+<!-- SYNC --><div id="ps" class="page"><div class="hdr"><h1>SYNC</h1></div><div class="card" style="text-align:center;padding:20px"><div style="font-size:48px;margin-bottom:8px">⛰️</div><div style="font-size:13px;color:var(--text2);margin-bottom:12px" id="bT">Conecta tu ESP32</div><button class="sbb" id="bB" onclick="doBT()">Conectar ESP32</button></div><div class="card"><div class="ct">TUS DATOS EN LA NUBE</div><p style="font-size:12px;color:var(--text2)"><span style="font-family:'Bebas Neue';font-size:22px;color:var(--green)" id="sN">0</span> registros guardados en Firebase</p><p style="font-size:10px;color:var(--text3);margin-top:4px">Tus datos están seguros. Si borras Chrome o cambias de móvil, inicia sesión y ahí estarán.</p></div><div class="card"><div class="ct">EXPORTAR</div><button class="btn bg2" onclick="exportData()" style="margin:0">📥 Descargar JSON</button></div></div>
 </div>
-<!-- MODAL ROUTE --><div class="mbg" id="mR1"><div class="mdl"><button class="mx" onclick="cm('mR1')">✕</button><h2 id="mRT">VÍA</h2><div class="fl"><label>Nombre</label><input id="iN" placeholder="Diedro mágico"></div><div class="fl"><label>Lugar</label><input id="iL" placeholder="Atauri" list="dlZonas"><datalist id="dlZonas"></datalist></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="fl"><label>Tipo lugar</label><select id="iLT"><option value="roca">Roca</option><option value="roco">Rocódromo</option></select></div><div class="fl"><label>Tipo vía</label><select id="iTP"><option>Cuerda</option><option>Bloque</option><option>AutoAseg</option><option>Largos</option></select></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px"><div class="fl"><label>Grado</label><select id="iG"></select></div><div class="fl"><label>Intento</label><select id="iI"></select></div><div class="fl"><label>Encadenado</label><select id="iE"><option value="1">Sí</option><option value="0">No</option></select></div></div><div class="fl"><label>Sensaciones</label><textarea id="iNo" placeholder="Beta, condiciones..."></textarea></div><div class="fl"><label>Compañeros</label><input id="iA" placeholder="Mikel, Ane, Jon"></div><div class="fl"><label>Fecha</label><input type="date" id="iFe"></div><button class="btn bp" onclick="svR()">Guardar</button><button class="btn bg2" onclick="cm('mR1')">Cancelar</button></div></div>
+<!-- MODAL ROUTE --><div class="mbg" id="mR1"><div class="mdl"><button class="mx" onclick="cm('mR1')">✕</button><h2 id="mRT">VÍA</h2><div class="fl"><label>Nombre</label><input id="iN" placeholder="Diedro mágico"></div><div class="fl"><label>Lugar</label><input id="iL" placeholder="Atauri, Galdames..." list="dlZ"><datalist id="dlZ"></datalist></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="fl"><label>Tipo lugar</label><select id="iLT"><option value="roca">Roca</option><option value="roco">Rocódromo</option></select></div><div class="fl"><label>Tipo vía</label><select id="iTP"><option>Cuerda</option><option>Bloque</option><option>AutoAseg</option><option>Largos</option></select></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px"><div class="fl"><label>Grado</label><select id="iG"></select></div><div class="fl"><label>Intento</label><select id="iI"></select></div><div class="fl"><label>Encadenado</label><select id="iE"><option value="1">Sí</option><option value="0">No</option></select></div></div><div class="fl"><label>Sensaciones</label><textarea id="iNo" placeholder="Beta, condiciones..."></textarea></div><div class="fl"><label>Compañeros</label><input id="iA" placeholder="Mikel, Ane, Jon"></div><div class="fl"><label>Fecha</label><input type="date" id="iFe"></div><button class="btn bp" onclick="svR()">Guardar</button><button class="btn bdel" id="btnDelR" style="display:none" onclick="delR()">🗑️ Eliminar vía</button><button class="btn bg2" onclick="cm('mR1')">Cancelar</button></div></div>
 <!-- MODAL WORKOUT --><div class="mbg" id="mW1"><div class="mdl"><button class="mx" onclick="cm('mW1')">✕</button><h2>CREAR ENTRENO</h2><div class="fl"><label>Nombre</label><input id="wNm" placeholder="Fuerza dedos"></div><div class="fl"><label>Fecha programada (opcional)</label><input type="date" id="wDt"></div><div class="ct">PASOS</div><div id="wS"></div><div class="ct" style="margin-top:12px">AÑADIR EJERCICIO</div><div class="eg" id="eG"></div><div id="eP" style="display:none"></div><button class="btn bg2" id="eA" style="display:none;margin-bottom:12px" onclick="addEj()">+ Añadir</button><hr style="border:none;border-top:1px solid var(--bg4);margin:12px 0"><button class="btn bp" onclick="svW()">Guardar</button><button class="btn bg2" onclick="cm('mW1')">Cancelar</button></div></div>
-<!-- MODAL PLAN --><div class="mbg" id="mPl"><div class="mdl"><button class="mx" onclick="cm('mPl')">✕</button><h2>PLANIFICAR DÍA</h2><div class="fl"><label>Fecha</label><input type="date" id="plDt"></div><div class="fl"><label>Lugar</label><input id="plLg" placeholder="Ej: Atauri" list="dlZonas"></div><div class="fl"><label>Tipo</label><select id="plTp"><option value="roca">Roca</option><option value="roco">Rocódromo</option></select></div><div class="fl"><label>Notas</label><input id="plNo" placeholder="Plan del día..."></div><button class="btn bp" onclick="svPlan()">Guardar plan</button><button class="btn bg2" onclick="cm('mPl')">Cancelar</button></div></div>
+<!-- MODAL PLAN --><div class="mbg" id="mPl"><div class="mdl"><button class="mx" onclick="cm('mPl')">✕</button><h2>PLANIFICAR DÍA</h2><div class="fl"><label>Fecha</label><input type="date" id="plDt"></div><div class="fl"><label>Lugar</label><input id="plLg" placeholder="Atauri" list="dlZ"></div><div class="fl"><label>Tipo</label><select id="plTp"><option value="roca">Roca</option><option value="roco">Rocódromo</option></select></div><div class="fl"><label>Notas</label><input id="plNo" placeholder="Plan del día..."></div><button class="btn bp" onclick="svPlan()">Guardar</button><button class="btn bg2" onclick="cm('mPl')">Cancelar</button></div></div>
+<!-- MODAL NEW CRAG --><div class="mbg" id="mNC"><div class="mdl"><button class="mx" onclick="cm('mNC')">✕</button><h2>NUEVA ZONA</h2><p style="font-size:12px;color:var(--text2);margin-bottom:12px">Para zonas que no estén en la base de datos. Copia las coordenadas desde Google Maps (click derecho → copiar coordenadas).</p><div class="fl"><label>Nombre</label><input id="ncNm" placeholder="Galdames"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="fl"><label>Latitud</label><input id="ncLat" type="number" step="any" placeholder="43.27085"></div><div class="fl"><label>Longitud</label><input id="ncLng" type="number" step="any" placeholder="-3.10228"></div></div><button class="btn bp" onclick="svNewCrag()">Guardar zona</button><button class="btn bg2" onclick="cm('mNC')">Cancelar</button></div></div>
 <!-- NAV --><nav class="nav">
 <button class="nb on" onclick="go('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h3m10-11v10a1 1 0 01-1 1h-3m-4 0v-6"/></svg>Inicio</button>
 <button class="nb" onclick="go('routes')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>Vías</button>
@@ -95,10 +93,9 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <button class="nb" onclick="go('sync')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 7h12l-4-4M16 17H4l4 4"/></svg>Sync</button>
 </nav>
 <script>
-// ══════════════ FIREBASE ══════════════
 firebase.initializeApp({apiKey:"AIzaSyBaBnTmI8_YuYIRGx2mdDVJSe_k4SF_eho",authDomain:"sube-pies.firebaseapp.com",projectId:"sube-pies",storageBucket:"sube-pies.firebasestorage.app",messagingSenderId:"597414564277",appId:"1:597414564277:web:1f79b81f567b67166c89fc"});
 const auth=firebase.auth(),db=firebase.firestore();
-let U=null,R=[],Tr=[],W=[],friends=[],plans=[];
+let U=null,R=[],Tr=[],W=[],friends=[],plans=[],userCrags=[];
 
 auth.onAuthStateChanged(async u=>{document.getElementById('loadPage').style.display='none';
   if(u){U=u;document.getElementById('loginPage').style.display='none';document.getElementById('appWrap').style.display='block';
@@ -115,76 +112,60 @@ async function loadData(){if(!U)return;const uid=U.uid;
   q=await db.collection('users').doc(uid).collection('workouts').get();W=[];q.forEach(d=>{W.push({id:d.id,...d.data()});});
   q=await db.collection('users').doc(uid).collection('friends').get();friends=[];q.forEach(d=>{friends.push({id:d.id,...d.data()});});
   q=await db.collection('users').doc(uid).collection('plans').get();plans=[];q.forEach(d=>{plans.push({id:d.id,...d.data()});});
-  // Populate datalist
-  const sitios=new Set();R.forEach(r=>{if(r.sitio)sitios.add(r.sitio);});
-  let dl='';[...CRAGS.keys(),...sitios].forEach(s=>{dl+=`<option value="${s}">`;});
-  document.getElementById('dlZonas').innerHTML=dl;
-}
+  q=await db.collection('users').doc(uid).collection('crags').get();userCrags=[];q.forEach(d=>{userCrags.push({id:d.id,...d.data()});});
+  updDL();}
+function updDL(){const s=new Set();R.forEach(r=>{if(r.sitio)s.add(r.sitio);});let dl='';[...CRAGS.keys(),...userCrags.map(c=>c.name),...s].forEach(n=>{dl+=`<option value="${n}">`;});document.getElementById('dlZ').innerHTML=dl;}
+
 async function saveRoute(data){if(!U)return;const col=db.collection('users').doc(U.uid).collection('routes');
   if(data.id&&data.id.length>5){await col.doc(data.id).set(data);const i=R.findIndex(r=>r.id===data.id);if(i>=0)R[i]=data;}
   else{const ref=await col.add(data);data.id=ref.id;R.unshift(data);}}
+async function deleteRoute(id){if(!U)return;await db.collection('users').doc(U.uid).collection('routes').doc(id).delete();R=R.filter(r=>r.id!==id);}
 async function saveTrain(data){if(!U)return;const ref=await db.collection('users').doc(U.uid).collection('trains').add(data);data.id=ref.id;Tr.unshift(data);}
 async function saveWorkout(data){if(!U)return;const ref=await db.collection('users').doc(U.uid).collection('workouts').add(data);data.id=ref.id;W.push(data);}
 async function delWorkout(id){if(!U)return;await db.collection('users').doc(U.uid).collection('workouts').doc(id).delete();W=W.filter(w=>w.id!==id);}
 async function savePlan(data){if(!U)return;const ref=await db.collection('users').doc(U.uid).collection('plans').add(data);data.id=ref.id;plans.push(data);}
+async function saveCrag(data){if(!U)return;const ref=await db.collection('users').doc(U.uid).collection('crags').add(data);data.id=ref.id;userCrags.push(data);updDL();}
 
-// ══════════════ CRAGS DB ══════════════
-const CRAGS=new Map([
-["Atauri",[42.77,-2.52]],["Etxauri",[42.83,-1.87]],["Riglos",[42.35,-0.72]],["Siurana",[41.25,0.93]],
-["Margalef",[41.28,0.75]],["Rodellar",[42.27,-0.08]],["Oliana",[42.07,1.31]],["Chulilla",[39.66,-0.89]],
-["Montanejos",[40.07,-0.53]],["Sella",[38.63,-0.27]],["Santa Linya",[41.98,0.76]],["Terradets",[42.07,0.84]],
-["El Chorro",[36.92,-4.77]],["Archidona",[37.09,-4.39]],["San Bartolo",[36.08,-5.63]],["Oñati",[42.98,-2.41]],
-["Araotz",[42.97,-2.41]],["Leitza",[43.09,-1.90]],["Barranc del Cinc",[41.28,0.76]],["Tres Ponts",[42.12,1.15]],
-["Kalymnos",[36.96,26.98]],["Leonidio",[37.16,22.86]],["Fontainebleau",[48.40,2.63]],["Ceüse",[44.50,5.95]],
-["Verdon",[43.75,6.40]],["Buoux",[43.82,5.38]],["Finale Ligure",[44.17,8.34]],["Arco",[45.92,10.88]],
-["Loja",[37.17,-4.15]],["Villanueva del Rosario",[36.99,-4.37]],["Teverga",[43.15,-6.08]],
-["Peñón de Ifach",[38.63,0.08]],["Gandía",[38.97,-0.18]],["Albarracín",[40.41,-1.44]],
-["Cuenca",[40.06,-2.13]],["La Pedriza",[40.75,-3.87]],["Patones",[40.87,-3.57]],
-["Geyikbayiri",[37.15,30.48]],["Railay",[8.01,98.84]],["El Potrero Chico",[25.95,-100.47]],
-["Berdejo",[41.63,-1.93]],["Calcena",[41.63,-1.70]],["Morata de Jalón",[41.48,-1.47]],
-["Baltzola",[43.14,-2.63]],["Pagomakurre",[43.14,-2.63]],["Aizkorri",[42.95,-2.35]],
-]);
-function getCragCoords(name){
-  if(!name)return null;
-  const nl=name.toLowerCase();
+// CRAGS DB
+const CRAGS=new Map([["Atauri",[42.77,-2.52]],["Etxauri",[42.83,-1.87]],["Riglos",[42.35,-0.72]],["Siurana",[41.25,0.93]],["Margalef",[41.28,0.75]],["Rodellar",[42.27,-0.08]],["Oliana",[42.07,1.31]],["Chulilla",[39.66,-0.89]],["Montanejos",[40.07,-0.53]],["Sella",[38.63,-0.27]],["Santa Linya",[41.98,0.76]],["Terradets",[42.07,0.84]],["El Chorro",[36.92,-4.77]],["Archidona",[37.09,-4.39]],["San Bartolo",[36.08,-5.63]],["Oñati",[42.98,-2.41]],["Araotz",[42.97,-2.41]],["Leitza",[43.09,-1.90]],["Tres Ponts",[42.12,1.15]],["Kalymnos",[36.96,26.98]],["Leonidio",[37.16,22.86]],["Fontainebleau",[48.40,2.63]],["Ceüse",[44.50,5.95]],["Verdon",[43.75,6.40]],["Buoux",[43.82,5.38]],["Finale Ligure",[44.17,8.34]],["Arco",[45.92,10.88]],["Loja",[37.17,-4.15]],["Teverga",[43.15,-6.08]],["Peñón de Ifach",[38.63,0.08]],["Albarracín",[40.41,-1.44]],["Cuenca",[40.06,-2.13]],["La Pedriza",[40.75,-3.87]],["Patones",[40.87,-3.57]],["Geyikbayiri",[37.15,30.48]],["Railay",[8.01,98.84]],["El Potrero Chico",[25.95,-100.47]],["Berdejo",[41.63,-1.93]],["Calcena",[41.63,-1.70]],["Morata de Jalón",[41.48,-1.47]],["Baltzola",[43.14,-2.63]],["Aizkorri",[42.95,-2.35]]]);
+function getCragCoords(name){if(!name)return null;const nl=name.toLowerCase();
   for(const[k,v]of CRAGS){if(nl.includes(k.toLowerCase()))return{name:k,lat:v[0],lng:v[1]};}
-  return null;
-}
+  for(const c of userCrags){if(nl.includes(c.name.toLowerCase()))return{name:c.name,lat:c.lat,lng:c.lng};}
+  return null;}
 
-// ══════════════ CONSTANTS ══════════════
 const G=["V","6a","6a+","6b","6b+","6c","6c+","7a","7a+","7b","7b+","7c","7c+","8a","8a+","8b","8b+","8c","8c+","9a","9a+","9b","9b+","9c"];
 const CT=["1234321","1-3-5","112233","1-max"],AN=["90gr","120gr","Lock-off"],AG=["Regleta","Cazo","Pinza","Romo"];
 let cY=2026,cMo=1,cSl=null,gM='cr',rFl='all',tTb='hist',eRt=null,cE=null,wSt=[],leafMap=null,markers=[];
 const PG={home:'ph',routes:'pv',map:'pm',train:'pt',friends:'pf',sync:'ps'},PK=Object.keys(PG);
 function go(id){Object.values(PG).forEach(p=>document.getElementById(p).classList.remove('on'));document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));document.getElementById(PG[id]).classList.add('on');document.querySelectorAll('.nb')[PK.indexOf(id)].classList.add('on');({home:rH,routes:drR,map:drM,train:drTr,friends:drFr,sync:drS})[id]();}
 
-// ══════════════ HOME ══════════════
+// HOME
 function rH(){const y=new Date().getFullYear(),yr=R.filter(r=>new Date(r.date).getFullYear()===y);
   document.getElementById('sV').textContent=yr.length;document.getElementById('sE').textContent=yr.filter(r=>r.enc).length;
-  document.getElementById('sT').textContent=Tr.filter(t=>new Date(t.date).getFullYear()===y).length;
-  rCal();rGr();
+  document.getElementById('sT').textContent=Tr.filter(t=>new Date(t.date).getFullYear()===y).length;rCal();rGr();
   let gs='';[['cr','Cuerda Roca'],['br','Bloq Roco'],['cro','Cuerda Roco'],['ar','Auto Roco']].forEach(([k,lb])=>{gs+=`<button class="gs${gM===k?' on':''}" onclick="gM='${k}';document.querySelectorAll('.gs').forEach(b=>b.classList.remove('on'));this.classList.add('on');rGr()">${lb}</button>`;});
   document.getElementById('gS').innerHTML=gs;}
 function rCal(){const mN=["ENERO","FEBRERO","MARZO","ABRIL","MAYO","JUNIO","JULIO","AGOSTO","SEPTIEMBRE","OCTUBRE","NOVIEMBRE","DICIEMBRE"];
-  document.getElementById('cM').textContent=mN[cMo]+' '+cY;
-  const f=new Date(cY,cMo,1);let sd=f.getDay();if(sd===0)sd=7;sd--;const dm=new Date(cY,cMo+1,0).getDate(),td=new Date();
+  document.getElementById('cM').textContent=mN[cMo]+' '+cY;const f=new Date(cY,cMo,1);let sd=f.getDay();if(sd===0)sd=7;sd--;const dm=new Date(cY,cMo+1,0).getDate(),td=new Date();
   let h='';['L','M','X','J','V','S','D'].forEach(d=>{h+=`<div class="cdh">${d}</div>`;});
   for(let i=0;i<sd;i++)h+='<div class="cd emp"></div>';
   for(let d=1;d<=dm;d++){const ds=`${cY}-${String(cMo+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const dr=R.filter(r=>r.date===ds),hr=dr.some(r=>r.lugar==='roca'),hc=dr.some(r=>r.lugar==='roco'),ht=Tr.some(t=>t.date===ds),hp=plans.some(p=>p.date===ds);
+    const dr=R.filter(r=>r.date===ds),hr=dr.some(r=>r.lugar==='roca'),hc=dr.some(r=>r.lugar==='roco'),ht=Tr.some(t=>t.date===ds);
+    const hp=plans.some(p=>p.date===ds),hwk=W.some(w=>w.plannedDate===ds);
     const it=d===td.getDate()&&cMo===td.getMonth()&&cY===td.getFullYear();
-    let c='cd';if(it)c+=' tod';if(hr&&hc)c+=' hb';else if(hr)c+=' hr';else if(hc)c+=' hc';if(ht)c+=' ht';if(hp&&!hr&&!hc)c+=' plan';if(cSl===ds)c+=' sel';
+    let c='cd';if(it)c+=' tod';if(hr&&hc)c+=' hb';else if(hr)c+=' hr';else if(hc)c+=' hc';
+    if(ht)c+=' ht';if(hp&&!hr&&!hc)c+=' plan';if(hwk&&!hr&&!hc&&!hp)c+=' hw';if(cSl===ds)c+=' sel';
     h+=`<div class="${c}" onclick="cSl=cSl==='${ds}'?null:'${ds}';rCal()">${d}</div>`;}
   document.getElementById('cG').innerHTML=h;
-  // Detail + plan button
   let det='';
-  if(cSl){const dr=R.filter(r=>r.date===cSl),dt=Tr.filter(t=>t.date===cSl),dp=plans.filter(p=>p.date===cSl),dd=new Date(cSl);
+  if(cSl){const dr=R.filter(r=>r.date===cSl),dt=Tr.filter(t=>t.date===cSl),dp=plans.filter(p=>p.date===cSl),dw=W.filter(w=>w.plannedDate===cSl),dd=new Date(cSl);
     det=`<div style="font-size:12px;color:var(--text2);margin-bottom:6px">${dd.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'})}</div>`;
     dp.forEach(p=>{det+=`<div style="font-size:11px;color:var(--blue);margin:2px 0">📋 Plan: ${p.lugar||''} (${p.tipo}) ${p.notas||''}</div>`;});
+    dw.forEach(w=>{det+=`<div style="font-size:11px;color:var(--purple);margin:2px 0">🏋 Entreno: ${w.name}</div>`;});
     dr.forEach(r=>{det+=`<div style="font-size:12px;margin:2px 0"><span style="color:${r.enc?'var(--green)':'var(--rock)'};font-family:'Bebas Neue';font-size:16px">${r.grado}</span> ${r.tipo} ${r.enc?'✓':''}${r.nombre?' · '+r.nombre:''}</div>`;});
     dt.forEach(t=>{det+=`<div style="font-size:12px;margin:2px 0;color:var(--yellow)">🏋 ${t.tipo} ${t.detail}</div>`;});
-    if(!dr.length&&!dt.length&&!dp.length)det+='<div style="font-size:12px;color:var(--text3)">Sin actividad</div>';
-    det+=`<button style="margin-top:6px;background:var(--bg3);border:1px solid var(--blue);border-radius:8px;color:var(--blue);padding:5px 12px;font-size:11px;cursor:pointer;font-family:Nunito" onclick="openPlan('${cSl}')">+ Planificar día</button>`;}
+    if(!dr.length&&!dt.length&&!dp.length&&!dw.length)det+='<div style="font-size:12px;color:var(--text3)">Sin actividad</div>';
+    det+=`<button style="margin-top:6px;background:var(--bg3);border:1px solid var(--blue);border-radius:8px;color:var(--blue);padding:5px 12px;font-size:11px;cursor:pointer;font-family:Nunito" onclick="openPlan('${cSl}')">+ Planificar</button>`;}
   document.getElementById('cD').innerHTML=det;}
 function cNav(d){cMo+=d;if(cMo>11){cMo=0;cY++;}if(cMo<0){cMo=11;cY--;}rCal();}
 function rGr(){const y=new Date().getFullYear(),yr=R.filter(r=>new Date(r.date).getFullYear()===y);
@@ -193,13 +174,10 @@ function rGr(){const y=new Date().getFullYear(),yr=R.filter(r=>new Date(r.date).
   const mx=Math.max(...s.map(x=>x[1]),1),cc=(gM==='br'||gM==='cro'||gM==='ar')?'ro':'rc';
   let h='';s.slice(0,8).forEach(([g,n])=>{h+=`<div class="gr"><div class="grn">${g}</div><div class="grb"><div class="grf ${cc}" style="width:${(n/mx)*100}%">${n}</div></div></div>`;});
   document.getElementById('gB').innerHTML=h||'<div style="color:var(--text3);font-size:12px;padding:10px">Sin datos</div>';}
-
-// ══════════════ PLAN ══════════════
 function openPlan(dt){document.getElementById('plDt').value=dt;document.getElementById('plLg').value='';document.getElementById('plNo').value='';document.getElementById('mPl').classList.add('sh');}
-async function svPlan(){const d={date:document.getElementById('plDt').value,lugar:document.getElementById('plLg').value,tipo:document.getElementById('plTp').value,notas:document.getElementById('plNo').value};
-  await savePlan(d);cm('mPl');rCal();}
+async function svPlan(){await savePlan({date:document.getElementById('plDt').value,lugar:document.getElementById('plLg').value,tipo:document.getElementById('plTp').value,notas:document.getElementById('plNo').value});cm('mPl');rCal();}
 
-// ══════════════ ROUTES ══════════════
+// ROUTES
 function drR(){let fc='';[['all','Todas'],['roca','Roca'],['roco','Rocódromo'],['enc','Encadenadas'],['cuerda','Cuerda'],['bloque','Bloque']].forEach(([k,lb])=>{fc+=`<button class="ch${rFl===k?' on':''}" onclick="rFl='${k}';drR()">${lb}</button>`;});document.getElementById('rF').innerHTML=fc;
   let fl=R.slice();if(rFl==='roca')fl=fl.filter(r=>r.lugar==='roca');if(rFl==='roco')fl=fl.filter(r=>r.lugar==='roco');if(rFl==='enc')fl=fl.filter(r=>r.enc);if(rFl==='cuerda')fl=fl.filter(r=>r.tipo==='Cuerda');if(rFl==='bloque')fl=fl.filter(r=>r.tipo==='Bloque');
   const so=document.getElementById('rS').value;if(so==='date')fl.sort((a,b)=>b.date.localeCompare(a.date));if(so==='dateA')fl.sort((a,b)=>a.date.localeCompare(b.date));if(so==='grD')fl.sort((a,b)=>G.indexOf(b.grado)-G.indexOf(a.grado));if(so==='grA')fl.sort((a,b)=>G.indexOf(a.grado)-G.indexOf(b.grado));if(so==='lugar')fl.sort((a,b)=>(a.sitio||'').localeCompare(b.sitio||''));if(so==='amigo')fl.sort((a,b)=>(a.amigos||'').localeCompare(b.amigos||''));
@@ -208,43 +186,42 @@ function drR(){let fc='';[['all','Todas'],['roca','Roca'],['roco','Rocódromo'],
   document.getElementById('rL').innerHTML=h||'<div style="text-align:center;color:var(--text3);padding:30px">Sin vías</div>';}
 function vc(r,ed){return `<div class="via ${r.enc?'enc':''}" ${ed?`onclick="edR('${r.id}')"`:''}><div class="vt"><div class="vg">${r.grado}</div><div class="vd">${new Date(r.date).toLocaleDateString('es-ES',{day:'numeric',month:'short'})}</div></div>${r.nombre?`<div class="vn">${r.nombre}</div>`:''}${r.sitio?`<div class="vl">📍 ${r.sitio}</div>`:''}<div class="vts"><span class="tg r">${r.lugar==='roca'?'Roca':'Roco'}</span><span class="tg t">${r.tipo}</span><span class="tg">Int:${r.intento||1}</span>${r.enc?'<span class="tg e">Enc ✓</span>':''}${r.amigos?`<span class="tg">👥 ${r.amigos}</span>`:''}${r.notas?'<span class="tg">💬</span>':''}</div></div>`;}
 function pSel(){const g=document.getElementById('iG');g.innerHTML='';G.forEach(x=>{g.innerHTML+=`<option>${x}</option>`;});const i=document.getElementById('iI');i.innerHTML='';for(let j=1;j<=9;j++)i.innerHTML+=`<option>${j}</option>`;}
-function addR(){eRt=null;document.getElementById('mRT').textContent='NUEVA VÍA';pSel();['iN','iL','iNo','iA'].forEach(id=>document.getElementById(id).value='');document.getElementById('iFe').value=new Date().toISOString().split('T')[0];document.getElementById('iG').value='7a';document.getElementById('iE').value='0';document.getElementById('mR1').classList.add('sh');}
-function edR(id){const r=R.find(x=>x.id===id);if(!r)return;eRt=id;document.getElementById('mRT').textContent='EDITAR VÍA';pSel();document.getElementById('iN').value=r.nombre||'';document.getElementById('iL').value=r.sitio||'';document.getElementById('iLT').value=r.lugar;document.getElementById('iTP').value=r.tipo;document.getElementById('iG').value=r.grado;document.getElementById('iI').value=r.intento||1;document.getElementById('iE').value=r.enc?'1':'0';document.getElementById('iNo').value=r.notas||'';document.getElementById('iA').value=r.amigos||'';document.getElementById('iFe').value=r.date;document.getElementById('mR1').classList.add('sh');}
-async function svR(){const d={date:document.getElementById('iFe').value,lugar:document.getElementById('iLT').value,tipo:document.getElementById('iTP').value,grado:document.getElementById('iG').value,intento:parseInt(document.getElementById('iI').value),enc:document.getElementById('iE').value==='1',nombre:document.getElementById('iN').value,sitio:document.getElementById('iL').value,notas:document.getElementById('iNo').value,amigos:document.getElementById('iA').value};if(eRt)d.id=eRt;await saveRoute(d);cm('mR1');if(!eRt)await loadData();drR();}
+function addR(){eRt=null;document.getElementById('mRT').textContent='NUEVA VÍA';pSel();['iN','iL','iNo','iA'].forEach(id=>document.getElementById(id).value='');document.getElementById('iFe').value=new Date().toISOString().split('T')[0];document.getElementById('iG').value='7a';document.getElementById('iE').value='0';document.getElementById('btnDelR').style.display='none';document.getElementById('mR1').classList.add('sh');}
+function edR(id){const r=R.find(x=>x.id===id);if(!r)return;eRt=id;document.getElementById('mRT').textContent='EDITAR VÍA';pSel();document.getElementById('iN').value=r.nombre||'';document.getElementById('iL').value=r.sitio||'';document.getElementById('iLT').value=r.lugar;document.getElementById('iTP').value=r.tipo;document.getElementById('iG').value=r.grado;document.getElementById('iI').value=r.intento||1;document.getElementById('iE').value=r.enc?'1':'0';document.getElementById('iNo').value=r.notas||'';document.getElementById('iA').value=r.amigos||'';document.getElementById('iFe').value=r.date;document.getElementById('btnDelR').style.display='block';document.getElementById('mR1').classList.add('sh');}
+async function svR(){const d={date:document.getElementById('iFe').value,lugar:document.getElementById('iLT').value,tipo:document.getElementById('iTP').value,grado:document.getElementById('iG').value,intento:parseInt(document.getElementById('iI').value),enc:document.getElementById('iE').value==='1',nombre:document.getElementById('iN').value,sitio:document.getElementById('iL').value,notas:document.getElementById('iNo').value,amigos:document.getElementById('iA').value};if(eRt)d.id=eRt;await saveRoute(d);cm('mR1');drR();}
+async function delR(){if(!eRt||!confirm('¿Eliminar esta vía?'))return;await deleteRoute(eRt);cm('mR1');drR();}
 function cm(id){document.getElementById(id).classList.remove('sh');}
 
-// ══════════════ MAP REAL ══════════════
-function drM(){const rr=R.filter(r=>r.lugar==='roca');
-  document.getElementById('mTotal').textContent=rr.length;
-  document.getElementById('mEnc').textContent=rr.filter(r=>r.enc).length;
-  const locs={};rr.forEach(r=>{if(!r.sitio)return;const c=getCragCoords(r.sitio);if(c){if(!locs[c.name])locs[c.name]={...c,rs:[],enc:0};locs[c.name].rs.push(r);if(r.enc)locs[c.name].enc++;}});
-  document.getElementById('mZonas').textContent=Object.keys(locs).length;
-  // Init Leaflet
-  if(!leafMap){leafMap=L.map('mapDiv',{zoomControl:false}).setView([40.4,-2.5],5);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'©OSM ©CARTO',maxZoom:18}).addTo(leafMap);
-    L.control.zoom({position:'topright'}).addTo(leafMap);}
-  markers.forEach(m=>leafMap.removeLayer(m));markers=[];
-  const bounds=[];
-  Object.values(locs).forEach(l=>{
-    const sz=Math.min(8+l.rs.length*3,28);
+// MAP
+function drM(){const rr=R.filter(r=>r.lugar==='roca');document.getElementById('mTotal').textContent=rr.length;document.getElementById('mEnc').textContent=rr.filter(r=>r.enc).length;
+  const locs=buildLocs(rr);document.getElementById('mZonas').textContent=Object.keys(locs).length;
+  if(!leafMap){leafMap=L.map('mapDiv',{zoomControl:false}).setView([40.4,-2.5],5);L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'©OSM',maxZoom:18}).addTo(leafMap);L.control.zoom({position:'topright'}).addTo(leafMap);}
+  renderMarkers(locs);setTimeout(()=>leafMap.invalidateSize(),100);
+  document.getElementById('mRt').innerHTML='<div style="color:var(--text3);font-size:11px;text-align:center;padding:8px">Pulsa un punto o busca arriba</div>';document.getElementById('mapResults').style.display='none';document.getElementById('mapQ').value='';}
+function buildLocs(rr){const locs={};rr.forEach(r=>{if(!r.sitio)return;const c=getCragCoords(r.sitio);if(c){if(!locs[c.name])locs[c.name]={...c,rs:[],enc:0};locs[c.name].rs.push(r);if(r.enc)locs[c.name].enc++;}});return locs;}
+function renderMarkers(locs){markers.forEach(m=>leafMap.removeLayer(m));markers=[];const bounds=[];
+  Object.values(locs).forEach(l=>{const sz=Math.min(8+l.rs.length*3,28);
     const icon=L.divIcon({className:'',html:`<div style="width:${sz}px;height:${sz}px;background:var(--rock);border-radius:50%;border:2px solid #fff;opacity:.9;display:flex;align-items:center;justify-content:center;font-size:${Math.max(9,sz/2.5)}px;font-weight:700;color:#000;font-family:Nunito">${l.rs.length}</div>`,iconSize:[sz,sz],iconAnchor:[sz/2,sz/2]});
-    const m=L.marker([l.lat,l.lng],{icon}).addTo(leafMap);
-    m.bindPopup(`<b style="font-family:'Bebas Neue';font-size:16px;color:var(--rock)">${l.name}</b><br>${l.rs.length} vías · ${l.enc} enc.`);
-    m.on('click',()=>showMapZone(l));
-    markers.push(m);bounds.push([l.lat,l.lng]);
-  });
-  if(bounds.length>1)leafMap.fitBounds(bounds,{padding:[30,30]});
-  else if(bounds.length===1)leafMap.setView(bounds[0],8);
-  setTimeout(()=>{leafMap.invalidateSize();},100);
-  document.getElementById('mRt').innerHTML='<div style="color:var(--text3);font-size:11px;text-align:center;padding:8px">Pulsa un punto en el mapa</div>';}
-function showMapZone(l){let h=`<div style="font-family:'Bebas Neue';font-size:16px;color:var(--rock);margin:8px 0">${l.name} — ${l.rs.length} vías (${l.enc} enc.)</div>`;l.rs.forEach(r=>{h+=vc(r,true);});document.getElementById('mRt').innerHTML=h;}
+    const m=L.marker([l.lat,l.lng],{icon}).addTo(leafMap);m.bindPopup(`<b style="font-family:'Bebas Neue';font-size:16px;color:var(--rock)">${l.name}</b><br>${l.rs.length} vías · ${l.enc} enc.`);
+    m.on('click',()=>showZone(l));markers.push(m);bounds.push([l.lat,l.lng]);});
+  if(bounds.length>1)leafMap.fitBounds(bounds,{padding:[30,30]});else if(bounds.length===1)leafMap.setView(bounds[0],10);}
+function showZone(l){let h=`<div style="font-family:'Bebas Neue';font-size:16px;color:var(--rock);margin:8px 0">${l.name} — ${l.rs.length} vías (${l.enc} enc.)</div>`;l.rs.forEach(r=>{h+=vc(r,true);});document.getElementById('mRt').innerHTML=h;}
+function filterMap(){const q=document.getElementById('mapQ').value.trim().toLowerCase();if(!q){document.getElementById('mapResults').style.display='none';return;}
+  const rr=R.filter(r=>r.lugar==='roca');const locs=buildLocs(rr);const match=Object.values(locs).filter(l=>l.name.toLowerCase().includes(q));
+  if(match.length===1){leafMap.setView([match[0].lat,match[0].lng],10);showZone(match[0]);document.getElementById('mapResults').style.display='none';}
+  else if(match.length>1){let h='';match.forEach(l=>{h+=`<div class="fr-card" style="cursor:pointer" onclick="leafMap.setView([${l.lat},${l.lng}],10);showZone(mapLocs['${l.name}'])"><div class="fr-info"><div class="fr-name" style="color:var(--rock)">${l.name}</div><div class="fr-email">${l.rs.length} vías</div></div></div>`;});
+    document.getElementById('mapResults').innerHTML=h;document.getElementById('mapResults').style.display='block';window.mapLocs={};match.forEach(l=>{window.mapLocs[l.name]=l;});}
+  else{document.getElementById('mapResults').innerHTML='<div style="color:var(--text3);font-size:11px;padding:8px">No encontrado</div>';document.getElementById('mapResults').style.display='block';}}
+function openNewCrag(){document.getElementById('ncNm').value='';document.getElementById('ncLat').value='';document.getElementById('ncLng').value='';document.getElementById('mNC').classList.add('sh');}
+async function svNewCrag(){const nm=document.getElementById('ncNm').value.trim(),lat=parseFloat(document.getElementById('ncLat').value),lng=parseFloat(document.getElementById('ncLng').value);
+  if(!nm||isNaN(lat)||isNaN(lng)){alert('Rellena nombre y coordenadas');return;}
+  await saveCrag({name:nm,lat,lng});cm('mNC');alert(nm+' añadida ✓');drM();}
 
-// ══════════════ TRAINS ══════════════
+// TRAINS
 function drTr(){let tb='';[['hist','Historial'],['plan','Programados']].forEach(([k,lb])=>{tb+=`<button class="tb${tTb===k?' on':''}" onclick="tTb='${k}';drTr()">${lb}</button>`;});document.getElementById('tT').innerHTML=tb;
   if(tTb==='hist'){document.getElementById('tH').style.display='block';document.getElementById('tP').style.display='none';let h='';Tr.forEach(t=>{h+=`<div class="trn"><div style="display:flex;justify-content:space-between"><div class="tt2">${t.tipo}</div><div style="font-size:10px;color:var(--text3)">${new Date(t.date).toLocaleDateString('es-ES',{day:'numeric',month:'short'})}</div></div><div class="td">${t.detail}</div></div>`;});document.getElementById('tH').innerHTML=h||'<div style="color:var(--text3);text-align:center;padding:20px">Sin entrenos</div>';}
-  else{document.getElementById('tH').style.display='none';document.getElementById('tP').style.display='block';let h='';W.forEach(w=>{h+=`<div class="wi"><button class="wi-del" onclick="delWo('${w.id}')">✕</button><div class="wit">${w.name}</div>${w.plannedDate?`<div class="wi-date">📅 ${new Date(w.plannedDate).toLocaleDateString('es-ES',{day:'numeric',month:'short'})}</div>`:''}<div class="wis">`;(w.steps||[]).forEach((s,i)=>{h+=`<div class="wiss">${i+1}. ${s.txt||s}</div>`;});h+=`</div><button class="wib" onclick="alert('📡 BT próximamente')">📡 ESP32</button></div>`;});document.getElementById('wL').innerHTML=h;}}
-async function delWo(id){if(confirm('¿Eliminar este entreno?')){await delWorkout(id);drTr();}}
-
+  else{document.getElementById('tH').style.display='none';document.getElementById('tP').style.display='block';let h='';W.forEach(w=>{h+=`<div class="wi"><button class="wi-del" onclick="delWo('${w.id}')">✕</button><div class="wit">${w.name}</div>${w.plannedDate?`<div class="wi-date">📅 ${new Date(w.plannedDate).toLocaleDateString('es-ES',{weekday:'short',day:'numeric',month:'short'})}</div>`:''}<div class="wis">`;(w.steps||[]).forEach((s,i)=>{h+=`<div class="wiss">${i+1}. ${s.txt||s}</div>`;});h+=`</div><button class="wib" onclick="alert('📡 BT próximamente')">📡 ESP32</button></div>`;});document.getElementById('wL').innerHTML=h;}}
+async function delWo(id){if(confirm('¿Eliminar?')){await delWorkout(id);drTr();}}
 function openWo(){wSt=[];cE=null;document.getElementById('wNm').value='';document.getElementById('wDt').value='';document.getElementById('eP').style.display='none';document.getElementById('eA').style.display='none';
   let eg='';[['regletas','🤏','Regletas'],['campus','🧗','Campus'],['rebotes','💥','Rebotes'],['bloqueos','💪','Bloqueos'],['travesia','🔄','Travesía'],['temporizador','⏱️','Timer'],['libre','📝','Libre']].forEach(([k,ic,lb])=>{eg+=`<div class="eb" data-e="${k}" onclick="sE('${k}')"><div class="ic">${ic}</div>${lb}</div>`;});
   document.getElementById('eG').innerHTML=eg;rWS();document.getElementById('mW1').classList.add('sh');}
@@ -270,10 +247,9 @@ function addEj(){if(!cE)return;let s={tipo:cE,p:{},txt:''};
   else if(cE==='libre'){const t=(document.getElementById('xLb').value||'').trim();if(!t)return;s.p={text:t};s.txt=t;}
   wSt.push(s);rWS();cE=null;document.querySelectorAll('.eb').forEach(b=>b.classList.remove('on'));document.getElementById('eP').style.display='none';document.getElementById('eA').style.display='none';}
 async function svW(){const n=(document.getElementById('wNm').value||'').trim();if(!n||!wSt.length){alert('Pon nombre y ejercicios');return;}
-  const d={name:n,steps:[...wSt]};const dt=document.getElementById('wDt').value;if(dt)d.plannedDate=dt;
-  await saveWorkout(d);cm('mW1');tTb='plan';drTr();}
+  const d={name:n,steps:[...wSt]};const dt=document.getElementById('wDt').value;if(dt)d.plannedDate=dt;await saveWorkout(d);cm('mW1');tTb='plan';drTr();}
 
-// ══════════════ FRIENDS ══════════════
+// FRIENDS
 async function drFr(){let h='';if(!friends.length)h='<div style="color:var(--text3);font-size:11px;text-align:center;padding:16px">Añade amigos por email</div>';
   for(const f of friends){const q=await db.collection('users').where('email','==',f.email).get();let name=f.email,photo='';
     if(!q.empty){const ud=q.docs[0].data();name=ud.name||f.email;photo=ud.photo||'';}
@@ -281,10 +257,10 @@ async function drFr(){let h='';if(!friends.length)h='<div style="color:var(--tex
   document.getElementById('frList').innerHTML=h;document.getElementById('frView').style.display='none';}
 async function addFriend(){const email=document.getElementById('frEmail').value.trim().toLowerCase(),msg=document.getElementById('frMsg');
   if(!email||!email.includes('@')){msg.textContent='Email no válido';msg.style.color='var(--red)';return;}
-  if(U&&email===U.email.toLowerCase()){msg.textContent='No puedes añadirte a ti mismo';msg.style.color='var(--red)';return;}
+  if(U&&email===U.email.toLowerCase()){msg.textContent='Ese eres tú';msg.style.color='var(--red)';return;}
   if(friends.some(f=>f.email===email)){msg.textContent='Ya es tu amigo';msg.style.color='var(--yellow)';return;}
   const q=await db.collection('users').where('email','==',email).get();
-  if(q.empty){msg.textContent='No está en Sube Pies (tiene que registrarse)';msg.style.color='var(--yellow)';return;}
+  if(q.empty){msg.textContent='No está en Sube Pies (tiene que entrar primero)';msg.style.color='var(--yellow)';return;}
   await db.collection('users').doc(U.uid).collection('friends').add({email});friends.push({email});
   document.getElementById('frEmail').value='';msg.textContent='Añadido ✓';msg.style.color='var(--green)';drFr();}
 async function rmFr(id){await db.collection('users').doc(U.uid).collection('friends').doc(id).delete();friends=friends.filter(f=>f.id!==id);drFr();}
@@ -294,10 +270,10 @@ async function viewFr(email){const q=await db.collection('users').where('email',
   rs.forEach(d=>{h+=vc({id:d.id,...d.data()},false);});
   document.getElementById('frRoutes').innerHTML=h||'<div style="color:var(--text3);font-size:11px;padding:8px">Sin vías</div>';document.getElementById('frView').style.display='block';}
 
-// ══════════════ SYNC + EXPORT ══════════════
+// SYNC
 function drS(){document.getElementById('sN').textContent=R.length+Tr.length;}
-function exportData(){const data={routes:R,trains:Tr,workouts:W,plans,exported:new Date().toISOString()};
-  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='sube_pies_backup_'+new Date().toISOString().split('T')[0]+'.json';a.click();}
+function exportData(){const data={routes:R,trains:Tr,workouts:W,plans,crags:userCrags,exported:new Date().toISOString()};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='sube_pies_'+new Date().toISOString().split('T')[0]+'.json';a.click();}
 async function doBT(){const b=document.getElementById('bB'),t=document.getElementById('bT');
   if(!navigator.bluetooth){t.textContent='Usa Chrome en Android';return;}
   try{t.textContent='Buscando...';b.textContent='...';
