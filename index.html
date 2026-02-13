@@ -35,6 +35,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 .cd.sel{background:var(--rock)!important;color:#000!important;font-weight:700;}.cd.emp{cursor:default;}
 .gsw{display:flex;gap:0;margin-bottom:10px;background:var(--bg3);border-radius:8px;padding:2px;flex-wrap:wrap;}
 .gs{flex:1;padding:5px 2px;text-align:center;border-radius:6px;font-size:10px;cursor:pointer;color:var(--text2);border:none;background:none;font-family:'Nunito';min-width:0;}.gs.on{background:var(--rock);color:#000;font-weight:700;}
+.gp{flex:1;padding:5px 2px;text-align:center;border-radius:6px;font-size:10px;cursor:pointer;color:var(--text2);border:none;background:none;font-family:'Nunito';min-width:0;}.gp.on{background:var(--blue);color:#fff;font-weight:700;}
 .gb{display:flex;flex-direction:column;gap:5px;}.gr{display:flex;align-items:center;gap:6px;}.grn{font-family:'Bebas Neue';font-size:14px;width:32px;text-align:right;color:var(--text2);}.grb{flex:1;height:18px;background:var(--bg3);border-radius:9px;overflow:hidden;}.grf{height:100%;border-radius:9px;display:flex;align-items:center;padding-left:6px;font-size:10px;font-weight:700;min-width:20px;}.grf.rc{background:linear-gradient(90deg,var(--rockD),var(--rock));}.grf.ro{background:linear-gradient(90deg,var(--greenD),var(--green));color:#000;}
 .via{background:var(--bg2);border-radius:var(--R);padding:12px;margin-bottom:8px;border:1px solid rgba(255,255,255,.04);cursor:pointer;}.via:active{transform:scale(.98);}.via.enc .vg{color:var(--green);}.vt{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}.vg{font-family:'Bebas Neue';font-size:22px;color:var(--rock);}.vd{font-size:11px;color:var(--text3);}.vn{font-size:13px;font-weight:600;margin-bottom:3px;}.vl{font-size:11px;color:var(--text2);margin-bottom:5px;}.vts{display:flex;flex-wrap:wrap;gap:3px;}.tg{display:inline-block;padding:2px 7px;border-radius:6px;font-size:9px;background:var(--bg3);color:var(--text2);}.tg.e{background:rgba(78,205,196,.15);color:var(--green);}.tg.r{background:rgba(212,165,116,.15);color:var(--rock);}.tg.t{background:rgba(74,158,255,.15);color:var(--blue);}
 .trn{background:var(--bg2);border-radius:var(--R);padding:12px;margin-bottom:8px;border-left:3px solid var(--yellow);border:1px solid rgba(255,255,255,.04);}.tt2{font-family:'Bebas Neue';font-size:18px;color:var(--yellow);}.td{font-size:12px;color:var(--text2);margin-top:4px;}
@@ -84,7 +85,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <!-- MODAL ROUTE --><div class="mbg" id="mR1"><div class="mdl"><button class="mx" onclick="cm('mR1')">✕</button><h2 id="mRT">VÍA</h2><div class="fl"><label>Nombre</label><input id="iN" placeholder="Diedro mágico"></div><div class="fl"><label>Lugar</label><input id="iL" placeholder="Atauri, Galdames..." list="dlZ"><datalist id="dlZ"></datalist></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="fl"><label>Tipo lugar</label><select id="iLT"><option value="roca">Roca</option><option value="roco">Rocódromo</option></select></div><div class="fl"><label>Tipo vía</label><select id="iTP"><option>Cuerda</option><option>Bloque</option><option>AutoAseg</option><option>Largos</option></select></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px"><div class="fl"><label>Grado</label><select id="iG"></select></div><div class="fl"><label>Intento</label><select id="iI"></select></div><div class="fl"><label>Encadenado</label><select id="iE"><option value="1">Sí</option><option value="0">No</option></select></div></div><div class="fl"><label>Sensaciones</label><textarea id="iNo" placeholder="Beta, condiciones..."></textarea></div><div class="fl"><label>Compañeros</label><input id="iA" placeholder="Mikel, Ane, Jon"></div><div class="fl"><label>Fecha</label><input type="date" id="iFe"></div><button class="btn bp" onclick="svR()">Guardar</button><button class="btn bdel" id="btnDelR" style="display:none" onclick="delR()">🗑️ Eliminar vía</button><button class="btn bg2" onclick="cm('mR1')">Cancelar</button></div></div>
 <!-- MODAL WORKOUT --><div class="mbg" id="mW1"><div class="mdl"><button class="mx" onclick="cm('mW1')">✕</button><h2>CREAR ENTRENO</h2><div class="fl"><label>Nombre</label><input id="wNm" placeholder="Fuerza dedos"></div><div class="fl"><label>Fecha programada (opcional)</label><input type="date" id="wDt"></div><div class="ct">PASOS</div><div id="wS"></div><div class="ct" style="margin-top:12px">AÑADIR EJERCICIO</div><div class="eg" id="eG"></div><div id="eP" style="display:none"></div><button class="btn bg2" id="eA" style="display:none;margin-bottom:12px" onclick="addEj()">+ Añadir</button><hr style="border:none;border-top:1px solid var(--bg4);margin:12px 0"><button class="btn bp" onclick="svW()">Guardar</button><button class="btn bg2" onclick="cm('mW1')">Cancelar</button></div></div>
 <!-- MODAL PLAN --><div class="mbg" id="mPl"><div class="mdl"><button class="mx" onclick="cm('mPl')">✕</button><h2>PLANIFICAR DÍA</h2><div class="fl"><label>Fecha</label><input type="date" id="plDt"></div><div class="fl"><label>Lugar</label><input id="plLg" placeholder="Atauri" list="dlZ"></div><div class="fl"><label>Tipo</label><select id="plTp"><option value="roca">Roca</option><option value="roco">Rocódromo</option></select></div><div class="fl"><label>Notas</label><input id="plNo" placeholder="Plan del día..."></div><button class="btn bp" onclick="svPlan()">Guardar</button><button class="btn bg2" onclick="cm('mPl')">Cancelar</button></div></div>
-<!-- MODAL NEW CRAG --><div class="mbg" id="mNC"><div class="mdl"><button class="mx" onclick="cm('mNC')">✕</button><h2>NUEVA ZONA</h2><p style="font-size:12px;color:var(--text2);margin-bottom:12px">En Google Maps, busca el sitio → pulsa largo en el mapa → copia las coordenadas que aparecen abajo.</p><div class="fl"><label>Nombre de la zona</label><input id="ncNm" placeholder="Galdames"></div><div class="fl"><label>Coordenadas (pega desde Google Maps)</label><input id="ncCoords" placeholder="43.270854, -3.102539"><small>Formato: latitud, longitud</small></div><button class="btn bp" onclick="svNewCrag()">Guardar zona</button><button class="btn bg2" onclick="cm('mNC')">Cancelar</button></div></div>
+<!-- MODAL NEW CRAG --><div class="mbg" id="mNC"><div class="mdl"><button class="mx" onclick="cm('mNC')">✕</button><h2>NUEVA ZONA</h2><p style="font-size:12px;color:var(--text2);margin-bottom:12px">En Google Maps → busca el sitio → pulsa largo → copia las coordenadas que aparecen abajo (ej: 43.270854, -3.102539).</p><div class="fl"><label>Nombre de la zona</label><input id="ncNm" placeholder="Galdames"></div><div class="fl"><label>Coordenadas</label><input id="ncCoords" placeholder="43.270854, -3.102539"><small>Pega las coordenadas o la URL larga de Google Maps (la que tiene @43.27,-3.10)</small></div><div id="ncMsg" style="font-size:11px;margin-bottom:8px"></div><button class="btn bp" onclick="svNewCrag()">Guardar zona</button><button class="btn bg2" onclick="cm('mNC')">Cancelar</button></div></div>
 <!-- NAV --><nav class="nav">
 <button class="nb on" onclick="go('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h3m10-11v10a1 1 0 01-1 1h-3m-4 0v-6"/></svg>Inicio</button>
 <button class="nb" onclick="go('routes')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>Vías</button>
@@ -143,7 +144,7 @@ function go(id){Object.values(PG).forEach(p=>document.getElementById(p).classLis
 // HOME
 function rH(){const y=new Date().getFullYear(),yr=R.filter(r=>new Date(r.date).getFullYear()===y);
   // Stats period toggle
-  let sp='';[['year','Año'],['life','Siempre']].forEach(([k,lb])=>{sp+=`<button class="gs${sPer===k?' on':''}" onclick="sPer='${k}';rH()">${lb}</button>`;});
+  let sp='';[['year','Año'],['life','Siempre']].forEach(([k,lb])=>{sp+=`<button class="gp${sPer===k?' on':''}" onclick="sPer='${k}';rH()">${lb}</button>`;});
   document.getElementById('sPer').innerHTML=sp;
   const sr=sPer==='year'?yr:R;const st=sPer==='year'?Tr.filter(t=>new Date(t.date).getFullYear()===y):Tr;
   document.getElementById('sV').textContent=sr.length;document.getElementById('sE').textContent=sr.filter(r=>r.enc).length;
@@ -153,7 +154,7 @@ function rH(){const y=new Date().getFullYear(),yr=R.filter(r=>new Date(r.date).g
   document.getElementById('sTl').textContent=sPer==='year'?'Entrenos / año':'Entrenos total';
   rCal();rGr();
   // Grade period toggle
-  let gp='';[['year','Año'],['life','Siempre']].forEach(([k,lb])=>{gp+=`<button class="gs${gPer===k?' on':''}" onclick="gPer='${k}';rGr()">${lb}</button>`;});
+  let gp='';[['year','Año'],['life','Siempre']].forEach(([k,lb])=>{gp+=`<button class="gp${gPer===k?' on':''}" onclick="gPer='${k}';rGr()">${lb}</button>`;});
   document.getElementById('gPer').innerHTML=gp;
   let gs='';[['all','Todas'],['cr','Cuerda Roca'],['br','Bloq Roco'],['cro','Cuerda Roco'],['ar','Auto Roco']].forEach(([k,lb])=>{gs+=`<button class="gs${gM===k?' on':''}" onclick="gM='${k}';document.querySelectorAll('#gS .gs').forEach(b=>b.classList.remove('on'));this.classList.add('on');rGr()">${lb}</button>`;});
   document.getElementById('gS').innerHTML=gs;}
@@ -232,14 +233,22 @@ function filterMap(){const q=document.getElementById('mapQ').value.trim().toLowe
   else if(match.length>1){let h='';match.forEach(l=>{h+=`<div class="fr-card" style="cursor:pointer" onclick="leafMap.setView([${l.lat},${l.lng}],10);showZone(mapLocs['${l.name}'])"><div class="fr-info"><div class="fr-name" style="color:var(--rock)">${l.name}</div><div class="fr-email">${l.rs.length} vías</div></div></div>`;});
     document.getElementById('mapResults').innerHTML=h;document.getElementById('mapResults').style.display='block';window.mapLocs={};match.forEach(l=>{window.mapLocs[l.name]=l;});}
   else{document.getElementById('mapResults').innerHTML='<div style="color:var(--text3);font-size:11px;padding:8px">No encontrado</div>';document.getElementById('mapResults').style.display='block';}}
-function openNewCrag(){document.getElementById('ncNm').value='';document.getElementById('ncCoords').value='';document.getElementById('mapDiv').style.display='none';document.getElementById('mNC').classList.add('sh');}
-async function svNewCrag(){const nm=document.getElementById('ncNm').value.trim(),raw=document.getElementById('ncCoords').value.trim();
-  if(!nm||!raw){alert('Rellena nombre y coordenadas');return;}
-  const parts=raw.split(/[,\s]+/).filter(x=>x.length>0);
-  if(parts.length<2){alert('Pega las coordenadas de Google Maps. Ej: 43.270854, -3.102539');return;}
-  const lat=parseFloat(parts[0]),lng=parseFloat(parts[1]);
-  if(isNaN(lat)||isNaN(lng)||lat<-90||lat>90||lng<-180||lng>180){alert('Coordenadas no válidas');return;}
-  await saveCrag({name:nm,lat,lng});cm('mNC');document.getElementById('mapDiv').style.display='block';drM();}
+function openNewCrag(){document.getElementById('ncNm').value='';document.getElementById('ncCoords').value='';document.getElementById('ncMsg').textContent='';document.getElementById('mapDiv').style.display='none';document.getElementById('mNC').classList.add('sh');}
+async function svNewCrag(){const nm=document.getElementById('ncNm').value.trim(),raw=document.getElementById('ncCoords').value.trim(),msg=document.getElementById('ncMsg');
+  if(!nm){msg.textContent='Pon un nombre';msg.style.color='var(--red)';return;}
+  if(!raw){msg.textContent='Pega las coordenadas';msg.style.color='var(--red)';return;}
+  let lat,lng;
+  // Try to extract from Google Maps URL (@lat,lng)
+  const urlMatch=raw.match(/@(-?\d+\.?\d*),(-?\d+\.?\d*)/);
+  if(urlMatch){lat=parseFloat(urlMatch[1]);lng=parseFloat(urlMatch[2]);}
+  else{// Try direct coords: "43.27, -3.10" or "43.27 -3.10"
+    const parts=raw.split(/[,\s]+/).filter(x=>x.length>0&&!isNaN(parseFloat(x)));
+    if(parts.length>=2){lat=parseFloat(parts[0]);lng=parseFloat(parts[1]);}}
+  if(isNaN(lat)||isNaN(lng)||lat<-90||lat>90||lng<-180||lng>180){
+    msg.textContent='No he podido leer las coordenadas. Pega algo como: 43.270854, -3.102539';msg.style.color='var(--red)';return;}
+  msg.textContent='Guardando...';msg.style.color='var(--green)';
+  try{await saveCrag({name:nm,lat,lng});cm('mNC');document.getElementById('mapDiv').style.display='block';drM();}
+  catch(e){msg.textContent='Error al guardar: '+e.message;msg.style.color='var(--red)';}}
 
 // TRAINS
 function drTr(){let tb='';[['hist','Historial'],['plan','Programados']].forEach(([k,lb])=>{tb+=`<button class="tb${tTb===k?' on':''}" onclick="tTb='${k}';drTr()">${lb}</button>`;});document.getElementById('tT').innerHTML=tb;
