@@ -16,12 +16,13 @@
 <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
 <style>
 :root{--bg:#141e2b;--bg2:#1b2838;--bg3:#243447;--bg4:#2d4055;--rock:#d4a574;--rockD:#8b6842;--green:#4ecdc4;--greenD:#2ea89f;--red:#ff6b6b;--yellow:#ffe66d;--blue:#4a9eff;--purple:#a78bfa;--text:#e8e0d8;--text2:#8a9bb0;--text3:#5a6a7a;--R:16px;}
-*{margin:0;padding:0;box-sizing:border-box;}body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;padding-bottom:75px;}
+*{margin:0;padding:0;box-sizing:border-box;}body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;padding-bottom:75px;position:relative;}
+body::after{content:'';position:fixed;bottom:70px;left:50%;transform:translateX(-50%);width:100%;max-width:500px;height:180px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 180'%3E%3Cpath d='M0,180 L30,165 L50,110 L60,75 L68,45 L72,30 L78,40 L88,35 L96,22 L104,22 L112,40 L128,42 L136,25 L144,14 L152,28 L168,35 L176,20 L184,12 L192,22 L205,50 L225,80 L260,110 L320,150 L400,170 L500,180Z' fill='%23d4a574' opacity='0.03'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:bottom center;background-size:100% auto;pointer-events:none;z-index:0;}
 h1,h2,h3{font-family:'Bebas Neue',sans-serif;letter-spacing:1.5px;}
 body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;background:linear-gradient(180deg,#1e3045,#1b2838 60%,var(--bg));z-index:-1;opacity:.7;}
 .nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid rgba(255,255,255,.05);display:flex;z-index:100;backdrop-filter:blur(20px);padding-bottom:env(safe-area-inset-bottom);}
 .nb{flex:1;padding:8px 0 6px;text-align:center;color:var(--text3);font-size:9px;cursor:pointer;border:none;background:none;font-family:'Nunito';transition:.2s;}.nb.on{color:var(--rock);}.nb svg{display:block;margin:0 auto 2px;width:20px;height:20px;}.nb.on svg{filter:drop-shadow(0 0 5px rgba(212,165,116,.4));}
-.page{display:none;padding:16px;animation:fu .3s ease;}.page.on{display:block;}#ph.on{display:flex!important;flex-direction:column;}@keyframes fu{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.page{display:none;padding:16px;animation:fu .3s ease;position:relative;z-index:1;}.page.on{display:block;}#ph.on{display:flex!important;flex-direction:column;}@keyframes fu{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 .hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}.hdr h1{font-size:24px;color:var(--rock);}
 .card{background:var(--bg2);border-radius:var(--R);padding:14px;border:1px solid rgba(255,255,255,.04);margin-bottom:12px;}.ct{font-family:'Bebas Neue';font-size:14px;color:var(--text2);letter-spacing:2px;margin-bottom:10px;}
 .stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;}.st{background:var(--bg2);border-radius:12px;padding:10px 8px;text-align:center;border:1px solid rgba(255,255,255,.04);}.st .v{font-family:'Bebas Neue';font-size:28px;line-height:1;}.st .l{font-size:9px;color:var(--text2);margin-top:2px;}.st.a .v{color:var(--rock);}.st.b .v{color:var(--green);}.st.c .v{color:var(--yellow);}
@@ -60,7 +61,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 #loginPage{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:20px;text-align:center;}
 .login-logo{font-family:'Bebas Neue';font-size:48px;color:var(--rock);margin-bottom:4px;}
 .goog-btn{display:flex;align-items:center;gap:12px;background:#fff;color:#333;border:none;padding:14px 28px;border-radius:25px;font-size:15px;font-family:'Nunito';font-weight:700;cursor:pointer;}.goog-btn:active{transform:scale(.95);}.goog-btn img{width:20px;height:20px;}
-.usr-bar{display:flex;align-items:center;gap:6px;padding:4px 0;}.usr-pic{width:24px;height:24px;border-radius:50%;border:2px solid var(--rock);}.usr-name{font-size:11px;color:var(--text2);}.usr-out{background:none;border:none;color:var(--text3);font-size:9px;cursor:pointer;text-decoration:underline;}
+.usr-bar{display:flex;align-items:center;gap:6px;padding:4px 0;}.usr-pic{width:24px;height:24px;border-radius:50%;border:2px solid var(--rock);}.usr-name{font-size:11px;color:var(--text2);}.usr-out{background:none;border:none;color:var(--text3);font-size:9px;cursor:pointer;text-decoration:underline;}.usr-tag{font-family:'Bebas Neue';font-size:11px;color:var(--rock);}
 .fr-card{display:flex;align-items:center;gap:8px;background:var(--bg3);border-radius:10px;padding:8px;margin-bottom:5px;cursor:pointer;}.fr-pic{width:32px;height:32px;border-radius:50%;border:2px solid var(--rock);}.fr-info{flex:1;}.fr-name{font-size:13px;font-weight:600;}.fr-email{font-size:9px;color:var(--text3);}.fr-rm{background:none;border:none;color:var(--red);font-size:14px;cursor:pointer;}
 .spinner{display:inline-block;width:20px;height:20px;border:2px solid var(--text3);border-top-color:var(--rock);border-radius:50%;animation:spin .6s linear infinite;}@keyframes spin{to{transform:rotate(360deg)}}.load-full{display:flex;align-items:center;justify-content:center;min-height:100vh;}
 .leaflet-popup-content-wrapper{background:var(--bg2)!important;color:var(--text)!important;border-radius:12px!important;border:1px solid var(--rock)!important;}.leaflet-popup-tip{background:var(--bg2)!important;}.leaflet-popup-content{font-family:'Nunito'!important;font-size:12px!important;}
@@ -71,16 +72,16 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <div id="loginPage" style="display:none"><div style="font-size:60px;margin-bottom:10px">⛰️</div><div class="login-logo">SUBE PIES</div><div style="color:var(--text2);font-size:14px;margin-bottom:30px">Diario de escalada</div><button class="goog-btn" onclick="loginGoogle()"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg">Entrar con Google</button></div>
 <div id="appWrap" style="display:none">
 <!-- HOME --><div id="ph" class="page on" style="overflow:hidden;height:calc(100vh - 75px);display:none">
-<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><div><h1 style="font-size:22px;color:var(--rock);margin:0">SUBE PIES</h1><div class="usr-bar"><img class="usr-pic" id="uPic"><span class="usr-name" id="uName"></span><button class="usr-out" onclick="logout()">Salir</button></div></div><button class="sbb" style="font-size:10px;padding:5px 10px" onclick="go('sync')">📡</button></div>
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><div><h1 style="font-size:22px;color:var(--rock);margin:0">SUBE PIES</h1><div class="usr-bar"><img class="usr-pic" id="uPic"><span class="usr-name" id="uName"></span><span class="usr-tag" id="uTag"></span><button class="usr-out" onclick="logout()">Salir</button></div></div><button class="sbb" style="font-size:10px;padding:5px 10px" onclick="go('sync')">📡</button></div>
 <div class="gsw" id="sPer" style="margin-bottom:4px"></div>
 <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:6px"><div class="st a" style="padding:6px 4px"><div class="v" id="sV" style="font-size:24px">0</div><div class="l" id="sVl">Vías / año</div></div><div class="st b" style="padding:6px 4px"><div class="v" id="sE" style="font-size:24px">0</div><div class="l" id="sEl">Enc</div></div><div class="st c" style="padding:6px 4px"><div class="v" id="sT" style="font-size:24px">0</div><div class="l" id="sTl">Entrenos</div></div></div>
 <div style="background:var(--bg2);border-radius:12px;padding:8px;border:1px solid rgba(255,255,255,.04);margin-bottom:6px"><div class="cn" style="margin-bottom:4px"><button onclick="cNav(-1)" style="padding:2px 6px;font-size:16px">◀</button><span class="mo" id="cM" style="font-size:15px"></span><button onclick="cNav(1)" style="padding:2px 6px;font-size:16px">▶</button></div><div class="cg" id="cG"></div><div id="cD" style="margin-top:4px"></div></div>
 <div style="background:var(--bg2);border-radius:12px;padding:8px;border:1px solid rgba(255,255,255,.04);overflow-y:auto;flex:1"><div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span class="ct" style="margin:0;font-size:12px">GRADOS</span></div><div class="gsw" id="gPer" style="margin-bottom:4px"></div><div class="gsw" id="gS" style="margin-bottom:4px"></div><div class="gb" id="gB"></div></div>
 </div>
-<!-- VÍAS --><div id="pv" class="page"><div class="hdr"><h1>VÍAS</h1><button class="bp btn" style="width:auto;padding:6px 12px;font-size:11px;border-radius:10px" onclick="addR()">+ Añadir</button></div><div class="chs" id="rF"></div><div class="sb"><label>Ordenar:</label><select id="rS" onchange="drR()"><option value="date">Fecha ↓</option><option value="dateA">Fecha ↑</option><option value="grD">Grado ↓</option><option value="grA">Grado ↑</option><option value="lugar">Lugar</option><option value="amigo">Compañero</option></select></div><div id="rL"></div></div>
-<!-- MAPA --><div id="pm" class="page"><div class="hdr"><h1>MAPA — ROCA</h1></div><div class="map-stats"><div class="st a"><div class="v" id="mTotal">0</div><div class="l">Total vías</div></div><div class="st b"><div class="v" id="mEnc">0</div><div class="l">Encadenadas</div></div><div class="st"><div class="v" style="color:var(--blue)" id="mZonas">0</div><div class="l">Zonas</div></div></div><div class="map-search"><input id="mapQ" placeholder="🔍 Buscar zona..." oninput="filterMap()"><button class="bp btn" style="width:auto;padding:8px 12px;font-size:11px;border-radius:10px" onclick="openNewCrag()">+ Zona</button></div><div id="mapDiv"></div><div id="mapResults" style="display:none"></div><div id="mRt"></div></div>
+<!-- VÍAS --><div id="pv" class="page"><div class="hdr"><h1>VÍAS</h1><button class="bp btn" style="width:auto;padding:6px 12px;font-size:11px;border-radius:10px" onclick="addR()">+ Añadir</button></div><div style="margin-bottom:10px"><input id="vQ" placeholder="🔍 Buscar vía, lugar, amigo, grado..." oninput="drR()" style="width:100%;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:8px 14px;color:var(--text);font-size:12px;font-family:Nunito;outline:none"></div><div class="chs" id="rF"></div><div class="sb"><label>Ordenar:</label><select id="rS" onchange="drR()"><option value="date">Fecha ↓</option><option value="dateA">Fecha ↑</option><option value="grD">Grado ↓</option><option value="grA">Grado ↑</option><option value="lugar">Lugar</option><option value="amigo">Compañero</option></select></div><div id="rL"></div></div>
+<!-- MAPA --><div id="pm" class="page"><div class="hdr"><h1>MAPA</h1></div><div style="display:flex;gap:0;margin-bottom:10px;background:var(--bg3);border-radius:10px;padding:2px" id="mapTbs"></div><div class="map-stats"><div class="st a"><div class="v" id="mTotal">0</div><div class="l">Vías</div></div><div class="st b"><div class="v" id="mEnc">0</div><div class="l">Enc</div></div><div class="st"><div class="v" style="color:var(--blue)" id="mZonas">0</div><div class="l">Zonas</div></div></div><div class="map-search"><input id="mapQ" placeholder="🔍 Buscar zona..." oninput="filterMap()"><button class="bp btn" style="width:auto;padding:8px 12px;font-size:11px;border-radius:10px" onclick="openNewCrag()">+ Zona</button></div><div id="mapDiv"></div><div id="mapResults" style="display:none"></div><div id="mRt"></div></div>
 <!-- ENTRENOS --><div id="pt" class="page"><div class="hdr"><h1>ENTRENOS</h1></div><div class="tbs" id="tT"></div><div id="tH"></div><div id="tP" style="display:none"><button class="btn bp" onclick="openWo()" style="margin-bottom:12px">+ Crear entreno</button><div id="wL"></div></div></div>
-<!-- AMIGOS --><div id="pf" class="page"><div class="hdr"><h1>AMIGOS</h1></div><div class="card"><div class="ct">AÑADIR AMIGO</div><div style="display:flex;gap:6px"><input id="frEmail" placeholder="Email del amigo" style="flex:1;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px;color:var(--text);font-size:12px;font-family:Nunito;outline:none"><button class="bp btn" style="width:auto;padding:8px 14px;font-size:12px;border-radius:10px" onclick="addFriend()">+</button></div><div id="frMsg" style="font-size:10px;margin-top:4px"></div></div><div class="ct" style="margin-top:12px">MIS AMIGOS</div><div id="frList"></div><div id="frView" style="display:none;margin-top:12px"><div class="ct" id="frViewTitle"></div><div id="frRoutes"></div></div></div>
+<!-- AMIGOS --><div id="pf" class="page"><div class="hdr"><h1>AMIGOS</h1></div><div class="card"><div class="ct">AÑADIR AMIGO</div><div style="display:flex;gap:6px"><input id="frCode" placeholder="Código #1234 o email" style="flex:1;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px;color:var(--text);font-size:12px;font-family:Nunito;outline:none"><button class="bp btn" style="width:auto;padding:8px 14px;font-size:12px;border-radius:10px" onclick="addFriend()">+</button></div><div id="frMsg" style="font-size:10px;margin-top:4px"></div></div><div class="ct" style="margin-top:12px">MIS AMIGOS</div><div id="frList"></div><div id="frView" style="display:none;margin-top:12px"><div class="ct" id="frViewTitle"></div><div id="frRoutes"></div></div></div>
 <!-- SYNC --><div id="ps" class="page"><div class="hdr"><h1>SYNC</h1></div><div class="card" style="text-align:center;padding:20px"><div style="font-size:48px;margin-bottom:8px">⛰️</div><div style="font-size:13px;color:var(--text2);margin-bottom:12px" id="bT">Conecta tu ESP32</div><button class="sbb" id="bB" onclick="doBT()">Conectar ESP32</button></div>
 <div class="card"><div class="ct">EXPORTAR A EXCEL</div>
 <div style="display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap" id="exPer"></div>
@@ -110,7 +111,9 @@ let U=null,R=[],Tr=[],W=[],friends=[],plans=[],userCrags=[];
 auth.onAuthStateChanged(async u=>{document.getElementById('loadPage').style.display='none';
   if(u){U=u;document.getElementById('loginPage').style.display='none';document.getElementById('appWrap').style.display='block';
     document.getElementById('uPic').src=u.photoURL||'';document.getElementById('uName').textContent=u.displayName||u.email;
-    await db.collection('users').doc(u.uid).set({name:u.displayName,email:u.email,photo:u.photoURL},{merge:true});
+    const code=parseInt(u.uid.replace(/[^0-9]/g,'').slice(0,4))||Math.floor(Math.random()*9000)+1000;
+    await db.collection('users').doc(u.uid).set({name:u.displayName,email:u.email,photo:u.photoURL,code:code},{merge:true});
+    document.getElementById('uTag').textContent='#'+code;
     await loadData();rH();}
   else{U=null;document.getElementById('loginPage').style.display='';document.getElementById('appWrap').style.display='none';}});
 function loginGoogle(){auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());}
@@ -145,7 +148,7 @@ function getCragCoords(name){if(!name)return null;const nl=name.toLowerCase();
 
 const G=["V","6a","6a+","6b","6b+","6c","6c+","7a","7a+","7b","7b+","7c","7c+","8a","8a+","8b","8b+","8c","8c+","9a","9a+","9b","9b+","9c"];
 const CT=["1234321","1-3-5","112233","1-max"],AN=["90gr","120gr","Lock-off"],AG=["Regleta","Cazo","Pinza","Romo"];
-let cY=2026,cMo=1,cSl=null,gM='cr',gPer='year',sPer='year',rFl='all',tTb='hist',eRt=null,cE=null,wSt=[],leafMap=null,markers=[];
+let cY=2026,cMo=1,cSl=null,gM='cr',gPer='year',sPer='year',rFl='all',tTb='hist',mapMode='roca',eRt=null,cE=null,wSt=[],leafMap=null,markers=[];
 const PG={home:'ph',routes:'pv',map:'pm',train:'pt',friends:'pf',sync:'ps'},PK=Object.keys(PG);
 function go(id){Object.values(PG).forEach(p=>document.getElementById(p).classList.remove('on'));document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));document.getElementById(PG[id]).classList.add('on');document.querySelectorAll('.nb')[PK.indexOf(id)].classList.add('on');({home:rH,routes:drR,map:drM,train:drTr,friends:drFr,sync:drS})[id]();}
 
@@ -206,8 +209,10 @@ function openPlan(dt){document.getElementById('plDt').value=dt;document.getEleme
 async function svPlan(){await savePlan({date:document.getElementById('plDt').value,lugar:document.getElementById('plLg').value,tipo:document.getElementById('plTp').value,notas:document.getElementById('plNo').value});cm('mPl');rCal();}
 
 // ROUTES
-function drR(){let fc='';[['all','Todas'],['roca','Roca'],['roco','Rocódromo'],['enc','Encadenadas'],['cuerda','Cuerda'],['bloque','Bloque']].forEach(([k,lb])=>{fc+=`<button class="ch${rFl===k?' on':''}" onclick="rFl='${k}';drR()">${lb}</button>`;});document.getElementById('rF').innerHTML=fc;
+function drR(){let fc='';[['all','Todas'],['roca','Roca'],['roco','Roco'],['enc','Enc'],['cuerda','Cuerda'],['bloque','Bloque']].forEach(([k,lb])=>{fc+=`<button class="ch${rFl===k?' on':''}" onclick="rFl='${k}';drR()">${lb}</button>`;});document.getElementById('rF').innerHTML=fc;
+  const q=(document.getElementById('vQ').value||'').trim().toLowerCase();
   let fl=R.slice();if(rFl==='roca')fl=fl.filter(r=>r.lugar==='roca');if(rFl==='roco')fl=fl.filter(r=>r.lugar==='roco');if(rFl==='enc')fl=fl.filter(r=>r.enc);if(rFl==='cuerda')fl=fl.filter(r=>r.tipo==='Cuerda');if(rFl==='bloque')fl=fl.filter(r=>r.tipo==='Bloque');
+  if(q)fl=fl.filter(r=>(r.nombre||'').toLowerCase().includes(q)||(r.sitio||'').toLowerCase().includes(q)||(r.amigos||'').toLowerCase().includes(q)||(r.grado||'').toLowerCase().includes(q)||(r.tipo||'').toLowerCase().includes(q)||(r.date||'').includes(q));
   const so=document.getElementById('rS').value;if(so==='date')fl.sort((a,b)=>b.date.localeCompare(a.date));if(so==='dateA')fl.sort((a,b)=>a.date.localeCompare(b.date));if(so==='grD')fl.sort((a,b)=>G.indexOf(b.grado)-G.indexOf(a.grado));if(so==='grA')fl.sort((a,b)=>G.indexOf(a.grado)-G.indexOf(b.grado));if(so==='lugar')fl.sort((a,b)=>(a.sitio||'').localeCompare(b.sitio||''));if(so==='amigo')fl.sort((a,b)=>(a.amigos||'').localeCompare(b.amigos||''));
   let h='',ld2='';const byD=so==='date'||so==='dateA';
   fl.forEach(r=>{if(byD&&r.date!==ld2){h+=`<div style="font-family:'Bebas Neue';font-size:12px;color:var(--text3);margin:12px 0 5px;letter-spacing:2px">${new Date(r.date).toLocaleDateString('es-ES',{weekday:'short',day:'numeric',month:'short'}).toUpperCase()}</div>`;ld2=r.date;}h+=vc(r,true);});
@@ -221,21 +226,19 @@ async function delR(){if(!eRt||!confirm('¿Eliminar esta vía?'))return;await de
 function cm(id){document.getElementById(id).classList.remove('sh');if(id==='mNC')document.getElementById('mapDiv').style.display='block';}
 
 // MAP
-function drM(){const rr=R.filter(r=>r.lugar==='roca');document.getElementById('mTotal').textContent=rr.length;document.getElementById('mEnc').textContent=rr.filter(r=>r.enc).length;
+function drM(){let tb='';[['roca','🏔️ Roca'],['roco','🏢 Rocódromo']].forEach(([k,lb])=>{tb+=`<button class="tb${mapMode===k?' on':''}" onclick="mapMode='${k}';drM()">${lb}</button>`;});document.getElementById('mapTbs').innerHTML=tb;
+  const rr=mapMode==='roca'?R.filter(r=>r.lugar==='roca'):R.filter(r=>r.lugar==='roco');
+  document.getElementById('mTotal').textContent=rr.length;document.getElementById('mEnc').textContent=rr.filter(r=>r.enc).length;
   const locs=buildLocs(rr);document.getElementById('mZonas').textContent=Object.keys(locs).length;
   if(!leafMap){leafMap=L.map('mapDiv',{zoomControl:false}).setView([40.4,-2.5],5);L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'©OSM',maxZoom:18}).addTo(leafMap);L.control.zoom({position:'topright'}).addTo(leafMap);}
-  renderMarkers(locs);setTimeout(()=>leafMap.invalidateSize(),100);
-  document.getElementById('mRt').innerHTML='<div style="color:var(--text3);font-size:11px;text-align:center;padding:8px">Pulsa un punto o busca arriba</div>';document.getElementById('mapResults').style.display='none';document.getElementById('mapQ').value='';}
+  markers.forEach(m=>leafMap.removeLayer(m));markers=[];const bounds=[],col=mapMode==='roca'?'#d4a574':'#4ecdc4';
+  Object.values(locs).forEach(l=>{const sz=Math.min(8+l.rs.length*3,28);const icon=L.divIcon({className:'',html:`<div style="width:${sz}px;height:${sz}px;background:${col};border-radius:50%;border:2px solid #fff;opacity:.9;display:flex;align-items:center;justify-content:center;font-size:${Math.max(9,sz/2.5)}px;font-weight:700;color:#000;font-family:Nunito">${l.rs.length}</div>`,iconSize:[sz,sz],iconAnchor:[sz/2,sz/2]});const m=L.marker([l.lat,l.lng],{icon}).addTo(leafMap);m.bindPopup(`<b style="font-family:'Bebas Neue';font-size:14px;color:${col}">${l.name}</b><br>${l.rs.length} vías · ${l.enc} enc.`);m.on('click',()=>showZone(l));markers.push(m);bounds.push([l.lat,l.lng]);});
+  if(bounds.length>1)leafMap.fitBounds(bounds,{padding:[20,20]});else if(bounds.length===1)leafMap.setView(bounds[0],10);
+  setTimeout(()=>leafMap.invalidateSize(),100);document.getElementById('mRt').innerHTML='';document.getElementById('mapResults').style.display='none';document.getElementById('mapQ').value='';}
 function buildLocs(rr){const locs={};rr.forEach(r=>{if(!r.sitio)return;const c=getCragCoords(r.sitio);if(c){if(!locs[c.name])locs[c.name]={...c,rs:[],enc:0};locs[c.name].rs.push(r);if(r.enc)locs[c.name].enc++;}});return locs;}
-function renderMarkers(locs){markers.forEach(m=>leafMap.removeLayer(m));markers=[];const bounds=[];
-  Object.values(locs).forEach(l=>{const sz=Math.min(8+l.rs.length*3,28);
-    const icon=L.divIcon({className:'',html:`<div style="width:${sz}px;height:${sz}px;background:var(--rock);border-radius:50%;border:2px solid #fff;opacity:.9;display:flex;align-items:center;justify-content:center;font-size:${Math.max(9,sz/2.5)}px;font-weight:700;color:#000;font-family:Nunito">${l.rs.length}</div>`,iconSize:[sz,sz],iconAnchor:[sz/2,sz/2]});
-    const m=L.marker([l.lat,l.lng],{icon}).addTo(leafMap);m.bindPopup(`<b style="font-family:'Bebas Neue';font-size:16px;color:var(--rock)">${l.name}</b><br>${l.rs.length} vías · ${l.enc} enc.`);
-    m.on('click',()=>showZone(l));markers.push(m);bounds.push([l.lat,l.lng]);});
-  if(bounds.length>1)leafMap.fitBounds(bounds,{padding:[30,30]});else if(bounds.length===1)leafMap.setView(bounds[0],10);}
 function showZone(l){let h=`<div style="font-family:'Bebas Neue';font-size:16px;color:var(--rock);margin:8px 0">${l.name} — ${l.rs.length} vías (${l.enc} enc.)</div>`;l.rs.forEach(r=>{h+=vc(r,true);});document.getElementById('mRt').innerHTML=h;}
 function filterMap(){const q=document.getElementById('mapQ').value.trim().toLowerCase();if(!q){document.getElementById('mapResults').style.display='none';return;}
-  const rr=R.filter(r=>r.lugar==='roca');const locs=buildLocs(rr);const match=Object.values(locs).filter(l=>l.name.toLowerCase().includes(q));
+  const rr=mapMode==='roca'?R.filter(r=>r.lugar==='roca'):R.filter(r=>r.lugar==='roco');const locs=buildLocs(rr);const match=Object.values(locs).filter(l=>l.name.toLowerCase().includes(q));
   if(match.length===1){leafMap.setView([match[0].lat,match[0].lng],10);showZone(match[0]);document.getElementById('mapResults').style.display='none';}
   else if(match.length>1){let h='';match.forEach(l=>{h+=`<div class="fr-card" style="cursor:pointer" onclick="leafMap.setView([${l.lat},${l.lng}],10);showZone(mapLocs['${l.name}'])"><div class="fr-info"><div class="fr-name" style="color:var(--rock)">${l.name}</div><div class="fr-email">${l.rs.length} vías</div></div></div>`;});
     document.getElementById('mapResults').innerHTML=h;document.getElementById('mapResults').style.display='block';window.mapLocs={};match.forEach(l=>{window.mapLocs[l.name]=l;});}
@@ -290,19 +293,24 @@ async function svW(){const n=(document.getElementById('wNm').value||'').trim();i
   const d={name:n,steps:[...wSt]};const dt=document.getElementById('wDt').value;if(dt)d.plannedDate=dt;await saveWorkout(d);cm('mW1');tTb='plan';drTr();}
 
 // FRIENDS
-async function drFr(){let h='';if(!friends.length)h='<div style="color:var(--text3);font-size:11px;text-align:center;padding:16px">Añade amigos por email</div>';
-  for(const f of friends){const q=await db.collection('users').where('email','==',f.email).get();let name=f.email,photo='';
-    if(!q.empty){const ud=q.docs[0].data();name=ud.name||f.email;photo=ud.photo||'';}
-    h+=`<div class="fr-card" onclick="viewFr('${f.email}')"><img class="fr-pic" src="${photo||'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22><circle cx=%2212%22 cy=%228%22 r=%224%22 fill=%22%238a9bb0%22/><path d=%22M4 20c0-4 4-7 8-7s8 3 8 7%22 fill=%22%238a9bb0%22/></svg>'}"><div class="fr-info"><div class="fr-name">${name}</div><div class="fr-email">${f.email}</div></div><button class="fr-rm" onclick="event.stopPropagation();rmFr('${f.id}')">✕</button></div>`;}
+async function drFr(){let h='';if(!friends.length)h='<div style="color:var(--text3);font-size:11px;text-align:center;padding:16px">Añade amigos con su código # o email</div>';
+  for(const f of friends){const q=await db.collection('users').where('email','==',f.email).get();let name=f.email,photo='',code='';
+    if(!q.empty){const ud=q.docs[0].data();name=ud.name||f.email;photo=ud.photo||'';code=ud.code?'#'+ud.code:'';}
+    h+=`<div class="fr-card" onclick="viewFr('${f.email}')"><img class="fr-pic" src="${photo||'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22><circle cx=%2212%22 cy=%228%22 r=%224%22 fill=%22%238a9bb0%22/><path d=%22M4 20c0-4 4-7 8-7s8 3 8 7%22 fill=%22%238a9bb0%22/></svg>'}"><div class="fr-info"><div class="fr-name">${name} <span style="font-size:9px;color:var(--rock)">${code}</span></div><div class="fr-email">${f.email}</div></div><button class="fr-rm" onclick="event.stopPropagation();rmFr('${f.id}')">✕</button></div>`;}
   document.getElementById('frList').innerHTML=h;document.getElementById('frView').style.display='none';}
-async function addFriend(){const email=document.getElementById('frEmail').value.trim().toLowerCase(),msg=document.getElementById('frMsg');
-  if(!email||!email.includes('@')){msg.textContent='Email no válido';msg.style.color='var(--red)';return;}
-  if(U&&email===U.email.toLowerCase()){msg.textContent='Ese eres tú';msg.style.color='var(--red)';return;}
-  if(friends.some(f=>f.email===email)){msg.textContent='Ya es tu amigo';msg.style.color='var(--yellow)';return;}
-  const q=await db.collection('users').where('email','==',email).get();
-  if(q.empty){msg.textContent='No está en Sube Pies (tiene que entrar primero)';msg.style.color='var(--yellow)';return;}
-  await db.collection('users').doc(U.uid).collection('friends').add({email});friends.push({email});
-  document.getElementById('frEmail').value='';msg.textContent='Añadido ✓';msg.style.color='var(--green)';drFr();}
+async function addFriend(){const raw=document.getElementById('frCode').value.trim(),msg=document.getElementById('frMsg');
+  if(!raw){msg.textContent='Pon código o email';msg.style.color='var(--red)';return;}
+  let q;
+  if(raw.startsWith('#')||/^\d+$/.test(raw)){
+    const code=parseInt(raw.replace('#',''));
+    q=await db.collection('users').where('code','==',code).get();
+  }else{q=await db.collection('users').where('email','==',raw.toLowerCase()).get();}
+  if(q.empty){msg.textContent='No encontrado';msg.style.color='var(--yellow)';return;}
+  const fDoc=q.docs[0],fd=fDoc.data();
+  if(fDoc.id===U.uid){msg.textContent='Ese eres tú';msg.style.color='var(--red)';return;}
+  if(friends.some(f=>f.email===fd.email)){msg.textContent='Ya es tu amigo';msg.style.color='var(--yellow)';return;}
+  await db.collection('users').doc(U.uid).collection('friends').add({email:fd.email});friends.push({email:fd.email});
+  document.getElementById('frCode').value='';msg.textContent=(fd.name||fd.email)+' añadido ✓';msg.style.color='var(--green)';drFr();}
 async function rmFr(id){await db.collection('users').doc(U.uid).collection('friends').doc(id).delete();friends=friends.filter(f=>f.id!==id);drFr();}
 async function viewFr(email){const q=await db.collection('users').where('email','==',email).get();if(q.empty)return;
   const fuid=q.docs[0].id,fd=q.docs[0].data();document.getElementById('frViewTitle').textContent='VÍAS DE '+(fd.name||email).toUpperCase();
