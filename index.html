@@ -65,6 +65,8 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 .fr-card{display:flex;align-items:center;gap:8px;background:var(--bg3);border-radius:10px;padding:8px;margin-bottom:5px;cursor:pointer;}.fr-pic{width:32px;height:32px;border-radius:50%;border:2px solid var(--rock);}.fr-info{flex:1;}.fr-name{font-size:13px;font-weight:600;}.fr-email{font-size:9px;color:var(--text3);}.fr-rm{background:none;border:none;color:var(--red);font-size:14px;cursor:pointer;}
 .spinner{display:inline-block;width:20px;height:20px;border:2px solid var(--text3);border-top-color:var(--rock);border-radius:50%;animation:spin .6s linear infinite;}@keyframes spin{to{transform:rotate(360deg)}}.load-full{display:flex;align-items:center;justify-content:center;min-height:100vh;}
 .leaflet-popup-content-wrapper{background:var(--bg2)!important;color:var(--text)!important;border-radius:12px!important;border:1px solid var(--rock)!important;}.leaflet-popup-tip{background:var(--bg2)!important;}.leaflet-popup-content{font-family:'Nunito'!important;font-size:12px!important;}
+.chat-wrap{background:var(--bg);border-radius:var(--R);border:1px solid rgba(255,255,255,.04);height:220px;overflow-y:auto;padding:8px;margin-bottom:8px;}.chat-msg{margin-bottom:5px;}.chat-msg.me{text-align:right;}.chat-bub{display:inline-block;padding:5px 10px;border-radius:12px;font-size:11px;max-width:80%;word-break:break-word;}.chat-msg.me .chat-bub{background:var(--rock);color:#000;border-bottom-right-radius:4px;}.chat-msg.ot .chat-bub{background:var(--bg3);color:var(--text);border-bottom-left-radius:4px;}.chat-time{font-size:7px;color:var(--text3);margin-top:1px;}
+.chat-input{display:flex;gap:4px;}.chat-input input{flex:1;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:8px 12px;color:var(--text);font-size:12px;font-family:'Nunito';outline:none;}.chat-input button{background:var(--rock);border:none;color:#000;width:36px;height:36px;border-radius:50%;font-size:14px;cursor:pointer;font-weight:700;}
 </style>
 </head>
 <body>
@@ -80,8 +82,9 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 </div>
 <!-- VÍAS --><div id="pv" class="page"><div class="hdr"><h1>VÍAS</h1><button class="bp btn" style="width:auto;padding:6px 12px;font-size:11px;border-radius:10px" onclick="addR()">+ Añadir</button></div><div style="margin-bottom:10px"><input id="vQ" placeholder="🔍 Buscar vía, lugar, amigo, grado..." oninput="drR()" style="width:100%;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:8px 14px;color:var(--text);font-size:12px;font-family:Nunito;outline:none"></div><div class="chs" id="rF"></div><div class="sb"><label>Ordenar:</label><select id="rS" onchange="drR()"><option value="date">Fecha ↓</option><option value="dateA">Fecha ↑</option><option value="grD">Grado ↓</option><option value="grA">Grado ↑</option><option value="lugar">Lugar</option><option value="amigo">Compañero</option></select></div><div id="rL"></div></div>
 <!-- MAPA --><div id="pm" class="page"><div class="hdr"><h1>MAPA</h1></div><div style="display:flex;gap:0;margin-bottom:10px;background:var(--bg3);border-radius:10px;padding:2px" id="mapTbs"></div><div class="map-stats"><div class="st a"><div class="v" id="mTotal">0</div><div class="l">Vías</div></div><div class="st b"><div class="v" id="mEnc">0</div><div class="l">Enc</div></div><div class="st"><div class="v" style="color:var(--blue)" id="mZonas">0</div><div class="l">Zonas</div></div></div><div class="map-search"><input id="mapQ" placeholder="🔍 Buscar zona..." oninput="filterMap()"><button class="bp btn" style="width:auto;padding:8px 12px;font-size:11px;border-radius:10px" onclick="openNewCrag()">+ Zona</button></div><div id="mapDiv"></div><div id="mapResults" style="display:none"></div><div id="mRt"></div></div>
-<!-- ENTRENOS --><div id="pt" class="page"><div class="hdr"><h1>ENTRENOS</h1></div><div class="tbs" id="tT"></div><div id="tH"></div><div id="tP" style="display:none"><button class="btn bp" onclick="openWo()" style="margin-bottom:12px">+ Crear entreno</button><div id="wL"></div></div></div>
-<!-- AMIGOS --><div id="pf" class="page"><div class="hdr"><h1>AMIGOS</h1></div><div class="card"><div class="ct">AÑADIR AMIGO</div><div style="display:flex;gap:6px"><input id="frCode" placeholder="Código #1234 o email" style="flex:1;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px;color:var(--text);font-size:12px;font-family:Nunito;outline:none"><button class="bp btn" style="width:auto;padding:8px 14px;font-size:12px;border-radius:10px" onclick="addFriend()">+</button></div><div id="frMsg" style="font-size:10px;margin-top:4px"></div></div><div class="ct" style="margin-top:12px">MIS AMIGOS</div><div id="frList"></div><div id="frView" style="display:none;margin-top:12px"><div class="ct" id="frViewTitle"></div><div id="frRoutes"></div></div></div>
+<!-- ENTRENOS --><div id="pt" class="page"><div class="hdr"><h1>ENTRENOS</h1></div><div class="tbs" id="tT"></div><div id="tH"></div><div id="tP" style="display:none"><button class="btn bp" onclick="openWo()" style="margin-bottom:12px">+ Crear entreno</button><div id="wL"></div></div><div id="tProg" style="display:none"><div class="ct">PROGRESO LASTRE (KG)</div><canvas id="cLas" height="130" style="width:100%;background:var(--bg3);border-radius:var(--R);margin-bottom:12px"></canvas><div class="ct">PROGRESO REGLETA (MM)</div><canvas id="cReg" height="130" style="width:100%;background:var(--bg3);border-radius:var(--R)"></canvas></div></div>
+<!-- AMIGOS --><div id="pf" class="page"><div class="hdr"><h1>AMIGOS</h1></div><div class="card"><div class="ct">AÑADIR AMIGO</div><div style="display:flex;gap:6px"><input id="frCode" placeholder="Código #1234 o email" style="flex:1;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px;color:var(--text);font-size:12px;font-family:Nunito;outline:none"><button class="bp btn" style="width:auto;padding:8px 14px;font-size:12px;border-radius:10px" onclick="addFriend()">+</button></div><div id="frMsg" style="font-size:10px;margin-top:4px"></div></div><div class="ct" style="margin-top:12px">MIS AMIGOS</div><div id="frList"></div><div id="frView" style="display:none;margin-top:12px"></div></div>
+<!-- CHAT MODAL --><div class="mbg" id="mChat"><div class="mdl" style="height:70vh;display:flex;flex-direction:column"><button class="mx" onclick="closeChat()">✕</button><h2 id="chatTitle">CHAT</h2><div class="chat-wrap" id="chatBox" style="flex:1"></div><div class="chat-input"><input id="chatIn" placeholder="Escribe..." onkeydown="if(event.key==='Enter')sendChat()"><button onclick="sendChat()">→</button></div></div></div>
 <!-- SYNC --><div id="ps" class="page"><div class="hdr"><h1>SYNC</h1></div><div class="card" style="text-align:center;padding:20px"><div style="font-size:48px;margin-bottom:8px">⛰️</div><div style="font-size:13px;color:var(--text2);margin-bottom:12px" id="bT">Conecta tu ESP32</div><button class="sbb" id="bB" onclick="doBT()">Conectar ESP32</button></div>
 <div class="card"><div class="ct">EXPORTAR A EXCEL</div>
 <div style="display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap" id="exPer"></div>
@@ -148,7 +151,7 @@ function getCragCoords(name){if(!name)return null;const nl=name.toLowerCase();
 
 const G=["V","6a","6a+","6b","6b+","6c","6c+","7a","7a+","7b","7b+","7c","7c+","8a","8a+","8b","8b+","8c","8c+","9a","9a+","9b","9b+","9c"];
 const CT=["1234321","1-3-5","112233","1-max"],AN=["90gr","120gr","Lock-off"],AG=["Regleta","Cazo","Pinza","Romo"];
-let cY=2026,cMo=1,cSl=null,gM='cr',gPer='year',sPer='year',rFl='all',tTb='hist',mapMode='roca',eRt=null,cE=null,wSt=[],leafMap=null,markers=[];
+let cY=2026,cMo=1,cSl=null,gM='cr',gPer='year',sPer='year',rFl='all',tTb='hist',mapMode='roca',eRt=null,cE=null,wSt=[],leafMap=null,markers=[],chatUnsub=null,chatFrUid=null;
 const PG={home:'ph',routes:'pv',map:'pm',train:'pt',friends:'pf',sync:'ps'},PK=Object.keys(PG);
 function go(id){Object.values(PG).forEach(p=>document.getElementById(p).classList.remove('on'));document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));document.getElementById(PG[id]).classList.add('on');document.querySelectorAll('.nb')[PK.indexOf(id)].classList.add('on');({home:rH,routes:drR,map:drM,train:drTr,friends:drFr,sync:drS})[id]();}
 
@@ -261,9 +264,11 @@ async function svNewCrag(){const nm=document.getElementById('ncNm').value.trim()
   catch(e){msg.textContent='Error al guardar: '+e.message;msg.style.color='var(--red)';}}
 
 // TRAINS
-function drTr(){let tb='';[['hist','Historial'],['plan','Programados']].forEach(([k,lb])=>{tb+=`<button class="tb${tTb===k?' on':''}" onclick="tTb='${k}';drTr()">${lb}</button>`;});document.getElementById('tT').innerHTML=tb;
-  if(tTb==='hist'){document.getElementById('tH').style.display='block';document.getElementById('tP').style.display='none';let h='';Tr.forEach(t=>{h+=`<div class="trn"><div style="display:flex;justify-content:space-between"><div class="tt2">${t.tipo}</div><div style="font-size:10px;color:var(--text3)">${new Date(t.date).toLocaleDateString('es-ES',{day:'numeric',month:'short'})}</div></div><div class="td">${t.detail}</div></div>`;});document.getElementById('tH').innerHTML=h||'<div style="color:var(--text3);text-align:center;padding:20px">Sin entrenos</div>';}
-  else{document.getElementById('tH').style.display='none';document.getElementById('tP').style.display='block';let h='';W.forEach(w=>{h+=`<div class="wi"><button class="wi-del" onclick="delWo('${w.id}')">✕</button><div class="wit">${w.name}</div>${w.plannedDate?`<div class="wi-date">📅 ${new Date(w.plannedDate).toLocaleDateString('es-ES',{weekday:'short',day:'numeric',month:'short'})}</div>`:''}<div class="wis">`;(w.steps||[]).forEach((s,i)=>{h+=`<div class="wiss">${i+1}. ${s.txt||s}</div>`;});h+=`</div><button class="wib" onclick="alert('📡 BT próximamente')">📡 ESP32</button></div>`;});document.getElementById('wL').innerHTML=h;}}
+function drTr(){let tb='';[['hist','Historial'],['plan','Programados'],['prog','Progreso']].forEach(([k,lb])=>{tb+=`<button class="tb${tTb===k?' on':''}" onclick="tTb='${k}';drTr()">${lb}</button>`;});document.getElementById('tT').innerHTML=tb;
+  document.getElementById('tH').style.display=tTb==='hist'?'block':'none';document.getElementById('tP').style.display=tTb==='plan'?'block':'none';document.getElementById('tProg').style.display=tTb==='prog'?'block':'none';
+  if(tTb==='hist'){let h='';Tr.forEach(t=>{h+=`<div class="trn"><div style="display:flex;justify-content:space-between"><div class="tt2">${t.tipo}</div><div style="font-size:10px;color:var(--text3)">${new Date(t.date).toLocaleDateString('es-ES',{day:'numeric',month:'short'})}</div></div><div class="td">${t.detail}</div></div>`;});document.getElementById('tH').innerHTML=h||'<div style="color:var(--text3);text-align:center;padding:20px">Sin entrenos</div>';}
+  else if(tTb==='plan'){let h='';W.forEach(w=>{h+=`<div class="wi"><button class="wi-del" onclick="delWo('${w.id}')">✕</button><div class="wit">${w.name}</div>${w.plannedDate?`<div class="wi-date">📅 ${new Date(w.plannedDate).toLocaleDateString('es-ES',{weekday:'short',day:'numeric',month:'short'})}</div>`:''}<div class="wis">`;(w.steps||[]).forEach((s,i)=>{h+=`<div class="wiss">${i+1}. ${s.txt||s}</div>`;});h+=`</div></div>`;});document.getElementById('wL').innerHTML=h;}
+  else if(tTb==='prog'){setTimeout(()=>{drawChart('cLas','peso','kg','#d4a574');drawChart('cReg','reg','mm','#4ecdc4');},50);}}
 async function delWo(id){if(confirm('¿Eliminar?')){await delWorkout(id);drTr();}}
 function openWo(){wSt=[];cE=null;document.getElementById('wNm').value='';document.getElementById('wDt').value='';document.getElementById('eP').style.display='none';document.getElementById('eA').style.display='none';
   let eg='';[['regletas','🤏','Regletas'],['campus','🧗','Campus'],['rebotes','💥','Rebotes'],['bloqueos','💪','Bloqueos'],['travesia','🔄','Travesía'],['temporizador','⏱️','Timer'],['libre','📝','Libre']].forEach(([k,ic,lb])=>{eg+=`<div class="eb" data-e="${k}" onclick="sE('${k}')"><div class="ic">${ic}</div>${lb}</div>`;});
@@ -296,8 +301,9 @@ async function svW(){const n=(document.getElementById('wNm').value||'').trim();i
 async function drFr(){let h='';if(!friends.length)h='<div style="color:var(--text3);font-size:11px;text-align:center;padding:16px">Añade amigos con su código # o email</div>';
   for(const f of friends){const q=await db.collection('users').where('email','==',f.email).get();let name=f.email,photo='',code='';
     if(!q.empty){const ud=q.docs[0].data();name=ud.name||f.email;photo=ud.photo||'';code=ud.code?'#'+ud.code:'';}
-    h+=`<div class="fr-card" onclick="viewFr('${f.email}')"><img class="fr-pic" src="${photo||'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22><circle cx=%2212%22 cy=%228%22 r=%224%22 fill=%22%238a9bb0%22/><path d=%22M4 20c0-4 4-7 8-7s8 3 8 7%22 fill=%22%238a9bb0%22/></svg>'}"><div class="fr-info"><div class="fr-name">${name} <span style="font-size:9px;color:var(--rock)">${code}</span></div><div class="fr-email">${f.email}</div></div><button class="fr-rm" onclick="event.stopPropagation();rmFr('${f.id}')">✕</button></div>`;}
+    h+=`<div class="fr-card"><img class="fr-pic" src="${photo||'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22><circle cx=%2212%22 cy=%228%22 r=%224%22 fill=%22%238a9bb0%22/><path d=%22M4 20c0-4 4-7 8-7s8 3 8 7%22 fill=%22%238a9bb0%22/></svg>'}" onclick="viewFr('${f.email}')"><div class="fr-info" onclick="viewFr('${f.email}')"><div class="fr-name">${name} <span style="font-size:9px;color:var(--rock)">${code}</span></div><div class="fr-email">${f.email}</div></div><button style="background:none;border:none;color:var(--blue);font-size:16px;cursor:pointer;padding:4px" onclick="event.stopPropagation();openChatByEmail('${f.email}')">💬</button><button class="fr-rm" onclick="event.stopPropagation();rmFr('${f.id}')">✕</button></div>`;}
   document.getElementById('frList').innerHTML=h;document.getElementById('frView').style.display='none';}
+async function openChatByEmail(email){const q=await db.collection('users').where('email','==',email).get();if(q.empty)return;const fd=q.docs[0].data();openChat(q.docs[0].id,(fd.name||email).replace(/'/g,''));}
 async function addFriend(){const raw=document.getElementById('frCode').value.trim(),msg=document.getElementById('frMsg');
   if(!raw){msg.textContent='Pon código o email';msg.style.color='var(--red)';return;}
   let q;
@@ -317,6 +323,52 @@ async function viewFr(email){const q=await db.collection('users').where('email',
   const rs=await db.collection('users').doc(fuid).collection('routes').orderBy('date','desc').limit(30).get();let h='';
   rs.forEach(d=>{h+=vc({id:d.id,...d.data()},false);});
   document.getElementById('frRoutes').innerHTML=h||'<div style="color:var(--text3);font-size:11px;padding:8px">Sin vías</div>';document.getElementById('frView').style.display='block';}
+
+// PROGRESS CHARTS
+function drawChart(canvasId,field,unit,color){const cv=document.getElementById(canvasId);if(!cv)return;const ctx=cv.getContext('2d');cv.width=cv.offsetWidth*2;cv.height=260;ctx.scale(2,2);const w=cv.offsetWidth,h=130;ctx.clearRect(0,0,w,h);
+  const monthly={};
+  // Extract from workout steps
+  W.forEach(wk=>{(wk.steps||[]).forEach(s=>{const txt=s.txt||'';const m=wk.plannedDate?wk.plannedDate.substring(0,7):null;if(!m)return;const kg=txt.match(/\+(\d+)kg/);const mm=txt.match(/(\d+)mm/);if(!monthly[m])monthly[m]={peso:0,reg:99};if(kg&&parseFloat(kg[1])>monthly[m].peso)monthly[m].peso=parseFloat(kg[1]);if(mm){const rv=parseFloat(mm[1]);if(rv>0&&rv<monthly[m].reg)monthly[m].reg=rv;}});});
+  // Also from train history
+  Tr.forEach(t=>{const m=t.date?t.date.substring(0,7):null;if(!m||!t.detail)return;const kg=t.detail.match(/\+(\d+)kg/);const mm=t.detail.match(/(\d+)mm/);if(!monthly[m])monthly[m]={peso:0,reg:99};if(kg&&parseFloat(kg[1])>monthly[m].peso)monthly[m].peso=parseFloat(kg[1]);if(mm){const rv=parseFloat(mm[1]);if(rv>0&&rv<monthly[m].reg)monthly[m].reg=rv;}});
+  const sorted=Object.entries(monthly).filter(([,v])=>field==='peso'?v.peso>0:v.reg<99).sort((a,b)=>a[0].localeCompare(b[0])).slice(-12);
+  if(!sorted.length){ctx.fillStyle='#5a6a7a';ctx.font='11px Nunito';ctx.fillText('Sin datos de '+unit,w/2-40,h/2);return;}
+  const vals=sorted.map(([,v])=>v[field]);const mx=Math.max(...vals),mn=Math.min(...vals);const range=mx-mn||1;
+  const pad={t:20,b:25,l:30,r:10},gw=w-pad.l-pad.r,gh=h-pad.t-pad.b;
+  ctx.strokeStyle='rgba(255,255,255,.06)';ctx.lineWidth=.5;for(let i=0;i<=3;i++){const y=pad.t+gh*i/3;ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(w-pad.r,y);ctx.stroke();ctx.fillStyle='#5a6a7a';ctx.font='8px Nunito';ctx.textAlign='right';ctx.fillText(Math.round(mx-range*i/3)+unit,pad.l-3,y+3);}
+  ctx.beginPath();ctx.strokeStyle=color;ctx.lineWidth=2;ctx.lineJoin='round';
+  sorted.forEach(([,v],i)=>{const x=pad.l+i*(gw/Math.max(sorted.length-1,1));const y=pad.t+gh-(vals[i]-mn)/range*gh;if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);});ctx.stroke();
+  sorted.forEach(([m],i)=>{const x=pad.l+i*(gw/Math.max(sorted.length-1,1));const y=pad.t+gh-(vals[i]-mn)/range*gh;ctx.beginPath();ctx.arc(x,y,3.5,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();ctx.fillStyle='#e8e0d8';ctx.font='bold 9px Nunito';ctx.textAlign='center';ctx.fillText(vals[i],x,y-8);ctx.fillStyle='#5a6a7a';ctx.font='8px Nunito';ctx.fillText(m.slice(5),x,h-3);});}
+
+// FRIEND VIEW with grades
+async function viewFr(email){const q=await db.collection('users').where('email','==',email).get();if(q.empty)return;
+  const fuid=q.docs[0].id,fd=q.docs[0].data();
+  const rs=await db.collection('users').doc(fuid).collection('routes').orderBy('date','desc').limit(50).get();
+  const frRoutes=[];rs.forEach(d=>{frRoutes.push({id:d.id,...d.data()});});
+  // Build grade chart for friend
+  const gc={};frRoutes.forEach(r=>{gc[r.grado]=(gc[r.grado]||0)+1;});
+  const gs=Object.entries(gc).sort((a,b)=>G.indexOf(b[0])-G.indexOf(a[0]));
+  const gmx=Math.max(...gs.map(x=>x[1]),1);
+  let h=`<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><img src="${fd.photo||''}" style="width:40px;height:40px;border-radius:50%;border:2px solid var(--rock)"><div><div style="font-family:'Bebas Neue';font-size:18px;color:var(--rock)">${fd.name||email}</div><div style="font-size:10px;color:var(--text3)">${fd.email} ${fd.code?'#'+fd.code:''}</div></div></div>`;
+  h+=`<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px"><div class="st a" style="padding:8px"><div class="v" style="font-size:22px">${frRoutes.length}</div><div class="l">Vías</div></div><div class="st b" style="padding:8px"><div class="v" style="font-size:22px">${frRoutes.filter(r=>r.enc).length}</div><div class="l">Enc</div></div><div class="st" style="padding:8px;border:1px solid rgba(255,255,255,.04)"><div class="v" style="font-size:22px;color:var(--blue)">${new Set(frRoutes.map(r=>r.sitio).filter(Boolean)).size}</div><div class="l">Zonas</div></div></div>`;
+  if(gs.length){h+='<div class="ct">GRADOS</div><div class="gb" style="margin-bottom:10px">';gs.slice(0,8).forEach(([g,n])=>{h+=`<div class="gr"><div class="grn">${g}</div><div class="grb"><div class="grf rc" style="width:${(n/gmx)*100}%">${n}</div></div></div>`;});h+='</div>';}
+  h+=`<button class="btn bp" style="margin-bottom:8px" onclick="openChat('${fuid}','${(fd.name||email).replace(/'/g,'')}')">💬 Chat</button>`;
+  h+='<div class="ct">ÚLTIMAS VÍAS</div>';frRoutes.slice(0,15).forEach(r=>{h+=vc(r,false);});
+  document.getElementById('frView').innerHTML=h;document.getElementById('frView').style.display='block';}
+
+// CHAT
+function chatId(uid1,uid2){return [uid1,uid2].sort().join('_');}
+function openChat(frUid,frName){chatFrUid=frUid;document.getElementById('chatTitle').textContent=frName;document.getElementById('chatBox').innerHTML='';document.getElementById('chatIn').value='';document.getElementById('mChat').classList.add('sh');
+  if(chatUnsub)chatUnsub();
+  const cid=chatId(U.uid,frUid);
+  chatUnsub=db.collection('chats').doc(cid).collection('msgs').orderBy('ts','asc').onSnapshot(snap=>{
+    let h='';snap.forEach(d=>{const m=d.data();const me=m.from===U.uid;const t=m.ts?new Date(m.ts.toDate()).toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}):'';
+      h+=`<div class="chat-msg ${me?'me':'ot'}"><div class="chat-bub">${m.text}</div><div class="chat-time">${t}</div></div>`;});
+    const box=document.getElementById('chatBox');box.innerHTML=h;box.scrollTop=box.scrollHeight;});}
+function closeChat(){if(chatUnsub){chatUnsub();chatUnsub=null;}cm('mChat');}
+async function sendChat(){const inp=document.getElementById('chatIn'),text=inp.value.trim();if(!text||!chatFrUid)return;inp.value='';
+  const cid=chatId(U.uid,chatFrUid);
+  await db.collection('chats').doc(cid).collection('msgs').add({from:U.uid,text,ts:firebase.firestore.FieldValue.serverTimestamp()});}
 
 // SYNC
 let exPer='all';
