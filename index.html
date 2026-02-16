@@ -13,6 +13,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
 <style>
 :root{--bg:#141e2b;--bg2:#1b2838;--bg3:#243447;--bg4:#2d4055;--rock:#d4a574;--rockD:#8b6842;--green:#4ecdc4;--greenD:#2ea89f;--red:#ff6b6b;--yellow:#ffe66d;--blue:#4a9eff;--purple:#a78bfa;--text:#e8e0d8;--text2:#8a9bb0;--text3:#5a6a7a;--R:16px;}
 *{margin:0;padding:0;box-sizing:border-box;}body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;padding-bottom:75px;}
@@ -80,7 +81,14 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <!-- MAPA --><div id="pm" class="page"><div class="hdr"><h1>MAPA — ROCA</h1></div><div class="map-stats"><div class="st a"><div class="v" id="mTotal">0</div><div class="l">Total vías</div></div><div class="st b"><div class="v" id="mEnc">0</div><div class="l">Encadenadas</div></div><div class="st"><div class="v" style="color:var(--blue)" id="mZonas">0</div><div class="l">Zonas</div></div></div><div class="map-search"><input id="mapQ" placeholder="🔍 Buscar zona..." oninput="filterMap()"><button class="bp btn" style="width:auto;padding:8px 12px;font-size:11px;border-radius:10px" onclick="openNewCrag()">+ Zona</button></div><div id="mapDiv"></div><div id="mapResults" style="display:none"></div><div id="mRt"></div></div>
 <!-- ENTRENOS --><div id="pt" class="page"><div class="hdr"><h1>ENTRENOS</h1></div><div class="tbs" id="tT"></div><div id="tH"></div><div id="tP" style="display:none"><button class="btn bp" onclick="openWo()" style="margin-bottom:12px">+ Crear entreno</button><div id="wL"></div></div></div>
 <!-- AMIGOS --><div id="pf" class="page"><div class="hdr"><h1>AMIGOS</h1></div><div class="card"><div class="ct">AÑADIR AMIGO</div><div style="display:flex;gap:6px"><input id="frEmail" placeholder="Email del amigo" style="flex:1;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px;color:var(--text);font-size:12px;font-family:Nunito;outline:none"><button class="bp btn" style="width:auto;padding:8px 14px;font-size:12px;border-radius:10px" onclick="addFriend()">+</button></div><div id="frMsg" style="font-size:10px;margin-top:4px"></div></div><div class="ct" style="margin-top:12px">MIS AMIGOS</div><div id="frList"></div><div id="frView" style="display:none;margin-top:12px"><div class="ct" id="frViewTitle"></div><div id="frRoutes"></div></div></div>
-<!-- SYNC --><div id="ps" class="page"><div class="hdr"><h1>SYNC</h1></div><div class="card" style="text-align:center;padding:20px"><div style="font-size:48px;margin-bottom:8px">⛰️</div><div style="font-size:13px;color:var(--text2);margin-bottom:12px" id="bT">Conecta tu ESP32</div><button class="sbb" id="bB" onclick="doBT()">Conectar ESP32</button></div><div class="card"><div class="ct">TUS DATOS EN LA NUBE</div><p style="font-size:12px;color:var(--text2)"><span style="font-family:'Bebas Neue';font-size:22px;color:var(--green)" id="sN">0</span> registros guardados en Firebase</p><p style="font-size:10px;color:var(--text3);margin-top:4px">Tus datos están seguros. Si borras Chrome o cambias de móvil, inicia sesión y ahí estarán.</p></div><div class="card"><div class="ct">EXPORTAR</div><button class="btn bg2" onclick="exportData()" style="margin:0">📥 Descargar JSON</button></div></div>
+<!-- SYNC --><div id="ps" class="page"><div class="hdr"><h1>SYNC</h1></div><div class="card" style="text-align:center;padding:20px"><div style="font-size:48px;margin-bottom:8px">⛰️</div><div style="font-size:13px;color:var(--text2);margin-bottom:12px" id="bT">Conecta tu ESP32</div><button class="sbb" id="bB" onclick="doBT()">Conectar ESP32</button></div>
+<div class="card"><div class="ct">EXPORTAR A EXCEL</div>
+<div style="display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap" id="exPer"></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px"><div class="fl" style="margin:0"><label>Desde</label><input type="date" id="exFrom"></div><div class="fl" style="margin:0"><label>Hasta</label><input type="date" id="exTo"></div></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><button class="btn bp" style="font-size:12px;padding:10px" onclick="exportXL('vias')">📥 Vías</button><button class="btn bp" style="font-size:12px;padding:10px;background:var(--yellow);color:#000" onclick="exportXL('entrenos')">📥 Entrenos</button></div>
+<div id="exMsg" style="font-size:10px;margin-top:6px;text-align:center"></div>
+</div>
+<div class="card"><div class="ct">DATOS EN LA NUBE</div><p style="font-size:12px;color:var(--text2)"><span style="font-family:'Bebas Neue';font-size:22px;color:var(--green)" id="sN">0</span> registros guardados</p><p style="font-size:10px;color:var(--text3);margin-top:4px">Tus datos están seguros en Firebase.</p></div></div>
 </div>
 <!-- MODAL ROUTE --><div class="mbg" id="mR1"><div class="mdl"><button class="mx" onclick="cm('mR1')">✕</button><h2 id="mRT">VÍA</h2><div class="fl"><label>Nombre</label><input id="iN" placeholder="Diedro mágico"></div><div class="fl"><label>Lugar</label><input id="iL" placeholder="Atauri, Galdames..." list="dlZ"><datalist id="dlZ"></datalist></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="fl"><label>Tipo lugar</label><select id="iLT"><option value="roca">Roca</option><option value="roco">Rocódromo</option></select></div><div class="fl"><label>Tipo vía</label><select id="iTP"><option>Cuerda</option><option>Bloque</option><option>AutoAseg</option><option>Largos</option></select></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px"><div class="fl"><label>Grado</label><select id="iG"></select></div><div class="fl"><label>Intento</label><select id="iI"></select></div><div class="fl"><label>Encadenado</label><select id="iE"><option value="1">Sí</option><option value="0">No</option></select></div></div><div class="fl"><label>Sensaciones</label><textarea id="iNo" placeholder="Beta, condiciones..."></textarea></div><div class="fl"><label>Compañeros</label><input id="iA" placeholder="Mikel, Ane, Jon"></div><div class="fl"><label>Fecha</label><input type="date" id="iFe"></div><button class="btn bp" onclick="svR()">Guardar</button><button class="btn bdel" id="btnDelR" style="display:none" onclick="delR()">🗑️ Eliminar vía</button><button class="btn bg2" onclick="cm('mR1')">Cancelar</button></div></div>
 <!-- MODAL WORKOUT --><div class="mbg" id="mW1"><div class="mdl"><button class="mx" onclick="cm('mW1')">✕</button><h2>CREAR ENTRENO</h2><div class="fl"><label>Nombre</label><input id="wNm" placeholder="Fuerza dedos"></div><div class="fl"><label>Fecha programada (opcional)</label><input type="date" id="wDt"></div><div class="ct">PASOS</div><div id="wS"></div><div class="ct" style="margin-top:12px">AÑADIR EJERCICIO</div><div class="eg" id="eG"></div><div id="eP" style="display:none"></div><button class="btn bg2" id="eA" style="display:none;margin-bottom:12px" onclick="addEj()">+ Añadir</button><hr style="border:none;border-top:1px solid var(--bg4);margin:12px 0"><button class="btn bp" onclick="svW()">Guardar</button><button class="btn bg2" onclick="cm('mW1')">Cancelar</button></div></div>
@@ -303,9 +311,42 @@ async function viewFr(email){const q=await db.collection('users').where('email',
   document.getElementById('frRoutes').innerHTML=h||'<div style="color:var(--text3);font-size:11px;padding:8px">Sin vías</div>';document.getElementById('frView').style.display='block';}
 
 // SYNC
-function drS(){document.getElementById('sN').textContent=R.length+Tr.length;}
-function exportData(){const data={routes:R,trains:Tr,workouts:W,plans,crags:userCrags,exported:new Date().toISOString()};
-  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='sube_pies_'+new Date().toISOString().split('T')[0]+'.json';a.click();}
+let exPer='all';
+function drS(){document.getElementById('sN').textContent=R.length+Tr.length;
+  const td=new Date().toISOString().split('T')[0];
+  let h='';[['1m','1 mes'],['3m','3 meses'],['1y','1 año'],['2y','2 años'],['all','Todo']].forEach(([k,lb])=>{h+=`<button class="ch${exPer===k?' on':''}" onclick="setExPer('${k}')">${lb}</button>`;});
+  document.getElementById('exPer').innerHTML=h;
+  if(!document.getElementById('exFrom').value)setExPer('all');}
+function setExPer(p){exPer=p;const td=new Date(),to=td.toISOString().split('T')[0];
+  document.getElementById('exTo').value=to;
+  let from=new Date(td);
+  if(p==='1m')from.setMonth(from.getMonth()-1);
+  else if(p==='3m')from.setMonth(from.getMonth()-3);
+  else if(p==='1y')from.setFullYear(from.getFullYear()-1);
+  else if(p==='2y')from.setFullYear(from.getFullYear()-2);
+  else from=new Date('2020-01-01');
+  document.getElementById('exFrom').value=from.toISOString().split('T')[0];
+  document.querySelectorAll('#exPer .ch').forEach(b=>b.classList.remove('on'));
+  event&&event.target&&event.target.classList.add('on');}
+function exportXL(tipo){
+  const from=document.getElementById('exFrom').value,to=document.getElementById('exTo').value,msg=document.getElementById('exMsg');
+  if(!from||!to){msg.textContent='Elige fechas';msg.style.color='var(--red)';return;}
+  if(tipo==='vias'){
+    const fl=R.filter(r=>r.date>=from&&r.date<=to).sort((a,b)=>a.date.localeCompare(b.date));
+    if(!fl.length){msg.textContent='No hay vías en ese rango';msg.style.color='var(--yellow)';return;}
+    const rows=fl.map(r=>({Fecha:r.date,Nombre:r.nombre||'',Lugar:r.sitio||'',Tipo_lugar:r.lugar==='roca'?'Roca':'Rocódromo',Tipo_via:r.tipo,Grado:r.grado,Intento:r.intento||1,Encadenado:r.enc?'Sí':'No',Compañeros:r.amigos||'',Notas:r.notas||''}));
+    const ws=XLSX.utils.json_to_sheet(rows);ws['!cols']=[{wch:12},{wch:20},{wch:15},{wch:12},{wch:10},{wch:8},{wch:8},{wch:10},{wch:15},{wch:25}];
+    const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Vías');
+    XLSX.writeFile(wb,`sube_pies_vias_${from}_${to}.xlsx`);
+    msg.textContent=`✓ ${fl.length} vías exportadas`;msg.style.color='var(--green)';}
+  else{
+    const fl=Tr.filter(t=>t.date>=from&&t.date<=to).sort((a,b)=>a.date.localeCompare(b.date));
+    if(!fl.length){msg.textContent='No hay entrenos en ese rango';msg.style.color='var(--yellow)';return;}
+    const rows=fl.map(t=>({Fecha:t.date,Tipo:t.tipo,Detalle:t.detail||''}));
+    const ws=XLSX.utils.json_to_sheet(rows);ws['!cols']=[{wch:12},{wch:15},{wch:40}];
+    const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Entrenos');
+    XLSX.writeFile(wb,`sube_pies_entrenos_${from}_${to}.xlsx`);
+    msg.textContent=`✓ ${fl.length} entrenos exportados`;msg.style.color='var(--green)';}}
 async function doBT(){const b=document.getElementById('bB'),t=document.getElementById('bT');
   if(!navigator.bluetooth){t.textContent='Usa Chrome en Android';return;}
   try{t.textContent='Buscando...';b.textContent='...';
