@@ -88,15 +88,23 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <!-- MAPA --><div id="pm" class="page"><div class="hdr"><h1>MAPA</h1></div><div style="display:flex;gap:0;margin-bottom:10px;background:var(--bg3);border-radius:10px;padding:2px" id="mapTbs"></div><div class="map-stats"><div class="st a"><div class="v" id="mTotal">0</div><div class="l">Vías</div></div><div class="st b"><div class="v" id="mEnc">0</div><div class="l">Enc</div></div><div class="st"><div class="v" style="color:var(--blue)" id="mZonas">0</div><div class="l">Zonas</div></div></div><div class="map-search"><input id="mapQ" placeholder="🔍 Buscar zona..." oninput="filterMap()"><button class="bp btn" style="width:auto;padding:8px 12px;font-size:11px;border-radius:10px" onclick="openNewCrag()">+ Zona</button></div><div id="mapDiv"></div><div id="mapResults" style="display:none"></div><div id="mRt"></div></div>
 <!-- ENTRENOS --><div id="pt" class="page"><div class="hdr"><h1>ENTRENOS</h1></div><div class="tbs" id="tT"></div><div id="tH"></div><div id="tP" style="display:none"><button class="btn bp" onclick="openWo()" style="margin-bottom:12px">+ Crear entreno</button><div id="wL"></div></div><div id="tProg" style="display:none">
 <div class="ct">EXPLORADOR DE DATOS</div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px"><div class="fl" style="margin:0"><label>Desde</label><input type="date" id="grFrom"></div><div class="fl" style="margin:0"><label>Hasta</label><input type="date" id="grTo"></div></div>
-<div class="fl"><label>¿Qué quieres ver?</label><select id="grMetric" onchange="drDash()" style="font-size:12px"><option value="lastre">Lastre (kg) por mes</option><option value="regleta">Regleta (mm) por mes</option><option value="vias_mes">Vías por mes</option><option value="enc_mes">Encadenes por mes</option><option value="entrenos_mes">Entrenos por mes</option><option value="grado_max">Grado máximo por mes</option><option value="roca_roco">Roca vs Rocódromo</option><option value="lugares">Lugares más visitados</option><option value="compas">Compañeros más frecuentes</option><option value="tipos">Tipos de vía</option><option value="dom_mes">Dominadas por mes</option></select></div>
-<button class="btn bp" style="font-size:11px;padding:8px;margin-bottom:10px" onclick="drDash()">📊 Generar</button>
-<canvas id="cDash" height="160" style="width:100%;background:var(--bg3);border-radius:var(--R);margin-bottom:8px"></canvas>
-<div id="dashInfo" style="font-size:11px;color:var(--text2)"></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px"><div class="fl" style="margin:0"><label>Desde</label><input type="date" id="grFrom"></div><div class="fl" style="margin:0"><label>Hasta</label><input type="date" id="grTo"></div></div>
+<div style="display:flex;gap:3px;margin-bottom:6px;flex-wrap:wrap" id="grPresets"></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">
+<div class="fl" style="margin:0"><label>Eje X (horizontal)</label><select id="grX" onchange="updFilters()" style="font-size:11px"><option value="mes">Mes</option><option value="semana">Semana</option><option value="dia">Día</option><option value="lugar">Lugar</option><option value="compa">Compañero</option><option value="grado">Grado</option><option value="tipo">Tipo vía</option><option value="agarre">Tipo agarre</option><option value="ejercicio">Ejercicio</option></select></div>
+<div class="fl" style="margin:0"><label>Eje Y (vertical)</label><select id="grY" style="font-size:11px"><option value="count">Cantidad</option><option value="enc">Encadenes</option><option value="lastre">Lastre máx (kg)</option><option value="regleta">Regleta mín (mm)</option><option value="grado_max">Grado máximo</option><option value="intentos">Media intentos</option><option value="series">Total series</option><option value="reps">Total reps</option><option value="tiempo">Tiempo total (min)</option></select></div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">
+<div class="fl" style="margin:0"><label>Fuente</label><select id="grSrc" onchange="updFilters()" style="font-size:11px"><option value="vias">Vías</option><option value="entrenos">Entrenos</option><option value="todo">Todo</option></select></div>
+<div class="fl" style="margin:0"><label>Filtro extra</label><select id="grFilt" style="font-size:11px"><option value="">— Sin filtro —</option></select></div>
+</div>
+<button class="btn bp" style="font-size:11px;padding:8px;margin-bottom:8px" onclick="drDash()">📊 Generar</button>
+<canvas id="cDash" height="180" style="width:100%;background:var(--bg3);border-radius:var(--R);margin-bottom:6px"></canvas>
+<div id="dashInfo" style="font-size:10px;color:var(--text2)"></div>
 </div><div id="tMeso" style="display:none"><button class="btn bp" onclick="openMeso()" style="margin-bottom:12px">+ Crear mesociclo</button><div id="mesoList"></div></div></div>
 <!-- AMIGOS --><div id="pf" class="page"><div class="hdr"><h1>AMIGOS</h1></div><div class="card"><div class="ct">AÑADIR AMIGO</div><div style="display:flex;gap:6px"><input id="frCode" placeholder="Código #1234 o email" style="flex:1;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px;color:var(--text);font-size:12px;font-family:Nunito;outline:none"><button class="bp btn" style="width:auto;padding:8px 14px;font-size:12px;border-radius:10px" onclick="addFriend()">+</button></div><div id="frMsg" style="font-size:10px;margin-top:4px"></div></div><div class="ct" style="margin-top:12px">MIS AMIGOS</div><div id="frList"></div><div id="frView" style="display:none;margin-top:12px"></div></div>
 <!-- CHAT MODAL --><div class="mbg" id="mChat"><div class="mdl" style="height:70vh;display:flex;flex-direction:column"><button class="mx" onclick="closeChat()">✕</button><h2 id="chatTitle">CHAT</h2><div class="chat-wrap" id="chatBox" style="flex:1"></div><div class="chat-input"><input id="chatIn" placeholder="Escribe..." onkeydown="if(event.key==='Enter')sendChat()"><button onclick="sendChat()">→</button></div></div></div>
-<!-- SYNC --><div id="ps" class="page"><div class="hdr"><h1>SYNC</h1></div><div class="card" style="text-align:center;padding:20px"><div style="font-size:48px;margin-bottom:8px">⛰️</div><div style="font-size:13px;color:var(--text2);margin-bottom:12px" id="bT">Conecta tu ESP32</div><button class="sbb" id="bB" onclick="doBT()">Conectar ESP32</button></div>
+<!-- SYNC --><div id="ps" class="page"><div class="hdr"><h1>SYNC</h1></div><div class="card" style="text-align:center;padding:20px"><div style="font-size:48px;margin-bottom:8px">⛰️</div><div style="font-size:13px;color:var(--text2);margin-bottom:12px" id="bT">Conecta tu Bolt</div><button class="sbb" id="bB" onclick="doBT()">Conectar Bolt</button></div>
 <div class="card"><div class="ct">EXPORTAR A EXCEL</div>
 <div style="display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap" id="exPer"></div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px"><div class="fl" style="margin:0"><label>Desde</label><input type="date" id="exFrom"></div><div class="fl" style="margin:0"><label>Hasta</label><input type="date" id="exTo"></div></div>
@@ -316,8 +324,8 @@ async function svNewCrag(){const nm=document.getElementById('ncNm').value.trim()
 function drTr(){let tb='';[['plan','Programados'],['hist','Historial'],['meso','Mesociclo'],['prog','Progreso']].forEach(([k,lb])=>{tb+=`<button class="tb${tTb===k?' on':''}" onclick="tTb='${k}';drTr()">${lb}</button>`;});document.getElementById('tT').innerHTML=tb;
   document.getElementById('tH').style.display=tTb==='hist'?'block':'none';document.getElementById('tP').style.display=tTb==='plan'?'block':'none';document.getElementById('tProg').style.display=tTb==='prog'?'block':'none';document.getElementById('tMeso').style.display=tTb==='meso'?'block':'none';
   if(tTb==='hist'){let h='';Tr.forEach(t=>{h+=`<div class="trn"><div style="display:flex;justify-content:space-between"><div class="tt2">${t.tipo}</div><div style="font-size:10px;color:var(--text3)">${new Date(t.date).toLocaleDateString('es-ES',{day:'numeric',month:'short'})}</div></div><div class="td">${t.detail}</div></div>`;});document.getElementById('tH').innerHTML=h||'<div style="color:var(--text3);text-align:center;padding:20px">Sin entrenos</div>';}
-  else if(tTb==='plan'){let h='';W.forEach(w=>{h+=`<div class="wi"><button class="wi-del" onclick="delWo('${w.id}')">✕</button><div class="wit">${w.name}</div>${w.plannedDate?`<div class="wi-date">📅 ${new Date(w.plannedDate).toLocaleDateString('es-ES',{weekday:'short',day:'numeric',month:'short'})}</div>`:''}<div class="wis">`;(w.steps||[]).forEach((s,i)=>{h+=`<div class="wiss">${i+1}. ${s.txt||s.nm||s}</div>`;});h+=`</div><button class="sbb" style="font-size:11px;padding:6px 14px;margin-top:6px" onclick='execWo(${JSON.stringify(w).replace(/'/g,"&#39;")})'>▶ Móvil</button><button class="sbb" style="font-size:11px;padding:6px 14px;margin-top:6px;margin-left:4px;background:var(--green)" onclick='sendToDevice(this,${JSON.stringify(w).replace(/'/g,"&#39;")})'>📡 Enviar</button></div>`;});document.getElementById('wL').innerHTML=h;}
-  else if(tTb==='prog'){const td=new Date(),y1=new Date(td);y1.setFullYear(y1.getFullYear()-1);if(!document.getElementById('grFrom').value){document.getElementById('grFrom').value=y1.toISOString().split('T')[0];document.getElementById('grTo').value=td.toISOString().split('T')[0];}setTimeout(()=>drDash(),50);}
+  else if(tTb==='plan'){let h='';W.forEach(w=>{h+=`<div class="wi"><button class="wi-del" onclick="delWo('${w.id}')">✕</button><div class="wit">${w.name}</div>${w.plannedDate?`<div class="wi-date">📅 ${new Date(w.plannedDate).toLocaleDateString('es-ES',{weekday:'short',day:'numeric',month:'short'})}</div>`:''}<div class="wis">`;(w.steps||[]).forEach((s,i)=>{h+=`<div class="wiss">${i+1}. ${s.txt||s.nm||s}</div>`;});h+=`</div><button class="sbb" style="font-size:11px;padding:6px 14px;margin-top:6px" onclick='execWo(${JSON.stringify(w).replace(/'/g,"&#39;")})'>▶ Móvil</button><button class="sbb" style="font-size:11px;padding:6px 14px;margin-top:6px;margin-left:4px;background:var(--green)" onclick='sendToDevice(this,${JSON.stringify(w).replace(/'/g,"&#39;")})'>⚡ Bolt</button></div>`;});document.getElementById('wL').innerHTML=h;}
+  else if(tTb==='prog'){initDashDates();setTimeout(()=>drDash(),100);}
   else if(tTb==='meso'){drMeso();}}
 async function delWo(id){if(confirm('¿Eliminar?')){await delWorkout(id);drTr();}}
 // Exercise templates
@@ -431,53 +439,95 @@ async function delMeso(id){if(!confirm('¿Eliminar mesociclo?'))return;await db.
 // Get mesociclo color for a date
 function getMesoColor(dateStr){for(const m of mesos){let d=new Date(m.start);for(const f of(m.fases||[])){for(let w=0;w<f.weeks;w++){const ws=d.toISOString().split('T')[0];const we=new Date(d);we.setDate(we.getDate()+6);const weS=we.toISOString().split('T')[0];if(dateStr>=ws&&dateStr<=weS)return f.color;d.setDate(d.getDate()+7);}}}return null;}
 
-// DASHBOARD EXPLORER
-function drDash(){const from=document.getElementById('grFrom').value,to=document.getElementById('grTo').value,metric=document.getElementById('grMetric').value;
-  const cv=document.getElementById('cDash');if(!cv)return;const ctx=cv.getContext('2d');cv.width=cv.offsetWidth*2;cv.height=320;ctx.scale(2,2);const w=cv.offsetWidth,h=160;ctx.clearRect(0,0,w,h);
-  const fR=R.filter(r=>r.date>=from&&r.date<=to);const fTr=Tr.filter(t=>t.date>=from&&t.date<=to);const fW=W.filter(wk=>wk.plannedDate&&wk.plannedDate>=from&&wk.plannedDate<=to);
-  let data=[];let type='line'; // line or bar
-  if(metric==='lastre'){data=getMonthlyFromEx(fW,fTr,'peso','kg');type='line';}
-  else if(metric==='regleta'){data=getMonthlyFromEx(fW,fTr,'reg','mm');type='line';}
-  else if(metric==='vias_mes'){data=groupByMonth(fR).map(([m,rs])=>[m,rs.length]);type='bar';}
-  else if(metric==='enc_mes'){data=groupByMonth(fR).map(([m,rs])=>[m,rs.filter(r=>r.enc).length]);type='bar';}
-  else if(metric==='entrenos_mes'){data=groupByMonth(fTr).map(([m,ts])=>[m,ts.length]);type='bar';}
-  else if(metric==='grado_max'){data=groupByMonth(fR).map(([m,rs])=>{const gm=Math.max(...rs.map(r=>G.indexOf(r.grado)).filter(i=>i>=0));return [m,gm>=0?G[gm]:'?'];});type='label';}
-  else if(metric==='roca_roco'){const rc=fR.filter(r=>r.lugar==='roca').length,ro=fR.filter(r=>r.lugar==='roco').length;data=[['Roca',rc],['Rocódromo',ro]];type='bar';}
-  else if(metric==='lugares'){const lc={};fR.forEach(r=>{if(r.sitio)lc[r.sitio]=(lc[r.sitio]||0)+1;});data=Object.entries(lc).sort((a,b)=>b[1]-a[1]).slice(0,10);type='bar';}
-  else if(metric==='compas'){const cc={};fR.forEach(r=>{if(r.amigos)(r.amigos).split(/[,;]+/).forEach(a=>{a=a.trim();if(a)cc[a]=(cc[a]||0)+1;});});data=Object.entries(cc).sort((a,b)=>b[1]-a[1]).slice(0,10);type='bar';}
-  else if(metric==='tipos'){const tc={};fR.forEach(r=>{tc[r.tipo]=(tc[r.tipo]||0)+1;});data=Object.entries(tc).sort((a,b)=>b[1]-a[1]);type='bar';}
-  else if(metric==='dom_mes'){data=getMonthlyDom(fW,fTr);type='bar';}
+// DASHBOARD EXPLORER - fully customizable
+function updFilters(){const src=document.getElementById('grSrc').value,x=document.getElementById('grX').value;
+  const filt=document.getElementById('grFilt');filt.innerHTML='<option value="">— Sin filtro —</option>';
+  if(src==='vias'||src==='todo'){
+    if(x!=='lugar'){const locs=new Set();R.forEach(r=>{if(r.sitio)locs.add(r.sitio);});locs.forEach(l=>filt.innerHTML+=`<option value="lugar:${l}">📍 ${l}</option>`);}
+    if(x!=='grado')G.forEach(g=>filt.innerHTML+=`<option value="grado:${g}">🏔 ${g}</option>`);
+    filt.innerHTML+='<option value="enc:1">✓ Solo encadenes</option><option value="tipo:roca">🏔 Solo roca</option><option value="tipo:roco">🏢 Solo roco</option>';
+    if(x!=='compa'){const cps=new Set();R.forEach(r=>{if(r.amigos)(r.amigos).split(/[,;]+/).forEach(a=>{a=a.trim();if(a)cps.add(a);});});cps.forEach(c=>filt.innerHTML+=`<option value="compa:${c}">👥 ${c}</option>`);}}
+  if(src==='entrenos'||src==='todo'){
+    const ejs=new Set();W.forEach(w=>(w.steps||[]).forEach(s=>{const nm=s.nm||s.txt||'';if(nm)ejs.add(nm);}));
+    ejs.forEach(e=>filt.innerHTML+=`<option value="ej:${e}">🏋 ${e}</option>`);
+    const ags=new Set();W.forEach(w=>(w.steps||[]).forEach(s=>{if(s.ag)ags.add(s.ag);}));
+    ags.forEach(a=>filt.innerHTML+=`<option value="ag:${a}">🤏 ${a}</option>`);
+    const mms=new Set();W.forEach(w=>(w.steps||[]).forEach(s=>{if(s.mm)mms.add(s.mm+'mm');}));
+    [...mms].sort().forEach(m=>filt.innerHTML+=`<option value="mm:${m}">📏 ${m}</option>`);}}
+function drDash(){const from=document.getElementById('grFrom').value,to=document.getElementById('grTo').value;
+  const xAxis=document.getElementById('grX').value,yAxis=document.getElementById('grY').value;
+  const src=document.getElementById('grSrc').value,filt=document.getElementById('grFilt').value;
+  const cv=document.getElementById('cDash');if(!cv)return;const ctx=cv.getContext('2d');cv.width=cv.offsetWidth*2;cv.height=360;ctx.scale(2,2);const w=cv.offsetWidth,h=180;ctx.clearRect(0,0,w,h);
+  // Collect data
+  let vias=src!=='entrenos'?R.filter(r=>r.date>=from&&r.date<=to):[];
+  let steps=[];if(src!=='vias'){W.forEach(wk=>{const d=wk.plannedDate||'';if(d>=from&&d<=to)(wk.steps||[]).forEach(s=>{steps.push({...s,date:d});});});}
+  // Apply filter
+  if(filt){const[fk,fv]=filt.split(':');
+    if(fk==='lugar')vias=vias.filter(r=>r.sitio===fv);
+    if(fk==='grado')vias=vias.filter(r=>r.grado===fv);
+    if(fk==='enc')vias=vias.filter(r=>r.enc);
+    if(fk==='tipo'){if(fv==='roca')vias=vias.filter(r=>r.lugar==='roca');if(fv==='roco')vias=vias.filter(r=>r.lugar==='roco');}
+    if(fk==='compa')vias=vias.filter(r=>(r.amigos||'').includes(fv));
+    if(fk==='ej')steps=steps.filter(s=>(s.nm||s.txt||'')===fv);
+    if(fk==='ag')steps=steps.filter(s=>s.ag===fv);
+    if(fk==='mm')steps=steps.filter(s=>s.mm+''+'mm'===fv);}
+  // Group by X axis
+  const groups={};
+  const addToGroup=(key,item,isTrain)=>{if(!groups[key])groups[key]={vias:[],steps:[]};if(isTrain)groups[key].steps.push(item);else groups[key].vias.push(item);};
+  const getXKey=(date,item,isTrain)=>{
+    if(xAxis==='mes')return date.substring(0,7);
+    if(xAxis==='semana'){const d=new Date(date);const w=Math.ceil(d.getDate()/7);return date.substring(0,7)+'-S'+w;}
+    if(xAxis==='dia')return date;
+    if(xAxis==='lugar')return isTrain?'Entreno':(item.sitio||'?');
+    if(xAxis==='compa'){if(isTrain)return 'Entreno';const ams=(item.amigos||'').split(/[,;]+/).map(a=>a.trim()).filter(Boolean);return ams.length?ams[0]:'Solo';}
+    if(xAxis==='grado')return isTrain?'Entreno':(item.grado||'?');
+    if(xAxis==='tipo')return isTrain?(item.nm||item.txt||'?'):(item.tipo||'?');
+    if(xAxis==='agarre')return isTrain?(item.ag||'?'):'Vía';
+    if(xAxis==='ejercicio')return isTrain?(item.nm||item.txt||'?'):'Vía';
+    return '?';};
+  vias.forEach(r=>addToGroup(getXKey(r.date,r,false),r,false));
+  steps.forEach(s=>addToGroup(getXKey(s.date,s,true),s,true));
+  // Calculate Y values
+  const data=[];const sortable=xAxis==='mes'||xAxis==='semana'||xAxis==='dia';
+  let entries=Object.entries(groups);if(sortable)entries.sort((a,b)=>a[0].localeCompare(b[0]));else entries.sort((a,b)=>(b[1].vias.length+b[1].steps.length)-(a[1].vias.length+a[1].steps.length));
+  entries.slice(0,20).forEach(([key,g])=>{let val=0;
+    if(yAxis==='count')val=g.vias.length+g.steps.length;
+    else if(yAxis==='enc')val=g.vias.filter(r=>r.enc).length;
+    else if(yAxis==='lastre'){const kgs=[...g.steps.map(s=>s.kg||0)];val=kgs.length?Math.max(...kgs):0;}
+    else if(yAxis==='regleta'){const mms=g.steps.map(s=>s.mm).filter(m=>m>0);val=mms.length?Math.min(...mms):0;}
+    else if(yAxis==='grado_max'){const gs=g.vias.map(r=>G.indexOf(r.grado)).filter(i=>i>=0);val=gs.length?G[Math.max(...gs)]:'?';}
+    else if(yAxis==='intentos'){const ints=g.vias.map(r=>r.intento||1);val=ints.length?Math.round(ints.reduce((a,b)=>a+b,0)/ints.length*10)/10:0;}
+    else if(yAxis==='series')val=g.steps.reduce((a,s)=>a+(s.ser||0),0);
+    else if(yAxis==='reps')val=g.steps.reduce((a,s)=>a+(s.ser||1)*(s.reps||s.rep||0),0);
+    else if(yAxis==='tiempo')val=Math.round(g.steps.reduce((a,s)=>a+((s.ser||1)*(s.rep||1)*(s.time||0)+(s.ser||1)*(s.ds||0))/60,0));
+    const lb=key.length>7&&(xAxis==='mes'||xAxis==='semana')?key.slice(5):key;
+    data.push([lb.length>12?lb.slice(0,12)+'…':lb,val]);});
   if(!data.length){ctx.fillStyle='#5a6a7a';ctx.font='12px Nunito';ctx.textAlign='center';ctx.fillText('Sin datos en este rango',w/2,h/2);document.getElementById('dashInfo').textContent='';return;}
-  if(type==='line')drawLine(ctx,w,h,data);
-  else if(type==='bar')drawBars(ctx,w,h,data);
-  else if(type==='label')drawLabels(ctx,w,h,data);
-  // Info text
-  const vals=data.map(d=>typeof d[1]==='number'?d[1]:0).filter(v=>v>0);
-  if(vals.length){const avg=Math.round(vals.reduce((a,b)=>a+b,0)/vals.length*10)/10;const mx=Math.max(...vals);document.getElementById('dashInfo').textContent=`Total: ${vals.reduce((a,b)=>a+b,0)} · Media: ${avg} · Máx: ${mx}`;}else{document.getElementById('dashInfo').textContent='';}}
+  const isNumeric=data.every(d=>typeof d[1]==='number');
+  if(isNumeric&&(sortable||data.length<=5))drawLine(ctx,w,h,data);
+  else if(isNumeric)drawBars(ctx,w,h,data);
+  else drawLabels(ctx,w,h,data);
+  if(isNumeric){const vals=data.map(d=>d[1]).filter(v=>v>0);if(vals.length){const sum=vals.reduce((a,b)=>a+b,0);document.getElementById('dashInfo').textContent=`Total: ${sum} · Media: ${Math.round(sum/vals.length*10)/10} · Máx: ${Math.max(...vals)}`;}else document.getElementById('dashInfo').textContent='';}else document.getElementById('dashInfo').textContent='';}
+function initDashDates(){const td=new Date(),y1=new Date(td);y1.setFullYear(y1.getFullYear()-1);document.getElementById('grFrom').value=y1.toISOString().split('T')[0];document.getElementById('grTo').value=td.toISOString().split('T')[0];
+  let h='';[['1m','1 mes'],['3m','3 meses'],['6m','6 meses'],['1y','1 año'],['all','Todo']].forEach(([k,lb])=>{h+=`<button class="ch" onclick="setDashPer('${k}')">${lb}</button>`;});document.getElementById('grPresets').innerHTML=h;updFilters();}
+function setDashPer(p){const td=new Date();document.getElementById('grTo').value=td.toISOString().split('T')[0];let f=new Date(td);if(p==='1m')f.setMonth(f.getMonth()-1);else if(p==='3m')f.setMonth(f.getMonth()-3);else if(p==='6m')f.setMonth(f.getMonth()-6);else if(p==='1y')f.setFullYear(f.getFullYear()-1);else f=new Date('2020-01-01');document.getElementById('grFrom').value=f.toISOString().split('T')[0];}
 function groupByMonth(arr){const m={};arr.forEach(x=>{const k=(x.date||'').substring(0,7);if(k){if(!m[k])m[k]=[];m[k].push(x);}});return Object.entries(m).sort((a,b)=>a[0].localeCompare(b[0]));}
-function getMonthlyFromEx(wks,trs,field,unit){const monthly={};
-  wks.forEach(wk=>{(wk.steps||[]).forEach(s=>{const p=s.p||s;const m=wk.plannedDate?wk.plannedDate.substring(0,7):null;if(!m)return;const kg=(p.nm||s.txt||'').match(/\+(\d+)kg/);const mm=(p.nm||s.txt||'').match(/(\d+)mm/);if(!monthly[m])monthly[m]={peso:0,reg:99};if(field==='peso'&&p.kg>monthly[m].peso)monthly[m].peso=p.kg;if(field==='reg'&&p.mm>0&&p.mm<monthly[m].reg)monthly[m].reg=p.mm;if(kg&&parseFloat(kg[1])>monthly[m].peso)monthly[m].peso=parseFloat(kg[1]);if(mm){const rv=parseFloat(mm[1]);if(rv>0&&rv<monthly[m].reg)monthly[m].reg=rv;}});});
-  trs.forEach(t=>{const m=t.date?t.date.substring(0,7):null;if(!m||!t.detail)return;const kg=t.detail.match(/\+(\d+)kg/);const mm=t.detail.match(/(\d+)mm/);if(!monthly[m])monthly[m]={peso:0,reg:99};if(kg&&parseFloat(kg[1])>monthly[m].peso)monthly[m].peso=parseFloat(kg[1]);if(mm){const rv=parseFloat(mm[1]);if(rv>0&&rv<monthly[m].reg)monthly[m].reg=rv;}});
-  return Object.entries(monthly).filter(([,v])=>field==='peso'?v.peso>0:v.reg<99).sort((a,b)=>a[0].localeCompare(b[0])).map(([m,v])=>[m.slice(5),v[field]]);}
-function getMonthlyDom(wks,trs){const monthly={};
-  wks.forEach(wk=>{(wk.steps||[]).forEach(s=>{const p=s.p||s;const nm=(p.nm||s.txt||'').toLowerCase();if(!nm.includes('dominada'))return;const m=wk.plannedDate?wk.plannedDate.substring(0,7):null;if(!m)return;const total=(p.ser||1)*(p.reps||p.rep||1);monthly[m]=(monthly[m]||0)+total;});});
-  return Object.entries(monthly).sort((a,b)=>a[0].localeCompare(b[0])).map(([m,v])=>[m.slice(5),v]);}
 function drawLine(ctx,w,h,data){const vals=data.map(d=>d[1]);const mx=Math.max(...vals),mn=Math.min(...vals);const range=mx-mn||1;
-  const pad={t:20,b:25,l:32,r:10},gw=w-pad.l-pad.r,gh=h-pad.t-pad.b;
+  const pad={t:20,b:28,l:32,r:10},gw=w-pad.l-pad.r,gh=h-pad.t-pad.b;
   ctx.strokeStyle='rgba(255,255,255,.06)';ctx.lineWidth=.5;for(let i=0;i<=3;i++){const y=pad.t+gh*i/3;ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(w-pad.r,y);ctx.stroke();ctx.fillStyle='#5a6a7a';ctx.font='8px Nunito';ctx.textAlign='right';ctx.fillText(Math.round(mx-range*i/3),pad.l-3,y+3);}
   ctx.beginPath();ctx.strokeStyle='#d4a574';ctx.lineWidth=2.5;ctx.lineJoin='round';
   data.forEach(([,v],i)=>{const x=pad.l+i*(gw/Math.max(data.length-1,1));const y=pad.t+gh-(v-mn)/range*gh;if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);});ctx.stroke();
-  data.forEach(([lb,v],i)=>{const x=pad.l+i*(gw/Math.max(data.length-1,1));const y=pad.t+gh-(v-mn)/range*gh;ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);ctx.fillStyle='#d4a574';ctx.fill();ctx.fillStyle='#e8e0d8';ctx.font='bold 9px Nunito';ctx.textAlign='center';ctx.fillText(v,x,y-10);ctx.fillStyle='#5a6a7a';ctx.font='8px Nunito';ctx.fillText(lb,x,h-3);});}
+  data.forEach(([lb,v],i)=>{const x=pad.l+i*(gw/Math.max(data.length-1,1));const y=pad.t+gh-(v-mn)/range*gh;ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);ctx.fillStyle='#d4a574';ctx.fill();ctx.fillStyle='#e8e0d8';ctx.font='bold 9px Nunito';ctx.textAlign='center';ctx.fillText(v,x,y-10);ctx.fillStyle='#5a6a7a';ctx.font='7px Nunito';ctx.fillText(lb,x,h-3);});}
 function drawBars(ctx,w,h,data){const vals=data.map(d=>d[1]);const mx=Math.max(...vals,1);
-  const pad={t:15,b:30,l:10,r:10},gw=w-pad.l-pad.r,gh=h-pad.t-pad.b;const bw=Math.min(gw/data.length-4,40);
+  const pad={t:15,b:32,l:10,r:10},gw=w-pad.l-pad.r,gh=h-pad.t-pad.b;const bw=Math.min(gw/data.length-3,36);
   const colors=['#d4a574','#4ecdc4','#ffe66d','#a78bfa','#4a9eff','#ff6b6b','#8a9bb0','#e8e0d8','#4ecdc4','#d4a574'];
-  data.forEach(([lb,v],i)=>{const x=pad.l+(gw/data.length)*i+(gw/data.length-bw)/2;const bh=(v/mx)*gh;const y=pad.t+gh-bh;
+  data.forEach(([lb,v],i)=>{const x=pad.l+(gw/data.length)*i+(gw/data.length-bw)/2;const bh=Math.max((v/mx)*gh,2);const y=pad.t+gh-bh;
     ctx.fillStyle=colors[i%colors.length];ctx.beginPath();ctx.roundRect(x,y,bw,bh,3);ctx.fill();
     ctx.fillStyle='#e8e0d8';ctx.font='bold 9px Nunito';ctx.textAlign='center';ctx.fillText(v,x+bw/2,y-4);
-    ctx.fillStyle='#8a9bb0';ctx.font='8px Nunito';ctx.save();ctx.translate(x+bw/2,h-2);if(lb.length>6)ctx.rotate(-0.4);ctx.fillText(lb.length>10?lb.slice(0,10)+'…':lb,0,0);ctx.restore();});}
+    ctx.fillStyle='#8a9bb0';ctx.font='7px Nunito';ctx.save();ctx.translate(x+bw/2,h-2);if(lb.length>5)ctx.rotate(-0.5);ctx.fillText(lb.length>10?lb.slice(0,10)+'…':lb,0,0);ctx.restore();});}
 function drawLabels(ctx,w,h,data){const pad={t:20,b:25,l:10,r:10},gw=w-pad.l-pad.r;
   data.forEach(([lb,v],i)=>{const x=pad.l+i*(gw/Math.max(data.length-1,1));ctx.fillStyle='#d4a574';ctx.font='bold 14px Bebas Neue';ctx.textAlign='center';ctx.fillText(v,x,h/2);ctx.fillStyle='#5a6a7a';ctx.font='8px Nunito';ctx.fillText(lb,x,h/2+16);});}
-function sendToDevice(btn,w){alert('📡 Conecta tu dispositivo por Bluetooth para enviar el entreno');}
+function sendToDevice(btn,w){alert('⚡ Conecta Bolt por Bluetooth para enviar el entreno');}
 
 // FRIEND VIEW with grades
 async function viewFr(email){const q=await db.collection('users').where('email','==',email).get();if(q.empty)return;
@@ -559,12 +609,12 @@ async function doBT(){const b=document.getElementById('bB'),t=document.getElemen
     for(const line of lines){if(line.startsWith('BEGIN')||line.startsWith('END'))continue;const p=line.split('|');
       if(p[0]==='V'){const lug=['roca','roco'],tipR=['Cuerda','Bloque','AutoAseg','Largos'],tipC=['Cuerda','Bloque','AutoAseg'];
         const lugar=lug[+p[1]]||'roca',ta=lugar==='roca'?tipR:tipC;
-        await saveRoute({date:new Date().toISOString().split('T')[0],lugar,tipo:ta[+p[2]]||'Cuerda',grado:G[+p[3]]||'7a',intento:+p[4]||1,enc:p[5]==='1',nombre:'',sitio:'',notas:'Sync ESP32',amigos:''});added++;}
+        await saveRoute({date:new Date().toISOString().split('T')[0],lugar,tipo:ta[+p[2]]||'Cuerda',grado:G[+p[3]]||'7a',intento:+p[4]||1,enc:p[5]==='1',nombre:'',sitio:'',notas:'Sync Bolt',amigos:''});added++;}
       else if(p[0]==='T'){const tipos=['Regletas','Campus','Rebotes','Bloqueos','Travesias','Timer'];
         await saveTrain({date:new Date().toISOString().split('T')[0],tipo:tipos[+p[1]]||'Regletas',detail:p[2]||''});added++;}}
     if(added>0){await rxC.writeValue(new TextEncoder().encode('ACK'));await loadData();}
     t.textContent=`✓ ${added} registros sincronizados`;
-  }catch(e){t.textContent='Error: '+e.message;b.textContent='Conectar ESP32';b.classList.remove('ok');}}
+  }catch(e){t.textContent='Error: '+e.message;b.textContent='Conectar Bolt';b.classList.remove('ok');}}
 </script>
 </body>
 </html>
