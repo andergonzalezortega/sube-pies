@@ -531,17 +531,36 @@ function drawLabels(ctx,w,h,data){const pad={t:20,b:25,l:10,r:10},gw=w-pad.l-pad
 let boltDev=null,boltRx=null,boltTx=null,boltBuf='',boltConnected=false;
 async function boltConnect(){
   if(!navigator.bluetooth){alert('Usa Chrome en Android');return null;}
-  try{const dev=await navigator.bluetooth.requestDevice({filters:[{namePrefix:'Bolt'}],optionalServices:['0000ffe0-0000-1000-8000-00805f9b34fb']});
-    const srv=await dev.gatt.connect();const svc=await srv.getPrimaryService('0000ffe0-0000-1000-8000-00805f9b34fb');
+  const t=document.getElementById('bT');
+  try{
+    t.textContent='Selecciona Bolt-1...';
+    const dev=await navigator.bluetooth.requestDevice({filters:[{namePrefix:'Bolt'}],optionalServices:['0000ffe0-0000-1000-8000-00805f9b34fb']});
+    t.textContent='Conectando GATT...';
+    // Retry connect up to 3 times
+    let srv=null;
+    for(let attempt=0;attempt<3;attempt++){
+      try{srv=await dev.gatt.connect();break;}
+      catch(e){t.textContent=`Reintento ${attempt+2}/3...`;await new Promise(r=>setTimeout(r,1000));}
+    }
+    if(!srv){t.textContent='No se pudo conectar GATT';return null;}
+    t.textContent='Buscando servicio...';
+    await new Promise(r=>setTimeout(r,500));
+    const svc=await srv.getPrimaryService('0000ffe0-0000-1000-8000-00805f9b34fb');
+    t.textContent='Obteniendo canales...';
     boltTx=await svc.getCharacteristic('0000ffe1-0000-1000-8000-00805f9b34fb');
     boltRx=await svc.getCharacteristic('0000ffe2-0000-1000-8000-00805f9b34fb');
     boltBuf='';await boltTx.startNotifications();
     boltTx.addEventListener('characteristicvaluechanged',e=>{boltBuf+=new TextDecoder().decode(e.target.value);});
     boltDev=dev;boltConnected=true;
+    t.textContent='Enviando nombre...';
     const nm=cU?cU.displayName||cU.email.split('@')[0]:'Escalador';
     await boltWrite('NAME:'+nm.substring(0,18));
-    dev.addEventListener('gattserverdisconnected',()=>{boltConnected=false;boltDev=null;});
-    return dev;}catch(e){console.error('BLE:',e);return null;}}
+    dev.addEventListener('gattserverdisconnected',()=>{boltConnected=false;boltDev=null;
+      const bt=document.getElementById('bT');if(bt)bt.textContent='Bolt desconectado';
+      const bb=document.getElementById('bB');if(bb){bb.textContent='🔗 Conectar Bolt';bb.classList.remove('ok');}});
+    t.textContent='✓ Conectado a '+dev.name;
+    return dev;
+  }catch(e){console.error('BLE:',e);t.textContent='Error: '+e.message;return null;}}
 async function boltWrite(cmd){if(!boltConnected||!boltRx)return false;
   try{const enc=new TextEncoder();for(let i=0;i<cmd.length;i+=20){await boltRx.writeValue(enc.encode(cmd.substring(i,i+20)));await new Promise(r=>setTimeout(r,30));}return true;}catch(e){return false;}}
 async function sendToDevice(btn,w){const ob=btn.textContent;btn.textContent='...';
@@ -619,21 +638,26 @@ function exportXL(tipo){
     XLSX.writeFile(wb,`sube_pies_entrenos_${from}_${to}.xlsx`);
     msg.textContent=`✓ ${fl.length} entrenos exportados`;msg.style.color='var(--green)';}}
 async function doBT(){const b=document.getElementById('bB'),t=document.getElementById('bT');
-  if(!navigator.bluetooth){t.textContent='Usa Chrome en Android';return;}
-  try{t.textContent='Buscando Bolt...';b.textContent='...';
-    const dev=await boltConnect();if(!dev){t.textContent='No encontrado';b.textContent='Conectar Bolt';return;}
-    b.textContent='Conectado ✓';b.classList.add('ok');t.textContent='Sincronizando...';
-    boltBuf='';await boltWrite('SYNC');await new Promise(r=>setTimeout(r,3000));
-    const lines=boltBuf.split('\n').filter(l=>l.length>0);let added=0;
-    for(const line of lines){if(line.startsWith('BEGIN')||line.startsWith('END'))continue;const p=line.split('|');
-      if(p[0]==='V'){const lug=['roca','indoor'],tipR=['Cuerda','Bloque','AutoAseg','Largos'],tipC=['Cuerda','Bloque','AutoAseg'];
-        const lugar=lug[+p[1]]||'roca',ta=lugar==='roca'?tipR:tipC;
-        await saveRoute({date:new Date().toISOString().split('T')[0],lugar,tipo:ta[+p[2]]||'Cuerda',grado:G[+p[3]]||'7a',intento:+p[4]||1,enc:p[5]==='1',flash:p[6]==='1',avista:p[7]==='1',nombre:p[8]||'',sitio:'',notas:'Sync Bolt',amigos:''});added++;}
-      else if(p[0]==='T'){const tipos=['Suspensi.','Campus','Bloqueo','Traves.','Timer','Libre'];
-        await saveTrain({date:new Date().toISOString().split('T')[0],tipo:tipos[+p[1]]||'Suspensi.',detail:p[2]||''});added++;}}
-    if(added>0){await boltWrite('ACK');await loadData();}
-    t.textContent=`✓ ${added} registros sincronizados`;
-  }catch(e){t.textContent='Error: '+e.message;b.textContent='Conectar Bolt';b.classList.remove('ok');}}
+  if(!navigator.bluetooth){t.textContent='Necesitas Chrome en Android';return;}
+  if(boltConnected){t.textContent='Ya conectado. Sincronizando...';
+  }else{
+    b.textContent='...';
+    const dev=await boltConnect();
+    if(!dev){b.textContent='🔗 Conectar Bolt';return;}
+  }
+  b.textContent='Conectado ✓';b.classList.add('ok');t.textContent='Sincronizando datos...';
+  boltBuf='';await boltWrite('SYNC');
+  // Wait for data with timeout
+  let waited=0;while(!boltBuf.includes('END')&&waited<8000){await new Promise(r=>setTimeout(r,500));waited+=500;t.textContent='Recibiendo... '+Math.round(waited/1000)+'s';}
+  const lines=boltBuf.split('\n').filter(l=>l.length>0);let added=0;
+  for(const line of lines){if(line.startsWith('BEGIN')||line.startsWith('END'))continue;const p=line.split('|');
+    if(p[0]==='V'){const lug=['roca','indoor'],tipR=['Cuerda','Bloque','AutoAseg','Largos'],tipC=['Cuerda','Bloque','AutoAseg'];
+      const lugar=lug[+p[1]]||'roca',ta=lugar==='roca'?tipR:tipC;
+      await saveRoute({date:new Date().toISOString().split('T')[0],lugar,tipo:ta[+p[2]]||'Cuerda',grado:G[+p[3]]||'7a',intento:+p[4]||1,enc:p[5]==='1',flash:p[6]==='1',avista:p[7]==='1',nombre:p[8]||'',sitio:'',notas:'Sync Bolt',amigos:''});added++;}
+    else if(p[0]==='T'){const tipos=['Suspensi.','Campus','Bloqueo','Traves.','Timer','Libre'];
+      await saveTrain({date:new Date().toISOString().split('T')[0],tipo:tipos[+p[1]]||'Suspensi.',detail:p[2]||''});added++;}}
+  if(added>0){await boltWrite('ACK');await loadData();}
+  t.textContent=added>0?`✓ ${added} registros sincronizados`:'✓ Conectado · 0 pendientes';}
 </script>
 </body>
 </html>
