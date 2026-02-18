@@ -562,10 +562,14 @@ async function boltConnect(){
     return dev;
   }catch(e){console.error('BLE:',e);t.textContent='Error: '+e.message;return null;}}
 async function boltWrite(cmd){if(!boltConnected||!boltRx)return false;
-  try{const enc=new TextEncoder();for(let i=0;i<cmd.length;i+=20){await boltRx.writeValue(enc.encode(cmd.substring(i,i+20)));await new Promise(r=>setTimeout(r,30));}return true;}catch(e){return false;}}
+  try{const data=cmd+'\n';const enc=new TextEncoder();for(let i=0;i<data.length;i+=20){await boltRx.writeValue(enc.encode(data.substring(i,i+20)));await new Promise(r=>setTimeout(r,30));}return true;}catch(e){console.error('BLE write:',e);return false;}}
 async function sendToDevice(btn,w){const ob=btn.textContent;btn.textContent='...';
   if(!boltConnected){const d=await boltConnect();if(!d){btn.textContent=ob;return;}}
-  const wo=JSON.stringify({name:w.name,steps:(w.steps||[]).map(s=>({nm:s.nm||s.txt,modo:s.modo||'time',time:s.time||7,reps:s.reps||s.rep||1,ser:s.ser||1,desc:s.desc||3,ds:s.ds||180,kg:s.kg||0,mm:s.mm||0,ag:s.ag||''}))});
+  // Keep JSON short for BLE
+  const steps=(w.steps||[]).map(s=>{const o={n:(s.nm||s.txt||'Ej').substring(0,16),m:s.modo==='time'?'t':'r'};
+    if(o.m==='t'){o.w=s.time||7;o.d=s.desc||3;}else{o.r=s.reps||s.rep||1;}
+    o.s=s.ser||1;o.ds=s.ds||180;return o;});
+  const wo=JSON.stringify({n:(w.name||'Entreno').substring(0,20),st:steps});
   const ok=await boltWrite('WO:'+wo);
   btn.textContent=ok?'✓ Enviado':'✗ Error';btn.style.background=ok?'var(--green)':'var(--red)';
   setTimeout(()=>{btn.textContent='⚡ Bolt';btn.style.background='var(--green)';},2000);}
