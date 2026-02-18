@@ -126,7 +126,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <div style="display:flex;gap:12px;align-items:center"><button class="sbb" onclick="skipExec()" style="background:var(--bg3);color:var(--text2);font-size:13px;padding:12px 20px">⏮</button><button class="sbb" id="exPlayBtn" onclick="toggleExec()" style="font-size:18px;padding:14px 36px;min-width:140px">▶ EMPEZAR</button><button class="sbb" onclick="skipExec()" style="background:var(--bg3);color:var(--text2);font-size:13px;padding:12px 20px">⏭</button></div>
 <label style="display:flex;align-items:center;gap:6px;margin-top:16px;font-size:12px;color:var(--text3);cursor:pointer"><input type="checkbox" id="exSound" checked style="accent-color:var(--rock)"> Sonido + vibración</label>
 </div></div>
-<!-- MODAL PLAN --><div class="mbg" id="mPl"><div class="mdl"><button class="mx" onclick="cm('mPl')">✕</button><h2>PLANIFICAR DÍA</h2><div class="fl"><label>Fecha</label><input type="date" id="plDt"></div><div class="fl"><label>Tipo</label><select id="plTp"><option value="roca">🏔️ Roca</option><option value="roco">🏢 Rocódromo</option><option value="entreno">🏋️ Entreno</option></select></div><div class="fl"><label>Lugar / Nombre</label><input id="plLg" placeholder="Atauri, Sharma Climbing..." list="dlZ"></div><div class="fl"><label>Notas</label><input id="plNo" placeholder="Plan del día..."></div><div class="ct" style="margin-top:4px">INVITAR AMIGOS</div><div id="plFriends"></div><button class="btn bp" onclick="svPlan()">Guardar plan</button><button class="btn bg2" onclick="cm('mPl')">Cancelar</button></div></div>
+<!-- MODAL PLAN --><div class="mbg" id="mPl"><div class="mdl"><button class="mx" onclick="cm('mPl')">✕</button><h2>PLANIFICAR DÍA</h2><div class="fl"><label>Fecha</label><input type="date" id="plDt"></div><div class="ct" style="margin-top:6px">¿QUÉ PLAN?</div><div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px"><button class="ch" id="plBtnEsc" onclick="setPlTipo('escalar')">🧗 Escalar</button><button class="ch" id="plBtnEnt" onclick="setPlTipo('entreno')">🏋 Entreno</button><button class="ch" id="plBtnNot" onclick="setPlTipo('nota')">📝 Nota</button></div><div id="plEscalar" style="display:none"><div class="fl"><label>Tipo</label><select id="plTp"><option value="roca">🏔️ Roca</option><option value="indoor">🏢 Indoor</option></select></div><div class="fl"><label>Lugar</label><input id="plLg" placeholder="Atauri, Sharma..." list="dlZ"></div></div><div id="plEntreno" style="display:none"><div class="fl"><label>Elegir entreno</label><select id="plWoSel"><option value="">— Sin entreno —</option></select></div><div class="fl"><label><input type="checkbox" id="plShareWo" checked style="accent-color:var(--rock)"> Compartir ejercicios con invitados</label></div></div><div class="fl"><label>Notas</label><input id="plNo" placeholder="Plan del día..."></div><div class="ct" style="margin-top:6px">INVITAR AMIGOS</div><div id="plFriends"></div><button class="btn bp" onclick="svPlan()">Guardar plan</button><button class="btn bg2" onclick="cm('mPl')">Cancelar</button></div></div>
 <!-- MODAL NEW CRAG --><div class="mbg" id="mNC"><div class="mdl"><button class="mx" onclick="cm('mNC')">✕</button><h2>NUEVA ZONA</h2><p style="font-size:12px;color:var(--text2);margin-bottom:12px">En Google Maps → busca el sitio → pulsa largo → copia las coordenadas que aparecen abajo (ej: 43.270854, -3.102539).</p><div class="fl"><label>Nombre de la zona</label><input id="ncNm" placeholder="Galdames"></div><div class="fl"><label>Coordenadas</label><input id="ncCoords" placeholder="43.270854, -3.102539"><small>Pega las coordenadas o la URL larga de Google Maps (la que tiene @43.27,-3.10)</small></div><div id="ncMsg" style="font-size:11px;margin-bottom:8px"></div><button class="btn bp" onclick="svNewCrag()">Guardar zona</button><button class="btn bg2" onclick="cm('mNC')">Cancelar</button></div></div>
 <!-- MESOCICLO --><div class="mbg" id="mMeso"><div class="mdl"><button class="mx" onclick="cm('mMeso')">✕</button><h2>CREAR MESOCICLO</h2><div class="fl"><label>Nombre</label><input id="msNm" placeholder="Pre-temporada, Fuerza..."></div><div class="fl"><label>Fecha inicio</label><input type="date" id="msStart"></div><div class="ct">FASES</div><div id="msFases"></div><button class="btn bg2" style="font-size:11px;margin-bottom:10px" onclick="addFase()">+ Añadir fase</button><div id="msPrev" style="display:none;margin-bottom:10px"></div><hr style="border:none;border-top:1px solid var(--bg4);margin:10px 0"><button class="btn bp" onclick="svMeso()">Guardar mesociclo</button><button class="btn bg2" onclick="cm('mMeso')">Cancelar</button></div></div>
 <!-- NAV --><nav class="nav">
@@ -190,15 +190,24 @@ function go(id){Object.values(PG).forEach(p=>document.getElementById(p).classLis
 function rH(){updStats();rCal();updGrToggles();loadInvites();}
 async function loadInvites(){if(!U)return;
   const q=await db.collection('users').doc(U.uid).collection('invites').where('status','==','pending').get();
-  let h='';q.forEach(d=>{const inv=d.data();const tipos={roca:'🏔️ Roca',roco:'🏢 Roco',entreno:'🏋️ Entreno'};
+  let h='';q.forEach(d=>{const inv=d.data();const tipos={roca:'🏔️ Roca',indoor:'🏢 Indoor',entreno:'🏋️ Entreno',nota:'📝 Nota'};
     const dd=new Date(inv.date).toLocaleDateString('es-ES',{weekday:'short',day:'numeric',month:'short'});
-    h+=`<div class="inv-card"><div class="inv-who">${inv.fromName} te invita</div><div class="inv-det">${tipos[inv.tipo]||inv.tipo} · ${inv.lugar||''} · ${dd}</div>${inv.notas?`<div style="font-size:10px;color:var(--text3)">${inv.notas}</div>`:''}<div class="inv-btns"><button class="inv-yes" onclick="answerInv('${d.id}','accepted')">✓ Aceptar</button><button class="inv-no" onclick="answerInv('${d.id}','rejected')">✕ Rechazar</button></div></div>`;});
+    let detail=tipos[inv.tipo]||inv.tipo;
+    if(inv.lugar)detail+=' · '+inv.lugar;
+    if(inv.workoutName)detail+=' · 🏋 '+inv.workoutName;
+    h+=`<div class="inv-card"><div class="inv-who">${inv.fromName} te invita</div><div class="inv-det">${detail} · ${dd}</div>${inv.notas?`<div style="font-size:10px;color:var(--text3)">${inv.notas}</div>`:''}<div class="inv-btns"><button class="inv-yes" onclick="answerInv('${d.id}','accepted')">✓ Aceptar</button><button class="inv-no" onclick="answerInv('${d.id}','rejected')">✕ Rechazar</button></div></div>`;});
   document.getElementById('invBanner').innerHTML=h;}
 async function answerInv(id,status){if(!U)return;
   const ref=db.collection('users').doc(U.uid).collection('invites').doc(id);
   const doc=await ref.get();if(!doc.exists)return;const inv=doc.data();
   await ref.update({status});
-  if(status==='accepted'){await savePlan({date:inv.date,tipo:inv.tipo,lugar:inv.lugar,notas:'Con '+inv.fromName});}
+  if(status==='accepted'){
+    const plan={date:inv.date,tipo:inv.tipo,lugar:inv.lugar||'',notas:'Con '+inv.fromName};
+    if(inv.workoutName)plan.workoutName=inv.workoutName;
+    if(inv.workoutSteps){plan.workoutSteps=inv.workoutSteps;
+      // Also save as a workout for the user
+      await saveWorkout({name:inv.workoutName+' (de '+inv.fromName+')',steps:inv.workoutSteps,plannedDate:inv.date});}
+    await savePlan(plan);}
   loadInvites();rCal();}
 function updStats(){const y=new Date().getFullYear(),yr=R.filter(r=>new Date(r.date).getFullYear()===y);
   let sp='';[['year','Año'],['life','Siempre']].forEach(([k,lb])=>{sp+=`<button class="gp${sPer===k?' on':''}" onclick="sPer='${k}';updStats()">${lb}</button>`;});
@@ -219,7 +228,7 @@ function rCal(){const mN=["ENERO","FEBRERO","MARZO","ABRIL","MAYO","JUNIO","JULI
   let h='';['L','M','X','J','V','S','D'].forEach(d=>{h+=`<div class="cdh">${d}</div>`;});
   for(let i=0;i<sd;i++)h+='<div class="cd emp"></div>';
   for(let d=1;d<=dm;d++){const ds=`${cY}-${String(cMo+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const dr=R.filter(r=>r.date===ds),hr=dr.some(r=>r.lugar==='roca'),hc=dr.some(r=>r.lugar==='roco'),ht=Tr.some(t=>t.date===ds);
+    const dr=R.filter(r=>r.date===ds),hr=dr.some(r=>r.lugar==='roca'),hc=dr.some(r=>r.lugar==='indoor'||r.lugar==='roco'),ht=Tr.some(t=>t.date===ds);
     const hp=plans.some(p=>p.date===ds),hwk=W.some(w=>w.plannedDate===ds);
     const it=d===td.getDate()&&cMo===td.getMonth()&&cY===td.getFullYear();
     let c='cd';if(it)c+=' tod';if(hr&&hc)c+=' hb';else if(hr)c+=' hr';else if(hc)c+=' hc';
@@ -230,8 +239,13 @@ function rCal(){const mN=["ENERO","FEBRERO","MARZO","ABRIL","MAYO","JUNIO","JULI
   let det='';
   if(cSl){const dr=R.filter(r=>r.date===cSl),dt=Tr.filter(t=>t.date===cSl),dp=plans.filter(p=>p.date===cSl),dw=W.filter(w=>w.plannedDate===cSl),dd=new Date(cSl);
     det=`<div style="font-size:12px;color:var(--text2);margin-bottom:6px">${dd.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'})}</div>`;
-    dp.forEach(p=>{det+=`<div style="font-size:11px;color:var(--blue);margin:2px 0">📋 Plan: ${p.lugar||''} (${p.tipo}) ${p.notas||''}</div>`;});
-    dw.forEach(w=>{det+=`<div style="font-size:11px;color:var(--purple);margin:2px 0">🏋 Entreno: ${w.name}</div>`;});
+    dp.forEach(p=>{
+      let icon=p.tipo==='roca'?'🏔️':p.tipo==='indoor'?'🏢':p.tipo==='entreno'?'🏋':'📝';
+      let txt=`${icon} ${p.tipo==='entreno'?(p.workoutName||'Entreno'):(p.lugar||p.tipo)}`;
+      if(p.notas)txt+=' · '+p.notas;
+      if(p.invited&&p.invited.length)txt+=' · 👥'+p.invited.length;
+      det+=`<div style="font-size:11px;color:var(--blue);margin:3px 0;padding:4px 6px;background:var(--bg3);border-radius:6px">${txt}</div>`;});
+    dw.forEach(w=>{det+=`<div style="font-size:11px;color:var(--purple);margin:3px 0;padding:4px 6px;background:var(--bg3);border-radius:6px">🏋 ${w.name} <span style="font-size:10px;color:var(--text3)">${(w.steps||[]).length} ej.</span></div>`;});
     dr.forEach(r=>{det+=`<div style="font-size:12px;margin:2px 0"><span style="color:${r.enc?'var(--green)':'var(--rock)'};font-family:'Bebas Neue';font-size:16px">${r.grado}</span> ${r.tipo} ${r.enc?'✓':''}${r.nombre?' · '+r.nombre:''}</div>`;});
     dt.forEach(t=>{det+=`<div style="font-size:12px;margin:2px 0;color:var(--yellow)">🏋 ${t.tipo} ${t.detail}</div>`;});
     if(!dr.length&&!dt.length&&!dp.length&&!dw.length)det+='<div style="font-size:12px;color:var(--text3)">Sin actividad</div>';
@@ -243,35 +257,65 @@ function rGr(){const y=new Date().getFullYear();
   let f;
   if(gM==='all')f=base;
   else if(gM==='cr')f=base.filter(r=>r.lugar==='roca'&&r.tipo==='Cuerda');
-  else if(gM==='br')f=base.filter(r=>r.lugar==='roco'&&r.tipo==='Bloque');
-  else if(gM==='cro')f=base.filter(r=>r.lugar==='roco'&&r.tipo==='Cuerda');
-  else f=base.filter(r=>r.lugar==='roco'&&r.tipo==='AutoAseg');
+  else if(gM==='br')f=base.filter(r=>r.lugar==='indoor'||r.lugar==='roco'&&r.tipo==='Bloque');
+  else if(gM==='cro')f=base.filter(r=>r.lugar==='indoor'||r.lugar==='roco'&&r.tipo==='Cuerda');
+  else f=base.filter(r=>r.lugar==='indoor'||r.lugar==='roco'&&r.tipo==='AutoAseg');
   const c={};f.forEach(r=>{c[r.grado]=(c[r.grado]||0)+1;});const s=Object.entries(c).sort((a,b)=>G.indexOf(b[0])-G.indexOf(a[0]));
   const mx=Math.max(...s.map(x=>x[1]),1);
   const cc=(gM==='br'||gM==='cro'||gM==='ar')?'ro':(gM==='all'?'rc':'rc');
   let h=`<div style="font-size:11px;color:var(--text2);margin-bottom:6px">${f.length} vías${gPer==='year'?' este año':' en total'}</div>`;
   s.slice(0,10).forEach(([g,n])=>{h+=`<div class="gr"><div class="grn">${g}</div><div class="grb"><div class="grf ${cc}" style="width:${(n/mx)*100}%">${n}</div></div></div>`;});
   document.getElementById('gB').innerHTML=h||'<div style="color:var(--text3);font-size:12px;padding:10px">Sin datos</div>';}
+let plTipo='escalar';
+function setPlTipo(t){plTipo=t;
+  document.getElementById('plEscalar').style.display=t==='escalar'?'block':'none';
+  document.getElementById('plEntreno').style.display=t==='entreno'?'block':'none';
+  document.querySelectorAll('#plBtnEsc,#plBtnEnt,#plBtnNot').forEach(b=>b.classList.remove('on'));
+  document.getElementById(t==='escalar'?'plBtnEsc':t==='entreno'?'plBtnEnt':'plBtnNot').classList.add('on');}
 function openPlan(dt){document.getElementById('plDt').value=dt;document.getElementById('plLg').value='';document.getElementById('plNo').value='';
+  plTipo='escalar';setPlTipo('escalar');
+  // Populate workout selector
+  let wh='<option value="">— Sin entreno —</option>';
+  W.forEach((w,i)=>{wh+=`<option value="${i}">${w.name}</option>`;});
+  document.getElementById('plWoSel').innerHTML=wh;
+  // Populate friends with names
   let fh='';if(!friends.length)fh='<div style="font-size:10px;color:var(--text3);padding:4px">Sin amigos aún</div>';
-  friends.forEach((f,i)=>{fh+=`<label style="display:flex;align-items:center;gap:6px;padding:4px 0;font-size:12px;cursor:pointer"><input type="checkbox" class="plFrCb" value="${f.email}" style="accent-color:var(--rock)">${f.email}</label>`;});
+  friends.forEach(f=>{const nm=f.name||f.email;
+    fh+=`<label style="display:flex;align-items:center;gap:6px;padding:5px 0;font-size:12px;cursor:pointer"><input type="checkbox" class="plFrCb" value="${f.email}" data-name="${nm}" style="accent-color:var(--rock)"><img src="${f.photo||''}" style="width:24px;height:24px;border-radius:50%;border:1px solid var(--bg3)">${nm}</label>`;});
   document.getElementById('plFriends').innerHTML=fh;document.getElementById('mPl').classList.add('sh');}
-async function svPlan(){const date=document.getElementById('plDt').value,tipo=document.getElementById('plTp').value,lugar=document.getElementById('plLg').value,notas=document.getElementById('plNo').value;
+async function svPlan(){const date=document.getElementById('plDt').value,notas=document.getElementById('plNo').value;
   if(!date){alert('Pon una fecha');return;}
-  const invited=[];document.querySelectorAll('.plFrCb:checked').forEach(cb=>invited.push(cb.value));
-  const plan={date,tipo,lugar,notas,invited};
+  let tipo,lugar='',woData=null;
+  if(plTipo==='escalar'){
+    tipo=document.getElementById('plTp').value;
+    lugar=document.getElementById('plLg').value;
+  }else if(plTipo==='entreno'){
+    tipo='entreno';
+    const wi=document.getElementById('plWoSel').value;
+    if(wi!==''){woData=W[parseInt(wi)];}
+  }else{tipo='nota';}
+  const invited=[];const invNames=[];
+  document.querySelectorAll('.plFrCb:checked').forEach(cb=>{invited.push(cb.value);invNames.push(cb.dataset.name||cb.value);});
+  const shareWo=document.getElementById('plShareWo')&&document.getElementById('plShareWo').checked;
+  const plan={date,tipo:tipo||'nota',lugar,notas,invited};
+  if(woData){plan.workoutName=woData.name;if(shareWo)plan.workoutSteps=woData.steps;
+    // Also set as planned date on the workout
+    if(woData.id){await db.collection('users').doc(U.uid).collection('workouts').doc(woData.id).update({plannedDate:date});woData.plannedDate=date;}}
   await savePlan(plan);
-  // Send invites to friends
-  if(invited.length&&U){const fromName=U.displayName||U.email;
+  // Send invites
+  if(invited.length&&U){const fromName=cU.displayName||cU.email;
     for(const email of invited){const q=await db.collection('users').where('email','==',email).get();
       if(!q.empty){const fuid=q.docs[0].id;
-        await db.collection('users').doc(fuid).collection('invites').add({from:U.uid,fromName,date,tipo,lugar,notas,status:'pending',ts:firebase.firestore.FieldValue.serverTimestamp()});}}}
+        const inv={from:U.uid,fromName,date,tipo:tipo||'nota',lugar,notas,status:'pending',ts:firebase.firestore.FieldValue.serverTimestamp()};
+        if(woData){inv.workoutName=woData.name;if(shareWo)inv.workoutSteps=woData.steps;inv.type='workout';}
+        else inv.type='plan';
+        await db.collection('users').doc(fuid).collection('invites').add(inv);}}}
   cm('mPl');rCal();}
 
 // ROUTES
-function drR(){let fc='';[['all','Todas'],['roca','Roca'],['roco','Roco'],['enc','Enc'],['cuerda','Cuerda'],['bloque','Bloque']].forEach(([k,lb])=>{fc+=`<button class="ch${rFl===k?' on':''}" onclick="rFl='${k}';drR()">${lb}</button>`;});document.getElementById('rF').innerHTML=fc;
+function drR(){let fc='';[['all','Todas'],['roca','Roca'],['indoor','Indoor'],['enc','Enc'],['cuerda','Cuerda'],['bloque','Bloque']].forEach(([k,lb])=>{fc+=`<button class="ch${rFl===k?' on':''}" onclick="rFl='${k}';drR()">${lb}</button>`;});document.getElementById('rF').innerHTML=fc;
   const q=(document.getElementById('vQ').value||'').trim().toLowerCase();
-  let fl=R.slice();if(rFl==='roca')fl=fl.filter(r=>r.lugar==='roca');if(rFl==='roco')fl=fl.filter(r=>r.lugar==='roco');if(rFl==='enc')fl=fl.filter(r=>r.enc);if(rFl==='cuerda')fl=fl.filter(r=>r.tipo==='Cuerda');if(rFl==='bloque')fl=fl.filter(r=>r.tipo==='Bloque');
+  let fl=R.slice();if(rFl==='roca')fl=fl.filter(r=>r.lugar==='roca');if(rFl==='roco')fl=fl.filter(r=>r.lugar==='indoor'||r.lugar==='roco');if(rFl==='enc')fl=fl.filter(r=>r.enc);if(rFl==='cuerda')fl=fl.filter(r=>r.tipo==='Cuerda');if(rFl==='bloque')fl=fl.filter(r=>r.tipo==='Bloque');
   if(q)fl=fl.filter(r=>(r.nombre||'').toLowerCase().includes(q)||(r.sitio||'').toLowerCase().includes(q)||(r.amigos||'').toLowerCase().includes(q)||(r.grado||'').toLowerCase().includes(q)||(r.tipo||'').toLowerCase().includes(q)||(r.date||'').includes(q));
   const so=document.getElementById('rS').value;if(so==='date')fl.sort((a,b)=>b.date.localeCompare(a.date));if(so==='dateA')fl.sort((a,b)=>a.date.localeCompare(b.date));if(so==='grD')fl.sort((a,b)=>G.indexOf(b.grado)-G.indexOf(a.grado));if(so==='grA')fl.sort((a,b)=>G.indexOf(a.grado)-G.indexOf(b.grado));if(so==='lugar')fl.sort((a,b)=>(a.sitio||'').localeCompare(b.sitio||''));if(so==='amigo')fl.sort((a,b)=>(a.amigos||'').localeCompare(b.amigos||''));
   let h='',ld2='';const byD=so==='date'||so==='dateA';
@@ -287,7 +331,7 @@ function cm(id){document.getElementById(id).classList.remove('sh');if(id==='mNC'
 
 // MAP
 function drM(){let tb='';[['roca','🏔️ Roca'],['roco','🏢 Rocódromo']].forEach(([k,lb])=>{tb+=`<button class="tb${mapMode===k?' on':''}" onclick="mapMode='${k}';drM()">${lb}</button>`;});document.getElementById('mapTbs').innerHTML=tb;
-  const rr=mapMode==='roca'?R.filter(r=>r.lugar==='roca'):R.filter(r=>r.lugar==='roco');
+  const rr=mapMode==='roca'?R.filter(r=>r.lugar==='roca'):R.filter(r=>r.lugar==='indoor'||r.lugar==='roco');
   document.getElementById('mTotal').textContent=rr.length;document.getElementById('mEnc').textContent=rr.filter(r=>r.enc).length;
   const locs=buildLocs(rr);document.getElementById('mZonas').textContent=Object.keys(locs).length;
   if(!leafMap){leafMap=L.map('mapDiv',{zoomControl:false}).setView([40.4,-2.5],5);L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'©OSM',maxZoom:18}).addTo(leafMap);L.control.zoom({position:'topright'}).addTo(leafMap);}
@@ -298,7 +342,7 @@ function drM(){let tb='';[['roca','🏔️ Roca'],['roco','🏢 Rocódromo']].fo
 function buildLocs(rr){const locs={};rr.forEach(r=>{if(!r.sitio)return;const c=getCragCoords(r.sitio);if(c){if(!locs[c.name])locs[c.name]={...c,rs:[],enc:0};locs[c.name].rs.push(r);if(r.enc)locs[c.name].enc++;}});return locs;}
 function showZone(l){let h=`<div style="font-family:'Bebas Neue';font-size:16px;color:var(--rock);margin:8px 0">${l.name} — ${l.rs.length} vías (${l.enc} enc.)</div>`;l.rs.forEach(r=>{h+=vc(r,true);});document.getElementById('mRt').innerHTML=h;}
 function filterMap(){const q=document.getElementById('mapQ').value.trim().toLowerCase();if(!q){document.getElementById('mapResults').style.display='none';return;}
-  const rr=mapMode==='roca'?R.filter(r=>r.lugar==='roca'):R.filter(r=>r.lugar==='roco');const locs=buildLocs(rr);const match=Object.values(locs).filter(l=>l.name.toLowerCase().includes(q));
+  const rr=mapMode==='roca'?R.filter(r=>r.lugar==='roca'):R.filter(r=>r.lugar==='indoor'||r.lugar==='roco');const locs=buildLocs(rr);const match=Object.values(locs).filter(l=>l.name.toLowerCase().includes(q));
   if(match.length===1){leafMap.setView([match[0].lat,match[0].lng],10);showZone(match[0]);document.getElementById('mapResults').style.display='none';}
   else if(match.length>1){let h='';match.forEach(l=>{h+=`<div class="fr-card" style="cursor:pointer" onclick="leafMap.setView([${l.lat},${l.lng}],10);showZone(mapLocs['${l.name}'])"><div class="fr-info"><div class="fr-name" style="color:var(--rock)">${l.name}</div><div class="fr-email">${l.rs.length} vías</div></div></div>`;});
     document.getElementById('mapResults').innerHTML=h;document.getElementById('mapResults').style.display='block';window.mapLocs={};match.forEach(l=>{window.mapLocs[l.name]=l;});}
@@ -477,7 +521,7 @@ function drDash(){const from=document.getElementById('grFrom').value,to=document
     if(fk==='lugar')vias=vias.filter(r=>r.sitio===fv);
     if(fk==='grado')vias=vias.filter(r=>r.grado===fv);
     if(fk==='enc')vias=vias.filter(r=>r.enc);
-    if(fk==='tipo'){if(fv==='roca')vias=vias.filter(r=>r.lugar==='roca');if(fv==='roco')vias=vias.filter(r=>r.lugar==='roco');}
+    if(fk==='tipo'){if(fv==='roca')vias=vias.filter(r=>r.lugar==='roca');if(fv==='roco')vias=vias.filter(r=>r.lugar==='indoor'||r.lugar==='roco');}
     if(fk==='compa')vias=vias.filter(r=>(r.amigos||'').includes(fv));
     if(fk==='ej')steps=steps.filter(s=>(s.nm||s.txt||'')===fv);
     if(fk==='ag')steps=steps.filter(s=>s.ag===fv);
@@ -586,16 +630,25 @@ async function sendToDevice(btn,w){const ob=btn.textContent;btn.textContent='...
   setTimeout(()=>{btn.textContent='⚡ Bolt';btn.style.background='var(--green)';},2000);}
 // Share workout with friend
 async function shareWo(woId){const w=W.find(x=>x.id===woId);if(!w)return;
-  const email=prompt('Email del amigo:');if(!email)return;
-  const q=await db.collection('users').where('email','==',email).get();
-  if(q.empty){alert('No encontrado');return;}
-  const fuid=q.docs[0].id;
-  await db.collection('users').doc(fuid).collection('invites').add({
-    type:'workout',fromUid:U.uid,fromName:cU.displayName||cU.email,
-    workout:{name:w.name,steps:w.steps,plannedDate:w.plannedDate||''},
-    date:w.plannedDate||new Date().toISOString().split('T')[0],
-    status:'pending',ts:firebase.firestore.FieldValue.serverTimestamp()});
-  alert('Entreno compartido con '+email);}
+  if(!friends.length){alert('Añade amigos primero');return;}
+  let h='<div style="padding:10px"><div style="font-family:Bebas Neue;font-size:18px;color:var(--rock);margin-bottom:8px">Compartir: '+w.name+'</div>';
+  friends.forEach(f=>{const nm=f.name||f.email;
+    h+=`<label style="display:flex;align-items:center;gap:8px;padding:6px 0;font-size:13px;cursor:pointer"><input type="checkbox" class="shFrCb" value="${f.email}" style="accent-color:var(--rock)"><img src="${f.photo||''}" style="width:28px;height:28px;border-radius:50%">${nm}</label>`;});
+  h+='<button class="btn bp" style="margin-top:10px" onclick="doShareWo(\''+woId+'\')">Enviar</button></div>';
+  const d=document.createElement('div');d.className='mbg sh';d.id='mShareWo';d.innerHTML='<div class="mdl"><button class="mx" onclick="cm(\'mShareWo\')">✕</button>'+h+'</div>';
+  document.body.appendChild(d);}
+async function doShareWo(woId){const w=W.find(x=>x.id===woId);if(!w)return;
+  const sel=[];document.querySelectorAll('.shFrCb:checked').forEach(cb=>sel.push(cb.value));
+  if(!sel.length){alert('Elige al menos un amigo');return;}
+  const fromName=cU.displayName||cU.email;
+  for(const email of sel){const q=await db.collection('users').where('email','==',email).get();
+    if(!q.empty){const fuid=q.docs[0].id;
+      await db.collection('users').doc(fuid).collection('invites').add({
+        type:'workout',from:U.uid,fromName,workoutName:w.name,workoutSteps:w.steps,
+        date:w.plannedDate||new Date().toISOString().split('T')[0],
+        status:'pending',ts:firebase.firestore.FieldValue.serverTimestamp()});}}
+  const el=document.getElementById('mShareWo');if(el)el.remove();
+  alert('Enviado a '+sel.length+' amigo'+(sel.length>1?'s':''));}
 // Auto flash/avista logic
 function autoFlashAvista(intento){
   const fi=document.getElementById('rFlash'),av=document.getElementById('rAvista');
@@ -656,7 +709,7 @@ function exportXL(tipo){
   if(tipo==='vias'){
     const fl=R.filter(r=>r.date>=from&&r.date<=to).sort((a,b)=>a.date.localeCompare(b.date));
     if(!fl.length){msg.textContent='No hay vías en ese rango';msg.style.color='var(--yellow)';return;}
-    const rows=fl.map(r=>({Fecha:r.date,Nombre:r.nombre||'',Lugar:r.sitio||'',Tipo_lugar:r.lugar==='roca'?'Roca':'Rocódromo',Tipo_via:r.tipo,Grado:r.grado,Intento:r.intento||1,Encadenado:r.enc?'Sí':'No',Compañeros:r.amigos||'',Notas:r.notas||''}));
+    const rows=fl.map(r=>({Fecha:r.date,Nombre:r.nombre||'',Lugar:r.sitio||'',Tipo_lugar:r.lugar==='roca'?'Roca':'Indoor',Tipo_via:r.tipo,Grado:r.grado,Intento:r.intento||1,Encadenado:r.enc?'Sí':'No',Compañeros:r.amigos||'',Notas:r.notas||''}));
     const ws=XLSX.utils.json_to_sheet(rows);ws['!cols']=[{wch:12},{wch:20},{wch:15},{wch:12},{wch:10},{wch:8},{wch:8},{wch:10},{wch:15},{wch:25}];
     const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Vías');
     XLSX.writeFile(wb,`sube_pies_vias_${from}_${to}.xlsx`);
