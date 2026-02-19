@@ -222,7 +222,7 @@ function drHomeWo(){
   // Workouts
   if(dw.length){dw.forEach(w=>{
     h+=`<div style="background:rgba(76,175,80,.08);border-radius:10px;padding:10px;margin-bottom:6px;border-left:3px solid var(--green)">`;
-    h+=`<div style="font-family:'Bebas Neue';font-size:16px;color:var(--green)">${w.name}</div>`;
+    h+=`<div style="font-family:'Bebas Neue';font-size:16px;color:var(--green)">${w.name}${w.boltPending?' <span style="font-size:9px;background:var(--green);color:#000;padding:1px 6px;border-radius:10px;font-family:Nunito">⚡ Bolt</span>':''}</div>`;
     h+=`<div style="font-size:10px;color:var(--text3);margin-bottom:4px">${(w.steps||[]).length} ejercicios</div>`;
     (w.steps||[]).forEach((s,i)=>{const p=s;let d=p.nm||s.txt||'';const pts=[];
       if(p.ag)pts.push(p.ag);if(p.mm)pts.push(p.mm+'mm');if(p.kg>0)pts.push('+'+p.kg+'kg');if(p.ang)pts.push(p.ang);
@@ -236,11 +236,24 @@ function drHomeWo(){
     dr.forEach(r=>{h+=`<div style="font-size:11px;padding:2px 0"><span style="color:${r.enc?'var(--green)':'var(--rock)'};font-family:'Bebas Neue';font-size:13px">${r.grado}</span> ${r.tipo}${r.enc?' ✓':''}${r.flash?' ⚡':''}${r.avista?' 👁':''}${r.nombre?' · '+r.nombre:''}</div>`;});}
   if(!h)h=`<div style="text-align:center;padding:20px"><div style="font-size:28px;margin-bottom:4px">🧗</div><div style="color:var(--text3);font-size:12px">${sel===td?'Nada para hoy':'Sin planes'}</div><div style="margin-top:8px"><button class="sbb" style="font-size:11px;padding:6px 14px" onclick="openPlan('${sel}')">+ Planificar</button></div></div>`;
   document.getElementById('homeWo').innerHTML=h;}
-// Queue workout to Bolt (stored, sent on next connect)
-let boltQueue=[];
-async function queueToBolt(w){boltQueue.push(w);
-  if(boltConnected){await sendToDevice({textContent:'',style:{}},w);}
-  else{alert('Entreno en cola. Se enviará al conectar Bolt.');}}
+// Bolt queue - persistent via boltPending flag on workouts
+async function queueToBolt(w){if(!U)return;
+  if(w.id){await db.collection('users').doc(U.uid).collection('workouts').doc(w.id).update({boltPending:true});w.boltPending=true;}
+  if(boltConnected){await sendWoToBolt(w);
+    if(w.id){await db.collection('users').doc(U.uid).collection('workouts').doc(w.id).update({boltPending:false});w.boltPending=false;}}
+  else{alert('⚡ En cola. Se enviará al conectar Bolt.');}drHomeWo();}
+async function sendWoToBolt(w){
+  const dt=w.plannedDate||new Date().toISOString().split('T')[0];
+  const steps=(w.steps||[]).map(s=>{const o={n:(s.nm||s.txt||'Ej').substring(0,16),m:s.modo==='time'?'t':'r'};
+    if(o.m==='t'){o.w=s.time||7;o.d=s.desc||3;}else{o.r=s.reps||s.rep||1;}
+    o.s=s.ser||1;o.ds=s.ds||180;
+    if(s.ag)o.a=s.ag.substring(0,8);if(s.mm)o.mm=s.mm;if(s.kg)o.kg=s.kg;if(s.ang)o.an=s.ang.substring(0,4);return o;});
+  const wo=JSON.stringify({n:(w.name||'Entreno').substring(0,20),dt,st:steps});
+  await boltWrite('WO:'+wo);}
+async function sendPendingToBolt(){const pending=W.filter(w=>w.boltPending);
+  for(const w of pending){await sendWoToBolt(w);await new Promise(r=>setTimeout(r,200));
+    if(w.id){await db.collection('users').doc(U.uid).collection('workouts').doc(w.id).update({boltPending:false});w.boltPending=false;}}
+  if(pending.length){alert(pending.length+' entreno(s) enviados a Bolt');}}
 // Settings
 function openSettings(){
   const s=JSON.parse(localStorage.getItem('spSettings')||'{}');
@@ -499,7 +512,7 @@ function doBeep(){if(!document.getElementById('exSound').checked)return;try{navi
 async function drFr(){let h='';if(!friends.length)h='<div style="color:var(--text3);font-size:11px;text-align:center;padding:16px">Añade amigos con su código # o email</div>';
   for(const f of friends){const q=await db.collection('users').where('email','==',f.email).get();let name=f.email,photo='',code='';
     if(!q.empty){const ud=q.docs[0].data();name=ud.name||f.email;photo=ud.photo||'';code=ud.code?'#'+ud.code:'';}
-    h+=`<div class="fr-card"><img class="fr-pic" src="${photo||'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22><circle cx=%2212%22 cy=%228%22 r=%224%22 fill=%22%238a9bb0%22/><path d=%22M4 20c0-4 4-7 8-7s8 3 8 7%22 fill=%22%238a9bb0%22/></svg>'}" onclick="viewFr('${f.email}')"><div class="fr-info" onclick="viewFr('${f.email}')"><div class="fr-name">${name} <span style="font-size:9px;color:var(--rock)">${code}</span></div><div class="fr-email">${f.email}</div></div><button style="background:none;border:none;color:var(--blue);font-size:16px;cursor:pointer;padding:4px" onclick="event.stopPropagation();openChatByEmail('${f.email}')">💬</button><button class="fr-rm" onclick="event.stopPropagation();rmFr('${f.id}')">✕</button></div>`;}
+    h+=`<div class="fr-card"><img class="fr-pic" src="${photo||'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22><circle cx=%2212%22 cy=%228%22 r=%224%22 fill=%22%238a9bb0%22/><path d=%22M4 20c0-4 4-7 8-7s8 3 8 7%22 fill=%22%238a9bb0%22/></svg>'}" onclick="viewFr('${f.email}')"><div class="fr-info" onclick="viewFr('${f.email}')"><div class="fr-name">${name} <span style="font-size:9px;color:var(--rock)">${code}</span></div></div><button style="background:none;border:none;color:var(--blue);font-size:16px;cursor:pointer;padding:4px" onclick="event.stopPropagation();openChatByEmail('${f.email}')">💬</button><button class="fr-rm" onclick="event.stopPropagation();rmFr('${f.id}')">✕</button></div>`;}
   document.getElementById('frList').innerHTML=h;document.getElementById('frView').style.display='none';}
 async function openChatByEmail(email){const q=await db.collection('users').where('email','==',email).get();if(q.empty)return;const fd=q.docs[0].data();openChat(q.docs[0].id,(fd.name||email).replace(/'/g,''));}
 async function addFriend(){const raw=document.getElementById('frCode').value.trim(),msg=document.getElementById('frMsg');
@@ -674,10 +687,11 @@ async function boltConnect(){
       const bt=document.getElementById('bT');if(bt)bt.textContent='Bolt desconectado';
       const bb=document.getElementById('bB');if(bb){bb.textContent='🔗 Conectar Bolt';bb.classList.remove('ok');}});
     t.textContent='✓ Conectado a '+dev.name;
-    // Send settings
+    // Send settings and today's date
     const st=getSettings();await boltWrite('CFG:'+(st.boltLed?'1':'0')+(st.boltBuz?'1':'0'));
-    // Send queued workouts
-    if(boltQueue.length){for(const w of boltQueue){await sendToDevice({textContent:'',style:{}},w);}boltQueue=[];}
+    await boltWrite('DATE:'+new Date().toISOString().split('T')[0]);
+    // Send pending workouts
+    await sendPendingToBolt();
     return dev;
   }catch(e){console.error('BLE:',e);t.textContent='Error: '+e.message;return null;}}
 async function boltWrite(cmd){if(!boltConnected||!boltRx)return false;
@@ -732,7 +746,7 @@ async function viewFr(email){const q=await db.collection('users').where('email',
   const gc={};frRoutes.forEach(r=>{gc[r.grado]=(gc[r.grado]||0)+1;});
   const gs=Object.entries(gc).sort((a,b)=>G.indexOf(b[0])-G.indexOf(a[0]));
   const gmx=Math.max(...gs.map(x=>x[1]),1);
-  let h=`<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><img src="${fd.photo||''}" style="width:40px;height:40px;border-radius:50%;border:2px solid var(--rock)"><div><div style="font-family:'Bebas Neue';font-size:18px;color:var(--rock)">${fd.name||email}</div><div style="font-size:10px;color:var(--text3)">${fd.email} ${fd.code?'#'+fd.code:''}</div></div></div>`;
+  let h=`<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><img src="${fd.photo||''}" style="width:40px;height:40px;border-radius:50%;border:2px solid var(--rock)"><div><div style="font-family:'Bebas Neue';font-size:18px;color:var(--rock)">${fd.name||'Escalador'}</div><div style="font-size:10px;color:var(--text3)">${fd.code?'#'+fd.code:''}</div></div></div>`;
   h+=`<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px"><div class="st a" style="padding:8px"><div class="v" style="font-size:22px">${frRoutes.length}</div><div class="l">Vías</div></div><div class="st b" style="padding:8px"><div class="v" style="font-size:22px">${frRoutes.filter(r=>r.enc).length}</div><div class="l">Enc</div></div><div class="st" style="padding:8px;border:1px solid rgba(255,255,255,.04)"><div class="v" style="font-size:22px;color:var(--blue)">${new Set(frRoutes.map(r=>r.sitio).filter(Boolean)).size}</div><div class="l">Zonas</div></div></div>`;
   if(gs.length){h+='<div class="ct">GRADOS</div><div class="gb" style="margin-bottom:10px">';gs.slice(0,8).forEach(([g,n])=>{h+=`<div class="gr"><div class="grn">${g}</div><div class="grb"><div class="grf rc" style="width:${(n/gmx)*100}%">${n}</div></div></div>`;});h+='</div>';}
   h+=`<button class="btn bp" style="margin-bottom:8px" onclick="openChat('${fuid}','${(fd.name||email).replace(/'/g,'')}')">💬 Chat</button>`;
