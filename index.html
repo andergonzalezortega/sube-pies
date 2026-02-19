@@ -76,14 +76,13 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <div id="loadPage" class="load-full"><div class="spinner" style="width:40px;height:40px;border-width:3px"></div></div>
 <div id="loginPage" style="display:none"><div style="font-size:60px;margin-bottom:10px">⛰️</div><div class="login-logo">SUBE PIES</div><div style="color:var(--text2);font-size:14px;margin-bottom:30px">Diario de escalada</div><button class="goog-btn" onclick="loginGoogle()"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg">Entrar con Google</button></div>
 <div id="appWrap" style="display:none">
-<!-- HOME --><div id="ph" class="page on" style="overflow:hidden;height:calc(100vh - 75px);display:none">
-<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><div><h1 style="font-size:22px;color:var(--rock);margin:0">SUBE PIES</h1><div class="usr-bar"><img class="usr-pic" id="uPic"><span class="usr-name" id="uName"></span><span class="usr-tag" id="uTag"></span><button class="usr-out" onclick="logout()">Salir</button></div></div><div style="display:flex;gap:4px"><button class="sbb" style="font-size:10px;padding:5px 10px" onclick="openSettings()">⚙️</button><button class="sbb" style="font-size:10px;padding:5px 10px" onclick="go('sync')">📡</button></div></div>
+<!-- HOME --><div id="ph" class="page on" style="overflow:hidden;height:calc(100vh - 75px);display:none;flex-direction:column">
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><div><h1 style="font-size:22px;color:var(--rock);margin:0">SUBE PIES</h1><div class="usr-bar"><img class="usr-pic" id="uPic"><span class="usr-name" id="uName"></span><span class="usr-tag" id="uTag"></span><button class="usr-out" onclick="logout()">Salir</button></div></div><button class="sbb" style="font-size:10px;padding:5px 10px" onclick="go('sync')">📡</button></div>
 <div id="invBanner"></div>
 <div class="gsw" id="sPer" style="margin-bottom:4px"></div>
 <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:6px"><div class="st a" style="padding:6px 4px"><div class="v" id="sV" style="font-size:24px">0</div><div class="l" id="sVl">Vías</div></div><div class="st b" style="padding:6px 4px"><div class="v" id="sE" style="font-size:24px">0</div><div class="l" id="sEl">Enc</div></div><div class="st c" style="padding:6px 4px"><div class="v" id="sT" style="font-size:24px">0</div><div class="l" id="sTl">Entrenos</div></div></div>
 <div style="background:var(--bg2);border-radius:12px;padding:8px;border:1px solid rgba(255,255,255,.04);margin-bottom:6px"><div class="cn" style="margin-bottom:4px"><button onclick="cNav(-1)" style="padding:2px 8px;font-size:16px">◀</button><span class="mo" id="cM" style="font-size:14px"></span><button onclick="cNav(1)" style="padding:2px 8px;font-size:16px">▶</button></div><div class="cg" id="cG"></div></div>
-<div id="cD" style="margin-bottom:6px"></div>
-<div id="homeWo" style="flex:1;overflow-y:auto"></div>
+<div id="homeWo" style="background:var(--bg2);border-radius:12px;padding:10px;border:1px solid rgba(255,255,255,.04);flex:1;overflow-y:auto"></div>
 </div>
 <!-- VÍAS --><div id="pv" class="page"><div class="hdr"><h1>VÍAS</h1><button class="bp btn" style="width:auto;padding:6px 12px;font-size:11px;border-radius:10px" onclick="addR()">+ Añadir</button></div>
 <div style="background:var(--bg2);border-radius:12px;padding:8px;border:1px solid rgba(255,255,255,.04);margin-bottom:8px"><div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span class="ct" style="margin:0;font-size:12px">GRADOS</span></div><div class="gsw" id="gPer" style="margin-bottom:4px"></div><div class="gsw" id="gS" style="margin-bottom:4px"></div><div class="gb" id="gB"></div></div>
@@ -116,7 +115,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 </div>
 <div class="card"><div class="ct">DATOS EN LA NUBE</div><p style="font-size:12px;color:var(--text2)"><span style="font-family:'Bebas Neue';font-size:22px;color:var(--green)" id="sN">0</span> registros guardados</p><p style="font-size:10px;color:var(--text3);margin-top:4px">Tus datos están seguros en Firebase.</p></div></div>
 </div>
-<!-- MODAL ROUTE --><div class="mbg" id="mR1"><div class="mdl"><button class="mx" onclick="cm('mR1')">✕</button><h2 id="mRT">VÍA</h2><div class="fl"><label>Nombre</label><input id="iN" placeholder="Diedro mágico"></div><div class="fl"><label>Lugar</label><input id="iL" placeholder="Atauri, Galdames..." list="dlZ"><datalist id="dlZ"></datalist></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="fl"><label>Tipo lugar</label><select id="iLT"><option value="roca">Roca</option><option value="indoor">Indoor</option></select></div><div class="fl"><label>Tipo vía</label><select id="iTP"><option>Cuerda</option><option>Bloque</option><option>Largos</option></select></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="fl"><label>Grado</label><select id="iG"></select></div><div class="fl"><label>Intento</label><select id="iI" onchange="chkFlashAvista()"></select></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px"><div class="fl"><label>Encadenado</label><select id="iE" onchange="chkFlashAvista()"><option value="1">Sí</option><option value="0">No</option></select></div><div class="fl" id="fFlash"><label>Flash</label><select id="iFlash"><option value="0">No</option><option value="1">Sí</option></select></div><div class="fl" id="fAvista"><label>A vista</label><select id="iAvista"><option value="0">No</option><option value="1">Sí</option></select></div></div><div class="fl"><label>Sensaciones</label><textarea id="iNo" placeholder="Beta, condiciones..."></textarea></div><div class="fl"><label>Compañeros</label><input id="iA" placeholder="Mikel, Ane, Jon"></div><div class="fl"><label>Fecha</label><input type="date" id="iFe"></div><button class="btn bp" onclick="svR()">Guardar</button><button class="btn bdel" id="btnDelR" style="display:none" onclick="delR()">🗑️ Eliminar vía</button><button class="btn bg2" onclick="cm('mR1')">Cancelar</button></div></div>
+<!-- MODAL ROUTE --><div class="mbg" id="mR1"><div class="mdl"><button class="mx" onclick="cm('mR1')">✕</button><h2 id="mRT">VÍA</h2><div class="fl"><label>Nombre</label><input id="iN" placeholder="Diedro mágico"></div><div class="fl"><label>Lugar</label><input id="iL" placeholder="Atauri, Galdames..." list="dlZ"><datalist id="dlZ"></datalist></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="fl"><label>Tipo lugar</label><select id="iLT"><option value="roca">Roca</option><option value="indoor">Indoor</option></select></div><div class="fl"><label>Tipo vía</label><select id="iTP"><option>Cuerda</option><option>Bloque</option><option>Largos</option></select></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="fl"><label>Grado</label><select id="iG"></select></div><div class="fl"><label>Intento</label><select id="iI" onchange="chkFlashAvista()"></select></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px"><div class="fl"><label>Encadenado</label><select id="iE" onchange="chkFlashAvista()"><option value="1">Sí</option><option value="0">No</option></select></div><div class="fl" id="fFlash"><label>Flash</label><select id="iFlash"><option value="0">No</option><option value="1">Sí</option></select></div><div class="fl" id="fAvista"><label>A vista</label><select id="iAvista"><option value="0">No</option><option value="1">Sí</option></select></div></div><div class="fl"><label>Sensaciones</label><textarea id="iNo" placeholder="Beta, condiciones..."></textarea></div><div class="fl"><label>Compañeros</label><div id="rFriendChips" style="display:flex;gap:3px;flex-wrap:wrap;margin-bottom:4px"></div><input id="iA" placeholder="Escribe o elige amigos..." oninput="filterRouteFriends()"><div id="rFriendSug" style="display:none"></div></div><div class="fl"><label>Fecha</label><input type="date" id="iFe"></div><button class="btn bp" onclick="svR()">Guardar</button><button class="btn bdel" id="btnDelR" style="display:none" onclick="delR()">🗑️ Eliminar vía</button><button class="btn bg2" onclick="cm('mR1')">Cancelar</button></div></div>
 <!-- MODAL WORKOUT --><div class="mbg" id="mW1"><div class="mdl"><button class="mx" onclick="cm('mW1')">✕</button><h2>CREAR ENTRENO</h2><div class="fl"><label>Nombre</label><input id="wNm" placeholder="Fuerza dedos"></div><div class="fl"><label>Fecha programada</label><input type="date" id="wDt"></div><div class="ct">PASOS</div><div id="wS"></div><div class="ct" style="margin-top:8px">AÑADIR EJERCICIO</div><div style="display:flex;gap:3px;margin-bottom:8px;flex-wrap:wrap" id="ejTpls"></div><div id="ejForm" style="display:none;background:var(--bg3);border-radius:10px;padding:10px;margin-bottom:8px"><div class="fl"><label>Nombre</label><input id="ejNm" placeholder="Suspensiones, Dominadas..."></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><div class="fl"><label>Agarre</label><select id="ejAg"><option value="">— Ninguno —</option><option>Regleta</option><option>Cazo</option><option>Pinza</option><option>Romo</option><option>Bidedo</option><option>Unidedo</option><option>Barra</option></select></div><div class="fl"><label>Tamaño (mm)</label><input id="ejMm" type="number" placeholder="20"></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><div class="fl"><label>Ángulo</label><select id="ejAng"><option value="">—</option><option>0°</option><option>15°</option><option>30°</option><option>45°</option><option>90°</option><option>120°</option></select></div><div class="fl"><label>Lastre (kg)</label><input id="ejKg" type="number" value="0"></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px"><div class="fl"><label>Modo</label><select id="ejModo" onchange="ejModoChg()"><option value="time">Tiempo</option><option value="reps">Reps</option></select></div><div class="fl" id="ejTimeF"><label>Tiempo (s)</label><input id="ejTime" type="number" value="7"></div><div class="fl" id="ejRepsF" style="display:none"><label>Reps</label><input id="ejReps" type="number" value="10"></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px"><div class="fl"><label>Series</label><input id="ejSer" type="number" value="4"></div><div class="fl"><label>Reps/serie</label><input id="ejRep" type="number" value="6"></div><div class="fl"><label>Descanso (s)</label><input id="ejDesc" type="number" value="3"></div></div><div class="fl"><label>Desc. entre series (s)</label><input id="ejDS" type="number" value="180"></div><button class="btn bp" style="font-size:12px;padding:8px" onclick="addEj()">+ Añadir</button></div><hr style="border:none;border-top:1px solid var(--bg4);margin:10px 0"><button class="btn bp" onclick="svW()">Guardar entreno</button><button class="btn bg2" onclick="cm('mW1')">Cancelar</button></div></div>
 <!-- EJECUTOR --><div id="mExec" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);z-index:300;padding:0">
 <div style="display:flex;flex-direction:column;height:100%;justify-content:center;align-items:center;padding:20px;text-align:center">
@@ -129,11 +128,10 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <div style="display:flex;gap:12px;align-items:center"><button class="sbb" onclick="skipExec()" style="background:var(--bg3);color:var(--text2);font-size:13px;padding:12px 20px">⏮</button><button class="sbb" id="exPlayBtn" onclick="toggleExec()" style="font-size:18px;padding:14px 36px;min-width:140px">▶ EMPEZAR</button><button class="sbb" onclick="skipExec()" style="background:var(--bg3);color:var(--text2);font-size:13px;padding:12px 20px">⏭</button></div>
 <label style="display:flex;align-items:center;gap:6px;margin-top:16px;font-size:12px;color:var(--text3);cursor:pointer"><input type="checkbox" id="exSound" checked style="accent-color:var(--rock)"> Sonido + vibración</label>
 </div></div>
-<!-- SETTINGS --><div class="mbg" id="mSettings"><div class="mdl"><button class="mx" onclick="cm('mSettings')">✕</button><h2>AJUSTES</h2>
-<div class="fl"><label style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="setSound" checked style="accent-color:var(--rock)" onchange="saveSettings()"> Sonido en entrenos</label></div>
-<div class="fl"><label style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="setVibra" checked style="accent-color:var(--rock)" onchange="saveSettings()"> Vibración</label></div>
-<div class="fl"><label style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="setBoltLed" checked style="accent-color:var(--green)" onchange="saveSettings()"> Luces Bolt (semáforo)</label></div>
-<div class="fl"><label style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="setBoltBuz" checked style="accent-color:var(--green)" onchange="saveSettings()"> Sonido Bolt (buzzer)</label></div>
+<!-- SETTINGS --><div class="mbg" id="mSettings"><div class="mdl"><button class="mx" onclick="cm('mSettings')">✕</button><h2>AJUSTES BOLT</h2>
+<div class="fl"><label style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="setBoltLed" checked style="accent-color:var(--green)" onchange="saveSettings()"> Luces semáforo</label></div>
+<div class="fl"><label style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="setBoltBuz" checked style="accent-color:var(--green)" onchange="saveSettings()"> Sonido buzzer</label></div>
+<div style="font-size:10px;color:var(--text3);margin-top:8px">Se envía al conectar Bolt</div>
 <button class="btn bg2" style="margin-top:8px" onclick="cm('mSettings')">Cerrar</button></div></div>
 <!-- MODAL PLAN --><div class="mbg" id="mPl"><div class="mdl"><button class="mx" onclick="cm('mPl')">✕</button><h2>PLANIFICAR DÍA</h2><div class="fl"><label>Fecha</label><input type="date" id="plDt"></div><div class="ct" style="margin-top:6px">¿QUÉ PLAN?</div><div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px"><button class="ch" id="plBtnEsc" onclick="setPlTipo('escalar')">🧗 Escalar</button><button class="ch" id="plBtnEnt" onclick="setPlTipo('entreno')">🏋 Entreno</button><button class="ch" id="plBtnNot" onclick="setPlTipo('nota')">📝 Nota</button></div><div id="plEscalar" style="display:none"><div class="fl"><label>Tipo</label><select id="plTp"><option value="roca">🏔️ Roca</option><option value="indoor">🏢 Indoor</option></select></div><div class="fl"><label>Lugar</label><input id="plLg" placeholder="Atauri, Sharma..." list="dlZ"></div></div><div id="plEntreno" style="display:none"><div class="fl"><label>Elegir entreno</label><select id="plWoSel"><option value="">— Sin entreno —</option></select></div><div class="fl"><label><input type="checkbox" id="plShareWo" checked style="accent-color:var(--rock)"> Compartir ejercicios con invitados</label></div></div><div class="fl"><label>Notas</label><input id="plNo" placeholder="Plan del día..."></div><div class="ct" style="margin-top:6px">INVITAR AMIGOS</div><div id="plFriends"></div><button class="btn bp" onclick="svPlan()">Guardar plan</button><button class="btn bg2" onclick="cm('mPl')">Cancelar</button></div></div>
 <!-- MODAL NEW CRAG --><div class="mbg" id="mNC"><div class="mdl"><button class="mx" onclick="cm('mNC')">✕</button><h2>NUEVA ZONA</h2><p style="font-size:12px;color:var(--text2);margin-bottom:12px">En Google Maps → busca el sitio → pulsa largo → copia las coordenadas que aparecen abajo (ej: 43.270854, -3.102539).</p><div class="fl"><label>Nombre de la zona</label><input id="ncNm" placeholder="Galdames"></div><div class="fl"><label>Coordenadas</label><input id="ncCoords" placeholder="43.270854, -3.102539"><small>Pega las coordenadas o la URL larga de Google Maps (la que tiene @43.27,-3.10)</small></div><div id="ncMsg" style="font-size:11px;margin-bottom:8px"></div><button class="btn bp" onclick="svNewCrag()">Guardar zona</button><button class="btn bg2" onclick="cm('mNC')">Cancelar</button></div></div>
@@ -204,7 +202,8 @@ function drHomeWo(){
   const dp=plans.filter(p=>p.date===sel);
   const dt=Tr.filter(t=>t.date===sel);
   const dr=R.filter(r=>r.date===sel);
-  let h='';
+  const dd=new Date(sel);
+  let h=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><div style="font-family:'Bebas Neue';font-size:15px;color:var(--text)">${sel===td?'HOY':dd.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'short'}).toUpperCase()}</div><button style="background:none;border:1px solid var(--blue);border-radius:8px;color:var(--blue);padding:3px 10px;font-size:10px;cursor:pointer;font-family:Nunito" onclick="openPlan('${sel}')">+ Plan</button></div>`;
   // Plans (where, who, what)
   if(dp.length){dp.forEach(p=>{
     let icon=p.tipo==='roca'?'🏔️':p.tipo==='indoor'?'🏢':p.tipo==='entreno'?'🏋':'📝';
@@ -234,7 +233,7 @@ function drHomeWo(){
   if(dr.length||dt.length){h+='<div class="ct" style="font-size:10px;margin:4px 0;color:var(--text3)">HECHO</div>';
     dt.forEach(t=>{h+=`<div style="font-size:11px;color:var(--yellow);padding:2px 0">✓ ${t.tipo} ${t.detail||''}</div>`;});
     dr.forEach(r=>{h+=`<div style="font-size:11px;padding:2px 0"><span style="color:${r.enc?'var(--green)':'var(--rock)'};font-family:'Bebas Neue';font-size:13px">${r.grado}</span> ${r.tipo}${r.enc?' ✓':''}${r.flash?' ⚡':''}${r.avista?' 👁':''}${r.nombre?' · '+r.nombre:''}</div>`;});}
-  if(!h)h=`<div style="text-align:center;padding:20px"><div style="font-size:28px;margin-bottom:4px">🧗</div><div style="color:var(--text3);font-size:12px">${sel===td?'Nada para hoy':'Sin planes'}</div><div style="margin-top:8px"><button class="sbb" style="font-size:11px;padding:6px 14px" onclick="openPlan('${sel}')">+ Planificar</button></div></div>`;
+  if(!dp.length&&!dw.length&&!dr.length&&!dt.length)h+=`<div style="text-align:center;padding:16px"><div style="font-size:24px;margin-bottom:4px">🧗</div><div style="color:var(--text3);font-size:11px">${sel===td?'Nada para hoy':'Sin planes'}</div></div>`;
   document.getElementById('homeWo').innerHTML=h;}
 // Bolt queue - persistent via boltPending flag on workouts
 async function queueToBolt(w){if(!U)return;
@@ -250,24 +249,26 @@ async function sendWoToBolt(w){
     if(s.ag)o.a=s.ag.substring(0,8);if(s.mm)o.mm=s.mm;if(s.kg)o.kg=s.kg;if(s.ang)o.an=s.ang.substring(0,4);return o;});
   const wo=JSON.stringify({n:(w.name||'Entreno').substring(0,20),dt,st:steps});
   await boltWrite('WO:'+wo);}
-async function sendPendingToBolt(){const pending=W.filter(w=>w.boltPending);
-  for(const w of pending){await sendWoToBolt(w);await new Promise(r=>setTimeout(r,200));
-    if(w.id){await db.collection('users').doc(U.uid).collection('workouts').doc(w.id).update({boltPending:false});w.boltPending=false;}}
-  if(pending.length){alert(pending.length+' entreno(s) enviados a Bolt');}}
+async function sendPendingToBolt(){
+  // Send ALL workouts planned for next 5 days
+  const td=new Date();let sent=0;
+  for(let i=0;i<5;i++){
+    const d=new Date(td);d.setDate(d.getDate()+i);
+    const ds=d.toISOString().split('T')[0];
+    const dw=W.filter(w=>w.plannedDate===ds);
+    for(const w of dw){await sendWoToBolt(w);await new Promise(r=>setTimeout(r,200));sent++;
+      if(w.id&&w.boltPending){await db.collection('users').doc(U.uid).collection('workouts').doc(w.id).update({boltPending:false});w.boltPending=false;}}}
+  if(sent)console.log(sent+' entrenos enviados a Bolt');}
 // Settings
 function openSettings(){
   const s=JSON.parse(localStorage.getItem('spSettings')||'{}');
-  document.getElementById('setSound').checked=s.sound!==false;
-  document.getElementById('setVibra').checked=s.vibra!==false;
   document.getElementById('setBoltLed').checked=s.boltLed!==false;
   document.getElementById('setBoltBuz').checked=s.boltBuz!==false;
   document.getElementById('mSettings').classList.add('sh');}
-function saveSettings(){const s={sound:document.getElementById('setSound').checked,vibra:document.getElementById('setVibra').checked,
-  boltLed:document.getElementById('setBoltLed').checked,boltBuz:document.getElementById('setBoltBuz').checked};
+function saveSettings(){const s={boltLed:document.getElementById('setBoltLed').checked,boltBuz:document.getElementById('setBoltBuz').checked};
   localStorage.setItem('spSettings',JSON.stringify(s));
-  // Send to Bolt if connected
   if(boltConnected){boltWrite('CFG:'+(s.boltLed?'1':'0')+(s.boltBuz?'1':'0'));}}
-function getSettings(){return JSON.parse(localStorage.getItem('spSettings')||'{"sound":true,"vibra":true,"boltLed":true,"boltBuz":true}');}
+function getSettings(){return JSON.parse(localStorage.getItem('spSettings')||'{"boltLed":true,"boltBuz":true}');}
 async function loadInvites(){if(!U)return;
   const q=await db.collection('users').doc(U.uid).collection('invites').where('status','==','pending').get();
   let h='';q.forEach(d=>{const inv=d.data();const tipos={roca:'🏔️ Roca',indoor:'🏢 Indoor',entreno:'🏋️ Entreno',nota:'📝 Nota'};
@@ -316,10 +317,6 @@ function rCal(){const mN=["ENERO","FEBRERO","MARZO","ABRIL","MAYO","JUNIO","JULI
     const mc=getMesoColor(ds);const mStyle=mc&&!hr&&!hc?` style="background:${mc}22;border:1px solid ${mc}44"`:'';
     h+=`<div class="${c}"${mStyle} onclick="cSl=cSl==='${ds}'?null:'${ds}';rCal()">${d}</div>`;}
   document.getElementById('cG').innerHTML=h;
-  let det='';
-  if(cSl){const dd=new Date(cSl);
-    det=`<div style="display:flex;justify-content:space-between;align-items:center"><div style="font-size:12px;color:var(--text2)">${dd.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'})}</div><button style="background:var(--bg3);border:1px solid var(--blue);border-radius:8px;color:var(--blue);padding:4px 10px;font-size:11px;cursor:pointer;font-family:Nunito" onclick="openPlan('${cSl}')">+ Plan</button></div>`;}
-  document.getElementById('cD').innerHTML=det;
   drHomeWo();}
 function cNav(d){cMo+=d;if(cMo>11){cMo=0;cY++;}if(cMo<0){cMo=11;cY--;}rCal();}
 function rGr(){const y=new Date().getFullYear();
@@ -398,7 +395,8 @@ function edR(id){const r=R.find(x=>x.id===id);if(!r)return;eRt=id;document.getEl
 async function svR(){const int=parseInt(document.getElementById('iI').value)||1;const enc=document.getElementById('iE').value==='1';
   const flash=enc&&int===1&&document.getElementById('iFlash').value==='1';
   const avista=enc&&int===1&&document.getElementById('iAvista').value==='1';
-  const d={date:document.getElementById('iFe').value,lugar:document.getElementById('iLT').value,tipo:document.getElementById('iTP').value,grado:document.getElementById('iG').value,intento:int,enc,flash,avista,nombre:document.getElementById('iN').value,sitio:document.getElementById('iL').value,notas:document.getElementById('iNo').value,amigos:document.getElementById('iA').value};if(eRt)d.id=eRt;await saveRoute(d);cm('mR1');drR();rH();}
+  const amigos=document.getElementById('iA').dataset.selected||document.getElementById('iA').value;
+  const d={date:document.getElementById('iFe').value,lugar:document.getElementById('iLT').value,tipo:document.getElementById('iTP').value,grado:document.getElementById('iG').value,intento:int,enc,flash,avista,nombre:document.getElementById('iN').value,sitio:document.getElementById('iL').value,notas:document.getElementById('iNo').value,amigos};if(eRt)d.id=eRt;await saveRoute(d);cm('mR1');drR();rH();}
 async function delR(){if(!eRt||!confirm('¿Eliminar esta vía?'))return;await deleteRoute(eRt);cm('mR1');drR();}
 function cm(id){document.getElementById(id).classList.remove('sh');if(id==='mNC')document.getElementById('mapDiv').style.display='block';}
 
@@ -736,6 +734,35 @@ function chkFlashAvista(){
   const fF=document.getElementById('fFlash'),fA=document.getElementById('fAvista');
   if(!enc||int>1){fl.value='0';av.value='0';fl.disabled=true;av.disabled=true;fF.style.opacity='.4';fA.style.opacity='.4';}
   else{fl.disabled=false;av.disabled=false;fF.style.opacity='1';fA.style.opacity='1';}}
+// Route friend selector
+function filterRouteFriends(){
+  const q=(document.getElementById('iA').value||'').toLowerCase();
+  if(!q){document.getElementById('rFriendSug').style.display='none';return;}
+  const cur=(document.getElementById('iA').dataset.selected||'').split(',').filter(Boolean);
+  const match=friends.filter(f=>{const nm=(f.name||f.email).toLowerCase();return nm.includes(q)&&!cur.includes(f.name||f.email);});
+  if(!match.length){document.getElementById('rFriendSug').style.display='none';return;}
+  let h='';match.slice(0,4).forEach(f=>{const nm=f.name||f.email;
+    h+=`<div style="padding:6px 8px;font-size:12px;cursor:pointer;border-bottom:1px solid var(--bg3)" onclick="addRouteFriend('${nm}')">${nm}</div>`;});
+  document.getElementById('rFriendSug').innerHTML=h;
+  document.getElementById('rFriendSug').style.display='block';
+  document.getElementById('rFriendSug').style.cssText='display:block;background:var(--bg3);border-radius:8px;max-height:120px;overflow-y:auto;margin-top:2px';}
+function addRouteFriend(nm){
+  const el=document.getElementById('iA');
+  const cur=(el.dataset.selected||'').split(',').filter(Boolean);
+  if(!cur.includes(nm))cur.push(nm);
+  el.dataset.selected=cur.join(',');
+  el.value='';
+  document.getElementById('rFriendSug').style.display='none';
+  drRouteFriendChips();}
+function rmRouteFriend(nm){
+  const el=document.getElementById('iA');
+  const cur=(el.dataset.selected||'').split(',').filter(Boolean).filter(n=>n!==nm);
+  el.dataset.selected=cur.join(',');
+  drRouteFriendChips();}
+function drRouteFriendChips(){
+  const cur=(document.getElementById('iA').dataset.selected||'').split(',').filter(Boolean);
+  let h='';cur.forEach(nm=>{h+=`<span style="background:var(--bg3);border-radius:12px;padding:2px 8px;font-size:11px;color:var(--text);display:inline-flex;align-items:center;gap:4px">${nm}<span style="cursor:pointer;color:var(--text3)" onclick="rmRouteFriend('${nm}')">✕</span></span>`;});
+  document.getElementById('rFriendChips').innerHTML=h;}
 
 // FRIEND VIEW with grades
 async function viewFr(email){const q=await db.collection('users').where('email','==',email).get();if(q.empty)return;
