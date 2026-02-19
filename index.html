@@ -166,9 +166,6 @@ async function loadData(){if(!U)return;const uid=U.uid;
   q=await db.collection('users').doc(uid).collection('trains').orderBy('date','desc').get();Tr=[];q.forEach(d=>{Tr.push({id:d.id,...d.data()});});
   q=await db.collection('users').doc(uid).collection('workouts').get();W=[];q.forEach(d=>{W.push({id:d.id,...d.data()});});
   q=await db.collection('users').doc(uid).collection('friends').get();friends=[];q.forEach(d=>{friends.push({id:d.id,...d.data()});});
-  // Resolve friend names
-  for(const f of friends){try{const fq=await db.collection('users').where('email','==',f.email).get();
-    if(!fq.empty){const ud=fq.docs[0].data();f.name=ud.name||f.email;f.photo=ud.photo||'';}}catch(e){}}
   q=await db.collection('users').doc(uid).collection('plans').get();plans=[];q.forEach(d=>{plans.push({id:d.id,...d.data()});});
   q=await db.collection('crags').get();userCrags=[];q.forEach(d=>{userCrags.push({id:d.id,...d.data()});});
   q=await db.collection('users').doc(uid).collection('mesos').get();mesos=[];q.forEach(d=>{mesos.push({id:d.id,...d.data()});});
@@ -198,7 +195,11 @@ const PG={home:'ph',routes:'pv',map:'pm',train:'pt',friends:'pf',sync:'ps'},PK=O
 function go(id){Object.values(PG).forEach(p=>document.getElementById(p).classList.remove('on'));document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));document.getElementById(PG[id]).classList.add('on');document.querySelectorAll('.nb')[PK.indexOf(id)].classList.add('on');({home:rH,routes:drR,map:drM,train:drTr,friends:drFr,sync:drS})[id]();}
 
 // HOME
-function rH(){updStats();rCal();updGrToggles();loadInvites();}
+function rH(){updStats();rCal();updGrToggles();loadInvites();resolveFriendNames();}
+async function resolveFriendNames(){for(const f of friends){if(f.name&&f.name!==f.email)continue;
+  try{const q=await db.collection('users').where('email','==',f.email).get();
+    if(!q.empty){const ud=q.docs[0].data();f.name=ud.name||f.email;f.photo=ud.photo||'';}}catch(e){}}
+  drCalDetail();drNextWo();}
 function drCalDetail(){
   const el=document.getElementById('calDetail');
   if(!cSl){el.innerHTML='';return;}
