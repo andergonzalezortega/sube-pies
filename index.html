@@ -146,7 +146,6 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <button class="nb" onclick="go('sync')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 7h12l-4-4M16 17H4l4 4"/></svg>Sync</button>
 </nav>
 <script>
-if(typeof firebase==='undefined'){document.body.innerHTML='<div style="color:white;padding:40px;text-align:center"><h2>Error de conexión</h2><p>No se pudieron cargar los scripts. Comprueba tu conexión a internet y recarga.</p><button onclick="location.reload()" style="padding:10px 20px;font-size:16px">Recargar</button></div>';}else{
 firebase.initializeApp({apiKey:"AIzaSyBaBnTmI8_YuYIRGx2mdDVJSe_k4SF_eho",authDomain:"sube-pies.firebaseapp.com",projectId:"sube-pies",storageBucket:"sube-pies.firebasestorage.app",messagingSenderId:"597414564277",appId:"1:597414564277:web:1f79b81f567b67166c89fc"});
 const auth=firebase.auth(),db=firebase.firestore();
 let U=null,R=[],Tr=[],W=[],friends=[],plans=[],userCrags=[],mesos=[];
@@ -167,6 +166,9 @@ async function loadData(){if(!U)return;const uid=U.uid;
   q=await db.collection('users').doc(uid).collection('trains').orderBy('date','desc').get();Tr=[];q.forEach(d=>{Tr.push({id:d.id,...d.data()});});
   q=await db.collection('users').doc(uid).collection('workouts').get();W=[];q.forEach(d=>{W.push({id:d.id,...d.data()});});
   q=await db.collection('users').doc(uid).collection('friends').get();friends=[];q.forEach(d=>{friends.push({id:d.id,...d.data()});});
+  // Resolve friend names
+  for(const f of friends){try{const fq=await db.collection('users').where('email','==',f.email).get();
+    if(!fq.empty){const ud=fq.docs[0].data();f.name=ud.name||f.email;f.photo=ud.photo||'';}}catch(e){}}
   q=await db.collection('users').doc(uid).collection('plans').get();plans=[];q.forEach(d=>{plans.push({id:d.id,...d.data()});});
   q=await db.collection('crags').get();userCrags=[];q.forEach(d=>{userCrags.push({id:d.id,...d.data()});});
   q=await db.collection('users').doc(uid).collection('mesos').get();mesos=[];q.forEach(d=>{mesos.push({id:d.id,...d.data()});});
@@ -196,11 +198,7 @@ const PG={home:'ph',routes:'pv',map:'pm',train:'pt',friends:'pf',sync:'ps'},PK=O
 function go(id){Object.values(PG).forEach(p=>document.getElementById(p).classList.remove('on'));document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));document.getElementById(PG[id]).classList.add('on');document.querySelectorAll('.nb')[PK.indexOf(id)].classList.add('on');({home:rH,routes:drR,map:drM,train:drTr,friends:drFr,sync:drS})[id]();}
 
 // HOME
-function rH(){updStats();rCal();updGrToggles();loadInvites();setupSwipe();resolveFriendNames();}
-async function resolveFriendNames(){for(const f of friends){if(f.name&&f.name!==f.email)continue;
-  try{const q=await db.collection('users').where('email','==',f.email).get();
-    if(!q.empty){const ud=q.docs[0].data();f.name=ud.name||f.email;f.photo=ud.photo||'';}}catch(e){}}
-  drCalDetail();drNextWo();}
+function rH(){updStats();rCal();updGrToggles();loadInvites();}
 function drCalDetail(){
   const el=document.getElementById('calDetail');
   if(!cSl){el.innerHTML='';return;}
@@ -250,13 +248,11 @@ function drNextWo(){
       else if(s.reps)pts.push(s.reps+'r×'+(s.ser||1)+'ser');
       h+=`<div style="font-size:11px;color:var(--text2);padding:1px 0">${i+1}. ${nm}${pts.length?' · '+pts.join(' · '):''}</div>`;});
     h+=`<div style="margin-top:6px"><button class="sbb" style="font-size:11px;padding:5px 12px" onclick='execWo(${JSON.stringify(w).replace(/'/g,"&#39;")})'>▶ Ejecutar</button></div></div>`;});
-  el.innerHTML=h;}
-let _swipeSetup=false;
-function setupSwipe(){if(_swipeSetup)return;_swipeSetup=true;let sx=0;
-  document.addEventListener('touchstart',e=>{if(e.target.closest('#homeNextWo'))sx=e.touches[0].clientX;else sx=0;},{passive:true});
-  document.addEventListener('touchend',e=>{if(!sx||!e.target.closest('#homeNextWo'))return;
-    const dx=e.changedTouches[0].clientX-sx;sx=0;
-    if(Math.abs(dx)>40){if(dx<0)nwoIdx++;else nwoIdx--;drNextWo();}});}
+  el.innerHTML=h;
+  // Setup swipe
+  el.ontouchstart=e=>{el._sx=e.touches[0].clientX;};
+  el.ontouchend=e=>{if(!el._sx)return;const dx=e.changedTouches[0].clientX-el._sx;
+    if(Math.abs(dx)>40){if(dx<0)nwoIdx++;else nwoIdx--;drNextWo();}el._sx=null;};}
 async function sendWoToBolt(w){
   const dt=w.plannedDate||new Date().toISOString().split('T')[0];
   const steps=(w.steps||[]).map(s=>{const o={n:(s.nm||s.txt||'Ej').substring(0,16),m:s.modo==='time'?'t':'r'};
@@ -684,22 +680,17 @@ async function boltConnect(){
     boltBuf='';await boltTx.startNotifications();
     boltTx.addEventListener('characteristicvaluechanged',e=>{boltBuf+=new TextDecoder().decode(e.target.value);});
     boltDev=dev;boltConnected=true;
-    t.textContent='Enviando...';
-    // Test: send a simple ping first
-    console.log('BLE: Testing write...');
-    let ok=await boltWrite('PING');
-    console.log('BLE: PING sent ok='+ok);
-    await new Promise(r=>setTimeout(r,200));
-    const nm=(cU&&cU.displayName)?cU.displayName.substring(0,18):'Escalador';
-    ok=await boltWrite('NAME:'+nm);
-    console.log('BLE: NAME sent ok='+ok);
+    t.textContent='Enviando nombre...';
+    const nm=cU?cU.displayName||cU.email.split('@')[0]:'Escalador';
+    await boltWrite('NAME:'+nm.substring(0,18));
     dev.addEventListener('gattserverdisconnected',()=>{boltConnected=false;boltDev=null;
       const bt=document.getElementById('bT');if(bt)bt.textContent='Bolt desconectado';
       const bb=document.getElementById('bB');if(bb){bb.textContent='🔗 Conectar Bolt';bb.classList.remove('ok');}});
     t.textContent='✓ Conectado a '+dev.name;
+    // Send date, settings, and next 5 days of workouts to Bolt
     console.log('BLE: Sending DATE...');
     const st=getSettings();
-    ok=await boltWrite('DATE:'+new Date().toISOString().split('T')[0]);
+    let ok=await boltWrite('DATE:'+new Date().toISOString().split('T')[0]);
     console.log('BLE: DATE sent ok='+ok);
     await new Promise(r=>setTimeout(r,100));
     ok=await boltWrite('CFG:'+(st.boltLed?'1':'0')+(st.boltBuz?'1':'0'));
@@ -879,7 +870,6 @@ async function doBT(){const b=document.getElementById('bB'),t=document.getElemen
       await saveTrain({date:new Date().toISOString().split('T')[0],tipo:tipos[+p[1]]||'Suspensi.',detail:p[2]||''});added++;}}
   if(added>0){await boltWrite('ACK');await loadData();}
   t.textContent=added>0?`✓ ${added} registros sincronizados`:'✓ Conectado · 0 pendientes';}
-}
 </script>
 </body>
 </html>
