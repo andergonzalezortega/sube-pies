@@ -195,7 +195,7 @@ const PG={home:'ph',routes:'pv',map:'pm',train:'pt',friends:'pf',sync:'ps'},PK=O
 function go(id){Object.values(PG).forEach(p=>document.getElementById(p).classList.remove('on'));document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));document.getElementById(PG[id]).classList.add('on');document.querySelectorAll('.nb')[PK.indexOf(id)].classList.add('on');({home:rH,routes:drR,map:drM,train:drTr,friends:drFr,sync:drS})[id]();}
 
 // HOME
-function rH(){updStats();rCal();updGrToggles();loadInvites();resolveFriendNames();}
+function rH(){updStats();rCal();updGrToggles();loadInvites();setupSwipe();resolveFriendNames();}
 async function resolveFriendNames(){for(const f of friends){if(f.name&&f.name!==f.email)continue;
   try{const q=await db.collection('users').where('email','==',f.email).get();
     if(!q.empty){const ud=q.docs[0].data();f.name=ud.name||f.email;f.photo=ud.photo||'';}}catch(e){}}
@@ -250,13 +250,12 @@ function drNextWo(){
       h+=`<div style="font-size:11px;color:var(--text2);padding:1px 0">${i+1}. ${nm}${pts.length?' · '+pts.join(' · '):''}</div>`;});
     h+=`<div style="margin-top:6px"><button class="sbb" style="font-size:11px;padding:5px 12px" onclick='execWo(${JSON.stringify(w).replace(/'/g,"&#39;")})'>▶ Ejecutar</button></div></div>`;});
   el.innerHTML=h;}
-// Swipe handler - setup once
-(function(){let sx=0;
-  document.addEventListener('touchstart',e=>{if(e.target.closest('#homeNextWo'))sx=e.touches[0].clientX;else sx=0;});
+let _swipeSetup=false;
+function setupSwipe(){if(_swipeSetup)return;_swipeSetup=true;let sx=0;
+  document.addEventListener('touchstart',e=>{if(e.target.closest('#homeNextWo'))sx=e.touches[0].clientX;else sx=0;},{passive:true});
   document.addEventListener('touchend',e=>{if(!sx||!e.target.closest('#homeNextWo'))return;
     const dx=e.changedTouches[0].clientX-sx;sx=0;
-    if(Math.abs(dx)>40){if(dx<0)nwoIdx++;else nwoIdx--;drNextWo();}});
-})();
+    if(Math.abs(dx)>40){if(dx<0)nwoIdx++;else nwoIdx--;drNextWo();}});}
 async function sendWoToBolt(w){
   const dt=w.plannedDate||new Date().toISOString().split('T')[0];
   const steps=(w.steps||[]).map(s=>{const o={n:(s.nm||s.txt||'Ej').substring(0,16),m:s.modo==='time'?'t':'r'};
