@@ -76,13 +76,14 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <div id="loadPage" class="load-full"><div class="spinner" style="width:40px;height:40px;border-width:3px"></div></div>
 <div id="loginPage" style="display:none"><div style="font-size:60px;margin-bottom:10px">⛰️</div><div class="login-logo">SUBE PIES</div><div style="color:var(--text2);font-size:14px;margin-bottom:30px">Diario de escalada</div><button class="goog-btn" onclick="loginGoogle()"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg">Entrar con Google</button></div>
 <div id="appWrap" style="display:none">
-<!-- HOME --><div id="ph" class="page on" style="overflow:hidden;height:calc(100vh - 75px);display:none;flex-direction:column">
+<!-- HOME --><div id="ph" class="page on" style="overflow-y:auto;height:calc(100vh - 75px);display:none">
 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><div><h1 style="font-size:22px;color:var(--rock);margin:0">SUBE PIES</h1><div class="usr-bar"><img class="usr-pic" id="uPic"><span class="usr-name" id="uName"></span><span class="usr-tag" id="uTag"></span><button class="usr-out" onclick="logout()">Salir</button></div></div><button class="sbb" style="font-size:10px;padding:5px 10px" onclick="go('sync')">📡</button></div>
 <div id="invBanner"></div>
 <div class="gsw" id="sPer" style="margin-bottom:4px"></div>
 <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:6px"><div class="st a" style="padding:6px 4px"><div class="v" id="sV" style="font-size:24px">0</div><div class="l" id="sVl">Vías</div></div><div class="st b" style="padding:6px 4px"><div class="v" id="sE" style="font-size:24px">0</div><div class="l" id="sEl">Enc</div></div><div class="st c" style="padding:6px 4px"><div class="v" id="sT" style="font-size:24px">0</div><div class="l" id="sTl">Entrenos</div></div></div>
-<div style="background:var(--bg2);border-radius:12px;padding:8px;border:1px solid rgba(255,255,255,.04);margin-bottom:6px"><div class="cn" style="margin-bottom:4px"><button onclick="cNav(-1)" style="padding:2px 8px;font-size:16px">◀</button><span class="mo" id="cM" style="font-size:14px"></span><button onclick="cNav(1)" style="padding:2px 8px;font-size:16px">▶</button></div><div class="cg" id="cG"></div></div>
-<div id="homeNext" style="background:var(--bg2);border-radius:12px;padding:10px;border:1px solid rgba(255,255,255,.04);flex:1;overflow-y:auto"></div>
+<div style="background:var(--bg2);border-radius:12px;padding:8px;border:1px solid rgba(255,255,255,.04);margin-bottom:0"><div class="cn" style="margin-bottom:4px"><button onclick="cNav(-1)" style="padding:2px 8px;font-size:16px">◀</button><span class="mo" id="cM" style="font-size:14px"></span><button onclick="cNav(1)" style="padding:2px 8px;font-size:16px">▶</button></div><div class="cg" id="cG"></div></div>
+<div id="calDetail" style="margin-bottom:6px"></div>
+<div id="homeNextWo" style="background:var(--bg2);border-radius:12px;padding:10px;border:1px solid rgba(255,255,255,.04);margin-bottom:10px"></div>
 </div>
 <!-- VÍAS --><div id="pv" class="page"><div class="hdr"><h1>VÍAS</h1><button class="bp btn" style="width:auto;padding:6px 12px;font-size:11px;border-radius:10px" onclick="addR()">+ Añadir</button></div>
 <div style="background:var(--bg2);border-radius:12px;padding:8px;border:1px solid rgba(255,255,255,.04);margin-bottom:8px"><div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span class="ct" style="margin:0;font-size:12px">GRADOS</span></div><div class="gsw" id="gPer" style="margin-bottom:4px"></div><div class="gsw" id="gS" style="margin-bottom:4px"></div><div class="gb" id="gB"></div></div>
@@ -165,6 +166,9 @@ async function loadData(){if(!U)return;const uid=U.uid;
   q=await db.collection('users').doc(uid).collection('trains').orderBy('date','desc').get();Tr=[];q.forEach(d=>{Tr.push({id:d.id,...d.data()});});
   q=await db.collection('users').doc(uid).collection('workouts').get();W=[];q.forEach(d=>{W.push({id:d.id,...d.data()});});
   q=await db.collection('users').doc(uid).collection('friends').get();friends=[];q.forEach(d=>{friends.push({id:d.id,...d.data()});});
+  // Resolve friend names
+  for(const f of friends){try{const fq=await db.collection('users').where('email','==',f.email).get();
+    if(!fq.empty){const ud=fq.docs[0].data();f.name=ud.name||f.email;f.photo=ud.photo||'';}}catch(e){}}
   q=await db.collection('users').doc(uid).collection('plans').get();plans=[];q.forEach(d=>{plans.push({id:d.id,...d.data()});});
   q=await db.collection('crags').get();userCrags=[];q.forEach(d=>{userCrags.push({id:d.id,...d.data()});});
   q=await db.collection('users').doc(uid).collection('mesos').get();mesos=[];q.forEach(d=>{mesos.push({id:d.id,...d.data()});});
@@ -194,65 +198,52 @@ const PG={home:'ph',routes:'pv',map:'pm',train:'pt',friends:'pf',sync:'ps'},PK=O
 function go(id){Object.values(PG).forEach(p=>document.getElementById(p).classList.remove('on'));document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));document.getElementById(PG[id]).classList.add('on');document.querySelectorAll('.nb')[PK.indexOf(id)].classList.add('on');({home:rH,routes:drR,map:drM,train:drTr,friends:drFr,sync:drS})[id]();}
 
 // HOME
-function rH(){updStats();rCal();updGrToggles();loadInvites();drHomeNext();}
-function drHomeNext(){
-  const td=new Date().toISOString().split('T')[0];
-  const el=document.getElementById('homeNext');
-  
-  // If a calendar day is selected, show that day's full info
-  if(cSl){el.innerHTML=renderDayCard(cSl);return;}
-  
-  // Default: find next day with a workout (today or future)
-  const upcoming=W.filter(w=>w.plannedDate&&w.plannedDate>=td).sort((a,b)=>a.plannedDate.localeCompare(b.plannedDate));
-  if(upcoming.length){el.innerHTML=renderDayCard(upcoming[0].plannedDate);}
-  else{el.innerHTML=`<div style="text-align:center;padding:20px"><div style="font-size:28px;margin-bottom:6px">🧗</div><div style="color:var(--text3);font-size:12px">Sin entrenos programados</div></div>`;}
-}
-function renderDayCard(date){
-  const td=new Date().toISOString().split('T')[0];
-  const dd=new Date(date);
-  const isToday=date===td;
-  const tmr=new Date();tmr.setDate(tmr.getDate()+1);const isTmr=date===tmr.toISOString().split('T')[0];
-  const label=isToday?'HOY':isTmr?'MAÑANA':dd.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'short'}).toUpperCase();
-  
-  const dw=W.filter(w=>w.plannedDate===date);
-  const dp=plans.filter(p=>p.date===date);
-  const dr=R.filter(r=>r.date===date);
-  const dt=Tr.filter(t=>t.date===date);
-  
-  let h=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-family:'Bebas Neue';font-size:16px;color:${isToday?'var(--green)':'var(--rock)'}">${label}</span><button style="background:none;border:1px solid var(--blue);border-radius:8px;color:var(--blue);padding:3px 10px;font-size:10px;cursor:pointer;font-family:Nunito" onclick="openPlan('${date}')">+ Plan</button></div>`;
-  
-  // Plans (where, who, notes)
+function rH(){updStats();rCal();updGrToggles();loadInvites();}
+function drCalDetail(){
+  const el=document.getElementById('calDetail');
+  if(!cSl){el.innerHTML='';return;}
+  const dp=plans.filter(p=>p.date===cSl);
+  const dr=R.filter(r=>r.date===cSl);
+  const dt=Tr.filter(t=>t.date===cSl);
+  if(!dp.length&&!dr.length&&!dt.length){el.innerHTML='';return;}
+  const dd=new Date(cSl);
+  let h=`<div style="background:var(--bg2);border-radius:0 0 12px 12px;padding:8px 10px;border:1px solid rgba(255,255,255,.04);border-top:none">`;
+  h+=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><span style="font-size:12px;color:var(--text2)">${dd.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'})}</span><button style="background:none;border:1px solid var(--blue);border-radius:8px;color:var(--blue);padding:2px 8px;font-size:10px;cursor:pointer;font-family:Nunito" onclick="openPlan('${cSl}')">+ Plan</button></div>`;
   dp.forEach(p=>{
     let icon=p.tipo==='roca'?'🏔️':p.tipo==='indoor'?'🏢':p.tipo==='entreno'?'🏋':'📝';
-    h+=`<div style="padding:4px 0;font-size:12px">${icon} `;
-    if(p.lugar)h+=`<span style="color:var(--text)">${p.lugar}</span> `;
+    h+=`<div style="font-size:12px;padding:2px 0">${icon} `;
+    if(p.lugar)h+=p.lugar+' ';
     if(p.workoutName)h+=`<span style="color:var(--green)">${p.workoutName}</span> `;
-    if(p.notas)h+=`<span style="color:var(--text2)">${p.notas}</span> `;
+    if(p.notas)h+=`<span style="color:var(--text3)">${p.notas}</span> `;
     if(p.invited&&p.invited.length){const names=p.invited.map(e=>{const f=friends.find(fr=>fr.email===e);return f?(f.name||e):e;});
       h+=`<span style="color:var(--blue)">👥 ${names.join(', ')}</span>`;}
     h+=`</div>`;});
+  dr.forEach(r=>{h+=`<div style="font-size:12px;padding:2px 0"><span style="color:${r.enc?'var(--green)':'var(--rock)'};font-family:'Bebas Neue';font-size:14px">${r.grado}</span> ${r.tipo}${r.enc?' ✓':''}${r.flash?' ⚡':''}${r.avista?' 👁':''}${r.nombre?' · '+r.nombre:''}${r.sitio?' · '+r.sitio:''}</div>`;});
+  dt.forEach(t=>{h+=`<div style="font-size:11px;color:var(--yellow);padding:2px 0">✓ ${t.detail||t.tipo}</div>`;});
+  h+='</div>';el.innerHTML=h;}
+function drNextWo(){
+  const td=new Date().toISOString().split('T')[0];
+  const el=document.getElementById('homeNextWo');
+  const upcoming=W.filter(w=>w.plannedDate&&w.plannedDate>=td).sort((a,b)=>a.plannedDate.localeCompare(b.plannedDate));
+  if(!upcoming.length){el.innerHTML=`<div style="text-align:center;padding:12px"><span style="color:var(--text3);font-size:12px">Sin entrenos programados</span></div>`;return;}
+  const nxtDate=upcoming[0].plannedDate;
+  const dw=W.filter(w=>w.plannedDate===nxtDate);
+  const dd=new Date(nxtDate);
+  const isToday=nxtDate===td;
+  const tmr=new Date();tmr.setDate(tmr.getDate()+1);const isTmr=nxtDate===tmr.toISOString().split('T')[0];
+  const dayLabel=isToday?'Hoy':isTmr?'Mañana':dd.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'short'});
   
-  // Workouts with all exercises
+  let h=`<div style="font-family:'Bebas Neue';font-size:13px;color:var(--text3);letter-spacing:1px;margin-bottom:4px">PRÓXIMO ENTRENO · <span style="color:${isToday?'var(--green)':'var(--rock)'}">${dayLabel.toUpperCase()}</span></div>`;
   dw.forEach(w=>{
-    h+=`<div style="background:rgba(76,175,80,.06);border-radius:8px;padding:8px;margin-top:4px;border-left:3px solid var(--green)">`;
-    h+=`<div style="font-family:'Bebas Neue';font-size:15px;color:var(--green);margin-bottom:4px">${w.name}</div>`;
+    h+=`<div style="background:rgba(76,175,80,.06);border-radius:8px;padding:8px;margin-bottom:4px;border-left:3px solid var(--green)">`;
+    h+=`<div style="font-family:'Bebas Neue';font-size:16px;color:var(--green);margin-bottom:4px">${w.name}</div>`;
     (w.steps||[]).forEach((s,i)=>{let nm=s.nm||s.txt||'';const pts=[];
       if(s.ag)pts.push(s.ag);if(s.mm)pts.push(s.mm+'mm');if(s.kg>0)pts.push('+'+s.kg+'kg');if(s.ang)pts.push(s.ang);
       if(s.modo==='time')pts.push(s.time+'s×'+(s.rep||1)+'r×'+(s.ser||1)+'ser');
       else if(s.reps)pts.push(s.reps+'r×'+(s.ser||1)+'ser');
       h+=`<div style="font-size:11px;color:var(--text2);padding:1px 0">${i+1}. ${nm}${pts.length?' · '+pts.join(' · '):''}</div>`;});
-    h+=`<div style="display:flex;gap:4px;margin-top:6px"><button class="sbb" style="font-size:11px;padding:5px 12px" onclick='execWo(${JSON.stringify(w).replace(/'/g,"&#39;")})'>▶ Ejecutar</button></div></div>`;});
-  
-  // Routes done that day
-  if(dr.length){h+='<div style="margin-top:6px;padding-top:4px;border-top:1px solid rgba(255,255,255,.06)">';
-    dr.forEach(r=>{h+=`<div style="font-size:11px;padding:2px 0"><span style="color:${r.enc?'var(--green)':'var(--rock)'};font-family:'Bebas Neue';font-size:13px">${r.grado}</span> ${r.tipo}${r.enc?' ✓':''}${r.flash?' ⚡':''}${r.avista?' 👁':''}${r.nombre?' · '+r.nombre:''}${r.sitio?' · '+r.sitio:''}</div>`;});
-    h+='</div>';}
-  // Trainings done
-  if(dt.length){dt.forEach(t=>{h+=`<div style="font-size:11px;color:var(--yellow);padding:2px 0">✓ ${t.detail||t.tipo}</div>`;});}
-  
-  if(!dw.length&&!dp.length&&!dr.length&&!dt.length)h+=`<div style="color:var(--text3);font-size:11px;text-align:center;padding:8px">Sin actividad</div>`;
-  return h;
-}
+    h+=`<div style="margin-top:6px"><button class="sbb" style="font-size:11px;padding:5px 12px" onclick='execWo(${JSON.stringify(w).replace(/'/g,"&#39;")})'>▶ Ejecutar</button></div></div>`;});
+  el.innerHTML=h;}
 async function sendWoToBolt(w){
   const dt=w.plannedDate||new Date().toISOString().split('T')[0];
   const steps=(w.steps||[]).map(s=>{const o={n:(s.nm||s.txt||'Ej').substring(0,16),m:s.modo==='time'?'t':'r'};
@@ -319,7 +310,7 @@ function rCal(){const mN=["ENERO","FEBRERO","MARZO","ABRIL","MAYO","JUNIO","JULI
     const mc=getMesoColor(ds);const mStyle=mc&&!hr&&!hc?` style="background:${mc}22;border:1px solid ${mc}44"`:'';
     h+=`<div class="${c}"${mStyle} onclick="cSl=cSl==='${ds}'?null:'${ds}';rCal()">${d}</div>`;}
   document.getElementById('cG').innerHTML=h;
-  drHomeNext();}
+  drCalDetail();drNextWo();}
 function cNav(d){cMo+=d;if(cMo>11){cMo=0;cY++;}if(cMo<0){cMo=11;cY--;}rCal();}
 function rGr(){const y=new Date().getFullYear();
   const base=gPer==='year'?R.filter(r=>new Date(r.date).getFullYear()===y):R;
@@ -512,7 +503,7 @@ function doBeep(){if(!document.getElementById('exSound').checked)return;try{navi
 async function drFr(){let h='';if(!friends.length)h='<div style="color:var(--text3);font-size:11px;text-align:center;padding:16px">Añade amigos con su código # o email</div>';
   for(const f of friends){const q=await db.collection('users').where('email','==',f.email).get();let name=f.email,photo='',code='';
     if(!q.empty){const ud=q.docs[0].data();name=ud.name||f.email;photo=ud.photo||'';code=ud.code?'#'+ud.code:'';}
-    h+=`<div class="fr-card"><img class="fr-pic" src="${photo||'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22><circle cx=%2212%22 cy=%228%22 r=%224%22 fill=%22%238a9bb0%22/><path d=%22M4 20c0-4 4-7 8-7s8 3 8 7%22 fill=%22%238a9bb0%22/></svg>'}" onclick="viewFr('${f.email}')"><div class="fr-info" onclick="viewFr('${f.email}')"><div class="fr-name">${name} <span style="font-size:9px;color:var(--rock)">${code}</span></div></div><button style="background:none;border:none;color:var(--blue);font-size:16px;cursor:pointer;padding:4px" onclick="event.stopPropagation();openChatByEmail('${f.email}')">💬</button><button class="fr-rm" onclick="event.stopPropagation();rmFr('${f.id}')">✕</button></div>`;}
+    f.name=name;f.photo=photo;f.code=code;    h+=`<div class="fr-card"><img class="fr-pic" src="${photo||'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22><circle cx=%2212%22 cy=%228%22 r=%224%22 fill=%22%238a9bb0%22/><path d=%22M4 20c0-4 4-7 8-7s8 3 8 7%22 fill=%22%238a9bb0%22/></svg>'}" onclick="viewFr('${f.email}')"><div class="fr-info" onclick="viewFr('${f.email}')"><div class="fr-name">${name} <span style="font-size:9px;color:var(--rock)">${code}</span></div></div><button style="background:none;border:none;color:var(--blue);font-size:16px;cursor:pointer;padding:4px" onclick="event.stopPropagation();openChatByEmail('${f.email}')">💬</button><button class="fr-rm" onclick="event.stopPropagation();rmFr('${f.id}')">✕</button></div>`;}
   document.getElementById('frList').innerHTML=h;document.getElementById('frView').style.display='none';}
 async function openChatByEmail(email){const q=await db.collection('users').where('email','==',email).get();if(q.empty)return;const fd=q.docs[0].data();openChat(q.docs[0].id,(fd.name||email).replace(/'/g,''));}
 async function addFriend(){const raw=document.getElementById('frCode').value.trim(),msg=document.getElementById('frMsg');
