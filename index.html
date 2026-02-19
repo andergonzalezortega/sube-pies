@@ -221,19 +221,24 @@ function drCalDetail(){
   dr.forEach(r=>{h+=`<div style="font-size:12px;padding:2px 0"><span style="color:${r.enc?'var(--green)':'var(--rock)'};font-family:'Bebas Neue';font-size:14px">${r.grado}</span> ${r.tipo}${r.enc?' ✓':''}${r.flash?' ⚡':''}${r.avista?' 👁':''}${r.nombre?' · '+r.nombre:''}${r.sitio?' · '+r.sitio:''}</div>`;});
   dt.forEach(t=>{h+=`<div style="font-size:11px;color:var(--yellow);padding:2px 0">✓ ${t.detail||t.tipo}</div>`;});
   h+='</div>';el.innerHTML=h;}
+let nwoIdx=0; // Index into upcoming workout days
 function drNextWo(){
   const td=new Date().toISOString().split('T')[0];
   const el=document.getElementById('homeNextWo');
-  const upcoming=W.filter(w=>w.plannedDate&&w.plannedDate>=td).sort((a,b)=>a.plannedDate.localeCompare(b.plannedDate));
-  if(!upcoming.length){el.innerHTML=`<div style="text-align:center;padding:12px"><span style="color:var(--text3);font-size:12px">Sin entrenos programados</span></div>`;return;}
-  const nxtDate=upcoming[0].plannedDate;
+  // Get all unique future dates with workouts
+  const dates=[...new Set(W.filter(w=>w.plannedDate&&w.plannedDate>=td).map(w=>w.plannedDate))].sort();
+  if(!dates.length){el.innerHTML=`<div style="text-align:center;padding:12px"><span style="color:var(--text3);font-size:12px">Sin entrenos programados</span></div>`;return;}
+  if(nwoIdx>=dates.length)nwoIdx=0;if(nwoIdx<0)nwoIdx=dates.length-1;
+  const nxtDate=dates[nwoIdx];
   const dw=W.filter(w=>w.plannedDate===nxtDate);
   const dd=new Date(nxtDate);
   const isToday=nxtDate===td;
   const tmr=new Date();tmr.setDate(tmr.getDate()+1);const isTmr=nxtDate===tmr.toISOString().split('T')[0];
   const dayLabel=isToday?'Hoy':isTmr?'Mañana':dd.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'short'});
   
-  let h=`<div style="font-family:'Bebas Neue';font-size:13px;color:var(--text3);letter-spacing:1px;margin-bottom:4px">PRÓXIMO ENTRENO · <span style="color:${isToday?'var(--green)':'var(--rock)'}">${dayLabel.toUpperCase()}</span></div>`;
+  let h=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-family:'Bebas Neue';font-size:13px;color:var(--text3);letter-spacing:1px">PRÓXIMO ENTRENO · <span style="color:${isToday?'var(--green)':'var(--rock)'}">${dayLabel.toUpperCase()}</span></span>`;
+  if(dates.length>1)h+=`<span style="font-size:10px;color:var(--text3)">${nwoIdx+1}/${dates.length} ◀ ▶</span>`;
+  h+=`</div>`;
   dw.forEach(w=>{
     h+=`<div style="background:rgba(76,175,80,.06);border-radius:8px;padding:8px;margin-bottom:4px;border-left:3px solid var(--green)">`;
     h+=`<div style="font-family:'Bebas Neue';font-size:16px;color:var(--green);margin-bottom:4px">${w.name}</div>`;
@@ -243,7 +248,11 @@ function drNextWo(){
       else if(s.reps)pts.push(s.reps+'r×'+(s.ser||1)+'ser');
       h+=`<div style="font-size:11px;color:var(--text2);padding:1px 0">${i+1}. ${nm}${pts.length?' · '+pts.join(' · '):''}</div>`;});
     h+=`<div style="margin-top:6px"><button class="sbb" style="font-size:11px;padding:5px 12px" onclick='execWo(${JSON.stringify(w).replace(/'/g,"&#39;")})'>▶ Ejecutar</button></div></div>`;});
-  el.innerHTML=h;}
+  el.innerHTML=h;
+  // Setup swipe
+  el.ontouchstart=e=>{el._sx=e.touches[0].clientX;};
+  el.ontouchend=e=>{if(!el._sx)return;const dx=e.changedTouches[0].clientX-el._sx;
+    if(Math.abs(dx)>40){if(dx<0)nwoIdx++;else nwoIdx--;drNextWo();}el._sx=null;};}
 async function sendWoToBolt(w){
   const dt=w.plannedDate||new Date().toISOString().split('T')[0];
   const steps=(w.steps||[]).map(s=>{const o={n:(s.nm||s.txt||'Ej').substring(0,16),m:s.modo==='time'?'t':'r'};
@@ -679,20 +688,30 @@ async function boltConnect(){
       const bb=document.getElementById('bB');if(bb){bb.textContent='🔗 Conectar Bolt';bb.classList.remove('ok');}});
     t.textContent='✓ Conectado a '+dev.name;
     // Send date, settings, and next 5 days of workouts to Bolt
+    console.log('BLE: Sending DATE...');
     const st=getSettings();
-    await boltWrite('DATE:'+new Date().toISOString().split('T')[0]);
-    await boltWrite('CFG:'+(st.boltLed?'1':'0')+(st.boltBuz?'1':'0'));
-    // Clear old workouts on Bolt first
-    await boltWrite('WOCLEAR');
+    let ok=await boltWrite('DATE:'+new Date().toISOString().split('T')[0]);
+    console.log('BLE: DATE sent ok='+ok);
+    await new Promise(r=>setTimeout(r,100));
+    ok=await boltWrite('CFG:'+(st.boltLed?'1':'0')+(st.boltBuz?'1':'0'));
+    console.log('BLE: CFG sent ok='+ok);
+    await new Promise(r=>setTimeout(r,100));
+    ok=await boltWrite('WOCLEAR');
+    console.log('BLE: WOCLEAR sent ok='+ok);
+    await new Promise(r=>setTimeout(r,200));
     // Send all workouts for next 5 days
-    const today=new Date();
+    const today=new Date();let woSent=0;
     for(let i=0;i<5;i++){const d=new Date(today);d.setDate(d.getDate()+i);const ds=d.toISOString().split('T')[0];
       const dw=W.filter(w=>w.plannedDate===ds);
-      for(const w of dw){await sendWoToBolt(w);await new Promise(r=>setTimeout(r,150));}}
+      console.log('BLE: Day '+ds+' has '+dw.length+' workouts');
+      for(const w of dw){console.log('BLE: Sending WO "'+w.name+'" date='+ds);
+        await sendWoToBolt(w);woSent++;await new Promise(r=>setTimeout(r,300));}}
+    console.log('BLE: Total '+woSent+' workouts sent');
+    t.textContent='✓ '+dev.name+' ('+woSent+' entrenos)';
     return dev;
   }catch(e){console.error('BLE:',e);t.textContent='Error: '+e.message;return null;}}
-async function boltWrite(cmd){if(!boltConnected||!boltRx)return false;
-  try{const data=cmd+'\n';const enc=new TextEncoder();for(let i=0;i<data.length;i+=20){await boltRx.writeValue(enc.encode(data.substring(i,i+20)));await new Promise(r=>setTimeout(r,30));}return true;}catch(e){console.error('BLE write:',e);return false;}}
+async function boltWrite(cmd){if(!boltConnected||!boltRx){console.log('BLE write SKIP: connected='+boltConnected+' rx='+!!boltRx);return false;}
+  try{const data=cmd+'\n';console.log('BLE write: "'+cmd+'" ('+data.length+' bytes)');const enc=new TextEncoder();for(let i=0;i<data.length;i+=20){await boltRx.writeValue(enc.encode(data.substring(i,i+20)));await new Promise(r=>setTimeout(r,50));}return true;}catch(e){console.error('BLE write ERROR:',e);return false;}}
 async function sendToDevice(btn,w){const ob=btn.textContent;btn.textContent='...';
   if(!boltConnected){const d=await boltConnect();if(!d){btn.textContent=ob;return;}}
   const steps=(w.steps||[]).map(s=>{const o={n:(s.nm||s.txt||'Ej').substring(0,16),m:s.modo==='time'?'t':'r'};
