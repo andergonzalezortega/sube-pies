@@ -146,6 +146,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <button class="nb" onclick="go('sync')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 7h12l-4-4M16 17H4l4 4"/></svg>Sync</button>
 </nav>
 <script>
+if(typeof firebase==='undefined'){document.body.innerHTML='<div style="color:white;padding:40px;text-align:center"><h2>Error de conexión</h2><p>No se pudieron cargar los scripts. Comprueba tu conexión a internet y recarga.</p><button onclick="location.reload()" style="padding:10px 20px;font-size:16px">Recargar</button></div>';}else{
 firebase.initializeApp({apiKey:"AIzaSyBaBnTmI8_YuYIRGx2mdDVJSe_k4SF_eho",authDomain:"sube-pies.firebaseapp.com",projectId:"sube-pies",storageBucket:"sube-pies.firebasestorage.app",messagingSenderId:"597414564277",appId:"1:597414564277:web:1f79b81f567b67166c89fc"});
 const auth=firebase.auth(),db=firebase.firestore();
 let U=null,R=[],Tr=[],W=[],friends=[],plans=[],userCrags=[],mesos=[];
@@ -696,10 +697,9 @@ async function boltConnect(){
       const bt=document.getElementById('bT');if(bt)bt.textContent='Bolt desconectado';
       const bb=document.getElementById('bB');if(bb){bb.textContent='🔗 Conectar Bolt';bb.classList.remove('ok');}});
     t.textContent='✓ Conectado a '+dev.name;
-    // Send date, settings, and next 5 days of workouts to Bolt
     console.log('BLE: Sending DATE...');
     const st=getSettings();
-    let ok=await boltWrite('DATE:'+new Date().toISOString().split('T')[0]);
+    ok=await boltWrite('DATE:'+new Date().toISOString().split('T')[0]);
     console.log('BLE: DATE sent ok='+ok);
     await new Promise(r=>setTimeout(r,100));
     ok=await boltWrite('CFG:'+(st.boltLed?'1':'0')+(st.boltBuz?'1':'0'));
@@ -879,6 +879,7 @@ async function doBT(){const b=document.getElementById('bB'),t=document.getElemen
       await saveTrain({date:new Date().toISOString().split('T')[0],tipo:tipos[+p[1]]||'Suspensi.',detail:p[2]||''});added++;}}
   if(added>0){await boltWrite('ACK');await loadData();}
   t.textContent=added>0?`✓ ${added} registros sincronizados`:'✓ Conectado · 0 pendientes';}
+}
 </script>
 </body>
 </html>
