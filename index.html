@@ -385,14 +385,30 @@ async function svPlan(){const date=document.getElementById('plDt').value,notas=d
   cm('mPl');rCal();}
 
 // ROUTES
+let vMo='';
 function drR(){let fc='';[['all','Todas'],['roca','Roca'],['indoor','Indoor'],['enc','Enc'],['cuerda','Cuerda'],['bloque','Bloque'],['auto','AutoAseg']].forEach(([k,lb])=>{fc+=`<button class="ch${rFl===k?' on':''}" onclick="rFl='${k}';drR()">${lb}</button>`;});document.getElementById('rF').innerHTML=fc;
   const q=(document.getElementById('vQ').value||'').trim().toLowerCase();
   let fl=R.slice();if(rFl==='roca')fl=fl.filter(r=>r.lugar==='roca');if(rFl==='indoor')fl=fl.filter(r=>r.lugar==='indoor'||r.lugar==='roco');if(rFl==='enc')fl=fl.filter(r=>r.enc);if(rFl==='cuerda')fl=fl.filter(r=>r.tipo==='Cuerda');if(rFl==='bloque')fl=fl.filter(r=>r.tipo==='Bloque');if(rFl==='auto')fl=fl.filter(r=>r.tipo==='AutoAseg');
   if(q)fl=fl.filter(r=>(r.nombre||'').toLowerCase().includes(q)||(r.sitio||'').toLowerCase().includes(q)||(r.amigos||'').toLowerCase().includes(q)||(r.grado||'').toLowerCase().includes(q)||(r.tipo||'').toLowerCase().includes(q)||(r.date||'').includes(q));
   const so=document.getElementById('rS').value;if(so==='date')fl.sort((a,b)=>b.date.localeCompare(a.date));if(so==='dateA')fl.sort((a,b)=>a.date.localeCompare(b.date));if(so==='grD')fl.sort((a,b)=>G.indexOf(b.grado)-G.indexOf(a.grado));if(so==='grA')fl.sort((a,b)=>G.indexOf(a.grado)-G.indexOf(b.grado));if(so==='lugar')fl.sort((a,b)=>(a.sitio||'').localeCompare(b.sitio||''));if(so==='amigo')fl.sort((a,b)=>(a.amigos||'').localeCompare(b.amigos||''));
-  let h='',ld2='';const byD=so==='date'||so==='dateA';
-  fl.forEach(r=>{if(byD&&r.date!==ld2){h+=`<div style="font-family:'Bebas Neue';font-size:12px;color:var(--text3);margin:12px 0 5px;letter-spacing:2px">${new Date(r.date).toLocaleDateString('es-ES',{weekday:'short',day:'numeric',month:'short'}).toUpperCase()}</div>`;ld2=r.date;}h+=vc(r,true);});
-  document.getElementById('rL').innerHTML=h||'<div style="text-align:center;color:var(--text3);padding:30px">Sin vías</div>';}
+  // Month dropdown (only when not searching)
+  const mos=[...new Set(fl.map(r=>(r.date||'').substring(0,7)).filter(Boolean))].sort().reverse();
+  if(!vMo&&mos.length)vMo=mos[0];
+  if(!q&&mos.length>1){
+    let md='<select id="vMoSel" onchange="vMo=this.value;drR()" style="width:100%;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px;color:var(--text);font-size:13px;font-family:Nunito;margin-bottom:6px">';
+    md+='<option value="all"'+(vMo==='all'?' selected':'')+'>Todos los meses ('+fl.length+')</option>';
+    mos.forEach(m=>{const d=new Date(m+'-01');const lb=d.toLocaleDateString('es-ES',{month:'long',year:'numeric'});const cnt=fl.filter(r=>(r.date||'').startsWith(m)).length;
+      md+=`<option value="${m}"${m===vMo?' selected':''}>${lb.charAt(0).toUpperCase()+lb.slice(1)} (${cnt})</option>`;});
+    md+='</select>';document.getElementById('rL').insertAdjacentHTML('beforebegin','');
+    // Filter by month
+    if(vMo&&vMo!=='all')fl=fl.filter(r=>(r.date||'').startsWith(vMo));
+    let h=md;
+    fl.forEach(r=>{h+=vc(r,true);});
+    document.getElementById('rL').innerHTML=h||'<div style="text-align:center;color:var(--text3);padding:30px">Sin vías</div>';
+  }else{
+    let h='';
+    fl.forEach(r=>{h+=vc(r,true);});
+    document.getElementById('rL').innerHTML=h||'<div style="text-align:center;color:var(--text3);padding:30px">Sin vías</div>';}}
 function vc(r,ed){return `<div class="via ${r.enc?'enc':''}" ${ed?`onclick="edR('${r.id}')"`:''}><div class="vt"><div class="vg">${r.grado}</div><div class="vd">${new Date(r.date).toLocaleDateString('es-ES',{day:'numeric',month:'short'})}</div></div>${r.nombre?`<div class="vn">${r.nombre}</div>`:''}${r.sitio?`<div class="vl">📍 ${r.sitio}</div>`:''}<div class="vts"><span class="tg r">${r.lugar==='roca'?'Roca':'Indoor'}</span><span class="tg t">${r.tipo}</span>${r.metros?`<span class="tg">${r.metros}m</span>`:''}<span class="tg">Int:${r.intento||1}</span>${r.enc?'<span class="tg e">Enc ✓</span>':''}${r.amigos?`<span class="tg">👥 ${r.amigos}</span>`:''}${r.notas?'<span class="tg">💬</span>':''}</div></div>`;}
 function pSel(){const g=document.getElementById('iG');g.innerHTML='';G.forEach(x=>{g.innerHTML+=`<option>${x}</option>`;});const i=document.getElementById('iI');i.innerHTML='';for(let j=1;j<=9;j++)i.innerHTML+=`<option>${j}</option>`;}
 function addR(){eRt=null;document.getElementById('mRT').textContent='NUEVA VÍA';pSel();['iN','iL','iNo','iA'].forEach(id=>document.getElementById(id).value='');document.getElementById('iMetros').value='';document.getElementById('iFe').value=new Date().toISOString().split('T')[0];document.getElementById('iG').value='7a';document.getElementById('iE').value='0';document.getElementById('btnDelR').style.display='none';document.getElementById('mR1').classList.add('sh');}
@@ -469,6 +485,7 @@ async function loadFolders(){if(!U)return;const q=await db.collection('users').d
 function drPlan(){
   let h='<div style="display:flex;gap:4px;margin-bottom:8px"><button class="btn bp" onclick="openWo()" style="flex:1;font-size:11px;padding:8px;border-radius:10px">+ Entreno</button><button class="btn bg2" onclick="newFolder()" style="width:auto;padding:8px 12px;font-size:11px;border-radius:10px;margin:0">📁 Carpeta</button></div>';
   h+='<input id="wQ" placeholder="🔍 Buscar entreno..." oninput="drTr()" style="width:100%;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:8px 14px;color:var(--text);font-size:12px;font-family:Nunito;outline:none;margin-bottom:8px">';
+  if(newFolderMode){h+='<div style="display:flex;gap:4px;margin-bottom:8px"><input id="newFolderNm" placeholder="Nombre carpeta..." style="flex:1;background:var(--bg3);border:1px solid var(--rock);border-radius:10px;padding:8px;color:var(--text);font-size:12px;font-family:Nunito;outline:none"><button class="btn bp" onclick="doNewFolder()" style="width:auto;padding:8px 14px;font-size:11px;border-radius:10px;margin:0">✓</button><button class="btn bg2" onclick="newFolderMode=false;drTr()" style="width:auto;padding:8px 10px;font-size:11px;border-radius:10px;margin:0">✕</button></div>';}
   const q=(document.getElementById('wQ')||{}).value||'';
   // Show folders
   if(!curFolder){
@@ -494,9 +511,11 @@ function renderWoCard(w){
     h+=`<div class="wiss">${i+1}. ${d}</div>`;});
   h+=`</div><div style="display:flex;gap:4px;margin-top:6px;flex-wrap:wrap"><button class="sbb" style="font-size:11px;padding:6px 12px" onclick='execWo(${JSON.stringify(w).replace(/'/g,"&#39;")})'>▶ Ejecutar</button><button class="sbb" style="font-size:11px;padding:6px 12px;background:var(--blue)" onclick='shareWo("${w.id}")'>👥 Compartir</button><button class="sbb" style="font-size:11px;padding:6px 12px;background:var(--bg3);color:var(--text2)" onclick='moveWo("${w.id}")'>📁</button></div></div>`;
   return h;}
-async function newFolder(){const nm=prompt('Nombre de la carpeta:');if(!nm)return;
-  const ref=await db.collection('users').doc(U.uid).collection('woFolders').add({name:nm.trim()});
-  woFolders.push({id:ref.id,name:nm.trim()});drTr();}
+let newFolderMode=false;
+function newFolder(){newFolderMode=!newFolderMode;drTr();}
+async function doNewFolder(){const inp=document.getElementById('newFolderNm');const nm=(inp?inp.value:'').trim();if(!nm){alert('Pon un nombre');return;}
+  try{const ref=await db.collection('users').doc(U.uid).collection('woFolders').add({name:nm});
+  woFolders.push({id:ref.id,name:nm});newFolderMode=false;drTr();}catch(e){alert('Error: '+e.message);}}
 async function delFolder(id){if(!confirm('¿Eliminar carpeta? Los entrenos se quedan sueltos.'))return;
   await db.collection('users').doc(U.uid).collection('woFolders').doc(id).delete();
   woFolders=woFolders.filter(f=>f.id!==id);
