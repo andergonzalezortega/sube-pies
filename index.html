@@ -91,18 +91,20 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <!-- MAPA --><div id="pm" class="page"><div class="hdr"><h1>MAPA</h1></div><div style="display:flex;gap:0;margin-bottom:10px;background:var(--bg3);border-radius:10px;padding:2px" id="mapTbs"></div><div class="map-stats"><div class="st a"><div class="v" id="mTotal">0</div><div class="l">Vías</div></div><div class="st b"><div class="v" id="mEnc">0</div><div class="l">Enc</div></div><div class="st"><div class="v" style="color:var(--blue)" id="mZonas">0</div><div class="l">Zonas</div></div></div><div class="map-search"><input id="mapQ" placeholder="🔍 Buscar zona..." oninput="filterMap()"><button class="bp btn" style="width:auto;padding:8px 12px;font-size:11px;border-radius:10px" onclick="openNewCrag()">+ Zona</button></div><div id="mapDiv"></div><div id="mapResults" style="display:none"></div><div id="mRt"></div></div>
 <!-- ENTRENOS --><div id="pt" class="page"><div class="hdr"><h1>ENTRENOS</h1></div><div class="tbs" id="tT"></div><div id="tH"></div><div id="tP" style="display:none"><div id="wL"></div></div><div id="tProg" style="display:none">
 <div class="ct">EXPLORADOR DE DATOS</div>
+<div id="savedGraphs" style="display:flex;gap:3px;margin-bottom:6px;flex-wrap:wrap;overflow-x:auto"></div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px"><div class="fl" style="margin:0"><label>Desde</label><input type="date" id="grFrom"></div><div class="fl" style="margin:0"><label>Hasta</label><input type="date" id="grTo"></div></div>
 <div style="display:flex;gap:3px;margin-bottom:6px;flex-wrap:wrap" id="grPresets"></div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">
-<div class="fl" style="margin:0"><label>Eje X (horizontal)</label><select id="grX" onchange="updFilters()" style="font-size:11px"><option value="mes">Mes</option><option value="semana">Semana</option><option value="dia">Día</option><option value="lugar">Lugar</option><option value="compa">Compañero</option><option value="grado">Grado</option><option value="tipo">Tipo vía</option><option value="agarre">Tipo agarre</option><option value="ejercicio">Ejercicio</option></select></div>
-<div class="fl" style="margin:0"><label>Eje Y (vertical)</label><select id="grY" style="font-size:11px"><option value="count">Cantidad</option><option value="enc">Encadenes</option><option value="lastre">Lastre máx (kg)</option><option value="regleta">Regleta mín (mm)</option><option value="grado_max">Grado máximo</option><option value="intentos">Media intentos</option><option value="series">Total series</option><option value="reps">Total reps</option><option value="tiempo">Tiempo total (min)</option></select></div>
+<div class="fl" style="margin:0"><label>Eje X</label><select id="grX" onchange="updFilters()" style="font-size:11px"><option value="mes">Mes</option><option value="semana">Semana</option><option value="dia">Día</option><option value="lugar">Lugar</option><option value="compa">Compañero</option><option value="grado">Grado</option><option value="tipo">Tipo vía</option><option value="agarre">Agarre</option><option value="ejercicio">Ejercicio</option></select></div>
+<div class="fl" style="margin:0"><label>Eje Y</label><select id="grY" style="font-size:11px"><option value="count">Cantidad vías</option><option value="enc">Encadenes</option><option value="metros">Metros escalados</option><option value="lastre">Lastre máx (kg)</option><option value="regleta">Regleta mín (mm)</option><option value="grado_max">Grado máximo</option><option value="intentos">Media intentos</option><option value="dias_ent">Días entrenados</option><option value="series">Total series</option><option value="reps">Total reps</option><option value="tiempo">Tiempo total (min)</option></select></div>
 </div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:6px">
 <div class="fl" style="margin:0"><label>Fuente</label><select id="grSrc" onchange="updFilters()" style="font-size:11px"><option value="vias">Vías</option><option value="entrenos">Entrenos</option><option value="todo">Todo</option></select></div>
-<div class="fl" style="margin:0"><label>Filtro extra</label><select id="grFilt" style="font-size:11px"><option value="">— Sin filtro —</option></select></div>
+<div class="fl" style="margin:0"><label>Filtro</label><select id="grFilt" style="font-size:11px"><option value="">—</option></select></div>
+<div class="fl" style="margin:0"><label>Modo</label><select id="grMode" style="font-size:11px"><option value="normal">Normal</option><option value="acum">Acumulativo</option></select></div>
 </div>
-<button class="btn bp" style="font-size:11px;padding:8px;margin-bottom:8px" onclick="drDash()">📊 Generar</button>
-<canvas id="cDash" height="180" style="width:100%;background:var(--bg3);border-radius:var(--R);margin-bottom:6px"></canvas>
+<div style="display:flex;gap:4px;margin-bottom:8px"><button class="btn bp" style="flex:1;font-size:11px;padding:8px" onclick="drDash()">📊 Generar</button><button class="btn bg2" style="width:auto;padding:8px 12px;font-size:11px;margin:0" onclick="saveGraph()">💾</button></div>
+<canvas id="cDash" height="200" style="width:100%;background:var(--bg3);border-radius:var(--R);margin-bottom:6px"></canvas>
 <div id="dashInfo" style="font-size:10px;color:var(--text2)"></div>
 </div><div id="tMeso" style="display:none"><button class="btn bp" onclick="openMeso()" style="margin-bottom:12px">+ Crear mesociclo</button><div id="mesoList"></div></div></div>
 <!-- AMIGOS --><div id="pf" class="page"><div class="hdr"><h1>AMIGOS</h1></div><div class="card"><div class="ct">AÑADIR AMIGO</div><div style="display:flex;gap:6px"><input id="frCode" placeholder="Código #1234 o email" style="flex:1;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px;color:var(--text);font-size:12px;font-family:Nunito;outline:none"><button class="bp btn" style="width:auto;padding:8px 14px;font-size:12px;border-radius:10px" onclick="addFriend()">+</button></div><div id="frMsg" style="font-size:10px;margin-top:4px"></div></div><div class="ct" style="margin-top:12px">MIS AMIGOS</div><div id="frList"></div><div id="frView" style="display:none;margin-top:12px"></div></div>
@@ -205,20 +207,23 @@ function drCalDetail(){
   const dp=plans.filter(p=>p.date===cSl);
   const dr=R.filter(r=>r.date===cSl);
   const dt=Tr.filter(t=>t.date===cSl);
-  if(!dp.length&&!dr.length&&!dt.length){el.innerHTML='';return;}
+  const dw=W.filter(w=>w.plannedDate===cSl);
   const dd=new Date(cSl);
   let h=`<div style="background:var(--bg2);border-radius:0 0 12px 12px;padding:8px 10px;border:1px solid rgba(255,255,255,.04);border-top:none">`;
-  h+=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><span style="font-size:12px;color:var(--text2)">${dd.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'})}</span><button style="background:none;border:1px solid var(--blue);border-radius:8px;color:var(--blue);padding:2px 8px;font-size:10px;cursor:pointer;font-family:Nunito" onclick="openPlan('${cSl}')">+ Plan</button></div>`;
-  // Plans
+  h+=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><span style="font-size:12px;color:var(--text2)">${dd.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'})}</span><button class="sbb" style="font-size:11px;padding:5px 14px" onclick="openPlan('${cSl}')">+ Planificar</button></div>`;
+  // Plans (with delete)
   dp.forEach(p=>{
     let icon=p.tipo==='roca'?'🏔️':p.tipo==='indoor'?'🏢':p.tipo==='entreno'?'🏋':'📝';
-    h+=`<div style="font-size:11px;padding:2px 0;display:flex;align-items:center;gap:4px">${icon} `;
-    if(p.lugar)h+=`<span>${p.lugar}</span>`;
-    if(p.workoutName)h+=`<span style="color:var(--green)">${p.workoutName}</span>`;
-    if(p.notas)h+=`<span style="color:var(--text3)">${p.notas}</span>`;
+    h+=`<div style="font-size:11px;padding:3px 0;display:flex;align-items:center;gap:4px">${icon} `;
+    if(p.lugar)h+=`<span>${p.lugar}</span> `;
+    if(p.workoutName)h+=`<span style="color:var(--green)">${p.workoutName}</span> `;
+    if(p.notas)h+=`<span style="color:var(--text3)">${p.notas}</span> `;
     if(p.invited&&p.invited.length){const names=p.invited.map(e=>{const f=friends.find(fr=>fr.email===e);return f?(f.name||e):e;});
-      h+=`<span style="color:var(--blue)">👥 ${names.join(', ')}</span>`;}
-    h+=`</div>`;});
+      h+=`<span style="color:var(--blue)">👥 ${names.join(', ')}</span> `;}
+    h+=`<button style="background:none;border:none;color:var(--red);font-size:12px;cursor:pointer;margin-left:auto;flex-shrink:0" onclick="delPlan('${p.id}')">✕</button></div>`;});
+  // Workouts planned
+  dw.forEach(w=>{
+    h+=`<div style="font-size:11px;padding:2px 0;color:var(--purple)">🏋 ${w.name}</div>`;});
   // Routes as compact table
   if(dr.length){
     h+=`<table style="width:100%;border-collapse:collapse;font-size:11px;margin-top:2px">`;
@@ -229,7 +234,23 @@ function drCalDetail(){
     h+=`</table>`;}
   // Trainings done
   dt.forEach(t=>{h+=`<div style="font-size:10px;color:var(--yellow);padding:2px 0">🏋 ${t.detail||t.tipo}</div>`;});
+  if(!dp.length&&!dr.length&&!dt.length&&!dw.length){h+=`<div style="font-size:11px;color:var(--text3);padding:4px 0">Sin actividad</div>`;}
   h+='</div>';el.innerHTML=h;}
+async function delPlan(planId){
+  const p=plans.find(x=>x.id===planId);if(!p)return;
+  if(!confirm('¿Eliminar este plan?'))return;
+  // If shared, notify invited friends
+  if(p.invited&&p.invited.length&&U){
+    const fromName=U.displayName||U.email;
+    for(const email of p.invited){
+      try{const q=await db.collection('users').where('email','==',email).get();
+        if(!q.empty){const fuid=q.docs[0].id;
+          await db.collection('users').doc(fuid).collection('invites').add({
+            from:U.uid,fromName,date:p.date,tipo:'cancelacion',
+            lugar:p.lugar||'',notas:fromName+' ha cancelado: '+(p.workoutName||p.lugar||p.notas||'plan'),
+            status:'pending',ts:firebase.firestore.FieldValue.serverTimestamp(),type:'cancel'});}}catch(e){}}}
+  await db.collection('users').doc(U.uid).collection('plans').doc(planId).delete();
+  plans=plans.filter(x=>x.id!==planId);rCal();}
 let nwoIdx=-1; // Index into workout days, -1 = auto
 function drNextWo(){
   const td=new Date().toISOString().split('T')[0];
@@ -244,9 +265,11 @@ function drNextWo(){
   const dd=new Date(nxtDate);
   const isToday=nxtDate===td;
   const tmr=new Date();tmr.setDate(tmr.getDate()+1);const isTmr=nxtDate===tmr.toISOString().split('T')[0];
-  const dayLabel=isToday?'Hoy':isTmr?'Mañana':dd.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'short'});
+  const dayLabel=dd.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'});
+  const isClose=isToday||isTmr;
+  const extra=isToday?' · HOY':isTmr?' · MAÑANA':'';
   
-  let h=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-family:'Bebas Neue';font-size:13px;color:var(--text3);letter-spacing:1px">PRÓXIMO ENTRENO · <span style="color:${isToday?'var(--green)':'var(--rock)'}">${dayLabel.toUpperCase()}</span></span>`;
+  let h=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-family:'Bebas Neue';font-size:13px;color:var(--text3);letter-spacing:1px">ENTRENO · <span style="color:${isClose?'var(--green)':'var(--rock)'}"> ${dayLabel.toUpperCase()}${extra}</span></span>`;
   if(dates.length>1)h+=`<span style="font-size:10px;color:var(--text3)">${nwoIdx+1}/${dates.length} ◀ ▶</span>`;
   h+=`</div>`;
   dw.forEach(w=>{
@@ -285,12 +308,15 @@ function saveSettings(){const s={boltLed:document.getElementById('setBoltLed').c
 function getSettings(){return JSON.parse(localStorage.getItem('spSettings')||'{"boltLed":true,"boltBuz":true}');}
 async function loadInvites(){if(!U)return;
   const q=await db.collection('users').doc(U.uid).collection('invites').where('status','==','pending').get();
-  let h='';q.forEach(d=>{const inv=d.data();const tipos={roca:'🏔️ Roca',indoor:'🏢 Indoor',entreno:'🏋️ Entreno',nota:'📝 Nota'};
+  let h='';q.forEach(d=>{const inv=d.data();const tipos={roca:'🏔️ Roca',indoor:'🏢 Indoor',entreno:'🏋️ Entreno',nota:'📝 Nota',cancelacion:'❌ Cancelación'};
     const dd=new Date(inv.date).toLocaleDateString('es-ES',{weekday:'short',day:'numeric',month:'short'});
     let detail=tipos[inv.tipo]||inv.tipo;
     if(inv.lugar)detail+=' · '+inv.lugar;
     if(inv.workoutName)detail+=' · 🏋 '+inv.workoutName;
-    h+=`<div class="inv-card"><div class="inv-who">${inv.fromName} te invita</div><div class="inv-det">${detail} · ${dd}</div>${inv.notas?`<div style="font-size:10px;color:var(--text3)">${inv.notas}</div>`:''}<div class="inv-btns"><button class="inv-yes" onclick="answerInv('${d.id}','accepted')">✓ Aceptar</button><button class="inv-no" onclick="answerInv('${d.id}','rejected')">✕ Rechazar</button></div></div>`;});
+    if(inv.type==='cancel'){
+      h+=`<div class="inv-card" style="border-color:var(--red);background:linear-gradient(135deg,rgba(255,107,107,.15),rgba(255,107,107,.05))"><div class="inv-who" style="color:var(--red)">❌ ${inv.fromName} ha cancelado</div><div class="inv-det">${inv.notas||detail} · ${dd}</div><div class="inv-btns"><button class="inv-yes" onclick="answerInv('${d.id}','accepted')">OK, mantener mi plan</button><button class="inv-no" onclick="answerInv('${d.id}','rejected')">Eliminar mi plan</button></div></div>`;
+    }else{
+      h+=`<div class="inv-card"><div class="inv-who">${inv.fromName} te invita</div><div class="inv-det">${detail} · ${dd}</div>${inv.notas?`<div style="font-size:10px;color:var(--text3)">${inv.notas}</div>`:''}<div class="inv-btns"><button class="inv-yes" onclick="answerInv('${d.id}','accepted')">✓ Aceptar</button><button class="inv-no" onclick="answerInv('${d.id}','rejected')">✕ Rechazar</button></div></div>`;}});
   document.getElementById('invBanner').innerHTML=h;}
 async function answerInv(id,status){if(!U)return;
   const ref=db.collection('users').doc(U.uid).collection('invites').doc(id);
@@ -712,11 +738,12 @@ function updFilters(){const src=document.getElementById('grSrc').value,x=documen
 function drDash(){const from=document.getElementById('grFrom').value,to=document.getElementById('grTo').value;
   const xAxis=document.getElementById('grX').value,yAxis=document.getElementById('grY').value;
   const src=document.getElementById('grSrc').value,filt=document.getElementById('grFilt').value;
-  const cv=document.getElementById('cDash');if(!cv)return;const ctx=cv.getContext('2d');cv.width=cv.offsetWidth*2;cv.height=360;ctx.scale(2,2);const w=cv.offsetWidth,h=180;ctx.clearRect(0,0,w,h);
-  // Collect data
+  const acum=document.getElementById('grMode').value==='acum';
+  const cv=document.getElementById('cDash');if(!cv)return;const ctx=cv.getContext('2d');cv.width=cv.offsetWidth*2;cv.height=400;ctx.scale(2,2);const w=cv.offsetWidth,h=200;ctx.clearRect(0,0,w,h);
   let vias=src!=='entrenos'?R.filter(r=>r.date>=from&&r.date<=to):[];
   let steps=[];if(src!=='vias'){W.forEach(wk=>{const d=wk.plannedDate||'';if(d>=from&&d<=to)(wk.steps||[]).forEach(s=>{steps.push({...s,date:d});});});}
-  // Apply filter
+  // Also use trains for dias_ent
+  const trains=Tr.filter(t=>t.date>=from&&t.date<=to);
   if(filt){const[fk,fv]=filt.split(':');
     if(fk==='lugar')vias=vias.filter(r=>r.sitio===fv);
     if(fk==='grado')vias=vias.filter(r=>r.grado===fv);
@@ -726,12 +753,12 @@ function drDash(){const from=document.getElementById('grFrom').value,to=document
     if(fk==='ej')steps=steps.filter(s=>(s.nm||s.txt||'')===fv);
     if(fk==='ag')steps=steps.filter(s=>s.ag===fv);
     if(fk==='mm')steps=steps.filter(s=>s.mm+''+'mm'===fv);}
-  // Group by X axis
   const groups={};
-  const addToGroup=(key,item,isTrain)=>{if(!groups[key])groups[key]={vias:[],steps:[]};if(isTrain)groups[key].steps.push(item);else groups[key].vias.push(item);};
+  const addToGroup=(key,item,isTrain)=>{if(!groups[key])groups[key]={vias:[],steps:[],trains:[]};if(isTrain)groups[key].steps.push(item);else groups[key].vias.push(item);};
+  const addTrainGroup=(key,t)=>{if(!groups[key])groups[key]={vias:[],steps:[],trains:[]};groups[key].trains.push(t);};
   const getXKey=(date,item,isTrain)=>{
     if(xAxis==='mes')return date.substring(0,7);
-    if(xAxis==='semana'){const d=new Date(date);const w=Math.ceil(d.getDate()/7);return date.substring(0,7)+'-S'+w;}
+    if(xAxis==='semana'){const d=new Date(date);const wk=Math.ceil(d.getDate()/7);return date.substring(0,7)+'-S'+wk;}
     if(xAxis==='dia')return date;
     if(xAxis==='lugar')return isTrain?'Entreno':(item.sitio||'?');
     if(xAxis==='compa'){if(isTrain)return 'Entreno';const ams=(item.amigos||'').split(/[,;]+/).map(a=>a.trim()).filter(Boolean);return ams.length?ams[0]:'Solo';}
@@ -742,29 +769,44 @@ function drDash(){const from=document.getElementById('grFrom').value,to=document
     return '?';};
   vias.forEach(r=>addToGroup(getXKey(r.date,r,false),r,false));
   steps.forEach(s=>addToGroup(getXKey(s.date,s,true),s,true));
-  // Calculate Y values
+  trains.forEach(t=>{const k=xAxis==='mes'?t.date.substring(0,7):xAxis==='semana'?t.date.substring(0,7)+'-S'+Math.ceil(new Date(t.date).getDate()/7):t.date;addTrainGroup(k,t);});
   const data=[];const sortable=xAxis==='mes'||xAxis==='semana'||xAxis==='dia';
   let entries=Object.entries(groups);if(sortable)entries.sort((a,b)=>a[0].localeCompare(b[0]));else entries.sort((a,b)=>(b[1].vias.length+b[1].steps.length)-(a[1].vias.length+a[1].steps.length));
-  entries.slice(0,20).forEach(([key,g])=>{let val=0;
+  entries.slice(0,30).forEach(([key,g])=>{let val=0;
     if(yAxis==='count')val=g.vias.length+g.steps.length;
     else if(yAxis==='enc')val=g.vias.filter(r=>r.enc).length;
+    else if(yAxis==='metros')val=g.vias.reduce((a,r)=>a+(r.metros||0),0);
     else if(yAxis==='lastre'){const kgs=[...g.steps.map(s=>s.kg||0)];val=kgs.length?Math.max(...kgs):0;}
     else if(yAxis==='regleta'){const mms=g.steps.map(s=>s.mm).filter(m=>m>0);val=mms.length?Math.min(...mms):0;}
-    else if(yAxis==='grado_max'){const gs=g.vias.map(r=>G.indexOf(r.grado)).filter(i=>i>=0);val=gs.length?G[Math.max(...gs)]:'?';}
+    else if(yAxis==='grado_max'){const gs=g.vias.map(r=>G.indexOf(r.grado)).filter(i=>i>=0);val=gs.length?Math.max(...gs):0;}
     else if(yAxis==='intentos'){const ints=g.vias.map(r=>r.intento||1);val=ints.length?Math.round(ints.reduce((a,b)=>a+b,0)/ints.length*10)/10:0;}
+    else if(yAxis==='dias_ent'){const ds=new Set();g.vias.forEach(r=>ds.add(r.date));g.trains.forEach(t=>ds.add(t.date));val=ds.size;}
     else if(yAxis==='series')val=g.steps.reduce((a,s)=>a+(s.ser||0),0);
     else if(yAxis==='reps')val=g.steps.reduce((a,s)=>a+(s.ser||1)*(s.reps||s.rep||0),0);
     else if(yAxis==='tiempo')val=Math.round(g.steps.reduce((a,s)=>a+((s.ser||1)*(s.rep||1)*(s.time||0)+(s.ser||1)*(s.ds||0))/60,0));
     const lb=key.length>7&&(xAxis==='mes'||xAxis==='semana')?key.slice(5):key;
     data.push([lb.length>12?lb.slice(0,12)+'…':lb,val]);});
+  // Acumulativo
+  if(acum&&data.length){let cum=0;data.forEach(d=>{if(typeof d[1]==='number'){cum+=d[1];d[1]=cum;}});}
   if(!data.length){ctx.fillStyle='#5a6a7a';ctx.font='12px Nunito';ctx.textAlign='center';ctx.fillText('Sin datos en este rango',w/2,h/2);document.getElementById('dashInfo').textContent='';return;}
   const isNumeric=data.every(d=>typeof d[1]==='number');
   if(isNumeric&&(sortable||data.length<=5))drawLine(ctx,w,h,data);
   else if(isNumeric)drawBars(ctx,w,h,data);
   else drawLabels(ctx,w,h,data);
-  if(isNumeric){const vals=data.map(d=>d[1]).filter(v=>v>0);if(vals.length){const sum=vals.reduce((a,b)=>a+b,0);document.getElementById('dashInfo').textContent=`Total: ${sum} · Media: ${Math.round(sum/vals.length*10)/10} · Máx: ${Math.max(...vals)}`;}else document.getElementById('dashInfo').textContent='';}else document.getElementById('dashInfo').textContent='';}
+  if(isNumeric){const vals=data.map(d=>d[1]).filter(v=>v>0);if(vals.length){const sum=acum?vals[vals.length-1]:vals.reduce((a,b)=>a+b,0);document.getElementById('dashInfo').textContent=`Total: ${sum} · Media: ${Math.round((acum?sum/vals.length:sum/vals.length)*10)/10} · Máx: ${Math.max(...vals)}`;}else document.getElementById('dashInfo').textContent='';}else document.getElementById('dashInfo').textContent='';}
+let savedGraphList=JSON.parse(localStorage.getItem('spSavedGraphs')||'[]');
+function saveGraph(){const nm=prompt('Nombre del gráfico:');if(!nm)return;
+  const cfg={name:nm,x:document.getElementById('grX').value,y:document.getElementById('grY').value,src:document.getElementById('grSrc').value,filt:document.getElementById('grFilt').value,mode:document.getElementById('grMode').value};
+  savedGraphList.push(cfg);localStorage.setItem('spSavedGraphs',JSON.stringify(savedGraphList));drSavedGraphs();}
+function drSavedGraphs(){let h='';savedGraphList.forEach((g,i)=>{
+  h+=`<button class="ch" style="position:relative;padding-right:18px" onclick="loadGraph(${i})">${g.name}<span style="position:absolute;right:3px;top:2px;font-size:9px;color:var(--red);cursor:pointer" onclick="event.stopPropagation();savedGraphList.splice(${i},1);localStorage.setItem('spSavedGraphs',JSON.stringify(savedGraphList));drSavedGraphs()">✕</span></button>`;});
+  document.getElementById('savedGraphs').innerHTML=h;}
+function loadGraph(i){const g=savedGraphList[i];if(!g)return;
+  document.getElementById('grX').value=g.x;document.getElementById('grY').value=g.y;
+  document.getElementById('grSrc').value=g.src;document.getElementById('grMode').value=g.mode||'normal';
+  updFilters();if(g.filt)document.getElementById('grFilt').value=g.filt;drDash();}
 function initDashDates(){const td=new Date(),y1=new Date(td);y1.setFullYear(y1.getFullYear()-1);document.getElementById('grFrom').value=y1.toISOString().split('T')[0];document.getElementById('grTo').value=td.toISOString().split('T')[0];
-  let h='';[['1m','1 mes'],['3m','3 meses'],['6m','6 meses'],['1y','1 año'],['all','Todo']].forEach(([k,lb])=>{h+=`<button class="ch" onclick="setDashPer('${k}')">${lb}</button>`;});document.getElementById('grPresets').innerHTML=h;updFilters();}
+  let h='';[['1m','1 mes'],['3m','3 meses'],['6m','6 meses'],['1y','1 año'],['all','Todo']].forEach(([k,lb])=>{h+=`<button class="ch" onclick="setDashPer('${k}')">${lb}</button>`;});document.getElementById('grPresets').innerHTML=h;updFilters();drSavedGraphs();}
 function setDashPer(p){const td=new Date();document.getElementById('grTo').value=td.toISOString().split('T')[0];let f=new Date(td);if(p==='1m')f.setMonth(f.getMonth()-1);else if(p==='3m')f.setMonth(f.getMonth()-3);else if(p==='6m')f.setMonth(f.getMonth()-6);else if(p==='1y')f.setFullYear(f.getFullYear()-1);else f=new Date('2020-01-01');document.getElementById('grFrom').value=f.toISOString().split('T')[0];}
 function groupByMonth(arr){const m={};arr.forEach(x=>{const k=(x.date||'').substring(0,7);if(k){if(!m[k])m[k]=[];m[k].push(x);}});return Object.entries(m).sort((a,b)=>a[0].localeCompare(b[0]));}
 function drawLine(ctx,w,h,data){const vals=data.map(d=>d[1]);const mx=Math.max(...vals),mn=Math.min(...vals);const range=mx-mn||1;
