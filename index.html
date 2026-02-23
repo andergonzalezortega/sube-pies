@@ -203,14 +203,14 @@ function go(id){Object.values(PG).forEach(p=>document.getElementById(p).classLis
 function rH(){updStats();rCal();updGrToggles();loadInvites();setupSwipe();}
 function drCalDetail(){
   const el=document.getElementById('calDetail');
-  if(!cSl){el.innerHTML='';return;}
-  const dp=plans.filter(p=>p.date===cSl);
-  const dr=R.filter(r=>r.date===cSl);
-  const dt=Tr.filter(t=>t.date===cSl);
-  const dw=W.filter(w=>w.plannedDate===cSl);
-  const dd=new Date(cSl);
-  let h=`<div style="background:var(--bg2);border-radius:0 0 12px 12px;padding:8px 10px;border:1px solid rgba(255,255,255,.04);border-top:none">`;
-  h+=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><span style="font-size:12px;color:var(--text2)">${dd.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'})}</span><button class="sbb" style="font-size:11px;padding:5px 14px" onclick="openPlan('${cSl}')">+ Planificar</button></div>`;
+  const sel=cSl||new Date().toISOString().split('T')[0];
+  const dp=plans.filter(p=>p.date===sel);
+  const dr=R.filter(r=>r.date===sel);
+  const dt=Tr.filter(t=>t.date===sel);
+  const dw=W.filter(w=>w.plannedDate===sel);
+  const dd=new Date(sel);
+  let h=`<div style="background:var(--bg2);border-radius:0 0 12px 12px;padding:10px 12px;border:1px solid rgba(255,255,255,.04);border-top:none">`;
+  h+=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-family:'Bebas Neue';font-size:15px;color:var(--text)">${dd.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'})}</span><button class="sbb" style="font-size:12px;padding:7px 18px" onclick="openPlan('${sel}')">+ Planificar</button></div>`;
   // Plans (with delete)
   dp.forEach(p=>{
     let icon=p.tipo==='roca'?'🏔️':p.tipo==='indoor'?'🏢':p.tipo==='entreno'?'🏋':'📝';
