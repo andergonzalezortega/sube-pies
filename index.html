@@ -63,7 +63,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 .goog-btn{display:flex;align-items:center;gap:12px;background:#fff;color:#333;border:none;padding:14px 28px;border-radius:25px;font-size:15px;font-family:'Nunito';font-weight:700;cursor:pointer;}.goog-btn:active{transform:scale(.95);}.goog-btn img{width:20px;height:20px;}
 .usr-bar{display:flex;align-items:center;gap:6px;padding:4px 0;}.usr-pic{width:24px;height:24px;border-radius:50%;border:2px solid var(--rock);}.usr-name{font-size:11px;color:var(--text2);}.usr-out{background:none;border:none;color:var(--text3);font-size:9px;cursor:pointer;text-decoration:underline;}.usr-tag{font-family:'Bebas Neue';font-size:11px;color:var(--rock);}
 .fr-card{display:flex;align-items:center;gap:8px;background:var(--bg3);border-radius:10px;padding:8px;margin-bottom:5px;cursor:pointer;}.fr-pic{width:32px;height:32px;border-radius:50%;border:2px solid var(--rock);}.fr-info{flex:1;}.fr-name{font-size:13px;font-weight:600;}.fr-email{font-size:9px;color:var(--text3);}.fr-rm{background:none;border:none;color:var(--red);font-size:14px;cursor:pointer;}
-.spinner{display:inline-block;width:20px;height:20px;border:2px solid var(--text3);border-top-color:var(--rock);border-radius:50%;animation:spin .6s linear infinite;}@keyframes spin{to{transform:rotate(360deg)}}.load-full{display:flex;align-items:center;justify-content:center;min-height:100vh;}
+.spinner{display:inline-block;width:20px;height:20px;border:2px solid var(--text3);border-top-color:var(--rock);border-radius:50%;animation:spin .6s linear infinite;}@keyframes spin{to{transform:rotate(360deg)}}@keyframes boltSpin{from{transform:rotateY(0deg)}to{transform:rotateY(360deg)}}.load-full{display:flex;align-items:center;justify-content:center;min-height:100vh;}
 .leaflet-popup-content-wrapper{background:var(--bg2)!important;color:var(--text)!important;border-radius:12px!important;border:1px solid var(--rock)!important;}.leaflet-popup-tip{background:var(--bg2)!important;}.leaflet-popup-content{font-family:'Nunito'!important;font-size:12px!important;}
 .inv-card{background:linear-gradient(135deg,rgba(74,158,255,.15),rgba(74,158,255,.05));border:1px solid var(--blue);border-radius:12px;padding:10px;margin-bottom:6px;}.inv-who{font-size:12px;font-weight:600;color:var(--blue);}.inv-det{font-size:11px;color:var(--text2);margin:3px 0;}.inv-btns{display:flex;gap:6px;margin-top:6px;}.inv-btns button{flex:1;padding:6px;border-radius:8px;font-size:11px;font-family:'Nunito';font-weight:700;cursor:pointer;border:none;}.inv-yes{background:var(--green);color:#000;}.inv-no{background:var(--bg3);color:var(--text2);border:1px solid rgba(255,255,255,.08)!important;}
 .meso-fase{background:var(--bg3);border-radius:10px;padding:8px;margin-bottom:6px;display:flex;align-items:center;gap:6px;}.meso-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0;}.meso-info{flex:1;font-size:11px;}.meso-rm{background:none;border:none;color:var(--red);font-size:13px;cursor:pointer;}
@@ -110,7 +110,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 </div><div id="tMeso" style="display:none"><button class="btn bp" onclick="openMeso()" style="margin-bottom:12px">+ Crear mesociclo</button><div id="mesoList"></div></div></div>
 <!-- AMIGOS --><div id="pf" class="page"><div class="hdr"><h1>AMIGOS</h1></div><div class="card"><div class="ct">AÑADIR AMIGO</div><div style="display:flex;gap:6px"><input id="frCode" placeholder="Código #1234 o email" style="flex:1;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px;color:var(--text);font-size:12px;font-family:Nunito;outline:none"><button class="bp btn" style="width:auto;padding:8px 14px;font-size:12px;border-radius:10px" onclick="addFriend()">+</button></div><div id="frMsg" style="font-size:10px;margin-top:4px"></div></div><div class="ct" style="margin-top:12px">MIS AMIGOS</div><div id="frList"></div><div id="frView" style="display:none;margin-top:12px"></div></div>
 <!-- CHAT MODAL --><div class="mbg" id="mChat"><div class="mdl" style="height:70vh;display:flex;flex-direction:column"><button class="mx" onclick="closeChat()">✕</button><h2 id="chatTitle">CHAT</h2><div class="chat-wrap" id="chatBox" style="flex:1"></div><div class="chat-input"><input id="chatIn" placeholder="Escribe..." onkeydown="if(event.key==='Enter')sendChat()"><button onclick="sendChat()">→</button></div></div></div>
-<!-- SYNC --><div id="ps" class="page"><div class="hdr"><h1>SYNC</h1></div><div class="card" style="text-align:center;padding:20px"><div style="margin-bottom:8px"><svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+<!-- SYNC --><div id="ps" class="page"><div class="hdr"><h1>SYNC</h1></div><div class="card" style="text-align:center;padding:20px"><div style="margin-bottom:8px"><svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" style="animation:boltSpin 8s linear infinite">
 <ellipse cx="30" cy="26" rx="20" ry="23" fill="none" stroke="#d4a574" stroke-width="2" opacity=".9"/>
 <ellipse cx="30" cy="26" rx="20" ry="23" fill="none" stroke="#e8d5c0" stroke-width="0.5" opacity=".3"/>
 <circle cx="30" cy="14" r="6" fill="none" stroke="#d4a574" stroke-width="2"/>
@@ -129,15 +129,17 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <div class="card"><div class="ct">DATOS EN LA NUBE</div><p style="font-size:12px;color:var(--text2)"><span style="font-family:'Bebas Neue';font-size:22px;color:var(--green)" id="sN">0</span> registros guardados</p><p style="font-size:10px;color:var(--text3);margin-top:4px">Tus datos están seguros en Firebase.</p></div></div>
 </div>
 <!-- MODAL ROUTE --><div class="mbg" id="mR1"><div class="mdl"><button class="mx" onclick="cm('mR1')">✕</button><h2 id="mRT">VÍA</h2><div class="fl"><label>Nombre</label><input id="iN" placeholder="Diedro mágico"></div><div class="fl"><label>Lugar</label><input id="iL" placeholder="Atauri, Galdames..." list="dlZ"><datalist id="dlZ"></datalist></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="fl"><label>Tipo lugar</label><select id="iLT"><option value="roca">Roca</option><option value="indoor">Indoor</option></select></div><div class="fl"><label>Tipo vía</label><select id="iTP"><option>Cuerda</option><option>Bloque</option><option>AutoAseg</option><option>Largos</option></select></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px"><div class="fl"><label>Grado</label><select id="iG"></select></div><div class="fl"><label>Intento</label><select id="iI" onchange="chkFlashAvista()"></select></div><div class="fl"><label>Metros</label><input type="number" id="iMetros" placeholder="—" min="0" max="500" style="width:100%"></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px"><div class="fl"><label>Encadenado</label><select id="iE" onchange="chkFlashAvista()"><option value="1">Sí</option><option value="0">No</option></select></div><div class="fl" id="fFlash"><label>Flash</label><select id="iFlash"><option value="0">No</option><option value="1">Sí</option></select></div><div class="fl" id="fAvista"><label>A vista</label><select id="iAvista"><option value="0">No</option><option value="1">Sí</option></select></div></div><div class="fl"><label>Sensaciones</label><textarea id="iNo" placeholder="Beta, condiciones..."></textarea></div><div class="fl"><label>Compañeros</label><div id="rFriendChips" style="display:flex;gap:3px;flex-wrap:wrap;margin-bottom:4px"></div><input id="iA" placeholder="Escribe o elige amigos..." oninput="filterRouteFriends()"><div id="rFriendSug" style="display:none"></div></div><div class="fl"><label>Fecha</label><input type="date" id="iFe"></div><button class="btn bp" onclick="svR()">Guardar</button><button class="btn bdel" id="btnDelR" style="display:none" onclick="delR()">🗑️ Eliminar vía</button><button class="btn bg2" onclick="cm('mR1')">Cancelar</button></div></div>
-<!-- MODAL WORKOUT --><div class="mbg" id="mW1"><div class="mdl"><button class="mx" onclick="cm('mW1')">✕</button><h2 id="mW1Title">CREAR ENTRENO</h2><div class="fl"><label>Nombre</label><input id="wNm" placeholder="Fuerza dedos"></div><div class="fl"><label>Carpeta</label><select id="wFolder"><option value="">— Sin carpeta —</option></select></div><div class="ct">PASOS</div><div id="wS"></div><div class="ct" style="margin-top:8px">AÑADIR EJERCICIO</div><div style="display:flex;gap:3px;margin-bottom:8px;flex-wrap:wrap" id="ejTpls"></div><div id="ejForm" style="display:none;background:var(--bg3);border-radius:10px;padding:10px;margin-bottom:8px"><div class="fl"><label>Nombre</label><input id="ejNm" placeholder="Suspensiones, Dominadas..."></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><div class="fl"><label>Agarre</label><select id="ejAg"><option value="">— Ninguno —</option><option>Regleta</option><option>Cazo</option><option>Pinza</option><option>Romo</option><option>Bidedo</option><option>Unidedo</option><option>Barra</option></select></div><div class="fl"><label>Tamaño (mm)</label><input id="ejMm" type="number" placeholder="20"></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><div class="fl"><label>Ángulo</label><select id="ejAng"><option value="">—</option><option>0°</option><option>15°</option><option>30°</option><option>45°</option><option>90°</option><option>120°</option></select></div><div class="fl"><label>Lastre (kg)</label><input id="ejKg" type="number" value="0"></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px"><div class="fl"><label>Modo</label><select id="ejModo" onchange="ejModoChg()"><option value="time">Tiempo</option><option value="reps">Reps</option></select></div><div class="fl" id="ejTimeF"><label>Tiempo (s)</label><input id="ejTime" type="number" value="7"></div><div class="fl" id="ejRepsF" style="display:none"><label>Reps</label><input id="ejReps" type="number" value="10"></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px"><div class="fl"><label>Series</label><input id="ejSer" type="number" value="4"></div><div class="fl"><label>Reps/serie</label><input id="ejRep" type="number" value="6"></div><div class="fl"><label>Descanso (s)</label><input id="ejDesc" type="number" value="3"></div></div><div class="fl"><label>Desc. entre series (s)</label><input id="ejDS" type="number" value="180"></div><button class="btn bp" style="font-size:12px;padding:8px" onclick="addEj()">+ Añadir</button></div><hr style="border:none;border-top:1px solid var(--bg4);margin:10px 0"><button class="btn bp" onclick="svW()">Guardar entreno</button><button class="btn bg2" onclick="cm('mW1')">Cancelar</button></div></div>
+<!-- MODAL WORKOUT --><div class="mbg" id="mW1"><div class="mdl"><button class="mx" onclick="cm('mW1')">✕</button><h2 id="mW1Title">CREAR ENTRENO</h2><div class="fl"><label>Nombre</label><input id="wNm" placeholder="Fuerza dedos"></div><div class="fl"><label>Carpeta</label><select id="wFolder"><option value="">— Sin carpeta —</option></select></div><div class="ct">PASOS</div><div id="wS"></div><div style="display:flex;gap:4px;margin-top:8px;margin-bottom:8px"><div class="ct" style="flex:1;margin:0">AÑADIR</div><button class="ch on" style="font-size:10px" onclick="showEjForm()">🏋 Ejercicio</button><button class="ch" style="font-size:10px" onclick="showViaForm()">🧗 Vía</button></div><div style="display:flex;gap:3px;margin-bottom:8px;flex-wrap:wrap" id="ejTpls"></div><div id="ejForm" style="display:none;background:var(--bg3);border-radius:10px;padding:10px;margin-bottom:8px"><div class="fl"><label>Nombre</label><input id="ejNm" placeholder="Suspensiones, Dominadas..."></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><div class="fl"><label>Agarre</label><select id="ejAg"><option value="">— Ninguno —</option><option>Regleta</option><option>Cazo</option><option>Pinza</option><option>Romo</option><option>Bidedo</option><option>Unidedo</option><option>Barra</option></select></div><div class="fl"><label>Tamaño (mm)</label><input id="ejMm" type="number" placeholder="20"></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><div class="fl"><label>Ángulo</label><select id="ejAng"><option value="">—</option><option>0°</option><option>15°</option><option>30°</option><option>45°</option><option>90°</option><option>120°</option></select></div><div class="fl"><label>Lastre (kg)</label><input id="ejKg" type="number" value="0"></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px"><div class="fl"><label>Modo</label><select id="ejModo" onchange="ejModoChg()"><option value="time">Tiempo</option><option value="reps">Reps</option></select></div><div class="fl" id="ejTimeF"><label>Tiempo (s)</label><input id="ejTime" type="number" value="7"></div><div class="fl" id="ejRepsF" style="display:none"><label>Reps</label><input id="ejReps" type="number" value="10"></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px"><div class="fl"><label>Series</label><input id="ejSer" type="number" value="4"></div><div class="fl"><label>Reps/serie</label><input id="ejRep" type="number" value="6"></div><div class="fl"><label>Descanso (s)</label><input id="ejDesc" type="number" value="3"></div></div><div class="fl"><label>Desc. entre series (s)</label><input id="ejDS" type="number" value="180"></div><div style="display:flex;gap:4px"><button class="btn bp" style="flex:1;font-size:12px;padding:8px" onclick="addEj()">+ Añadir</button><button class="btn bg2" style="width:auto;padding:8px 12px;font-size:10px;margin:0" onclick="saveCustomTpl()">💾 Guardar plantilla</button></div></div><div id="viaForm" style="display:none;background:var(--bg3);border-radius:10px;padding:10px;margin-bottom:8px"><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><div class="fl"><label>Grado</label><select id="vfGrado"></select></div><div class="fl"><label>Tipo</label><select id="vfTipo"><option>Cuerda</option><option>Bloque</option><option>AutoAseg</option></select></div></div><div class="fl"><label>Nombre (opcional)</label><input id="vfNombre" placeholder="La rambla..."></div><button class="btn bp" style="font-size:12px;padding:8px" onclick="addViaStep()">+ Añadir vía</button></div><hr style="border:none;border-top:1px solid var(--bg4);margin:10px 0"><button class="btn bp" onclick="svW()">Guardar entreno</button><button class="btn bg2" onclick="cm('mW1')">Cancelar</button></div></div>
 <!-- EJECUTOR --><div id="mExec" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);z-index:300;padding:0">
 <div style="display:flex;flex-direction:column;height:100%;justify-content:center;align-items:center;padding:20px;text-align:center">
 <button style="position:absolute;top:12px;right:16px;background:none;border:none;color:var(--text3);font-size:28px;cursor:pointer;z-index:2" onclick="stopExec()">✕</button>
 <div id="exStep" style="font-family:'Bebas Neue';font-size:14px;color:var(--text3);letter-spacing:3px;margin-bottom:4px"></div>
 <div id="exTitle" style="font-family:'Bebas Neue';font-size:32px;color:var(--rock);margin-bottom:4px"></div>
+<div id="exDetail" style="font-size:12px;color:var(--rock);opacity:.7;margin-bottom:4px"></div>
 <div id="exInfo" style="font-size:13px;color:var(--text2);margin-bottom:20px"></div>
 <div id="exTimer" style="font-family:'Bebas Neue';font-size:120px;color:var(--green);line-height:1;margin:10px 0 20px"></div>
 <div style="width:80%;max-width:300px;margin-bottom:24px"><div id="exProg" style="height:8px;background:var(--bg3);border-radius:4px;overflow:hidden"><div id="exBar" style="height:100%;background:var(--green);border-radius:4px;width:0%;transition:width .5s"></div></div></div>
+<div id="exViaBtn" style="display:none;gap:12px;margin-bottom:16px"><button class="sbb" onclick="exViaDone(true)" style="font-size:16px;padding:14px 28px;background:var(--green)">✓ Hecha</button><button class="sbb" onclick="exViaDone(false)" style="font-size:16px;padding:14px 28px;background:var(--red)">✕ No</button></div>
 <div style="display:flex;gap:12px;align-items:center"><button class="sbb" onclick="skipExec()" style="background:var(--bg3);color:var(--text2);font-size:13px;padding:12px 20px">⏮</button><button class="sbb" id="exPlayBtn" onclick="toggleExec()" style="font-size:18px;padding:14px 36px;min-width:140px">▶ EMPEZAR</button><button class="sbb" onclick="skipExec()" style="background:var(--bg3);color:var(--text2);font-size:13px;padding:12px 20px">⏭</button></div>
 <label style="display:flex;align-items:center;gap:6px;margin-top:16px;font-size:12px;color:var(--text3);cursor:pointer"><input type="checkbox" id="exSound" checked style="accent-color:var(--rock)"> Sonido + vibración</label>
 </div></div>
@@ -588,7 +590,7 @@ function renderWoCard(w){
     if(p.modo==='time')pts.push(p.time+'s×'+((p.rep||1))+'×'+(p.ser||1));else if(p.reps)pts.push((p.reps)+'r×'+(p.ser||1));
     if(pts.length)d+=' · '+pts.join(' · ');
     h+=`<div class="wiss">${i+1}. ${d}</div>`;});
-  h+=`</div><div style="display:flex;gap:4px;margin-top:6px;flex-wrap:wrap"><button class="sbb" style="font-size:11px;padding:6px 12px" onclick='execWo(${JSON.stringify(w).replace(/'/g,"&#39;")})'>▶ Ejecutar</button><button class="sbb" style="font-size:11px;padding:6px 12px;background:var(--blue)" onclick='shareWo("${w.id}")'>👥 Compartir</button><button class="sbb" style="font-size:11px;padding:6px 12px;background:var(--bg3);color:var(--text2)" onclick='moveWo("${w.id}")'>📁</button></div></div>`;
+  h+=`</div><div style="display:flex;gap:4px;margin-top:6px;flex-wrap:wrap"><button class="sbb" style="font-size:11px;padding:6px 12px" onclick='execWo(${JSON.stringify(w).replace(/'/g,"&#39;")})'>▶ Ejecutar</button><button class="sbb" style="font-size:11px;padding:6px 12px;background:var(--bg3);color:var(--text2)" onclick='editWo("${w.id}")'>✏️ Editar</button><button class="sbb" style="font-size:11px;padding:6px 12px;background:var(--blue)" onclick='shareWo("${w.id}")'>👥</button><button class="sbb" style="font-size:11px;padding:6px 12px;background:var(--bg3);color:var(--text2)" onclick='moveWo("${w.id}")'>📁</button></div></div>`;
   return h;}
 let newFolderMode=false;
 function newFolder(){newFolderMode=!newFolderMode;drTr();}
@@ -614,6 +616,7 @@ async function doMoveWo(woId){const fId=document.getElementById('mvFolderSel').v
   w.folder=fId;await db.collection('users').doc(U.uid).collection('workouts').doc(woId).update({folder:fId||''});
   const el=document.getElementById('mMoveWo');if(el)el.remove();drTr();}
 async function delWo(id){if(confirm('¿Eliminar?')){await delWorkout(id);drTr();}}
+function editWo(id){const w=W.find(x=>x.id===id);if(!w)return;openWo(w);}
 // Exercise templates
 const TPLS=[{nm:'Suspensiones',ag:'Regleta',mm:20,kg:0,modo:'time',time:7,reps:0,rep:6,ser:4,desc:3,ds:180,ang:''},
 {nm:'Bloqueos',ag:'Regleta',mm:20,kg:0,modo:'time',time:10,reps:0,rep:3,ser:3,desc:30,ds:180,ang:'90°'},
@@ -625,46 +628,104 @@ const TPLS=[{nm:'Suspensiones',ag:'Regleta',mm:20,kg:0,modo:'time',time:7,reps:0
 {nm:'Pinza ext. muñeca',ag:'Pinza',mm:30,kg:5,modo:'time',time:10,reps:0,rep:6,ser:3,desc:5,ds:120,ang:''},
 {nm:'Travesía',ag:'',mm:0,kg:0,modo:'time',time:180,reps:0,rep:0,ser:3,desc:0,ds:180,ang:''},
 {nm:'Personalizado',ag:'',mm:0,kg:0,modo:'reps',time:7,reps:10,rep:0,ser:3,desc:3,ds:120,ang:''}];
-function openWo(){wSt=[];document.getElementById('wNm').value='';document.getElementById('mW1Title').textContent='CREAR ENTRENO';document.getElementById('ejForm').style.display='none';
+let editWoId=null;
+function openWo(woToEdit){
+  editWoId=null;wSt=[];document.getElementById('wNm').value='';document.getElementById('mW1Title').textContent='CREAR ENTRENO';
+  document.getElementById('ejForm').style.display='none';document.getElementById('viaForm').style.display='none';
   let fh='<option value="">— Sin carpeta —</option>';woFolders.forEach(f=>{fh+=`<option value="${f.id}"${curFolder===f.id?' selected':''}>${f.name}</option>`;});
   document.getElementById('wFolder').innerHTML=fh;
+  // Populate grado selector for vía form
+  let gh='';G.forEach(g=>{gh+=`<option>${g}</option>`;});document.getElementById('vfGrado').innerHTML=gh;
+  // Load templates (built-in + custom)
   let h='';TPLS.forEach((t,i)=>{h+=`<button class="ch" onclick="loadTpl(${i})">${t.nm}</button>`;});
-  document.getElementById('ejTpls').innerHTML=h;rWS();document.getElementById('mW1').classList.add('sh');}
-function loadTpl(i){const t=TPLS[i];document.getElementById('ejNm').value=t.nm;document.getElementById('ejAg').value=t.ag;document.getElementById('ejMm').value=t.mm||'';document.getElementById('ejAng').value=t.ang;document.getElementById('ejKg').value=t.kg;document.getElementById('ejModo').value=t.modo;document.getElementById('ejTime').value=t.time;document.getElementById('ejReps').value=t.reps;document.getElementById('ejRep').value=t.rep;document.getElementById('ejSer').value=t.ser;document.getElementById('ejDesc').value=t.desc;document.getElementById('ejDS').value=t.ds;ejModoChg();document.getElementById('ejForm').style.display='block';}
+  const cust=JSON.parse(localStorage.getItem('spCustomTpls')||'[]');
+  cust.forEach((t,i)=>{h+=`<button class="ch" style="border-color:var(--green)" onclick="loadCustomTpl(${i})">${t.nm}</button>`;});
+  document.getElementById('ejTpls').innerHTML=h;
+  // If editing existing workout
+  if(woToEdit){editWoId=woToEdit.id;document.getElementById('mW1Title').textContent='EDITAR ENTRENO';
+    document.getElementById('wNm').value=woToEdit.name||'';
+    if(woToEdit.folder)document.getElementById('wFolder').value=woToEdit.folder;
+    wSt=[...(woToEdit.steps||[])];
+  }
+  rWS();document.getElementById('mW1').classList.add('sh');}
+function showEjForm(){document.getElementById('ejForm').style.display='block';document.getElementById('viaForm').style.display='none';}
+function showViaForm(){document.getElementById('ejForm').style.display='none';document.getElementById('viaForm').style.display='block';}
+function loadTpl(i){const t=TPLS[i];document.getElementById('ejNm').value=t.nm;document.getElementById('ejAg').value=t.ag;document.getElementById('ejMm').value=t.mm||'';document.getElementById('ejAng').value=t.ang;document.getElementById('ejKg').value=t.kg;document.getElementById('ejModo').value=t.modo;document.getElementById('ejTime').value=t.time;document.getElementById('ejReps').value=t.reps;document.getElementById('ejRep').value=t.rep;document.getElementById('ejSer').value=t.ser;document.getElementById('ejDesc').value=t.desc;document.getElementById('ejDS').value=t.ds;ejModoChg();showEjForm();}
+function loadCustomTpl(i){const cust=JSON.parse(localStorage.getItem('spCustomTpls')||'[]');if(cust[i])loadTplData(cust[i]);}
+function loadTplData(t){document.getElementById('ejNm').value=t.nm;document.getElementById('ejAg').value=t.ag||'';document.getElementById('ejMm').value=t.mm||'';document.getElementById('ejAng').value=t.ang||'';document.getElementById('ejKg').value=t.kg||0;document.getElementById('ejModo').value=t.modo||'time';document.getElementById('ejTime').value=t.time||7;document.getElementById('ejReps').value=t.reps||0;document.getElementById('ejRep').value=t.rep||6;document.getElementById('ejSer').value=t.ser||4;document.getElementById('ejDesc').value=t.desc||3;document.getElementById('ejDS').value=t.ds||180;ejModoChg();showEjForm();}
 function ejModoChg(){const m=document.getElementById('ejModo').value;document.getElementById('ejTimeF').style.display=m==='time'?'block':'none';document.getElementById('ejRepsF').style.display=m==='reps'?'block':'none';}
-function rWS(){let h='';if(!wSt.length)h='<div style="color:var(--text3);font-size:11px;padding:6px">Añade ejercicios</div>';wSt.forEach((s,i)=>{h+=`<div class="ws"><div class="wn">${i+1}</div><div class="wd">${s.txt}</div><button class="wr" onclick="wSt.splice(${i},1);rWS()">✕</button></div>`;});document.getElementById('wS').innerHTML=h;}
+function rWS(){let h='';if(!wSt.length)h='<div style="color:var(--text3);font-size:11px;padding:6px">Añade ejercicios o vías</div>';
+  wSt.forEach((s,i)=>{
+    const isVia=s.stepType==='via';
+    const icon=isVia?'🧗':'🏋';
+    h+=`<div class="ws" style="display:flex;align-items:center;gap:4px;${isVia?'border-left:3px solid var(--rock);':''}">`;
+    h+=`<div style="display:flex;flex-direction:column;gap:2px"><button style="background:none;border:none;color:var(--text3);font-size:10px;cursor:pointer;padding:0" onclick="moveStep(${i},-1)">▲</button><button style="background:none;border:none;color:var(--text3);font-size:10px;cursor:pointer;padding:0" onclick="moveStep(${i},1)">▼</button></div>`;
+    h+=`<div class="wn">${icon}${i+1}</div><div class="wd" style="flex:1">${s.txt||s.nm||'?'}</div><button class="wr" onclick="wSt.splice(${i},1);rWS()">✕</button></div>`;});
+  document.getElementById('wS').innerHTML=h;}
+function moveStep(i,dir){const ni=i+dir;if(ni<0||ni>=wSt.length)return;const tmp=wSt[i];wSt[i]=wSt[ni];wSt[ni]=tmp;rWS();}
 function gv(id){const e=document.getElementById(id);return e?parseFloat(e.value)||0:0;}
 function addEj(){const nm=document.getElementById('ejNm').value.trim();if(!nm){alert('Pon nombre');return;}
-  const p={nm,ag:document.getElementById('ejAg').value,mm:gv('ejMm'),ang:document.getElementById('ejAng').value,kg:gv('ejKg'),modo:document.getElementById('ejModo').value,time:gv('ejTime'),reps:gv('ejReps'),rep:gv('ejRep'),ser:gv('ejSer'),desc:gv('ejDesc'),ds:gv('ejDS')};
+  const p={nm,ag:document.getElementById('ejAg').value,mm:gv('ejMm'),ang:document.getElementById('ejAng').value,kg:gv('ejKg'),modo:document.getElementById('ejModo').value,time:gv('ejTime'),reps:gv('ejReps'),rep:gv('ejRep'),ser:gv('ejSer'),desc:gv('ejDesc'),ds:gv('ejDS'),stepType:'exercise'};
   let txt=nm;const parts=[];if(p.ag)parts.push(p.ag);if(p.mm)parts.push(p.mm+'mm');if(p.ang)parts.push(p.ang);if(p.kg>0)parts.push('+'+p.kg+'kg');
   if(p.modo==='time'){if(p.ser>0&&p.rep>0)parts.push(p.ser+'x'+p.rep+' '+p.time+'s/'+p.desc+'s');else if(p.ser>0)parts.push(p.ser+'ser '+p.time+'s');else parts.push(p.time+'s');}else{if(p.ser>0&&p.reps>0)parts.push(p.ser+'x'+p.reps);else if(p.reps>0)parts.push(p.reps+'reps');}
   if(parts.length)txt+=' · '+parts.join(' · ');
   wSt.push({...p,txt});rWS();document.getElementById('ejForm').style.display='none';}
+function addViaStep(){const grado=document.getElementById('vfGrado').value;const tipo=document.getElementById('vfTipo').value;
+  const nombre=document.getElementById('vfNombre').value.trim();
+  const txt=`${grado} ${tipo}${nombre?' · '+nombre:''}`;
+  wSt.push({stepType:'via',grado,tipo,nombre,txt});rWS();document.getElementById('vfNombre').value='';}
+function saveCustomTpl(){const nm=document.getElementById('ejNm').value.trim();if(!nm){alert('Pon nombre');return;}
+  const t={nm,ag:document.getElementById('ejAg').value,mm:gv('ejMm'),ang:document.getElementById('ejAng').value,kg:gv('ejKg'),modo:document.getElementById('ejModo').value,time:gv('ejTime'),reps:gv('ejReps'),rep:gv('ejRep'),ser:gv('ejSer'),desc:gv('ejDesc'),ds:gv('ejDS')};
+  const cust=JSON.parse(localStorage.getItem('spCustomTpls')||'[]');cust.push(t);localStorage.setItem('spCustomTpls',JSON.stringify(cust));
+  alert('Plantilla "'+nm+'" guardada');}
 async function svW(){const n=(document.getElementById('wNm').value||'').trim();if(!n||!wSt.length){alert('Pon nombre y ejercicios');return;}
-  const d={name:n,steps:[...wSt]};const fld=document.getElementById('wFolder').value;if(fld)d.folder=fld;await saveWorkout(d);cm('mW1');tTb='plan';drTr();}
+  const d={name:n,steps:[...wSt]};const fld=document.getElementById('wFolder').value;if(fld)d.folder=fld;
+  if(editWoId){d.id=editWoId;await db.collection('users').doc(U.uid).collection('workouts').doc(editWoId).update(d);
+    const wi=W.findIndex(x=>x.id===editWoId);if(wi>=0)W[wi]={...W[wi],...d};}
+  else{await saveWorkout(d);}
+  cm('mW1');tTb='plan';drTr();}
 
 // EXECUTOR
-let exSteps=[],exIdx=0,exTimerId=null,exSec=0,exTotalSec=0,exPaused=true,exWoName='';
-function execWo(w){exSteps=[];exWoName=w.name||'Entreno';
-  (w.steps||[]).forEach(s=>{const p=s.p||s;const nm=p.nm||s.txt||s.nm||'Ejercicio';const ser=p.ser||1;const rep=p.rep||1;
-    for(let si=0;si<ser;si++){if(p.modo==='time'){for(let ri=0;ri<(rep||1);ri++){exSteps.push({label:nm,type:'work',dur:p.time||7,info:`Serie ${si+1}/${ser} · Rep ${ri+1}/${rep||1}`});if(p.desc>0&&ri<(rep||1)-1)exSteps.push({label:'DESCANSO',type:'rest',dur:p.desc,info:'Entre reps'});}}
-      else{exSteps.push({label:nm,type:'work',dur:0,info:`Serie ${si+1}/${ser} · ${p.reps||0} reps`});}
-      if(p.ds>0&&si<ser-1)exSteps.push({label:'DESCANSO SERIE',type:'rest',dur:p.ds,info:`Descanso entre series`});}});
+let exSteps=[],exIdx=0,exTimerId=null,exSec=0,exTotalSec=0,exPaused=true,exWoName='',exWoSteps=[];
+function execWo(w){exSteps=[];exWoName=w.name||'Entreno';exWoSteps=w.steps||[];
+  (w.steps||[]).forEach((s,si)=>{const p=s.p||s;
+    // Vía step
+    if(s.stepType==='via'){
+      exSteps.push({label:`🧗 ${s.grado} ${s.tipo}`,type:'via',dur:0,info:s.nombre||'Vía proyecto',grado:s.grado,tipo:s.tipo,nombre:s.nombre,stepIdx:si});
+      return;
+    }
+    const nm=p.nm||s.txt||s.nm||'Ejercicio';const ser=p.ser||1;const rep=p.rep||1;
+    // Build detail string
+    const det=[];if(p.ag)det.push(p.ag);if(p.mm)det.push(p.mm+'mm');if(p.ang)det.push(p.ang);if(p.kg>0)det.push('+'+p.kg+'kg');
+    const detStr=det.length?det.join(' · '):'';
+    for(let si2=0;si2<ser;si2++){if(p.modo==='time'){for(let ri=0;ri<(rep||1);ri++){exSteps.push({label:nm,type:'work',dur:p.time||7,info:`Serie ${si2+1}/${ser} · Rep ${ri+1}/${rep||1}`,detail:detStr});if(p.desc>0&&ri<(rep||1)-1)exSteps.push({label:'DESCANSO',type:'rest',dur:p.desc,info:'Entre reps',detail:''});}}
+      else{exSteps.push({label:nm,type:'work',dur:0,info:`Serie ${si2+1}/${ser} · ${p.reps||0} reps`,detail:detStr});}
+      if(p.ds>0&&si2<ser-1)exSteps.push({label:'DESCANSO SERIE',type:'rest',dur:p.ds,info:'Descanso entre series',detail:''});}});
   if(!exSteps.length){alert('Entreno vacío');return;}
   exIdx=0;exPaused=true;showExStep();document.getElementById('exPlayBtn').textContent='▶ EMPEZAR';document.getElementById('mExec').style.display='block';}
-function showExStep(){if(exIdx>=exSteps.length){document.getElementById('exTitle').textContent='¡COMPLETADO!';document.getElementById('exStep').textContent='';document.getElementById('exTimer').textContent='✓';document.getElementById('exTimer').style.color='var(--green)';document.getElementById('exInfo').textContent='Buen entreno 💪';document.getElementById('exBar').style.width='100%';
-  // Save to history
+function showExStep(){if(exIdx>=exSteps.length){document.getElementById('exTitle').textContent='¡COMPLETADO!';document.getElementById('exStep').textContent='';document.getElementById('exTimer').textContent='✓';document.getElementById('exTimer').style.color='var(--green)';document.getElementById('exInfo').textContent='Buen entreno 💪';document.getElementById('exDetail').textContent='';document.getElementById('exBar').style.width='100%';
+  document.getElementById('exViaBtn').style.display='none';
   if(exWoName){saveTrain({date:new Date().toISOString().split('T')[0],tipo:'Entreno',detail:exWoName+' ('+exSteps.length+' pasos)'}).then(()=>{updStats();});}
   return;}
   const s=exSteps[exIdx];document.getElementById('exTitle').textContent=s.label;document.getElementById('exStep').textContent=`PASO ${exIdx+1} / ${exSteps.length}`;document.getElementById('exInfo').textContent=s.info;
-  const isRest=s.type==='rest';document.getElementById('exTimer').style.color=isRest?'var(--blue)':'var(--green)';document.getElementById('exBar').style.background=isRest?'var(--blue)':'var(--green)';
-  if(s.dur>0){exSec=s.dur;exTotalSec=s.dur;updExTimer();}else{exSec=0;document.getElementById('exTimer').textContent='→ TAP';document.getElementById('exBar').style.width=((exIdx+1)/exSteps.length*100)+'%';}}
+  document.getElementById('exDetail').textContent=s.detail||'';
+  const isRest=s.type==='rest';const isVia=s.type==='via';
+  document.getElementById('exTimer').style.color=isRest?'var(--blue)':isVia?'var(--rock)':'var(--green)';
+  document.getElementById('exBar').style.background=isRest?'var(--blue)':isVia?'var(--rock)':'var(--green)';
+  // Show via buttons
+  document.getElementById('exViaBtn').style.display=isVia?'flex':'none';
+  if(s.dur>0){exSec=s.dur;exTotalSec=s.dur;updExTimer();}else{exSec=0;document.getElementById('exTimer').textContent=isVia?'🧗':'→ TAP';document.getElementById('exBar').style.width=((exIdx+1)/exSteps.length*100)+'%';}}
+async function exViaDone(enc){const s=exSteps[exIdx];if(!s||s.type!=='via')return;
+  // Auto-save route
+  const route={date:new Date().toISOString().split('T')[0],grado:s.grado,tipo:s.tipo,lugar:'indoor',nombre:s.nombre||'',intento:1,enc:enc,sitio:'',notas:'Auto: '+exWoName,amigos:'',metros:0};
+  await saveRoute(route);
+  doAlert();nextEx();if(!exPaused&&exIdx<exSteps.length&&exSteps[exIdx].dur>0)runEx();}
 function updExTimer(){const m=Math.floor(exSec/60),ss=exSec%60;document.getElementById('exTimer').textContent=exSec>=60?`${m}:${String(ss).padStart(2,'0')}`:exSec;document.getElementById('exBar').style.width=((exIdx+(1-exSec/exTotalSec))/exSteps.length*100)+'%';}
 function toggleExec(){if(exIdx>=exSteps.length)return;exPaused=!exPaused;document.getElementById('exPlayBtn').textContent=exPaused?'▶ SEGUIR':'⏸ PAUSA';
   if(!exPaused)runEx();}
 function runEx(){if(exPaused||exIdx>=exSteps.length)return;const s=exSteps[exIdx];
   if(s.dur>0&&exSec>0){exTimerId=setTimeout(()=>{exSec--;updExTimer();if(exSec<=0){doAlert();nextEx();}else if(exSec<=3)doBeep();runEx();},1000);}
-  else if(s.dur===0){/* manual - press skip */}}
+  else if(s.dur===0){/* manual - press skip or via buttons */}}
 function nextEx(){exIdx++;showExStep();if(!exPaused&&exIdx<exSteps.length&&exSteps[exIdx].dur>0)runEx();}
 function skipExec(){clearTimeout(exTimerId);doAlert();nextEx();if(!exPaused&&exIdx<exSteps.length&&exSteps[exIdx].dur>0)runEx();}
 function stopExec(){clearTimeout(exTimerId);exPaused=true;document.getElementById('mExec').style.display='none';}
