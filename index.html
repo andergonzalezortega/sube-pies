@@ -110,6 +110,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <!-- AMIGOS --><div id="pf" class="page"><div class="hdr"><h1>AMIGOS</h1></div><div class="card"><div class="ct">AÑADIR AMIGO</div><div style="display:flex;gap:6px"><input id="frCode" placeholder="Código #1234 o email" style="flex:1;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px;color:var(--text);font-size:12px;font-family:Nunito;outline:none"><button class="bp btn" style="width:auto;padding:8px 14px;font-size:12px;border-radius:10px" onclick="addFriend()">+</button></div><div id="frMsg" style="font-size:10px;margin-top:4px"></div></div><div class="ct" style="margin-top:12px">MIS AMIGOS</div><div id="frList"></div><div id="frView" style="display:none;margin-top:12px"></div></div>
 <!-- CHAT MODAL --><div class="mbg" id="mChat"><div class="mdl" style="height:70vh;display:flex;flex-direction:column"><button class="mx" onclick="closeChat()">✕</button><h2 id="chatTitle">CHAT</h2><div class="chat-wrap" id="chatBox" style="flex:1"></div><div class="chat-input"><input id="chatIn" placeholder="Escribe..." onkeydown="if(event.key==='Enter')sendChat()"><button onclick="sendChat()">→</button></div></div></div>
 <!-- SYNC --><div id="ps" class="page"><div class="hdr"><h1>SYNC</h1></div><div class="card" style="text-align:center;padding:20px"><div style="font-size:48px;margin-bottom:8px">⚡</div><div style="font-family:'Bebas Neue';font-size:22px;color:var(--rock);margin-bottom:4px">BOLT</div><div style="font-size:12px;color:var(--text3);margin-bottom:12px" id="bT">Conecta tu Bolt por Bluetooth</div><button class="sbb" id="bB" onclick="doBT()" style="font-size:14px;padding:14px 28px">🔗 Conectar Bolt</button><div style="font-size:10px;color:var(--text3);margin-top:10px">Usa Chrome en Android · Bolt encendido</div></div>
+<div class="card"><div class="ct">LOG BLE</div><div id="bleLog" style="font-family:monospace;font-size:9px;color:var(--green);background:var(--bg);border-radius:8px;padding:6px;max-height:200px;overflow-y:auto;white-space:pre-wrap"></div><button class="btn bg2" style="font-size:10px;padding:4px;margin-top:4px" onclick="document.getElementById('bleLog').textContent=''">Limpiar</button></div>
 <div class="card"><div class="ct">EXPORTAR A EXCEL</div>
 <div style="display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap" id="exPer"></div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px"><div class="fl" style="margin:0"><label>Desde</label><input type="date" id="exFrom"></div><div class="fl" style="margin:0"><label>Hasta</label><input type="date" id="exTo"></div></div>
@@ -826,48 +827,85 @@ function drawLabels(ctx,w,h,data){const pad={t:20,b:25,l:10,r:10},gw=w-pad.l-pad
   data.forEach(([lb,v],i)=>{const x=pad.l+i*(gw/Math.max(data.length-1,1));ctx.fillStyle='#d4a574';ctx.font='bold 14px Bebas Neue';ctx.textAlign='center';ctx.fillText(v,x,h/2);ctx.fillStyle='#5a6a7a';ctx.font='8px Nunito';ctx.fillText(lb,x,h/2+16);});}
 // ── BOLT BLE ──
 let boltDev=null,boltRx=null,boltTx=null,boltBuf='',boltConnected=false;
+function bleLog(msg){const el=document.getElementById('bleLog');if(el){el.textContent+=new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit',second:'2-digit'})+' '+msg+'\n';el.scrollTop=el.scrollHeight;}console.log('BLE:',msg);}
 async function boltConnect(){
   if(!navigator.bluetooth){alert('Usa Chrome en Android');return null;}
   const t=document.getElementById('bT');
   try{
+    bleLog('Buscando dispositivo...');
     t.textContent='Selecciona Bolt-1...';
     const dev=await navigator.bluetooth.requestDevice({filters:[{namePrefix:'Bolt'}],optionalServices:['0000ffe0-0000-1000-8000-00805f9b34fb']});
+    bleLog('Dispositivo: '+dev.name);
     t.textContent='Conectando GATT...';
-    // Retry connect up to 3 times
     let srv=null;
     for(let attempt=0;attempt<3;attempt++){
-      try{srv=await dev.gatt.connect();break;}
-      catch(e){t.textContent=`Reintento ${attempt+2}/3...`;await new Promise(r=>setTimeout(r,1000));}
+      try{bleLog('GATT intento '+(attempt+1)+'...');srv=await dev.gatt.connect();bleLog('GATT conectado');break;}
+      catch(e){bleLog('GATT fallo: '+e.message);t.textContent=`Reintento ${attempt+2}/3...`;await new Promise(r=>setTimeout(r,1000));}
     }
-    if(!srv){t.textContent='No se pudo conectar GATT';return null;}
+    if(!srv){t.textContent='No se pudo conectar GATT';bleLog('GATT falló tras 3 intentos');return null;}
     t.textContent='Buscando servicio...';
     await new Promise(r=>setTimeout(r,500));
+    bleLog('Buscando servicio FFE0...');
     const svc=await srv.getPrimaryService('0000ffe0-0000-1000-8000-00805f9b34fb');
+    bleLog('Servicio encontrado');
     t.textContent='Obteniendo canales...';
+    bleLog('Obteniendo TX (FFE1)...');
     boltTx=await svc.getCharacteristic('0000ffe1-0000-1000-8000-00805f9b34fb');
+    bleLog('TX ok, props: '+JSON.stringify({notify:boltTx.properties.notify,read:boltTx.properties.read}));
+    bleLog('Obteniendo RX (FFE2)...');
     boltRx=await svc.getCharacteristic('0000ffe2-0000-1000-8000-00805f9b34fb');
+    bleLog('RX ok, props: '+JSON.stringify({write:boltRx.properties.write,writeNoResp:boltRx.properties.writeWithoutResponse}));
     boltBuf='';await boltTx.startNotifications();
-    boltTx.addEventListener('characteristicvaluechanged',e=>{boltBuf+=new TextDecoder().decode(e.target.value);});
+    bleLog('Notificaciones TX activadas');
+    boltTx.addEventListener('characteristicvaluechanged',e=>{const chunk=new TextDecoder().decode(e.target.value);boltBuf+=chunk;bleLog('RX← '+chunk.trim());});
     boltDev=dev;boltConnected=true;
-    t.textContent='Enviando nombre...';
+    // Send NAME
     const nm=U?U.displayName||U.email.split('@')[0]:'Escalador';
-    await boltWrite('NAME:'+nm.substring(0,18));
-    dev.addEventListener('gattserverdisconnected',()=>{boltConnected=false;boltDev=null;
+    bleLog('Enviando NAME: '+nm.substring(0,18));
+    t.textContent='Enviando nombre...';
+    let ok=await boltWrite('NAME:'+nm.substring(0,18));
+    bleLog('NAME enviado: '+ok);
+    await new Promise(r=>setTimeout(r,200));
+    dev.addEventListener('gattserverdisconnected',()=>{boltConnected=false;boltDev=null;bleLog('Desconectado');
       const bt=document.getElementById('bT');if(bt)bt.textContent='Bolt desconectado';
       const bb=document.getElementById('bB');if(bb){bb.textContent='🔗 Conectar Bolt';bb.classList.remove('ok');}});
-    t.textContent='✓ Conectado a '+dev.name;
+    // Send DATE
+    const dateStr=new Date().toISOString().split('T')[0];
+    bleLog('Enviando DATE: '+dateStr);
+    ok=await boltWrite('DATE:'+dateStr);
+    bleLog('DATE enviado: '+ok);
+    await new Promise(r=>setTimeout(r,100));
+    // Send CFG
     const st=getSettings();
-    await boltWrite('DATE:'+new Date().toISOString().split('T')[0]);
-    await boltWrite('CFG:'+(st.boltLed?'1':'0')+(st.boltBuz?'1':'0'));
-    await boltWrite('WOCLEAR');
-    const today=new Date();
+    const cfgStr='CFG:'+(st.boltLed?'1':'0')+(st.boltBuz?'1':'0');
+    bleLog('Enviando '+cfgStr);
+    ok=await boltWrite(cfgStr);
+    bleLog('CFG enviado: '+ok);
+    await new Promise(r=>setTimeout(r,100));
+    // Clear old workouts
+    bleLog('Enviando WOCLEAR');
+    ok=await boltWrite('WOCLEAR');
+    bleLog('WOCLEAR enviado: '+ok);
+    await new Promise(r=>setTimeout(r,200));
+    // Send next 5 days of workouts
+    const today=new Date();let woCount=0;
     for(let i=0;i<5;i++){const d=new Date(today);d.setDate(d.getDate()+i);const ds=d.toISOString().split('T')[0];
       const dw=W.filter(w=>w.plannedDate===ds);
-      for(const w of dw){await sendWoToBolt(w);await new Promise(r=>setTimeout(r,150));}}
+      if(dw.length)bleLog('Día '+ds+': '+dw.length+' entrenos');
+      for(const w of dw){bleLog('Enviando WO: '+w.name);await sendWoToBolt(w);woCount++;await new Promise(r=>setTimeout(r,200));}}
+    bleLog('Total: '+woCount+' entrenos enviados');
+    t.textContent='✓ '+dev.name+' ('+woCount+' entrenos)';
     return dev;
-  }catch(e){console.error('BLE:',e);t.textContent='Error: '+e.message;return null;}}
-async function boltWrite(cmd){if(!boltConnected||!boltRx)return false;
-  try{const data=cmd+'\n';const enc=new TextEncoder();for(let i=0;i<data.length;i+=20){await boltRx.writeValue(enc.encode(data.substring(i,i+20)));await new Promise(r=>setTimeout(r,30));}return true;}catch(e){console.error('BLE write:',e);return false;}}
+  }catch(e){console.error('BLE:',e);bleLog('ERROR: '+e.message);t.textContent='Error: '+e.message;return null;}}
+async function boltWrite(cmd){
+  if(!boltConnected||!boltRx){bleLog('SKIP write (no conectado)');return false;}
+  try{const data=cmd+'\n';const enc=new TextEncoder();
+    bleLog('TX→ '+cmd+' ('+data.length+'b)');
+    for(let i=0;i<data.length;i+=20){
+      const chunk=data.substring(i,i+20);
+      await boltRx.writeValue(enc.encode(chunk));
+      await new Promise(r=>setTimeout(r,50));}
+    return true;}catch(e){bleLog('TX ERROR: '+e.message);return false;}}
 async function sendToDevice(btn,w){const ob=btn.textContent;btn.textContent='...';
   if(!boltConnected){const d=await boltConnect();if(!d){btn.textContent=ob;return;}}
   const steps=(w.steps||[]).map(s=>{const o={n:(s.nm||s.txt||'Ej').substring(0,16),m:s.modo==='time'?'t':'r'};
