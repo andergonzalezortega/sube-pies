@@ -217,7 +217,8 @@ function getCragCoords(name){if(!name)return null;const nl=name.toLowerCase();
 const G=["V","6a","6a+","6b","6b+","6c","6c+","7a","7a+","7b","7b+","7c","7c+","8a","8a+","8b","8b+","8c","8c+","9a","9a+","9b","9b+","9c"];
 let cY=2026,cMo=1,cSl=null,gM='cr',gPer='year',sPer='year',rFl='all',tTb='plan',mapMode='roca',eRt=null,wSt=[],leafMap=null,markers=[],chatUnsub=null,chatFrUid=null;
 const PG={home:'ph',routes:'pv',map:'pm',train:'pt',friends:'pf',sync:'ps'},PK=Object.keys(PG);
-function go(id){Object.values(PG).forEach(p=>document.getElementById(p).classList.remove('on'));document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));document.getElementById(PG[id]).classList.add('on');document.querySelectorAll('.nb')[PK.indexOf(id)].classList.add('on');({home:rH,routes:drR,map:drM,train:drTr,friends:drFr,sync:drS})[id]();}
+function go(id){Object.values(PG).forEach(p=>document.getElementById(p).classList.remove('on'));document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));document.getElementById(PG[id]).classList.add('on');document.querySelectorAll('.nb')[PK.indexOf(id)].classList.add('on');const fns={home:rH,routes:drR,map:drM,train:drTr,friends:drFr,sync:drS};if(fns[id])fns[id]();}
+function drS(){const el=document.getElementById('sN');if(el)el.textContent=D.length;}
 
 // HOME
 function rH(){updStats();rCal();updGrToggles();loadInvites();setupSwipe();}
