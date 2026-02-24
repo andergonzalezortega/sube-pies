@@ -75,6 +75,11 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 @media (orientation: portrait){#mExec .landscape-hint{display:block}#mExec #exTimer{font-size:80px;}}
 @media (orientation: landscape){#mExec #exInner{flex-direction:row;flex-wrap:wrap;justify-content:center;gap:12px;padding:10px 30px}#mExec #exTimer{font-size:90px;margin:0 20px}#mExec #exTitle{font-size:26px}}
 .load-full{display:flex;align-items:center;justify-content:center;min-height:100vh;}
+@keyframes fogD1{0%{transform:translateX(0)}100%{transform:translateX(33.3%)}}
+@keyframes fogD2{0%{transform:translateX(0)}100%{transform:translateX(-33.3%)}}
+@keyframes fogP{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:.7;transform:scale(1.1)}}
+@keyframes spL{0%{opacity:0;transform:scale(.7) translateY(20px)}100%{opacity:1;transform:scale(1) translateY(0)}}
+@keyframes spT{0%{opacity:0;transform:translateY(15px)}100%{opacity:1;transform:translateY(0)}}
 .leaflet-popup-content-wrapper{background:var(--bg2)!important;color:var(--text)!important;border-radius:12px!important;border:1px solid var(--rock)!important;}.leaflet-popup-tip{background:var(--bg2)!important;}.leaflet-popup-content{font-family:'Nunito'!important;font-size:12px!important;}
 .inv-card{background:linear-gradient(135deg,rgba(74,158,255,.15),rgba(74,158,255,.05));border:1px solid var(--blue);border-radius:12px;padding:10px;margin-bottom:6px;}.inv-who{font-size:12px;font-weight:600;color:var(--blue);}.inv-det{font-size:11px;color:var(--text2);margin:3px 0;}.inv-btns{display:flex;gap:6px;margin-top:6px;}.inv-btns button{flex:1;padding:6px;border-radius:8px;font-size:11px;font-family:'Nunito';font-weight:700;cursor:pointer;border:none;}.inv-yes{background:var(--green);color:#000;}.inv-no{background:var(--bg3);color:var(--text2);border:1px solid rgba(255,255,255,.08)!important;}
 .meso-fase{background:var(--bg3);border-radius:10px;padding:8px;margin-bottom:6px;display:flex;align-items:center;gap:6px;}.meso-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0;}.meso-info{flex:1;font-size:11px;}.meso-rm{background:none;border:none;color:var(--red);font-size:13px;cursor:pointer;}
@@ -97,11 +102,14 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 </div></div>
 <div id="splashScreen" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:999;overflow:hidden;transition:opacity .5s ease">
 <img src="inicio.jpg" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover">
-<div style="position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(to bottom,rgba(26,29,35,.2) 0%,rgba(26,29,35,.1) 40%,rgba(26,29,35,.8) 80%,rgba(26,29,35,1) 100%)"></div>
-<div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center">
-<img src="logo.png" style="width:150px;height:150px;border-radius:50%;box-shadow:0 4px 40px rgba(0,0,0,.6)">
-<div style="font-family:'Bebas Neue';font-size:36px;color:#fff;margin-top:16px;text-shadow:0 2px 20px rgba(0,0,0,.6)">SUBE PIES</div>
-<div style="color:rgba(255,255,255,.5);font-size:12px;margin-top:8px" id="loginSubTxt">Diario de escalada</div>
+<div style="position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(to bottom,rgba(26,29,35,.15) 0%,rgba(26,29,35,.05) 30%,rgba(26,29,35,.6) 70%,rgba(26,29,35,1) 100%)"></div>
+<div style="position:absolute;top:0;left:-100%;width:300%;height:100%;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.08) 20%,rgba(255,255,255,.12) 30%,rgba(255,255,255,.06) 50%,transparent 70%,rgba(255,255,255,.1) 80%,transparent 100%);animation:fogD1 8s linear infinite;pointer-events:none"></div>
+<div style="position:absolute;top:10%;left:-100%;width:300%;height:80%;background:linear-gradient(90deg,transparent 10%,rgba(255,255,255,.06) 30%,transparent 50%,rgba(255,255,255,.09) 70%,rgba(255,255,255,.04) 85%,transparent 100%);animation:fogD2 12s linear infinite;pointer-events:none"></div>
+<div style="position:absolute;top:20%;left:-50%;width:200%;height:60%;background:radial-gradient(ellipse at center,rgba(255,255,255,.1) 0%,transparent 70%);animation:fogP 6s ease-in-out infinite;pointer-events:none"></div>
+<div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;height:100%;text-align:center;padding-top:18vh">
+<img src="logo.png" style="width:140px;height:140px;border-radius:50%;box-shadow:0 4px 50px rgba(0,0,0,.5),0 0 80px rgba(212,165,116,.15);animation:spL 1.5s ease-out">
+<div style="font-family:'Bebas Neue';font-size:38px;color:#fff;margin-top:14px;text-shadow:0 2px 30px rgba(0,0,0,.7),0 0 60px rgba(212,165,116,.2);animation:spT 1.8s ease-out">SUBE PIES</div>
+<div style="color:rgba(255,255,255,.5);font-size:12px;margin-top:6px;animation:spT 2.2s ease-out" id="splashSubTxt">Diario de escalada</div>
 </div></div>
 <div id="appWrap" style="display:none">
 <!-- HOME --><div id="ph" class="page on" style="overflow-y:auto;height:calc(100vh - 75px);display:none">
@@ -192,13 +200,12 @@ auth.onAuthStateChanged(async u=>{document.getElementById('loadPage').style.disp
     await db.collection('users').doc(u.uid).set({name:u.displayName,email:u.email,photo:u.photoURL,code:code},{merge:true});
     document.getElementById('uTag').textContent='#'+code;
     await loadData();
+    applyLang();
     document.getElementById('langSel').value=LANG;
     setTimeout(()=>{document.getElementById('splashScreen').style.opacity='0';
       setTimeout(()=>{document.getElementById('splashScreen').style.display='none';document.getElementById('appWrap').style.display='block';rH();},500);
     },2000);}
-  else{U=null;document.getElementById('loginPage').style.display='';document.getElementById('appWrap').style.display='none';document.getElementById('splashScreen').style.display='none';}});
-// Apply language to login page
-(function(){const lb=document.getElementById('loginBtnTxt');if(lb)lb.textContent=t('loginBtn');const ls=document.getElementById('loginSubTxt');if(ls)ls.textContent=t('loginSub');const ss=document.getElementById('splashSubTxt');if(ss)ss.textContent=t('splashSub');})();
+  else{U=null;document.getElementById('loginPage').style.display='';document.getElementById('appWrap').style.display='none';document.getElementById('splashScreen').style.display='none';applyLang();}});
 function loginGoogle(){auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());}
 function logout(){auth.signOut();}
 
@@ -628,6 +635,10 @@ function applyLang(){
   if(cur){const fns={home:rH,routes:drR,map:drM,train:drTr,friends:drFr,sync:drS};if(fns[cur])fns[cur]();}
   // Lang selector
   const ls=document.getElementById('langSel');if(ls)ls.value=LANG;
+  // Login & splash
+  const lb=document.getElementById('loginBtnTxt');if(lb)lb.textContent=t('loginBtn');
+  const lsub=document.getElementById('loginSubTxt');if(lsub)lsub.textContent=t('loginSub');
+  const ss=document.getElementById('splashSubTxt');if(ss)ss.textContent=t('splashSub');
 }
 
 function go(id){Object.values(PG).forEach(p=>document.getElementById(p).classList.remove('on'));document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));document.getElementById(PG[id]).classList.add('on');document.querySelectorAll('.nb')[PK.indexOf(id)].classList.add('on');const fns={home:rH,routes:drR,map:drM,train:drTr,friends:drFr,sync:drS};if(fns[id])fns[id]();}
@@ -639,7 +650,7 @@ function drS(){const el=document.getElementById('sN');if(el)el.textContent=R.len
   const ls=document.getElementById('langSel');if(ls)ls.value=LANG;}
 
 // HOME
-function rH(){updStats();rCal();updGrToggles();loadInvites();setupSwipe();applyLang();}
+function rH(){updStats();rCal();updGrToggles();loadInvites();setupSwipe();}
 function drCalDetail(){
   const el=document.getElementById('calDetail');
   const sel=cSl||new Date().toISOString().split('T')[0];
