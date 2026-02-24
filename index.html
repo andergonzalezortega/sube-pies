@@ -7,7 +7,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="logo.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#1b2838">
 <title>Sube Pies</title>
@@ -86,7 +88,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <div id="loginPage" style="display:none"><img src="logo.png" style="width:120px;height:120px;margin-bottom:10px;border-radius:12px"><div class="login-logo">SUBE PIES</div><div style="color:var(--text2);font-size:14px;margin-bottom:30px">Diario de escalada</div><button class="goog-btn" onclick="loginGoogle()"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg">Entrar con Google</button></div>
 <div id="appWrap" style="display:none">
 <!-- HOME --><div id="ph" class="page on" style="overflow-y:auto;height:calc(100vh - 75px);display:none">
-<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><div style="display:flex;align-items:center;gap:10px"><img src="logo.png" style="width:44px;height:44px;border-radius:6px;object-fit:cover"><div><h1 style="font-size:22px;color:var(--rock);margin:0">SUBE PIES</h1><div class="usr-bar"><img class="usr-pic" id="uPic"><span class="usr-name" id="uName"></span><span class="usr-tag" id="uTag"></span><button class="usr-out" onclick="logout()">Salir</button></div></div></div><button class="sbb" style="font-size:10px;padding:5px 10px" onclick="go('sync')"><svg width="20" height="20" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="20" cy="18" rx="14" ry="16" fill="none" stroke="#d4a574" stroke-width="2.5"/><circle cx="20" cy="8" r="4" fill="none" stroke="#d4a574" stroke-width="2"/><path d="M14 34 L20 28 L26 34" stroke="#d4a574" stroke-width="2.5" fill="none" stroke-linecap="round"/><line x1="20" y1="28" x2="20" y2="38" stroke="#d4a574" stroke-width="2" stroke-linecap="round"/></svg></button></div>
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><div style="display:flex;align-items:center;gap:10px"><img src="logo.png" style="width:44px;height:44px;border-radius:6px;object-fit:cover"><div><h1 style="font-size:22px;color:var(--rock);margin:0">SUBE PIES</h1><div class="usr-bar"><img class="usr-pic" id="uPic"><span class="usr-name" id="uName"></span><span class="usr-tag" id="uTag"></span><button class="usr-out" onclick="logout()">Salir</button></div></div></div></div>
 <div style="width:100%;height:80px;border-radius:12px;overflow:hidden;margin-bottom:8px;position:relative"><img src="inicio.jpg" style="width:100%;height:100%;object-fit:cover;opacity:.7"><div style="position:absolute;bottom:0;left:0;right:0;height:100%;background:linear-gradient(to top,var(--bg) 0%,transparent 60%)"></div></div>
 <div id="invBanner"></div>
 <div class="gsw" id="sPer" style="margin-bottom:4px"></div>
@@ -119,23 +121,15 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 </div><div id="tMeso" style="display:none"><button class="btn bp" onclick="openMeso()" style="margin-bottom:12px">+ Crear mesociclo</button><div id="mesoList"></div></div></div>
 <!-- AMIGOS --><div id="pf" class="page"><div class="hdr"><h1>AMIGOS</h1></div><div class="card"><div class="ct">AÑADIR AMIGO</div><div style="display:flex;gap:6px"><input id="frCode" placeholder="Código #1234 o email" style="flex:1;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px;color:var(--text);font-size:12px;font-family:Nunito;outline:none"><button class="bp btn" style="width:auto;padding:8px 14px;font-size:12px;border-radius:10px" onclick="addFriend()">+</button></div><div id="frMsg" style="font-size:10px;margin-top:4px"></div></div><div class="ct" style="margin-top:12px">MIS AMIGOS</div><div id="frList"></div><div id="frView" style="display:none;margin-top:12px"></div></div>
 <!-- CHAT MODAL --><div class="mbg" id="mChat"><div class="mdl" style="height:70vh;display:flex;flex-direction:column"><button class="mx" onclick="closeChat()">✕</button><h2 id="chatTitle">CHAT</h2><div class="chat-wrap" id="chatBox" style="flex:1"></div><div class="chat-input"><input id="chatIn" placeholder="Escribe..." onkeydown="if(event.key==='Enter')sendChat()"><button onclick="sendChat()">→</button></div></div></div>
-<!-- SYNC --><div id="ps" class="page"><div class="hdr"><h1>SYNC</h1></div><div class="card" style="text-align:center;padding:20px"><div style="margin-bottom:8px"><svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" style="animation:boltSpin 8s linear infinite">
-<ellipse cx="30" cy="26" rx="20" ry="23" fill="none" stroke="#d4a574" stroke-width="2" opacity=".9"/>
-<ellipse cx="30" cy="26" rx="20" ry="23" fill="none" stroke="#e8d5c0" stroke-width="0.5" opacity=".3"/>
-<circle cx="30" cy="14" r="6" fill="none" stroke="#d4a574" stroke-width="2"/>
-<circle cx="30" cy="14" r="6" fill="none" stroke="#e8d5c0" stroke-width="0.5" opacity=".3"/>
-<path d="M20 50 L30 42 L40 50" stroke="#d4a574" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-<line x1="30" y1="42" x2="30" y2="58" stroke="#d4a574" stroke-width="1.5" stroke-linecap="round"/>
-<text x="30" y="30" text-anchor="middle" font-family="Bebas Neue" font-size="8" fill="#d4a574" opacity=".6">BOLT</text>
-</svg></div><div style="font-family:'Bebas Neue';font-size:22px;color:var(--rock);margin-bottom:4px">BOLT</div><div style="font-size:12px;color:var(--text3);margin-bottom:12px" id="bT">Conecta tu Bolt por Bluetooth</div><button class="sbb" id="bB" onclick="doBT()" style="font-size:14px;padding:14px 28px">🔗 Conectar Bolt</button><div style="font-size:10px;color:var(--text3);margin-top:10px">Usa Chrome en Android · Bolt encendido</div></div>
-<div class="card"><div class="ct">LOG BLE</div><div id="bleLog" style="font-family:monospace;font-size:9px;color:var(--green);background:var(--bg);border-radius:8px;padding:6px;max-height:200px;overflow-y:auto;white-space:pre-wrap"></div><button class="btn bg2" style="font-size:10px;padding:4px;margin-top:4px" onclick="document.getElementById('bleLog').textContent=''">Limpiar</button></div>
+<!-- AJUSTES --><div id="ps" class="page"><div class="hdr"><h1>AJUSTES</h1></div>
 <div class="card"><div class="ct">EXPORTAR A EXCEL</div>
 <div style="display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap" id="exPer"></div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px"><div class="fl" style="margin:0"><label>Desde</label><input type="date" id="exFrom"></div><div class="fl" style="margin:0"><label>Hasta</label><input type="date" id="exTo"></div></div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><button class="btn bp" style="font-size:12px;padding:10px" onclick="exportXL('vias')">📥 Vías</button><button class="btn bp" style="font-size:12px;padding:10px;background:var(--yellow);color:#000" onclick="exportXL('entrenos')">📥 Entrenos</button></div>
 <div id="exMsg" style="font-size:10px;margin-top:6px;text-align:center"></div>
 </div>
-<div class="card"><div class="ct">DATOS EN LA NUBE</div><p style="font-size:12px;color:var(--text2)"><span style="font-family:'Bebas Neue';font-size:22px;color:var(--green)" id="sN">0</span> registros guardados</p><p style="font-size:10px;color:var(--text3);margin-top:4px">Tus datos están seguros en Firebase.</p></div></div>
+<div class="card"><div class="ct">DATOS EN LA NUBE</div><p style="font-size:12px;color:var(--text2)"><span style="font-family:'Bebas Neue';font-size:22px;color:var(--green)" id="sN">0</span> registros guardados</p><p style="font-size:10px;color:var(--text3);margin-top:4px">Tus datos están seguros en Firebase.</p></div>
+<div class="card"><div class="ct">ACERCA DE</div><p style="font-size:11px;color:var(--text2)">Sube Pies v1.0 · © 2026 · Todos los derechos reservados</p></div></div>
 </div>
 <!-- MODAL ROUTE --><div class="mbg" id="mR1"><div class="mdl"><button class="mx" onclick="cm('mR1')">✕</button><h2 id="mRT">VÍA</h2><div class="fl"><label>Nombre</label><input id="iN" placeholder="Diedro mágico"></div><div class="fl"><label>Lugar</label><input id="iL" placeholder="Atauri, Galdames..." list="dlZ"><datalist id="dlZ"></datalist></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="fl"><label>Tipo lugar</label><select id="iLT"><option value="roca">Roca</option><option value="indoor">Indoor</option></select></div><div class="fl"><label>Tipo vía</label><select id="iTP"><option>Cuerda</option><option>Bloque</option><option>AutoAseg</option><option>Largos</option></select></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px"><div class="fl"><label>Grado</label><select id="iG"></select></div><div class="fl"><label>Intento</label><select id="iI" onchange="chkFlashAvista()"></select></div><div class="fl"><label>Metros</label><input type="number" id="iMetros" placeholder="—" min="0" max="500" style="width:100%"></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px"><div class="fl"><label>Encadenado</label><select id="iE" onchange="chkFlashAvista()"><option value="1">Sí</option><option value="0">No</option></select></div><div class="fl" id="fFlash"><label>Flash</label><select id="iFlash"><option value="0">No</option><option value="1">Sí</option></select></div><div class="fl" id="fAvista"><label>A vista</label><select id="iAvista"><option value="0">No</option><option value="1">Sí</option></select></div></div><div class="fl"><label>Sensaciones</label><textarea id="iNo" placeholder="Beta, condiciones..."></textarea></div><div class="fl"><label>Compañeros</label><div id="rFriendChips" style="display:flex;gap:3px;flex-wrap:wrap;margin-bottom:4px"></div><input id="iA" placeholder="Escribe o elige amigos..." oninput="filterRouteFriends()"><div id="rFriendSug" style="display:none"></div></div><div class="fl"><label>Fecha</label><input type="date" id="iFe"></div><button class="btn bp" onclick="svR()">Guardar</button><button class="btn bdel" id="btnDelR" style="display:none" onclick="delR()">🗑️ Eliminar vía</button><button class="btn bg2" onclick="cm('mR1')">Cancelar</button></div></div>
 <!-- MODAL WORKOUT --><div class="mbg" id="mW1"><div class="mdl"><button class="mx" onclick="cm('mW1')">✕</button><h2 id="mW1Title">CREAR ENTRENO</h2><div class="fl"><label>Nombre</label><input id="wNm" placeholder="Fuerza dedos"></div><div class="fl"><label>Carpeta</label><select id="wFolder"><option value="">— Sin carpeta —</option></select></div><div class="ct">PASOS</div><div id="wS"></div><div style="display:flex;gap:4px;margin-top:8px;margin-bottom:8px"><div class="ct" style="flex:1;margin:0">AÑADIR</div><button class="ch on" style="font-size:10px" onclick="showEjForm()">🏋 Ejercicio</button><button class="ch" style="font-size:10px" onclick="showViaForm()">🧗 Vía</button></div><div style="display:flex;gap:3px;margin-bottom:8px;flex-wrap:wrap" id="ejTpls"></div><div id="ejForm" style="display:none;background:var(--bg3);border-radius:10px;padding:10px;margin-bottom:8px"><div class="fl"><label>Nombre</label><input id="ejNm" placeholder="Suspensiones, Dominadas..."></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><div class="fl"><label>Agarre</label><select id="ejAg"><option value="">— Ninguno —</option><option>Regleta</option><option>Cazo</option><option>Pinza</option><option>Romo</option><option>Bidedo</option><option>Unidedo</option><option>Barra</option></select></div><div class="fl"><label>Tamaño (mm)</label><input id="ejMm" type="number" placeholder="20"></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><div class="fl"><label>Ángulo</label><select id="ejAng"><option value="">—</option><option>0°</option><option>15°</option><option>30°</option><option>45°</option><option>90°</option><option>120°</option></select></div><div class="fl"><label>Lastre (kg)</label><input id="ejKg" type="number" value="0"></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px"><div class="fl"><label>Modo</label><select id="ejModo" onchange="ejModoChg()"><option value="time">Tiempo</option><option value="reps">Reps</option></select></div><div class="fl" id="ejTimeF"><label>Tiempo (s)</label><input id="ejTime" type="number" value="7"></div><div class="fl" id="ejRepsF" style="display:none"><label>Reps</label><input id="ejReps" type="number" value="10"></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px"><div class="fl"><label>Series</label><input id="ejSer" type="number" value="4"></div><div class="fl"><label>Reps/serie</label><input id="ejRep" type="number" value="6"></div><div class="fl"><label>Descanso (s)</label><input id="ejDesc" type="number" value="3"></div></div><div class="fl"><label>Desc. entre series (s)</label><input id="ejDS" type="number" value="180"></div><div style="display:flex;gap:4px"><button class="btn bp" style="flex:1;font-size:12px;padding:8px" onclick="addEj()">+ Añadir</button><button class="btn bg2" style="width:auto;padding:8px 12px;font-size:10px;margin:0" onclick="saveCustomTpl()">💾 Guardar plantilla</button></div></div><div id="viaForm" style="display:none;background:var(--bg3);border-radius:10px;padding:10px;margin-bottom:8px"><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><div class="fl"><label>Grado</label><select id="vfGrado"></select></div><div class="fl"><label>Tipo</label><select id="vfTipo"><option>Cuerda</option><option>Bloque</option><option>AutoAseg</option></select></div></div><div class="fl"><label>Nombre (opcional)</label><input id="vfNombre" placeholder="La rambla..."></div><button class="btn bp" style="font-size:12px;padding:8px" onclick="addViaStep()">+ Añadir vía</button></div><hr style="border:none;border-top:1px solid var(--bg4);margin:10px 0"><button class="btn bp" onclick="svW()">Guardar entreno</button><button class="btn bg2" onclick="cm('mW1')">Cancelar</button></div></div>
@@ -153,11 +147,6 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <div style="display:flex;gap:12px;align-items:center"><button class="sbb" onclick="skipExec()" style="background:var(--bg3);color:var(--text2);font-size:13px;padding:12px 20px">⏮</button><button class="sbb" id="exPlayBtn" onclick="toggleExec()" style="font-size:18px;padding:14px 36px;min-width:140px">▶ EMPEZAR</button><button class="sbb" onclick="skipExec()" style="background:var(--bg3);color:var(--text2);font-size:13px;padding:12px 20px">⏭</button></div>
 <label style="display:flex;align-items:center;gap:6px;margin-top:16px;font-size:12px;color:var(--text3);cursor:pointer"><input type="checkbox" id="exSound" checked style="accent-color:var(--rock)"> Sonido + vibración</label>
 </div></div>
-<!-- SETTINGS --><div class="mbg" id="mSettings"><div class="mdl"><button class="mx" onclick="cm('mSettings')">✕</button><h2>AJUSTES BOLT</h2>
-<div class="fl"><label style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="setBoltLed" checked style="accent-color:var(--green)" onchange="saveSettings()"> Luces semáforo</label></div>
-<div class="fl"><label style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="setBoltBuz" checked style="accent-color:var(--green)" onchange="saveSettings()"> Sonido buzzer</label></div>
-<div style="font-size:10px;color:var(--text3);margin-top:8px">Se envía al conectar Bolt</div>
-<button class="btn bg2" style="margin-top:8px" onclick="cm('mSettings')">Cerrar</button></div></div>
 <!-- MODAL PLAN --><div class="mbg" id="mPl"><div class="mdl"><button class="mx" onclick="cm('mPl')">✕</button><h2>PLANIFICAR DÍA</h2><div class="fl"><label>Fecha</label><input type="date" id="plDt"></div><div class="ct" style="margin-top:6px">¿QUÉ PLAN?</div><div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px"><button class="ch" id="plBtnEsc" onclick="setPlTipo('escalar')">🧗 Escalar</button><button class="ch" id="plBtnEnt" onclick="setPlTipo('entreno')">🏋 Entreno</button><button class="ch" id="plBtnNot" onclick="setPlTipo('nota')">📝 Nota</button></div><div id="plEscalar" style="display:none"><div class="fl"><label>Tipo</label><select id="plTp"><option value="roca">🏔️ Roca</option><option value="indoor">🏢 Indoor</option></select></div><div class="fl"><label>Lugar</label><input id="plLg" placeholder="Atauri, Sharma..." list="dlZ"></div></div><div id="plEntreno" style="display:none"><div class="fl"><label>Carpeta</label><select id="plFolderSel" onchange="updPlWoList()"><option value="">— Todas —</option></select></div><div class="fl"><label>Entreno</label><select id="plWoSel" onchange="updPlWoPreview()"><option value="">— Sin entreno —</option></select></div><div id="plWoPreview" style="display:none;background:var(--bg3);border-radius:8px;padding:6px 8px;margin-bottom:8px;font-size:10px;color:var(--text2)"></div><div class="fl"><label><input type="checkbox" id="plShareWo" checked style="accent-color:var(--rock)"> Compartir ejercicios con invitados</label></div></div><div class="fl"><label>Notas</label><input id="plNo" placeholder="Plan del día..."></div><div class="ct" style="margin-top:6px">INVITAR AMIGOS</div><div class="fl"><input id="plFrSearch" placeholder="Buscar amigo..." oninput="filterPlFriends()" style="background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:7px 10px;color:var(--text);font-size:12px;font-family:Nunito;outline:none;width:100%;margin-bottom:4px"></div><div id="plFriends"></div><button class="btn bp" onclick="svPlan()">Guardar plan</button><button class="btn bg2" onclick="cm('mPl')">Cancelar</button></div></div>
 <!-- MODAL NEW CRAG --><div class="mbg" id="mNC"><div class="mdl"><button class="mx" onclick="cm('mNC')">✕</button><h2>NUEVA ZONA</h2><p style="font-size:12px;color:var(--text2);margin-bottom:12px">En Google Maps → busca el sitio → pulsa largo → copia las coordenadas que aparecen abajo (ej: 43.270854, -3.102539).</p><div class="fl"><label>Nombre de la zona</label><input id="ncNm" placeholder="Galdames"></div><div class="fl"><label>Coordenadas</label><input id="ncCoords" placeholder="43.270854, -3.102539"><small>Pega las coordenadas o la URL larga de Google Maps (la que tiene @43.27,-3.10)</small></div><div id="ncMsg" style="font-size:11px;margin-bottom:8px"></div><button class="btn bp" onclick="svNewCrag()">Guardar zona</button><button class="btn bg2" onclick="cm('mNC')">Cancelar</button></div></div>
 <!-- MESOCICLO --><div class="mbg" id="mMeso"><div class="mdl"><button class="mx" onclick="cm('mMeso')">✕</button><h2>CREAR MESOCICLO</h2><div class="fl"><label>Nombre</label><input id="msNm" placeholder="Pre-temporada, Fuerza..."></div><div class="fl"><label>Fecha inicio</label><input type="date" id="msStart"></div><div class="ct">FASES</div><div id="msFases"></div><button class="btn bg2" style="font-size:11px;margin-bottom:10px" onclick="addFase()">+ Añadir fase</button><div id="msPrev" style="display:none;margin-bottom:10px"></div><hr style="border:none;border-top:1px solid var(--bg4);margin:10px 0"><button class="btn bp" onclick="svMeso()">Guardar mesociclo</button><button class="btn bg2" onclick="cm('mMeso')">Cancelar</button></div></div>
@@ -167,7 +156,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <button class="nb" onclick="go('map')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Mapa</button>
 <button class="nb" onclick="go('train')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>Entrenos</button>
 <button class="nb" onclick="go('friends')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>Amigos</button>
-<button class="nb" onclick="go('sync')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="12" cy="10" rx="7" ry="8"/><circle cx="12" cy="6" r="2.5"/><path d="M8 20l4-4 4 4" stroke-linecap="round" stroke-linejoin="round"/><line x1="12" y1="16" x2="12" y2="23" stroke-linecap="round"/></svg>Sync</button>
+<button class="nb" onclick="go('sync')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Ajustes</button>
 </nav>
 <script>
 firebase.initializeApp({apiKey:"AIzaSyBaBnTmI8_YuYIRGx2mdDVJSe_k4SF_eho",authDomain:"sube-pies.firebaseapp.com",projectId:"sube-pies",storageBucket:"sube-pies.firebasestorage.app",messagingSenderId:"597414564277",appId:"1:597414564277:web:1f79b81f567b67166c89fc"});
@@ -310,24 +299,9 @@ function setupSwipe(){if(_swipeSetup)return;_swipeSetup=true;let sx=0;
   document.addEventListener('touchend',e=>{if(!sx||!e.target.closest('#homeNextWo'))return;
     const dx=e.changedTouches[0].clientX-sx;sx=0;
     if(Math.abs(dx)>40){if(dx<0)nwoIdx++;else nwoIdx--;drNextWo();}});}
-async function sendWoToBolt(w){
-  const dt=w.plannedDate||new Date().toISOString().split('T')[0];
-  const steps=(w.steps||[]).map(s=>{const o={n:(s.nm||s.txt||'Ej').substring(0,16),m:s.modo==='time'?'t':'r'};
-    if(o.m==='t'){o.w=s.time||7;o.d=s.desc||3;}else{o.r=s.reps||s.rep||1;}
-    o.s=s.ser||1;o.ds=s.ds||180;
-    if(s.ag)o.a=s.ag.substring(0,8);if(s.mm)o.mm=s.mm;if(s.kg)o.kg=s.kg;if(s.ang)o.an=s.ang.substring(0,4);return o;});
-  const wo=JSON.stringify({n:(w.name||'Entreno').substring(0,20),dt,st:steps});
-  await boltWrite('WO:'+wo);}
-// Settings
-function openSettings(){
-  const s=JSON.parse(localStorage.getItem('spSettings')||'{}');
-  document.getElementById('setBoltLed').checked=s.boltLed!==false;
-  document.getElementById('setBoltBuz').checked=s.boltBuz!==false;
-  document.getElementById('mSettings').classList.add('sh');}
-function saveSettings(){const s={boltLed:document.getElementById('setBoltLed').checked,boltBuz:document.getElementById('setBoltBuz').checked};
-  localStorage.setItem('spSettings',JSON.stringify(s));
-  if(boltConnected){boltWrite('CFG:'+(s.boltLed?'1':'0')+(s.boltBuz?'1':'0'));}}
-function getSettings(){return JSON.parse(localStorage.getItem('spSettings')||'{"boltLed":true,"boltBuz":true}');}
+// Bolt (disabled for now)
+// Settings (Bolt disabled)
+function getSettings(){return JSON.parse(localStorage.getItem('spSettings')||'{}');}
 async function loadInvites(){if(!U)return;
   const q=await db.collection('users').doc(U.uid).collection('invites').where('status','==','pending').get();
   let h='';q.forEach(d=>{const inv=d.data();const tipos={roca:'🏔️ Roca',indoor:'🏢 Indoor',entreno:'🏋️ Entreno',nota:'📝 Nota',cancelacion:'❌ Cancelación'};
@@ -921,245 +895,7 @@ function drawBars(ctx,w,h,data){const vals=data.map(d=>d[1]);const mx=Math.max(.
     ctx.fillStyle='#8a9bb0';ctx.font='7px Nunito';ctx.save();ctx.translate(x+bw/2,h-2);if(lb.length>5)ctx.rotate(-0.5);ctx.fillText(lb.length>10?lb.slice(0,10)+'…':lb,0,0);ctx.restore();});}
 function drawLabels(ctx,w,h,data){const pad={t:20,b:25,l:10,r:10},gw=w-pad.l-pad.r;
   data.forEach(([lb,v],i)=>{const x=pad.l+i*(gw/Math.max(data.length-1,1));ctx.fillStyle='#d4a574';ctx.font='bold 14px Bebas Neue';ctx.textAlign='center';ctx.fillText(v,x,h/2);ctx.fillStyle='#5a6a7a';ctx.font='8px Nunito';ctx.fillText(lb,x,h/2+16);});}
-// ── BOLT BLE ──
-let boltDev=null,boltRx=null,boltTx=null,boltBuf='',boltConnected=false;
-function bleLog(msg){const el=document.getElementById('bleLog');if(el){el.textContent+=new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit',second:'2-digit'})+' '+msg+'\n';el.scrollTop=el.scrollHeight;}console.log('BLE:',msg);}
-async function boltConnect(){
-  if(!navigator.bluetooth){alert('Usa Chrome en Android');return null;}
-  const t=document.getElementById('bT');
-  try{
-    bleLog('Buscando dispositivo...');
-    t.textContent='Selecciona Bolt-1...';
-    const dev=await navigator.bluetooth.requestDevice({filters:[{namePrefix:'Bolt'}],optionalServices:['0000ffe0-0000-1000-8000-00805f9b34fb']});
-    bleLog('Dispositivo: '+dev.name);
-    t.textContent='Conectando GATT...';
-    let srv=null;
-    for(let attempt=0;attempt<3;attempt++){
-      try{bleLog('GATT intento '+(attempt+1)+'...');srv=await dev.gatt.connect();bleLog('GATT conectado');break;}
-      catch(e){bleLog('GATT fallo: '+e.message);t.textContent=`Reintento ${attempt+2}/3...`;await new Promise(r=>setTimeout(r,1000));}
-    }
-    if(!srv){t.textContent='No se pudo conectar GATT';bleLog('GATT falló tras 3 intentos');return null;}
-    t.textContent='Buscando servicio...';
-    await new Promise(r=>setTimeout(r,500));
-    bleLog('Buscando servicio FFE0...');
-    const svc=await srv.getPrimaryService('0000ffe0-0000-1000-8000-00805f9b34fb');
-    bleLog('Servicio encontrado');
-    t.textContent='Obteniendo canales...';
-    bleLog('Obteniendo TX (FFE1)...');
-    boltTx=await svc.getCharacteristic('0000ffe1-0000-1000-8000-00805f9b34fb');
-    bleLog('TX ok, props: '+JSON.stringify({notify:boltTx.properties.notify,read:boltTx.properties.read}));
-    bleLog('Obteniendo RX (FFE2)...');
-    boltRx=await svc.getCharacteristic('0000ffe2-0000-1000-8000-00805f9b34fb');
-    bleLog('RX ok, props: '+JSON.stringify({write:boltRx.properties.write,writeNoResp:boltRx.properties.writeWithoutResponse}));
-    boltBuf='';await boltTx.startNotifications();
-    bleLog('Notificaciones TX activadas');
-    boltTx.addEventListener('characteristicvaluechanged',e=>{const chunk=new TextDecoder().decode(e.target.value);boltBuf+=chunk;bleLog('RX← '+chunk.trim());});
-    boltDev=dev;boltConnected=true;
-    // Send NAME
-    const nm=U?U.displayName||U.email.split('@')[0]:'Escalador';
-    bleLog('Enviando NAME: '+nm.substring(0,18));
-    t.textContent='Enviando nombre...';
-    let ok=await boltWrite('NAME:'+nm.substring(0,18));
-    bleLog('NAME enviado: '+ok);
-    await new Promise(r=>setTimeout(r,200));
-    dev.addEventListener('gattserverdisconnected',()=>{boltConnected=false;boltDev=null;bleLog('Desconectado');
-      const bt=document.getElementById('bT');if(bt)bt.textContent='Bolt desconectado';
-      const bb=document.getElementById('bB');if(bb){bb.textContent='🔗 Conectar Bolt';bb.classList.remove('ok');}});
-    // Send DATE
-    const dateStr=new Date().toISOString().split('T')[0];
-    bleLog('Enviando DATE: '+dateStr);
-    ok=await boltWrite('DATE:'+dateStr);
-    bleLog('DATE enviado: '+ok);
-    await new Promise(r=>setTimeout(r,100));
-    // Send CFG
-    const st=getSettings();
-    const cfgStr='CFG:'+(st.boltLed?'1':'0')+(st.boltBuz?'1':'0');
-    bleLog('Enviando '+cfgStr);
-    ok=await boltWrite(cfgStr);
-    bleLog('CFG enviado: '+ok);
-    await new Promise(r=>setTimeout(r,100));
-    // Clear old workouts
-    bleLog('Enviando WOCLEAR');
-    ok=await boltWrite('WOCLEAR');
-    bleLog('WOCLEAR enviado: '+ok);
-    await new Promise(r=>setTimeout(r,200));
-    // Send next 5 days of workouts
-    const today=new Date();let woCount=0;
-    for(let i=0;i<5;i++){const d=new Date(today);d.setDate(d.getDate()+i);const ds=d.toISOString().split('T')[0];
-      const dw=W.filter(w=>w.plannedDate===ds);
-      if(dw.length)bleLog('Día '+ds+': '+dw.length+' entrenos');
-      for(const w of dw){bleLog('Enviando WO: '+w.name);await sendWoToBolt(w);woCount++;await new Promise(r=>setTimeout(r,200));}}
-    bleLog('Total: '+woCount+' entrenos enviados');
-    t.textContent='✓ '+dev.name+' ('+woCount+' entrenos)';
-    return dev;
-  }catch(e){console.error('BLE:',e);bleLog('ERROR: '+e.message);t.textContent='Error: '+e.message;return null;}}
-async function boltWrite(cmd){
-  if(!boltConnected||!boltRx){bleLog('SKIP write (no conectado)');return false;}
-  try{const data=cmd+'\n';const enc=new TextEncoder();
-    bleLog('TX→ '+cmd+' ('+data.length+'b)');
-    for(let i=0;i<data.length;i+=20){
-      const chunk=data.substring(i,i+20);
-      await boltRx.writeValue(enc.encode(chunk));
-      await new Promise(r=>setTimeout(r,50));}
-    return true;}catch(e){bleLog('TX ERROR: '+e.message);return false;}}
-async function sendToDevice(btn,w){const ob=btn.textContent;btn.textContent='...';
-  if(!boltConnected){const d=await boltConnect();if(!d){btn.textContent=ob;return;}}
-  const steps=(w.steps||[]).map(s=>{const o={n:(s.nm||s.txt||'Ej').substring(0,16),m:s.modo==='time'?'t':'r'};
-    if(o.m==='t'){o.w=s.time||7;o.d=s.desc||3;}else{o.r=s.reps||s.rep||1;}
-    o.s=s.ser||1;o.ds=s.ds||180;
-    if(s.ag)o.a=s.ag.substring(0,8);if(s.mm)o.mm=s.mm;if(s.kg)o.kg=s.kg;if(s.ang)o.an=s.ang.substring(0,4);
-    return o;});
-  const wo=JSON.stringify({n:(w.name||'Entreno').substring(0,20),st:steps});
-  const ok=await boltWrite('WO:'+wo);
-  btn.textContent=ok?'✓ Enviado':'✗ Error';btn.style.background=ok?'var(--green)':'var(--red)';
-  setTimeout(()=>{btn.textContent='⚡ Bolt';btn.style.background='var(--green)';},2000);}
-// Share workout with friend
-async function shareWo(woId){const w=W.find(x=>x.id===woId);if(!w)return;
-  if(!friends.length){alert('Añade amigos primero');return;}
-  let h='<div style="padding:10px"><div style="font-family:Bebas Neue;font-size:18px;color:var(--rock);margin-bottom:8px">Compartir: '+w.name+'</div>';
-  friends.forEach(f=>{const nm=f.name||f.email;
-    h+=`<label style="display:flex;align-items:center;gap:8px;padding:6px 0;font-size:13px;cursor:pointer"><input type="checkbox" class="shFrCb" value="${f.email}" style="accent-color:var(--rock)"><img src="${f.photo||''}" style="width:28px;height:28px;border-radius:50%">${nm}</label>`;});
-  h+='<button class="btn bp" style="margin-top:10px" onclick="doShareWo(\''+woId+'\')">Enviar</button></div>';
-  const d=document.createElement('div');d.className='mbg sh';d.id='mShareWo';d.innerHTML='<div class="mdl"><button class="mx" onclick="cm(\'mShareWo\')">✕</button>'+h+'</div>';
-  document.body.appendChild(d);}
-async function doShareWo(woId){const w=W.find(x=>x.id===woId);if(!w)return;
-  const sel=[];document.querySelectorAll('.shFrCb:checked').forEach(cb=>sel.push(cb.value));
-  if(!sel.length){alert('Elige al menos un amigo');return;}
-  const fromName=U.displayName||U.email;
-  for(const email of sel){const q=await db.collection('users').where('email','==',email).get();
-    if(!q.empty){const fuid=q.docs[0].id;
-      await db.collection('users').doc(fuid).collection('invites').add({
-        type:'workout',from:U.uid,fromName,workoutName:w.name,workoutSteps:w.steps,
-        date:w.plannedDate||new Date().toISOString().split('T')[0],
-        status:'pending',ts:firebase.firestore.FieldValue.serverTimestamp()});}}
-  const el=document.getElementById('mShareWo');if(el)el.remove();
-  alert('Enviado a '+sel.length+' amigo'+(sel.length>1?'s':''));}
-function autoFlashAvista(){}
-function chkFlashAvista(){
-  const int=parseInt(document.getElementById('iI').value)||1;
-  const enc=document.getElementById('iE').value==='1';
-  const fl=document.getElementById('iFlash'),av=document.getElementById('iAvista');
-  const fF=document.getElementById('fFlash'),fA=document.getElementById('fAvista');
-  if(!enc||int>1){fl.value='0';av.value='0';fl.disabled=true;av.disabled=true;fF.style.opacity='.4';fA.style.opacity='.4';}
-  else{fl.disabled=false;av.disabled=false;fF.style.opacity='1';fA.style.opacity='1';}}
-// Route friend selector
-function filterRouteFriends(){
-  const q=(document.getElementById('iA').value||'').toLowerCase();
-  if(!q){document.getElementById('rFriendSug').style.display='none';return;}
-  const cur=(document.getElementById('iA').dataset.selected||'').split(',').filter(Boolean);
-  const match=friends.filter(f=>{const nm=(f.name||f.email).toLowerCase();return nm.includes(q)&&!cur.includes(f.name||f.email);});
-  if(!match.length){document.getElementById('rFriendSug').style.display='none';return;}
-  let h='';match.slice(0,4).forEach(f=>{const nm=f.name||f.email;
-    h+=`<div style="padding:6px 8px;font-size:12px;cursor:pointer;border-bottom:1px solid var(--bg3)" onclick="addRouteFriend('${nm}')">${nm}</div>`;});
-  document.getElementById('rFriendSug').innerHTML=h;
-  document.getElementById('rFriendSug').style.display='block';
-  document.getElementById('rFriendSug').style.cssText='display:block;background:var(--bg3);border-radius:8px;max-height:120px;overflow-y:auto;margin-top:2px';}
-function addRouteFriend(nm){
-  const el=document.getElementById('iA');
-  const cur=(el.dataset.selected||'').split(',').filter(Boolean);
-  if(!cur.includes(nm))cur.push(nm);
-  el.dataset.selected=cur.join(',');
-  el.value='';
-  document.getElementById('rFriendSug').style.display='none';
-  drRouteFriendChips();}
-function rmRouteFriend(nm){
-  const el=document.getElementById('iA');
-  const cur=(el.dataset.selected||'').split(',').filter(Boolean).filter(n=>n!==nm);
-  el.dataset.selected=cur.join(',');
-  drRouteFriendChips();}
-function drRouteFriendChips(){
-  const cur=(document.getElementById('iA').dataset.selected||'').split(',').filter(Boolean);
-  let h='';cur.forEach(nm=>{h+=`<span style="background:var(--bg3);border-radius:12px;padding:2px 8px;font-size:11px;color:var(--text);display:inline-flex;align-items:center;gap:4px">${nm}<span style="cursor:pointer;color:var(--text3)" onclick="rmRouteFriend('${nm}')">✕</span></span>`;});
-  document.getElementById('rFriendChips').innerHTML=h;}
-
-// FRIEND VIEW with grades
-async function viewFr(email){const q=await db.collection('users').where('email','==',email).get();if(q.empty)return;
-  const fuid=q.docs[0].id,fd=q.docs[0].data();
-  const rs=await db.collection('users').doc(fuid).collection('routes').orderBy('date','desc').limit(50).get();
-  const frRoutes=[];rs.forEach(d=>{frRoutes.push({id:d.id,...d.data()});});
-  // Build grade chart for friend
-  const gc={};frRoutes.forEach(r=>{gc[r.grado]=(gc[r.grado]||0)+1;});
-  const gs=Object.entries(gc).sort((a,b)=>G.indexOf(b[0])-G.indexOf(a[0]));
-  const gmx=Math.max(...gs.map(x=>x[1]),1);
-  let h=`<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><img src="${fd.photo||''}" style="width:40px;height:40px;border-radius:50%;border:2px solid var(--rock)"><div><div style="font-family:'Bebas Neue';font-size:18px;color:var(--rock)">${fd.name||'Escalador'}</div><div style="font-size:10px;color:var(--text3)">${fd.code?'#'+fd.code:''}</div></div></div>`;
-  h+=`<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px"><div class="st a" style="padding:8px"><div class="v" style="font-size:22px">${frRoutes.length}</div><div class="l">Vías</div></div><div class="st b" style="padding:8px"><div class="v" style="font-size:22px">${frRoutes.filter(r=>r.enc).length}</div><div class="l">Enc</div></div><div class="st" style="padding:8px;border:1px solid rgba(255,255,255,.04)"><div class="v" style="font-size:22px;color:var(--blue)">${new Set(frRoutes.map(r=>r.sitio).filter(Boolean)).size}</div><div class="l">Zonas</div></div></div>`;
-  if(gs.length){h+='<div class="ct">GRADOS</div><div class="gb" style="margin-bottom:10px">';gs.slice(0,8).forEach(([g,n])=>{h+=`<div class="gr"><div class="grn">${g}</div><div class="grb"><div class="grf rc" style="width:${(n/gmx)*100}%">${n}</div></div></div>`;});h+='</div>';}
-  h+=`<button class="btn bp" style="margin-bottom:8px" onclick="openChat('${fuid}','${(fd.name||email).replace(/'/g,'')}')">💬 Chat</button>`;
-  h+='<div class="ct">ÚLTIMAS VÍAS</div>';frRoutes.slice(0,15).forEach(r=>{h+=vc(r,false);});
-  document.getElementById('frView').innerHTML=h;document.getElementById('frView').style.display='block';}
-
-// CHAT
-function chatId(uid1,uid2){return [uid1,uid2].sort().join('_');}
-function openChat(frUid,frName){chatFrUid=frUid;document.getElementById('chatTitle').textContent=frName;document.getElementById('chatBox').innerHTML='';document.getElementById('chatIn').value='';document.getElementById('mChat').classList.add('sh');
-  if(chatUnsub)chatUnsub();
-  const cid=chatId(U.uid,frUid);
-  chatUnsub=db.collection('chats').doc(cid).collection('msgs').orderBy('ts','asc').onSnapshot(snap=>{
-    let h='';snap.forEach(d=>{const m=d.data();const me=m.from===U.uid;const t=m.ts?new Date(m.ts.toDate()).toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}):'';
-      h+=`<div class="chat-msg ${me?'me':'ot'}"><div class="chat-bub">${m.text}</div><div class="chat-time">${t}</div></div>`;});
-    const box=document.getElementById('chatBox');box.innerHTML=h;box.scrollTop=box.scrollHeight;});}
-function closeChat(){if(chatUnsub){chatUnsub();chatUnsub=null;}cm('mChat');}
-async function sendChat(){const inp=document.getElementById('chatIn'),text=inp.value.trim();if(!text||!chatFrUid)return;inp.value='';
-  const cid=chatId(U.uid,chatFrUid);
-  await db.collection('chats').doc(cid).collection('msgs').add({from:U.uid,text,ts:firebase.firestore.FieldValue.serverTimestamp()});}
-
-// SYNC
-let exPer='all';
-function drS(){document.getElementById('sN').textContent=R.length+Tr.length;
-  const td=new Date().toISOString().split('T')[0];
-  let h='';[['1m','1 mes'],['3m','3 meses'],['1y','1 año'],['2y','2 años'],['all','Todo']].forEach(([k,lb])=>{h+=`<button class="ch${exPer===k?' on':''}" onclick="setExPer('${k}')">${lb}</button>`;});
-  document.getElementById('exPer').innerHTML=h;
-  if(!document.getElementById('exFrom').value)setExPer('all');}
-function setExPer(p){exPer=p;const td=new Date(),to=td.toISOString().split('T')[0];
-  document.getElementById('exTo').value=to;
-  let from=new Date(td);
-  if(p==='1m')from.setMonth(from.getMonth()-1);
-  else if(p==='3m')from.setMonth(from.getMonth()-3);
-  else if(p==='1y')from.setFullYear(from.getFullYear()-1);
-  else if(p==='2y')from.setFullYear(from.getFullYear()-2);
-  else from=new Date('2020-01-01');
-  document.getElementById('exFrom').value=from.toISOString().split('T')[0];
-  document.querySelectorAll('#exPer .ch').forEach(b=>b.classList.remove('on'));
-  event&&event.target&&event.target.classList.add('on');}
-function exportXL(tipo){
-  const from=document.getElementById('exFrom').value,to=document.getElementById('exTo').value,msg=document.getElementById('exMsg');
-  if(!from||!to){msg.textContent='Elige fechas';msg.style.color='var(--red)';return;}
-  if(tipo==='vias'){
-    const fl=R.filter(r=>r.date>=from&&r.date<=to).sort((a,b)=>a.date.localeCompare(b.date));
-    if(!fl.length){msg.textContent='No hay vías en ese rango';msg.style.color='var(--yellow)';return;}
-    const rows=fl.map(r=>({Fecha:r.date,Nombre:r.nombre||'',Lugar:r.sitio||'',Tipo_lugar:r.lugar==='roca'?'Roca':'Indoor',Tipo_via:r.tipo,Grado:r.grado,Intento:r.intento||1,Encadenado:r.enc?'Sí':'No',Compañeros:r.amigos||'',Notas:r.notas||''}));
-    const ws=XLSX.utils.json_to_sheet(rows);ws['!cols']=[{wch:12},{wch:20},{wch:15},{wch:12},{wch:10},{wch:8},{wch:8},{wch:10},{wch:15},{wch:25}];
-    const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Vías');
-    XLSX.writeFile(wb,`sube_pies_vias_${from}_${to}.xlsx`);
-    msg.textContent=`✓ ${fl.length} vías exportadas`;msg.style.color='var(--green)';}
-  else{
-    const fl=Tr.filter(t=>t.date>=from&&t.date<=to).sort((a,b)=>a.date.localeCompare(b.date));
-    if(!fl.length){msg.textContent='No hay entrenos en ese rango';msg.style.color='var(--yellow)';return;}
-    const rows=fl.map(t=>({Fecha:t.date,Tipo:t.tipo,Detalle:t.detail||''}));
-    const ws=XLSX.utils.json_to_sheet(rows);ws['!cols']=[{wch:12},{wch:15},{wch:40}];
-    const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Entrenos');
-    XLSX.writeFile(wb,`sube_pies_entrenos_${from}_${to}.xlsx`);
-    msg.textContent=`✓ ${fl.length} entrenos exportados`;msg.style.color='var(--green)';}}
-async function doBT(){const b=document.getElementById('bB'),t=document.getElementById('bT');
-  if(!navigator.bluetooth){t.textContent='Necesitas Chrome en Android';return;}
-  if(boltConnected){t.textContent='Ya conectado. Sincronizando...';
-  }else{
-    b.textContent='...';
-    const dev=await boltConnect();
-    if(!dev){b.textContent='🔗 Conectar Bolt';return;}
-  }
-  b.textContent='Conectado ✓';b.classList.add('ok');t.textContent='Sincronizando datos...';
-  boltBuf='';await boltWrite('SYNC');
-  // Wait for data with timeout
-  let waited=0;while(!boltBuf.includes('END')&&waited<8000){await new Promise(r=>setTimeout(r,500));waited+=500;t.textContent='Recibiendo... '+Math.round(waited/1000)+'s';}
-  const lines=boltBuf.split('\n').filter(l=>l.length>0);let added=0;
-  for(const line of lines){if(line.startsWith('BEGIN')||line.startsWith('END'))continue;const p=line.split('|');
-    if(p[0]==='V'){const lug=['roca','indoor'],tipR=['Cuerda','Bloque','AutoAseg','Largos'],tipC=['Cuerda','Bloque','AutoAseg'];
-      const lugar=lug[+p[1]]||'roca',ta=lugar==='roca'?tipR:tipC;
-      await saveRoute({date:new Date().toISOString().split('T')[0],lugar,tipo:ta[+p[2]]||'Cuerda',grado:G[+p[3]]||'7a',intento:+p[4]||1,enc:p[5]==='1',flash:p[6]==='1',avista:p[7]==='1',nombre:p[8]||'',sitio:'',notas:'Sync Bolt',amigos:''});added++;}
-    else if(p[0]==='T'){const tipos=['Suspensi.','Campus','Bloqueo','Traves.','Timer','Libre'];
-      await saveTrain({date:new Date().toISOString().split('T')[0],tipo:tipos[+p[1]]||'Suspensi.',detail:p[2]||''});added++;}}
-  if(added>0){await boltWrite('ACK');await loadData();}
-  t.textContent=added>0?`✓ ${added} registros sincronizados`:'✓ Conectado · 0 pendientes';}
+// ── BOLT BLE (disabled - saved separately in Bolt.ino) ──
 </script>
 <script>if('serviceWorker' in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});</script>
 </body>
