@@ -91,8 +91,8 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:20px;text-align:center">
 <img src="logo.png" style="width:140px;height:140px;margin-bottom:12px;border-radius:50%;box-shadow:0 4px 30px rgba(0,0,0,.5)">
 <div class="login-logo" style="text-shadow:0 2px 20px rgba(0,0,0,.6)">SUBE PIES</div>
-<div style="color:rgba(255,255,255,.8);font-size:14px;margin-bottom:40px;text-shadow:0 1px 8px rgba(0,0,0,.5)">Diario de escalada</div>
-<button class="goog-btn" onclick="loginGoogle()"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg">Entrar con Google</button>
+<div style="color:rgba(255,255,255,.8);font-size:14px;margin-bottom:40px;text-shadow:0 1px 8px rgba(0,0,0,.5)" id="loginSubTxt">Diario de escalada</div>
+<button class="goog-btn" onclick="loginGoogle()"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" id="loginBtnTxt">Entrar con Google</button>
 <div style="color:rgba(255,255,255,.4);font-size:10px;margin-top:40px">© 2026 Sube Pies · Todos los derechos reservados</div>
 </div></div>
 <div id="splashScreen" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:999;overflow:hidden;transition:opacity .5s ease">
@@ -101,7 +101,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center">
 <img src="logo.png" style="width:150px;height:150px;border-radius:50%;box-shadow:0 4px 40px rgba(0,0,0,.6)">
 <div style="font-family:'Bebas Neue';font-size:36px;color:#fff;margin-top:16px;text-shadow:0 2px 20px rgba(0,0,0,.6)">SUBE PIES</div>
-<div style="color:rgba(255,255,255,.5);font-size:12px;margin-top:8px">Diario de escalada</div>
+<div style="color:rgba(255,255,255,.5);font-size:12px;margin-top:8px" id="loginSubTxt">Diario de escalada</div>
 </div></div>
 <div id="appWrap" style="display:none">
 <!-- HOME --><div id="ph" class="page on" style="overflow-y:auto;height:calc(100vh - 75px);display:none">
@@ -114,9 +114,9 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <div id="calDetail" style="margin-bottom:6px"></div>
 <div id="homeNextWo" style="background:var(--bg2);border-radius:12px;padding:10px;border:1px solid rgba(255,255,255,.04);margin-bottom:10px"></div>
 </div>
-<!-- VÍAS --><div id="pv" class="page"><div class="hdr"><h1>VÍAS</h1><button class="bp btn" style="width:auto;padding:6px 12px;font-size:11px;border-radius:10px" onclick="addR()">+ Añadir</button></div>
+<!-- VÍAS --><div id="pv" class="page"><div class="hdr"><h1>VÍAS</h1><button class="bp btn" style="width:auto;padding:6px 12px;font-size:11px;border-radius:10px" onclick="addR()" id="btnAddR">+ Añadir</button></div>
 <div style="background:var(--bg2);border-radius:12px;padding:8px;border:1px solid rgba(255,255,255,.04);margin-bottom:8px"><div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span class="ct" style="margin:0;font-size:12px">GRADOS</span></div><div class="gsw" id="gPer" style="margin-bottom:4px"></div><div class="gsw" id="gS" style="margin-bottom:4px"></div><div class="gb" id="gB"></div></div>
-<div style="margin-bottom:10px"><input id="vQ" placeholder="🔍 Buscar vía, lugar, amigo, grado..." oninput="drR()" style="width:100%;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:8px 14px;color:var(--text);font-size:12px;font-family:Nunito;outline:none"></div><div class="chs" id="rF"></div><div class="sb"><label>Ordenar:</label><select id="rS" onchange="drR()"><option value="date">Fecha ↓</option><option value="dateA">Fecha ↑</option><option value="grD">Grado ↓</option><option value="grA">Grado ↑</option><option value="lugar">Lugar</option><option value="amigo">Compañero</option></select></div><div id="rL"></div></div>
+<div style="margin-bottom:10px"><input id="vQ" placeholder="🔍 Buscar vía, lugar, amigo, grado..." id="vQInput" oninput="drR()" style="width:100%;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:8px 14px;color:var(--text);font-size:12px;font-family:Nunito;outline:none"></div><div class="chs" id="rF"></div><div class="sb"><label>Ordenar:</label><select id="rS" onchange="drR()"><option value="date">Fecha ↓</option><option value="dateA">Fecha ↑</option><option value="grD">Grado ↓</option><option value="grA">Grado ↑</option><option value="lugar">Lugar</option><option value="amigo">Compañero</option></select></select></div><div id="rL"></div></div>
 <!-- MAPA --><div id="pm" class="page"><div class="hdr"><h1>MAPA</h1></div><div style="display:flex;gap:0;margin-bottom:10px;background:var(--bg3);border-radius:10px;padding:2px" id="mapTbs"></div><div class="map-stats"><div class="st a"><div class="v" id="mTotal">0</div><div class="l">Vías</div></div><div class="st b"><div class="v" id="mEnc">0</div><div class="l">Enc</div></div><div class="st"><div class="v" style="color:var(--blue)" id="mZonas">0</div><div class="l">Zonas</div></div></div><div class="map-search"><input id="mapQ" placeholder="🔍 Buscar zona..." oninput="filterMap()"><button class="bp btn" style="width:auto;padding:8px 12px;font-size:11px;border-radius:10px" onclick="openNewCrag()">+ Zona</button></div><div id="mapDiv"></div><div id="mapResults" style="display:none"></div><div id="mRt"></div></div>
 <!-- ENTRENOS --><div id="pt" class="page"><div class="hdr"><h1>ENTRENOS</h1></div><div class="tbs" id="tT"></div><div id="tH"></div><div id="tP" style="display:none"><div id="wL"></div></div><div id="tProg" style="display:none">
 <div class="ct">EXPLORADOR DE DATOS</div>
@@ -139,14 +139,18 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <!-- AMIGOS --><div id="pf" class="page"><div class="hdr"><h1>AMIGOS</h1></div><div class="card"><div class="ct">AÑADIR AMIGO</div><div style="display:flex;gap:6px"><input id="frCode" placeholder="Código #1234 o email" style="flex:1;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px;color:var(--text);font-size:12px;font-family:Nunito;outline:none"><button class="bp btn" style="width:auto;padding:8px 14px;font-size:12px;border-radius:10px" onclick="addFriend()">+</button></div><div id="frMsg" style="font-size:10px;margin-top:4px"></div></div><div class="ct" style="margin-top:12px">MIS AMIGOS</div><div id="frList"></div><div id="frView" style="display:none;margin-top:12px"></div></div>
 <!-- CHAT MODAL --><div class="mbg" id="mChat"><div class="mdl" style="height:70vh;display:flex;flex-direction:column"><button class="mx" onclick="closeChat()">✕</button><h2 id="chatTitle">CHAT</h2><div class="chat-wrap" id="chatBox" style="flex:1"></div><div class="chat-input"><input id="chatIn" placeholder="Escribe..." onkeydown="if(event.key==='Enter')sendChat()"><button onclick="sendChat()">→</button></div></div></div>
 <!-- AJUSTES --><div id="ps" class="page"><div class="hdr"><h1>AJUSTES</h1></div>
-<div class="card"><div class="ct">EXPORTAR A EXCEL</div>
+<div class="card"><div class="ct" id="ctExport">EXPORTAR A EXCEL</div>
 <div style="display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap" id="exPer"></div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px"><div class="fl" style="margin:0"><label>Desde</label><input type="date" id="exFrom"></div><div class="fl" style="margin:0"><label>Hasta</label><input type="date" id="exTo"></div></div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><button class="btn bp" style="font-size:12px;padding:10px" onclick="exportXL('vias')">📥 Vías</button><button class="btn bp" style="font-size:12px;padding:10px;background:var(--yellow);color:#000" onclick="exportXL('entrenos')">📥 Entrenos</button></div>
 <div id="exMsg" style="font-size:10px;margin-top:6px;text-align:center"></div>
 </div>
-<div class="card"><div class="ct">DATOS EN LA NUBE</div><p style="font-size:12px;color:var(--text2)"><span style="font-family:'Bebas Neue';font-size:22px;color:var(--green)" id="sN">0</span> registros guardados</p><p style="font-size:10px;color:var(--text3);margin-top:4px">Tus datos están seguros en Firebase.</p></div>
-<div class="card"><div class="ct">ACERCA DE</div><p style="font-size:11px;color:var(--text2)">Sube Pies v1.0 · © 2026 · Todos los derechos reservados</p></div></div>
+<div class="card"><div class="ct" id="ctLang">IDIOMA</div>
+<select id="langSel" onchange="setLang(this.value)" style="width:100%;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:9px 11px;color:var(--text);font-size:13px;font-family:Nunito;outline:none;margin-bottom:4px">
+<option value="es">🇪🇸 Castellano</option><option value="en">🇬🇧 English</option><option value="eu">🇪🇺 Euskera</option><option value="ca">🇪🇸 Català</option>
+</select></div>
+<div class="card"><div class="ct" id="ctCloud">DATOS EN LA NUBE</div><p style="font-size:12px;color:var(--text2)"><span style="font-family:'Bebas Neue';font-size:22px;color:var(--green)" id="sN">0</span> registros guardados</p><p style="font-size:10px;color:var(--text3);margin-top:4px">Tus datos están seguros en Firebase.</p></div>
+<div class="card"><div class="ct" id="ctAbout">ACERCA DE</div><p style="font-size:11px;color:var(--text2)">Sube Pies v1.0 · © 2026 · Todos los derechos reservados</p></div></div>
 </div>
 <!-- MODAL ROUTE --><div class="mbg" id="mR1"><div class="mdl"><button class="mx" onclick="cm('mR1')">✕</button><h2 id="mRT">VÍA</h2><div class="fl"><label>Nombre</label><input id="iN" placeholder="Diedro mágico"></div><div class="fl"><label>Lugar</label><input id="iL" placeholder="Atauri, Galdames..." list="dlZ"><datalist id="dlZ"></datalist></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="fl"><label>Tipo lugar</label><select id="iLT"><option value="roca">Roca</option><option value="indoor">Indoor</option></select></div><div class="fl"><label>Tipo vía</label><select id="iTP"><option>Cuerda</option><option>Bloque</option><option>AutoAseg</option><option>Largos</option></select></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px"><div class="fl"><label>Grado</label><select id="iG"></select></div><div class="fl"><label>Intento</label><select id="iI" onchange="chkFlashAvista()"></select></div><div class="fl"><label>Metros</label><input type="number" id="iMetros" placeholder="—" min="0" max="500" style="width:100%"></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px"><div class="fl"><label>Encadenado</label><select id="iE" onchange="chkFlashAvista()"><option value="1">Sí</option><option value="0">No</option></select></div><div class="fl" id="fFlash"><label>Flash</label><select id="iFlash"><option value="0">No</option><option value="1">Sí</option></select></div><div class="fl" id="fAvista"><label>A vista</label><select id="iAvista"><option value="0">No</option><option value="1">Sí</option></select></div></div><div class="fl"><label>Sensaciones</label><textarea id="iNo" placeholder="Beta, condiciones..."></textarea></div><div class="fl"><label>Compañeros</label><div id="rFriendChips" style="display:flex;gap:3px;flex-wrap:wrap;margin-bottom:4px"></div><input id="iA" placeholder="Escribe o elige amigos..." oninput="filterRouteFriends()"><div id="rFriendSug" style="display:none"></div></div><div class="fl"><label>Fecha</label><input type="date" id="iFe"></div><button class="btn bp" onclick="svR()">Guardar</button><button class="btn bdel" id="btnDelR" style="display:none" onclick="delR()">🗑️ Eliminar vía</button><button class="btn bg2" onclick="cm('mR1')">Cancelar</button></div></div>
 <!-- MODAL WORKOUT --><div class="mbg" id="mW1"><div class="mdl"><button class="mx" onclick="cm('mW1')">✕</button><h2 id="mW1Title">CREAR ENTRENO</h2><div class="fl"><label>Nombre</label><input id="wNm" placeholder="Fuerza dedos"></div><div class="fl"><label>Carpeta</label><select id="wFolder"><option value="">— Sin carpeta —</option></select></div><div class="ct">PASOS</div><div id="wS"></div><div style="display:flex;gap:4px;margin-top:8px;margin-bottom:8px"><div class="ct" style="flex:1;margin:0">AÑADIR</div><button class="ch on" style="font-size:10px" onclick="showEjForm()">🏋 Ejercicio</button><button class="ch" style="font-size:10px" onclick="showViaForm()">🧗 Vía</button></div><div style="display:flex;gap:3px;margin-bottom:8px;flex-wrap:wrap" id="ejTpls"></div><div id="ejForm" style="display:none;background:var(--bg3);border-radius:10px;padding:10px;margin-bottom:8px"><div class="fl"><label>Nombre</label><input id="ejNm" placeholder="Suspensiones, Dominadas..."></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><div class="fl"><label>Agarre</label><select id="ejAg"><option value="">— Ninguno —</option><option>Regleta</option><option>Cazo</option><option>Pinza</option><option>Romo</option><option>Bidedo</option><option>Unidedo</option><option>Barra</option></select></div><div class="fl"><label>Tamaño (mm)</label><input id="ejMm" type="number" placeholder="20"></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><div class="fl"><label>Ángulo</label><select id="ejAng"><option value="">—</option><option>0°</option><option>15°</option><option>30°</option><option>45°</option><option>90°</option><option>120°</option></select></div><div class="fl"><label>Lastre (kg)</label><input id="ejKg" type="number" value="0"></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px"><div class="fl"><label>Modo</label><select id="ejModo" onchange="ejModoChg()"><option value="time">Tiempo</option><option value="reps">Reps</option></select></div><div class="fl" id="ejTimeF"><label>Tiempo (s)</label><input id="ejTime" type="number" value="7"></div><div class="fl" id="ejRepsF" style="display:none"><label>Reps</label><input id="ejReps" type="number" value="10"></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px"><div class="fl"><label>Series</label><input id="ejSer" type="number" value="4"></div><div class="fl"><label>Reps/serie</label><input id="ejRep" type="number" value="6"></div><div class="fl"><label>Descanso (s)</label><input id="ejDesc" type="number" value="3"></div></div><div class="fl"><label>Desc. entre series (s)</label><input id="ejDS" type="number" value="180"></div><div style="display:flex;gap:4px"><button class="btn bp" style="flex:1;font-size:12px;padding:8px" onclick="addEj()">+ Añadir</button><button class="btn bg2" style="width:auto;padding:8px 12px;font-size:10px;margin:0" onclick="saveCustomTpl()">💾 Guardar plantilla</button></div></div><div id="viaForm" style="display:none;background:var(--bg3);border-radius:10px;padding:10px;margin-bottom:8px"><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><div class="fl"><label>Grado</label><select id="vfGrado"></select></div><div class="fl"><label>Tipo</label><select id="vfTipo"><option>Cuerda</option><option>Bloque</option><option>AutoAseg</option></select></div></div><div class="fl"><label>Nombre (opcional)</label><input id="vfNombre" placeholder="La rambla..."></div><button class="btn bp" style="font-size:12px;padding:8px" onclick="addViaStep()">+ Añadir vía</button></div><hr style="border:none;border-top:1px solid var(--bg4);margin:10px 0"><button class="btn bp" onclick="svW()">Guardar entreno</button><button class="btn bg2" onclick="cm('mW1')">Cancelar</button></div></div>
@@ -188,10 +192,13 @@ auth.onAuthStateChanged(async u=>{document.getElementById('loadPage').style.disp
     await db.collection('users').doc(u.uid).set({name:u.displayName,email:u.email,photo:u.photoURL,code:code},{merge:true});
     document.getElementById('uTag').textContent='#'+code;
     await loadData();
+    document.getElementById('langSel').value=LANG;
     setTimeout(()=>{document.getElementById('splashScreen').style.opacity='0';
       setTimeout(()=>{document.getElementById('splashScreen').style.display='none';document.getElementById('appWrap').style.display='block';rH();},500);
     },2000);}
   else{U=null;document.getElementById('loginPage').style.display='';document.getElementById('appWrap').style.display='none';document.getElementById('splashScreen').style.display='none';}});
+// Apply language to login page
+(function(){const lb=document.getElementById('loginBtnTxt');if(lb)lb.textContent=t('loginBtn');const ls=document.getElementById('loginSubTxt');if(ls)ls.textContent=t('loginSub');const ss=document.getElementById('splashSubTxt');if(ss)ss.textContent=t('splashSub');})();
 function loginGoogle(){auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());}
 function logout(){auth.signOut();}
 
@@ -229,11 +236,410 @@ function getCragCoords(name){if(!name)return null;const nl=name.toLowerCase();
 const G=["V","6a","6a+","6b","6b+","6c","6c+","7a","7a+","7b","7b+","7c","7c+","8a","8a+","8b","8b+","8c","8c+","9a","9a+","9b","9b+","9c"];
 let cY=2026,cMo=1,cSl=null,gM='cr',gPer='year',sPer='year',rFl='all',tTb='plan',mapMode='roca',eRt=null,wSt=[],leafMap=null,markers=[],chatUnsub=null,chatFrUid=null;
 const PG={home:'ph',routes:'pv',map:'pm',train:'pt',friends:'pf',sync:'ps'},PK=Object.keys(PG);
+
+// ── i18n MULTI-IDIOMA ──
+let LANG=localStorage.getItem('spLang')||'es';
+const I18N={
+es:{
+  // Login
+  loginBtn:'Entrar con Google',loginSub:'Diario de escalada',loginCopy:'© 2026 Sube Pies · Todos los derechos reservados',
+  // Splash
+  splashSub:'Diario de escalada',
+  // Nav
+  navHome:'Inicio',navRoutes:'Vías',navMap:'Mapa',navTrain:'Entrenos',navFriends:'Amigos',navSettings:'Ajustes',
+  // Home
+  logout:'Salir',stats_vias:'Vías',stats_enc:'Enc',stats_entrenos:'Entrenos',planBtn:'+ Planificar',noActivity:t('noActivity'),
+  noTrainPlan:''+t('noTrainPlan')+'',trainLabel:'ENTRENO',today:'HOY',tomorrow:'MAÑANA',execute:'▶ Ejecutar',
+  // Routes
+  addRoute:'+ Añadir',searchRoute:'🔍 Buscar vía, lugar, amigo, grado...',sortLabel:'Ordenar:',
+  sortDate:'Fecha ↓',sortDateA:'Fecha ↑',sortGrD:'Grado ↓',sortGrA:'Grado ↑',sortPlace:'Lugar',sortFriend:'Compañero',
+  allRoutes:'Todas',rock:'Roca',indoor:'Indoor',enc:'Enc',rope:'Cuerda',boulder:'Bloque',autoBelay:'AutoAseg',
+  noRoutes:'Sin vías',allMonths:'Todos los meses',routes_count:'vías',
+  thisYear:'este año',total:'en total',
+  // Route modal
+  newRoute:'NUEVA VÍA',editRoute:'EDITAR VÍA',routeName:'Nombre',routeNamePh:'Diedro mágico',
+  routePlace:'Lugar',routePlacePh:'Atauri, Galdames...',placeType:'Tipo lugar',routeType:'Tipo vía',
+  grade:'Grado',attempt:'Intento',meters:'Metros',chained:'Encadenado',flash:'Flash',onSight:'A vista',
+  yes:'Sí',no:'No',feelings:'Sensaciones',feelingsPh:'Beta, condiciones...',partners:'Compañeros',
+  partnersPh:'Escribe o elige amigos...',date:'Fecha',save:'Guardar',deleteRoute:'🗑️ Eliminar vía',cancel:'Cancelar',
+  longs:'Largos',
+  // Map
+  mapZones:'Zonas',searchZone:'🔍 Buscar zona...',addZone:'+ Zona',
+  newZone:'NUEVA ZONA',newZoneHelp:'En Google Maps → busca el sitio → pulsa largo → copia las coordenadas que aparecen abajo (ej: 43.270854, -3.102539).',
+  zoneName:'Nombre de la zona',zoneCoords:'Coordenadas',zoneCoordsPh:'43.270854, -3.102539',
+  zoneCoordsSub:'Pega las coordenadas o la URL larga de Google Maps (la que tiene @43.27,-3.10)',
+  saveZone:'Guardar zona',notFound:t('notFoundFr'),coordsError:'No he podido leer las coordenadas. Pega algo como: 43.270854, -3.102539',
+  // Trains
+  scheduled:'Programados',history:'Historial',mesocycle:'Mesociclo',progress:'Progreso',
+  newTrain:'+ Entreno',folder:'📁 Carpeta',searchTrain:'🔍 Buscar entreno...',noFolder:'SIN CARPETA',
+  emptyFolder:'Carpeta vacía · Crea un entreno',noTrainsMonth:'Sin entrenos este mes',trainCount:'entrenos',
+  // Workout modal
+  createTrain:'CREAR ENTRENO',editTrain:'EDITAR ENTRENO',trainName:'Nombre',trainNamePh:'Fuerza dedos',
+  folderLabel:'Carpeta',noFolderOpt:'— Sin carpeta —',steps:'PASOS',addLabel:'AÑADIR',
+  exercise:'🏋 Ejercicio',route:'🧗 Vía',addExercise:'+ Añadir',saveTrain:'Guardar entreno',
+  addSteps:'Añade ejercicios o vías',
+  // Exercise form
+  grip:'Agarre',noGrip:'— Ninguno —',sizeMm:'Tamaño (mm)',angle:'Ángulo',ballast:'Lastre (kg)',
+  mode:'Modo',timeMode:'Tiempo',repsMode:'Reps',timeSec:'Tiempo (s)',reps:'Reps',
+  series:'Series',repsPerSeries:'Reps/serie',restSec:'Descanso (s)',restBetweenSeries:'Desc. entre series (s)',
+  saveTpl:'💾 Guardar plantilla',
+  // Via form in workout
+  nameOptional:'Nombre (opcional)',addVia:'+ Añadir vía',
+  // Executor
+  completed:'¡COMPLETADO!',goodTraining:'Buen entreno 💪',step:'PASO',next:'SIGUIENTE:',
+  start:'▶ EMPEZAR',pause:'⏸ PAUSA',resume:'▶ SEGUIR',soundVibration:'Sonido + vibración',
+  rest:'DESCANSO',seriesRest:'DESCANSO SERIE',betweenReps:'Entre reps',betweenSeries:'Descanso entre series',
+  serie:'Serie',rep:'Rep',done:'✓ Hecha',notDone:'✕ No',emptyTrain:'Entreno vacío',viaProject:'Vía proyecto',
+  // Friends
+  addFriend:'AÑADIR AMIGO',friendCodePh:'Código #1234 o email',myFriends:'MIS AMIGOS',
+  noFriends:t('noFriends'),chatPh:'Escribe...',
+  notFoundFr:t('notFoundFr'),thatsYou:t('thatsYou'),alreadyFriend:t('alreadyFriend'),added:'añadido ✓',
+  friendRoutes:'VÍAS DE',noFriendRoutes:'Sin vías',
+  // Settings
+  exportExcel:'EXPORTAR A EXCEL',from:'Desde',to:'Hasta',exportRoutes:'📥 Vías',exportTrains:'📥 Entrenos',
+  cloudData:'DATOS EN LA NUBE',cloudRecords:'registros guardados',cloudSafe:'Tus datos están seguros en Firebase.',
+  about:'ACERCA DE',language:'IDIOMA',
+  // Plan modal
+  planDay:'PLANIFICAR DÍA',whatPlan:'¿QUÉ PLAN?',climb:'🧗 Escalar',training:'🏋 Entreno',note:'📝 Nota',
+  typeLabel:'Tipo',placePh:'Atauri, Sharma...',trainLabel2:'Entreno',allFolders:'— Todas —',noTrain:'— Sin entreno —',
+  shareExercises:'Compartir ejercicios con invitados',notes:'Notas',notesPh:'Plan del día...',
+  inviteFriends:'INVITAR AMIGOS',searchFriend:'Buscar amigo...',savePlan:'Guardar plan',noFriendsYet:t('noFriendsYet'),
+  deletePlan:'¿Eliminar este plan?',
+  // Mesocycle
+  createMeso:'CREAR MESOCICLO',mesoName:'Nombre',mesoNamePh:'Pre-temporada, Fuerza...',startDate:'Fecha inicio',
+  phases:'FASES',addPhase:'+ Añadir fase',saveMeso:'Guardar mesociclo',noMesos:'Sin mesociclos',
+  deleteMeso:'¿Eliminar mesociclo?',addPhasesMsg:'Añade fases',weeks:'sem',
+  copyFrom:'📋 Copiar de',mesoStart:'Inicio:',
+  // Meso phases
+  aerobicBase:'Base aeróbica',enduranceStr:'Fuerza resistencia',maxStr:'Fuerza máxima',
+  power:'Potencia',deload:'Descarga',custom:'Personalizado',
+  // Dashboard
+  dataExplorer:'EXPLORADOR DE DATOS',generate:'📊 Generar',
+  xAxis:'Eje X',yAxis:'Eje Y',source:'Fuente',filter:'Filtro',modeLabel:'Modo',
+  normal:'Normal',cumulative:'Acumulativo',
+  month:'Mes',week:'Semana',day:'Día',place:'Lugar',partner:'Compañero',gradeAxis:'Grado',routeType2:'Tipo vía',
+  gripAxis:'Agarre',exerciseAxis:'Ejercicio',
+  routeCount:'Cantidad vías',chaineds:'Encadenes',metersClimbed:'Metros escalados',
+  maxBallast:'Lastre máx (kg)',minCrimp:'Regleta mín (mm)',maxGrade:'Grado máximo',
+  avgAttempts:'Media intentos',daysTrained:'Días entrenados',totalSeries:'Total series',
+  totalReps:'Total reps',totalTime:'Tiempo total (min)',
+  routesSource:'Vías',trainsSource:'Entrenos',allSource:'Todo',noFilter:'— Sin filtro —',
+  onlyChaineds:'✓ Solo encadenes',onlyRock:'🏔 Solo roca',onlyGym:'🏢 Solo roco',
+  presets_1m:'1 mes',presets_3m:'3 meses',presets_6m:'6 meses',presets_1y:'1 año',presets_all:'Todo',
+  noData:t('noData'),noDataShort:'Sin datos',
+  graphName:'Nombre del gráfico:',
+  // Invites
+  hasCancelled:'ha cancelado',cancelledPlan:'ha cancelado:',
+  keepPlan:'OK, mantener mi plan',removePlan:'Eliminar mi plan',
+  accept:'✓ Aceptar',reject:'Rechazar',
+  inviteAccepted:'Aceptada ✓',inviteRejected:'Rechazada',
+  // Calendar days
+  calDays:['L','M','X','J','V','S','D'],
+  // Confirm msgs
+  confirmDeleteRoute:'¿Eliminar esta vía?',confirmDeleteWo:'¿Eliminar?',
+  confirmDeleteFolder:'¿Eliminar carpeta? Los entrenos se quedan sueltos.',
+  putDate:'Pon una fecha',putName:'Pon nombre',putNameAndEx:'Pon nombre y ejercicios',
+  tplSaved:'Plantilla "{name}" guardada',
+  moveTo:'Mover:',moveBtn:'Mover',
+  putZoneName:'Pon un nombre',pasteCoords:'Pega las coordenadas',saving:'Guardando...',
+  putCodeOrEmail:t('putCodeOrEmail'),
+  mesoNeedAll:'Pon nombre, fecha y al menos una fase',
+  // Invites types
+  invRoca:'🏔️ Roca',invIndoor:'🏢 Indoor',invEntreno:'🏋️ Entreno',invNota:'📝 Nota',invCancel:'❌ Cancelación',
+  deleteBtn:'Eliminar',
+},
+en:{
+  loginBtn:'Sign in with Google',loginSub:'Climbing diary',loginCopy:'© 2026 Sube Pies · All rights reserved',
+  splashSub:'Climbing diary',
+  navHome:'Home',navRoutes:'Routes',navMap:'Map',navTrain:'Workouts',navFriends:'Friends',navSettings:'Settings',
+  logout:'Log out',stats_vias:'Routes',stats_enc:'Sent',stats_entrenos:'Workouts',planBtn:'+ Plan',noActivity:'No activity',
+  noTrainPlan:'No scheduled workouts',trainLabel:'WORKOUT',today:'TODAY',tomorrow:'TOMORROW',execute:'▶ Run',
+  addRoute:'+ Add',searchRoute:'🔍 Search route, place, friend, grade...',sortLabel:'Sort:',
+  sortDate:'Date ↓',sortDateA:'Date ↑',sortGrD:'Grade ↓',sortGrA:'Grade ↑',sortPlace:'Place',sortFriend:'Partner',
+  allRoutes:'All',rock:'Rock',indoor:'Indoor',enc:'Sent',rope:'Lead',boulder:'Boulder',autoBelay:'AutoBelay',
+  noRoutes:'No routes',allMonths:'All months',routes_count:'routes',
+  thisYear:'this year',total:'total',
+  newRoute:'NEW ROUTE',editRoute:'EDIT ROUTE',routeName:'Name',routeNamePh:'Magic dihedral',
+  routePlace:'Place',routePlacePh:'Kalymnos, Siurana...',placeType:'Place type',routeType:'Route type',
+  grade:'Grade',attempt:'Attempt',meters:'Meters',chained:'Sent',flash:'Flash',onSight:'On sight',
+  yes:'Yes',no:'No',feelings:'Notes',feelingsPh:'Beta, conditions...',partners:'Partners',
+  partnersPh:'Type or choose friends...',date:'Date',save:'Save',deleteRoute:'🗑️ Delete route',cancel:'Cancel',
+  longs:'Multi-pitch',
+  mapZones:'Zones',searchZone:'🔍 Search zone...',addZone:'+ Zone',
+  newZone:'NEW ZONE',newZoneHelp:'In Google Maps → find the place → long press → copy the coordinates (e.g. 43.270854, -3.102539).',
+  zoneName:'Zone name',zoneCoords:'Coordinates',zoneCoordsPh:'43.270854, -3.102539',
+  zoneCoordsSub:'Paste coordinates or the long Google Maps URL (with @43.27,-3.10)',
+  saveZone:'Save zone',notFound:'Not found',coordsError:'Could not read coordinates. Paste like: 43.270854, -3.102539',
+  scheduled:'Scheduled',history:'History',mesocycle:'Mesocycle',progress:'Progress',
+  newTrain:'+ Workout',folder:'📁 Folder',searchTrain:'🔍 Search workout...',noFolder:'NO FOLDER',
+  emptyFolder:'Empty folder · Create a workout',noTrainsMonth:'No workouts this month',trainCount:'workouts',
+  createTrain:'CREATE WORKOUT',editTrain:'EDIT WORKOUT',trainName:'Name',trainNamePh:'Finger strength',
+  folderLabel:'Folder',noFolderOpt:'— No folder —',steps:'STEPS',addLabel:'ADD',
+  exercise:'🏋 Exercise',route:'🧗 Route',addExercise:'+ Add',saveTrain:'Save workout',
+  addSteps:'Add exercises or routes',
+  grip:'Grip',noGrip:'— None —',sizeMm:'Size (mm)',angle:'Angle',ballast:'Weight (kg)',
+  mode:'Mode',timeMode:'Time',repsMode:'Reps',timeSec:'Time (s)',reps:'Reps',
+  series:'Sets',repsPerSeries:'Reps/set',restSec:'Rest (s)',restBetweenSeries:'Rest between sets (s)',
+  saveTpl:'💾 Save template',
+  nameOptional:'Name (optional)',addVia:'+ Add route',
+  completed:'COMPLETED!',goodTraining:'Good workout 💪',step:'STEP',next:'NEXT:',
+  start:'▶ START',pause:'⏸ PAUSE',resume:'▶ RESUME',soundVibration:'Sound + vibration',
+  rest:'REST',seriesRest:'SET REST',betweenReps:'Between reps',betweenSeries:'Rest between sets',
+  serie:'Set',rep:'Rep',done:'✓ Done',notDone:'✕ No',emptyTrain:'Empty workout',viaProject:'Project route',
+  addFriend:'ADD FRIEND',friendCodePh:'Code #1234 or email',myFriends:'MY FRIENDS',
+  noFriends:'Add friends with their # code or email',chatPh:'Write...',
+  notFoundFr:'Not found',thatsYou:"That's you",alreadyFriend:'Already a friend',added:'added ✓',
+  friendRoutes:'ROUTES OF',noFriendRoutes:'No routes',
+  exportExcel:'EXPORT TO EXCEL',from:'From',to:'To',exportRoutes:'📥 Routes',exportTrains:'📥 Workouts',
+  cloudData:'CLOUD DATA',cloudRecords:'saved records',cloudSafe:'Your data is safe on Firebase.',
+  about:'ABOUT',language:'LANGUAGE',
+  planDay:'PLAN DAY',whatPlan:'WHAT PLAN?',climb:'🧗 Climb',training:'🏋 Workout',note:'📝 Note',
+  typeLabel:'Type',placePh:'Kalymnos, Siurana...',trainLabel2:'Workout',allFolders:'— All —',noTrain:'— No workout —',
+  shareExercises:'Share exercises with invitees',notes:'Notes',notesPh:'Day plan...',
+  inviteFriends:'INVITE FRIENDS',searchFriend:'Search friend...',savePlan:'Save plan',noFriendsYet:'No friends yet',
+  deletePlan:'Delete this plan?',
+  createMeso:'CREATE MESOCYCLE',mesoName:'Name',mesoNamePh:'Pre-season, Strength...',startDate:'Start date',
+  phases:'PHASES',addPhase:'+ Add phase',saveMeso:'Save mesocycle',noMesos:'No mesocycles',
+  deleteMeso:'Delete mesocycle?',addPhasesMsg:'Add phases',weeks:'wk',
+  copyFrom:'📋 Copy from',mesoStart:'Start:',
+  aerobicBase:'Aerobic base',enduranceStr:'Strength endurance',maxStr:'Max strength',
+  power:'Power',deload:'Deload',custom:'Custom',
+  dataExplorer:'DATA EXPLORER',generate:'📊 Generate',
+  xAxis:'X Axis',yAxis:'Y Axis',source:'Source',filter:'Filter',modeLabel:'Mode',
+  normal:'Normal',cumulative:'Cumulative',
+  month:'Month',week:'Week',day:'Day',place:'Place',partner:'Partner',gradeAxis:'Grade',routeType2:'Route type',
+  gripAxis:'Grip',exerciseAxis:'Exercise',
+  routeCount:'Route count',chaineds:'Sends',metersClimbed:'Meters climbed',
+  maxBallast:'Max weight (kg)',minCrimp:'Min crimp (mm)',maxGrade:'Max grade',
+  avgAttempts:'Avg attempts',daysTrained:'Days trained',totalSeries:'Total sets',
+  totalReps:'Total reps',totalTime:'Total time (min)',
+  routesSource:'Routes',trainsSource:'Workouts',allSource:'All',noFilter:'— No filter —',
+  onlyChaineds:'✓ Sends only',onlyRock:'🏔 Rock only',onlyGym:'🏢 Gym only',
+  presets_1m:'1 month',presets_3m:'3 months',presets_6m:'6 months',presets_1y:'1 year',presets_all:'All',
+  noData:'No data in this range',noDataShort:'No data',
+  graphName:'Graph name:',
+  hasCancelled:'has cancelled',cancelledPlan:'has cancelled:',
+  keepPlan:'OK, keep my plan',removePlan:'Remove my plan',
+  accept:'✓ Accept',reject:'Reject',
+  inviteAccepted:'Accepted ✓',inviteRejected:'Rejected',
+  calDays:['M','T','W','T','F','S','S'],
+  confirmDeleteRoute:'Delete this route?',confirmDeleteWo:'Delete?',
+  confirmDeleteFolder:'Delete folder? Workouts will be unassigned.',
+  putDate:'Set a date',putName:'Set a name',putNameAndEx:'Set name and exercises',
+  tplSaved:'Template "{name}" saved',
+  moveTo:'Move:',moveBtn:'Move',
+  putZoneName:'Set a name',pasteCoords:'Paste the coordinates',saving:'Saving...',
+  putCodeOrEmail:'Enter code or email',
+  mesoNeedAll:'Set name, date and at least one phase',
+  invRoca:'🏔️ Rock',invIndoor:'🏢 Indoor',invEntreno:'🏋️ Workout',invNota:'📝 Note',invCancel:'❌ Cancellation',
+  deleteBtn:'Delete',
+},
+eu:{
+  loginBtn:'Sartu Googlerekin',loginSub:'Eskalada egunkaria',loginCopy:'© 2026 Sube Pies · Eskubide guztiak erreserbatuak',
+  splashSub:'Eskalada egunkaria',
+  navHome:'Hasiera',navRoutes:'Biak',navMap:'Mapa',navTrain:'Entrenak',navFriends:'Lagunak',navSettings:'Ezarpenak',
+  logout:'Irten',stats_vias:'Biak',stats_enc:'Enk',stats_entrenos:'Entrenak',planBtn:'+ Planifikatu',noActivity:'Aktibitaterik ez',
+  noTrainPlan:'Entrenamendürik programaturik ez',trainLabel:'ENTRENAMENDUA',today:'GAUR',tomorrow:'BIHAR',execute:'▶ Egin',
+  addRoute:'+ Gehitu',searchRoute:'🔍 Bilatu bia, lekua, laguna, grada...',sortLabel:'Ordenatu:',
+  sortDate:'Data ↓',sortDateA:'Data ↑',sortGrD:'Grada ↓',sortGrA:'Grada ↑',sortPlace:'Lekua',sortFriend:'Laguna',
+  allRoutes:'Denak',rock:'Arroka',indoor:'Indoor',enc:'Enk',rope:'Sokaz',boulder:'Blokea',autoBelay:'AutoSega',
+  noRoutes:'Biarik ez',allMonths:'Hilabete guztiak',routes_count:'bia',
+  thisYear:'aurten',total:'guztira',
+  newRoute:'BIA BERRIA',editRoute:'BIA EDITATU',routeName:'Izena',routeNamePh:'Diedro magikoa',
+  routePlace:'Lekua',routePlacePh:'Atauri, Galdames...',placeType:'Leku mota',routeType:'Bia mota',
+  grade:'Grada',attempt:'Saiakera',meters:'Metroak',chained:'Enkadenatua',flash:'Flash',onSight:'A vista',
+  yes:'Bai',no:'Ez',feelings:'Sentsazioak',feelingsPh:'Beta, baldintzak...',partners:'Kideak',
+  partnersPh:'Idatzi edo aukeratu lagunak...',date:'Data',save:'Gorde',deleteRoute:'🗑️ Bia ezabatu',cancel:'Utzi',
+  longs:'Largoak',
+  mapZones:'Zonak',searchZone:'🔍 Zona bilatu...',addZone:'+ Zona',
+  newZone:'ZONA BERRIA',newZoneHelp:'Google Maps-en → bilatu lekua → luze sakatu → kopiatu koordenadak (adib: 43.270854, -3.102539).',
+  zoneName:'Zonaren izena',zoneCoords:'Koordenatuak',zoneCoordsPh:'43.270854, -3.102539',
+  zoneCoordsSub:'Itsatsi koordenatuak edo Google Maps-eko URL luzea (@43.27,-3.10 duena)',
+  saveZone:'Zona gorde',notFound:'Ez da aurkitu',coordsError:'Ezin izan ditut koordenatuak irakurri. Itsatsi honelako zerbait: 43.270854, -3.102539',
+  scheduled:'Programatuak',history:'Historiala',mesocycle:'Mesotzikloa',progress:'Aurrerakuntza',
+  newTrain:'+ Entrenamendua',folder:'📁 Karpeta',searchTrain:'🔍 Entrenamendua bilatu...',noFolder:'KARPETARIK GABE',
+  emptyFolder:'Karpeta hutsik · Sortu entrenamendua',noTrainsMonth:'Hilabete honetan entrenarik ez',trainCount:'entrena',
+  createTrain:'ENTRENAMENDUA SORTU',editTrain:'ENTRENAMENDUA EDITATU',trainName:'Izena',trainNamePh:'Hatz indarra',
+  folderLabel:'Karpeta',noFolderOpt:'— Karpetarik gabe —',steps:'PAUSOAK',addLabel:'GEHITU',
+  exercise:'🏋 Ariketa',route:'🧗 Bia',addExercise:'+ Gehitu',saveTrain:'Entrenamendua gorde',
+  addSteps:'Gehitu ariketak edo biak',
+  grip:'Presa',noGrip:'— Bat ere ez —',sizeMm:'Tamaina (mm)',angle:'Angelua',ballast:'Lastrea (kg)',
+  mode:'Modua',timeMode:'Denbora',repsMode:'Errep',timeSec:'Denbora (s)',reps:'Errep',
+  series:'Serieak',repsPerSeries:'Errep/serie',restSec:'Atsedena (s)',restBetweenSeries:'Serie arteko atsedena (s)',
+  saveTpl:'💾 Txantiloia gorde',
+  nameOptional:'Izena (aukerakoa)',addVia:'+ Bia gehitu',
+  completed:'OSATUTA!',goodTraining:'Entrenamendu ona 💪',step:'PAUSOA',next:'HURRENGOA:',
+  start:'▶ HASI',pause:'⏸ PAUSATU',resume:'▶ JARRAITU',soundVibration:'Soinua + bibrazioa',
+  rest:'ATSEDENA',seriesRest:'SERIE ATSEDENA',betweenReps:'Errep artean',betweenSeries:'Serie arteko atsedena',
+  serie:'Serie',rep:'Errep',done:'✓ Eginda',notDone:'✕ Ez',emptyTrain:'Entrenamendua hutsik',viaProject:'Proiektu bia',
+  addFriend:'LAGUNA GEHITU',friendCodePh:'#1234 kodea edo emaila',myFriends:'NIRE LAGUNAK',
+  noFriends:'Gehitu lagunak haien # kodearekin edo emailarekin',chatPh:'Idatzi...',
+  notFoundFr:'Ez da aurkitu',thatsYou:'Hori zu zara',alreadyFriend:'Dagoeneko laguna da',added:'gehituta ✓',
+  friendRoutes:'BIAK:',noFriendRoutes:'Biarik ez',
+  exportExcel:'EXCELERA ESPORTATU',from:'Noiztik',to:'Noiz arte',exportRoutes:'📥 Biak',exportTrains:'📥 Entrenak',
+  cloudData:'HODEIKO DATUAK',cloudRecords:'erregistro gordeta',cloudSafe:'Zure datuak seguru daude Firebase-n.',
+  about:'HONI BURUZ',language:'HIZKUNTZA',
+  planDay:'EGUNA PLANIFIKATU',whatPlan:'ZER PLAN?',climb:'🧗 Eskalatu',training:'🏋 Entrenatu',note:'📝 Oharra',
+  typeLabel:'Mota',placePh:'Atauri, Sharma...',trainLabel2:'Entrenamendua',allFolders:'— Denak —',noTrain:'— Entrenamendürik gabe —',
+  shareExercises:'Ariketak gonbidatuekin partekatu',notes:'Oharrak',notesPh:'Eguneko plana...',
+  inviteFriends:'LAGUNAK GONBIDATU',searchFriend:'Laguna bilatu...',savePlan:'Plana gorde',noFriendsYet:'Lagunik ez oraindik',
+  deletePlan:'Plan hau ezabatu?',
+  createMeso:'MESOTZIKLOA SORTU',mesoName:'Izena',mesoNamePh:'Aurre-denboraldia, Indarra...',startDate:'Hasiera data',
+  phases:'FASEAK',addPhase:'+ Fasea gehitu',saveMeso:'Mesotzikloa gorde',noMesos:'Mesotziklorik ez',
+  deleteMeso:'Mesotzikloa ezabatu?',addPhasesMsg:'Gehitu faseak',weeks:'ast',
+  copyFrom:'📋 Kopiatu hemendik',mesoStart:'Hasiera:',
+  aerobicBase:'Oinarri aerobikoa',enduranceStr:'Erresistentzia indarra',maxStr:'Indar maximoa',
+  power:'Potentzia',deload:'Deskarga',custom:'Pertsonalizatua',
+  dataExplorer:'DATU ESPLORATZAILEA',generate:'📊 Sortu',
+  xAxis:'X Ardatza',yAxis:'Y Ardatza',source:'Iturria',filter:'Iragazkia',modeLabel:'Modua',
+  normal:'Normala',cumulative:'Metatua',
+  month:'Hilabetea',week:'Astea',day:'Eguna',place:'Lekua',partner:'Laguna',gradeAxis:'Grada',routeType2:'Bia mota',
+  gripAxis:'Presa',exerciseAxis:'Ariketa',
+  routeCount:'Bia kopurua',chaineds:'Enkadenatzeak',metersClimbed:'Metro eskalatzeak',
+  maxBallast:'Lastre max (kg)',minCrimp:'Regleta min (mm)',maxGrade:'Grada maximoa',
+  avgAttempts:'Saiakera batezbestekoa',daysTrained:'Entrenatutako egunak',totalSeries:'Serie guztira',
+  totalReps:'Errep guztira',totalTime:'Denbora guztira (min)',
+  routesSource:'Biak',trainsSource:'Entrenak',allSource:'Dena',noFilter:'— Iragazkirik gabe —',
+  onlyChaineds:'✓ Enkadenatzeak bakarrik',onlyRock:'🏔 Arroka bakarrik',onlyGym:'🏢 Roko bakarrik',
+  presets_1m:'Hilabete 1',presets_3m:'3 hilabete',presets_6m:'6 hilabete',presets_1y:'Urte 1',presets_all:'Dena',
+  noData:'Daturik ez tarte honetan',noDataShort:'Daturik ez',
+  graphName:'Grafikoaren izena:',
+  hasCancelled:'bertan behera utzi du',cancelledPlan:'bertan behera utzi du:',
+  keepPlan:'Ados, nire plana mantendu',removePlan:'Nire plana ezabatu',
+  accept:'✓ Onartu',reject:'Baztertu',
+  inviteAccepted:'Onartuta ✓',inviteRejected:'Baztertua',
+  calDays:['Al','As','Az','Og','Or','Lr','Ig'],
+  confirmDeleteRoute:'Bia hau ezabatu?',confirmDeleteWo:'Ezabatu?',
+  confirmDeleteFolder:'Karpeta ezabatu? Entrenak karpetarik gabe geratuko dira.',
+  putDate:'Jarri data bat',putName:'Jarri izena',putNameAndEx:'Jarri izena eta ariketak',
+  tplSaved:'"{name}" txantiloia gordeta',
+  moveTo:'Mugitu:',moveBtn:'Mugitu',
+  putZoneName:'Jarri izena',pasteCoords:'Itsatsi koordenatuak',saving:'Gordetzen...',
+  putCodeOrEmail:'Sartu kodea edo emaila',
+  mesoNeedAll:'Jarri izena, data eta gutxienez fase bat',
+  invRoca:'🏔️ Arroka',invIndoor:'🏢 Indoor',invEntreno:'🏋️ Entrenamendua',invNota:'📝 Oharra',invCancel:'❌ Bertan behera',
+  deleteBtn:'Ezabatu',
+},
+ca:{
+  loginBtn:'Entra amb Google',loginSub:'Diari d\'escalada',loginCopy:'© 2026 Sube Pies · Tots els drets reservats',
+  splashSub:'Diari d\'escalada',
+  navHome:'Inici',navRoutes:'Vies',navMap:'Mapa',navTrain:'Entrenos',navFriends:'Amics',navSettings:'Ajustos',
+  logout:'Sortir',stats_vias:'Vies',stats_enc:'Enc',stats_entrenos:'Entrenos',planBtn:'+ Planificar',noActivity:'Sense activitat',
+  noTrainPlan:'Sense entrenos programats',trainLabel:'ENTRENO',today:'AVUI',tomorrow:'DEMÀ',execute:'▶ Executar',
+  addRoute:'+ Afegir',searchRoute:'🔍 Cercar via, lloc, amic, grau...',sortLabel:'Ordenar:',
+  sortDate:'Data ↓',sortDateA:'Data ↑',sortGrD:'Grau ↓',sortGrA:'Grau ↑',sortPlace:'Lloc',sortFriend:'Company',
+  allRoutes:'Totes',rock:'Roca',indoor:'Indoor',enc:'Enc',rope:'Corda',boulder:'Bloc',autoBelay:'AutoSeg',
+  noRoutes:'Sense vies',allMonths:'Tots els mesos',routes_count:'vies',
+  thisYear:'aquest any',total:'en total',
+  newRoute:'NOVA VIA',editRoute:'EDITAR VIA',routeName:'Nom',routeNamePh:'Diedre màgic',
+  routePlace:'Lloc',routePlacePh:'Siurana, Margalef...',placeType:'Tipus lloc',routeType:'Tipus via',
+  grade:'Grau',attempt:'Intent',meters:'Metres',chained:'Encadenat',flash:'Flash',onSight:'A vista',
+  yes:'Sí',no:'No',feelings:'Sensacions',feelingsPh:'Beta, condicions...',partners:'Companys',
+  partnersPh:'Escriu o tria amics...',date:'Data',save:'Desar',deleteRoute:'🗑️ Eliminar via',cancel:'Cancel·lar',
+  longs:'Llargades',
+  mapZones:'Zones',searchZone:'🔍 Cercar zona...',addZone:'+ Zona',
+  newZone:'NOVA ZONA',newZoneHelp:'A Google Maps → cerca el lloc → prem llarg → copia les coordenades (ex: 43.270854, -3.102539).',
+  zoneName:'Nom de la zona',zoneCoords:'Coordenades',zoneCoordsPh:'43.270854, -3.102539',
+  zoneCoordsSub:'Enganxa les coordenades o la URL llarga de Google Maps (la que té @43.27,-3.10)',
+  saveZone:'Desar zona',notFound:'No trobat',coordsError:'No he pogut llegir les coordenades. Enganxa algo com: 43.270854, -3.102539',
+  scheduled:'Programats',history:'Historial',mesocycle:'Mesocicle',progress:'Progrés',
+  newTrain:'+ Entreno',folder:'📁 Carpeta',searchTrain:'🔍 Cercar entreno...',noFolder:'SENSE CARPETA',
+  emptyFolder:'Carpeta buida · Crea un entreno',noTrainsMonth:'Sense entrenos aquest mes',trainCount:'entrenos',
+  createTrain:'CREAR ENTRENO',editTrain:'EDITAR ENTRENO',trainName:'Nom',trainNamePh:'Força dits',
+  folderLabel:'Carpeta',noFolderOpt:'— Sense carpeta —',steps:'PASSOS',addLabel:'AFEGIR',
+  exercise:'🏋 Exercici',route:'🧗 Via',addExercise:'+ Afegir',saveTrain:'Desar entreno',
+  addSteps:'Afegeix exercicis o vies',
+  grip:'Presa',noGrip:'— Cap —',sizeMm:'Mida (mm)',angle:'Angle',ballast:'Llast (kg)',
+  mode:'Mode',timeMode:'Temps',repsMode:'Reps',timeSec:'Temps (s)',reps:'Reps',
+  series:'Sèries',repsPerSeries:'Reps/sèrie',restSec:'Descans (s)',restBetweenSeries:'Desc. entre sèries (s)',
+  saveTpl:'💾 Desar plantilla',
+  nameOptional:'Nom (opcional)',addVia:'+ Afegir via',
+  completed:'COMPLETAT!',goodTraining:'Bon entreno 💪',step:'PAS',next:'SEGÜENT:',
+  start:'▶ COMENÇAR',pause:'⏸ PAUSA',resume:'▶ CONTINUAR',soundVibration:'So + vibració',
+  rest:'DESCANS',seriesRest:'DESCANS SÈRIE',betweenReps:'Entre reps',betweenSeries:'Descans entre sèries',
+  serie:'Sèrie',rep:'Rep',done:'✓ Feta',notDone:'✕ No',emptyTrain:'Entreno buit',viaProject:'Via projecte',
+  addFriend:'AFEGIR AMIC',friendCodePh:'Codi #1234 o email',myFriends:'ELS MEUS AMICS',
+  noFriends:'Afegeix amics amb el seu codi # o email',chatPh:'Escriu...',
+  notFoundFr:'No trobat',thatsYou:'Aquest ets tu',alreadyFriend:'Ja és amic teu',added:'afegit ✓',
+  friendRoutes:'VIES DE',noFriendRoutes:'Sense vies',
+  exportExcel:'EXPORTAR A EXCEL',from:'Des de',to:'Fins a',exportRoutes:'📥 Vies',exportTrains:'📥 Entrenos',
+  cloudData:'DADES AL NÚVOL',cloudRecords:'registres desats',cloudSafe:'Les teves dades estan segures a Firebase.',
+  about:'SOBRE',language:'IDIOMA',
+  planDay:'PLANIFICAR DIA',whatPlan:'QUIN PLA?',climb:'🧗 Escalar',training:'🏋 Entreno',note:'📝 Nota',
+  typeLabel:'Tipus',placePh:'Siurana, Margalef...',trainLabel2:'Entreno',allFolders:'— Totes —',noTrain:'— Sense entreno —',
+  shareExercises:'Compartir exercicis amb convidats',notes:'Notes',notesPh:'Pla del dia...',
+  inviteFriends:'CONVIDAR AMICS',searchFriend:'Cercar amic...',savePlan:'Desar pla',noFriendsYet:'Sense amics encara',
+  deletePlan:'Eliminar aquest pla?',
+  createMeso:'CREAR MESOCICLE',mesoName:'Nom',mesoNamePh:'Pre-temporada, Força...',startDate:'Data inici',
+  phases:'FASES',addPhase:'+ Afegir fase',saveMeso:'Desar mesocicle',noMesos:'Sense mesocicles',
+  deleteMeso:'Eliminar mesocicle?',addPhasesMsg:'Afegeix fases',weeks:'set',
+  copyFrom:'📋 Copiar de',mesoStart:'Inici:',
+  aerobicBase:'Base aeròbica',enduranceStr:'Força resistència',maxStr:'Força màxima',
+  power:'Potència',deload:'Descàrrega',custom:'Personalitzat',
+  dataExplorer:'EXPLORADOR DE DADES',generate:'📊 Generar',
+  xAxis:'Eix X',yAxis:'Eix Y',source:'Font',filter:'Filtre',modeLabel:'Mode',
+  normal:'Normal',cumulative:'Acumulatiu',
+  month:'Mes',week:'Setmana',day:'Dia',place:'Lloc',partner:'Company',gradeAxis:'Grau',routeType2:'Tipus via',
+  gripAxis:'Presa',exerciseAxis:'Exercici',
+  routeCount:'Quantitat vies',chaineds:'Encadenaments',metersClimbed:'Metres escalats',
+  maxBallast:'Llast màx (kg)',minCrimp:'Regleta mín (mm)',maxGrade:'Grau màxim',
+  avgAttempts:'Mitjana intents',daysTrained:'Dies entrenats',totalSeries:'Total sèries',
+  totalReps:'Total reps',totalTime:'Temps total (min)',
+  routesSource:'Vies',trainsSource:'Entrenos',allSource:'Tot',noFilter:'— Sense filtre —',
+  onlyChaineds:'✓ Només encadenats',onlyRock:'🏔 Només roca',onlyGym:'🏢 Només roco',
+  presets_1m:'1 mes',presets_3m:'3 mesos',presets_6m:'6 mesos',presets_1y:'1 any',presets_all:'Tot',
+  noData:'Sense dades en aquest rang',noDataShort:'Sense dades',
+  graphName:'Nom del gràfic:',
+  hasCancelled:'ha cancel·lat',cancelledPlan:'ha cancel·lat:',
+  keepPlan:'OK, mantenir el meu pla',removePlan:'Eliminar el meu pla',
+  accept:'✓ Acceptar',reject:'Rebutjar',
+  inviteAccepted:'Acceptada ✓',inviteRejected:'Rebutjada',
+  calDays:['Dl','Dt','Dc','Dj','Dv','Ds','Dg'],
+  confirmDeleteRoute:'Eliminar aquesta via?',confirmDeleteWo:'Eliminar?',
+  confirmDeleteFolder:'Eliminar carpeta? Els entrenos quedaran solts.',
+  putDate:'Posa una data',putName:'Posa nom',putNameAndEx:'Posa nom i exercicis',
+  tplSaved:'Plantilla "{name}" desada',
+  moveTo:'Moure:',moveBtn:'Moure',
+  putZoneName:'Posa un nom',pasteCoords:'Enganxa les coordenades',saving:'Desant...',
+  putCodeOrEmail:'Posa codi o email',
+  mesoNeedAll:'Posa nom, data i almenys una fase',
+  invRoca:'🏔️ Roca',invIndoor:'🏢 Indoor',invEntreno:'🏋️ Entreno',invNota:'📝 Nota',invCancel:'❌ Cancel·lació',
+  deleteBtn:'Eliminar',
+}
+};
+function t(k){return (I18N[LANG]||I18N.es)[k]||(I18N.es)[k]||k;}
+function setLang(l){LANG=l;localStorage.setItem('spLang',l);applyLang();}
+function applyLang(){
+  // Nav buttons
+  const nbs=document.querySelectorAll('.nb');
+  const nlabs=[t('navHome'),t('navRoutes'),t('navMap'),t('navTrain'),t('navFriends'),t('navSettings')];
+  nbs.forEach((b,i)=>{const svg=b.querySelector('svg');if(svg){b.innerHTML='';b.appendChild(svg);b.append(nlabs[i]);}});
+  // Page headers
+  const hm={'pv':t('navRoutes'),'pm':t('navMap'),'pt':t('navTrain'),'pf':t('navFriends'),'ps':t('navSettings')};
+  Object.entries(hm).forEach(([pid,txt])=>{const p=document.getElementById(pid);if(p){const h1=p.querySelector('.hdr h1');if(h1)h1.textContent=txt;}});
+  // Stats labels
+  const sl=document.getElementById('sVl');if(sl)sl.textContent=t('stats_vias');
+  const se=document.getElementById('sEl');if(se)se.textContent=t('stats_enc');
+  const st2=document.getElementById('sTl');if(st2)st2.textContent=t('stats_entrenos');
+  // Logout
+  const lo=document.querySelector('.usr-out');if(lo)lo.textContent=t('logout');
+  // Redraw current page
+  const cur=PK.find(k=>document.getElementById(PG[k]).classList.contains('on'));
+  if(cur){const fns={home:rH,routes:drR,map:drM,train:drTr,friends:drFr,sync:drS};if(fns[cur])fns[cur]();}
+  // Lang selector
+  const ls=document.getElementById('langSel');if(ls)ls.value=LANG;
+}
+
 function go(id){Object.values(PG).forEach(p=>document.getElementById(p).classList.remove('on'));document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));document.getElementById(PG[id]).classList.add('on');document.querySelectorAll('.nb')[PK.indexOf(id)].classList.add('on');const fns={home:rH,routes:drR,map:drM,train:drTr,friends:drFr,sync:drS};if(fns[id])fns[id]();}
-function drS(){const el=document.getElementById('sN');if(el)el.textContent=D.length;}
+function drS(){const el=document.getElementById('sN');if(el)el.textContent=R.length+Tr.length+W.length;
+  const ce=document.getElementById('ctExport');if(ce)ce.textContent=t('exportExcel');
+  const cc=document.getElementById('ctCloud');if(cc)cc.textContent=t('cloudData');
+  const ca=document.getElementById('ctAbout');if(ca)ca.textContent=t('about');
+  const cl=document.getElementById('ctLang');if(cl)cl.textContent=t('language');
+  const ls=document.getElementById('langSel');if(ls)ls.value=LANG;}
 
 // HOME
-function rH(){updStats();rCal();updGrToggles();loadInvites();setupSwipe();}
+function rH(){updStats();rCal();updGrToggles();loadInvites();setupSwipe();applyLang();}
 function drCalDetail(){
   const el=document.getElementById('calDetail');
   const sel=cSl||new Date().toISOString().split('T')[0];
@@ -271,7 +677,7 @@ function drCalDetail(){
   h+='</div>';el.innerHTML=h;}
 async function delPlan(planId){
   const p=plans.find(x=>x.id===planId);if(!p)return;
-  if(!confirm('¿Eliminar este plan?'))return;
+  if(!confirm(t('deletePlan')))return;
   // If shared, notify invited friends
   if(p.invited&&p.invited.length&&U){
     const fromName=U.displayName||U.email;
@@ -289,7 +695,7 @@ function drNextWo(){
   const td=new Date().toISOString().split('T')[0];
   const el=document.getElementById('homeNextWo');
   const dates=[...new Set(W.filter(w=>w.plannedDate).map(w=>w.plannedDate))].sort();
-  if(!dates.length){el.innerHTML=`<div style="text-align:center;padding:12px"><span style="color:var(--text3);font-size:12px">Sin entrenos programados</span></div>`;return;}
+  if(!dates.length){el.innerHTML=`<div style="text-align:center;padding:12px"><span style="color:var(--text3);font-size:12px">'+t('noTrainPlan')+'</span></div>`;return;}
   // Auto: find nearest future date
   if(nwoIdx<0){nwoIdx=dates.findIndex(d=>d>=td);if(nwoIdx<0)nwoIdx=dates.length-1;}
   if(nwoIdx>=dates.length)nwoIdx=0;if(nwoIdx<0)nwoIdx=dates.length-1;
@@ -300,7 +706,7 @@ function drNextWo(){
   const tmr=new Date();tmr.setDate(tmr.getDate()+1);const isTmr=nxtDate===tmr.toISOString().split('T')[0];
   const dayLabel=dd.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'});
   const isClose=isToday||isTmr;
-  const extra=isToday?' · HOY':isTmr?' · MAÑANA':'';
+  const extra=isToday?' · '+t('today'):isTmr?' · '+t('tomorrow'):'';
   
   let h=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-family:'Bebas Neue';font-size:13px;color:var(--text3);letter-spacing:1px">ENTRENO · <span style="color:${isClose?'var(--green)':'var(--rock)'}"> ${dayLabel.toUpperCase()}${extra}</span></span>`;
   if(dates.length>1)h+=`<span style="font-size:10px;color:var(--text3)">${nwoIdx+1}/${dates.length} ◀ ▶</span>`;
@@ -326,7 +732,7 @@ function setupSwipe(){if(_swipeSetup)return;_swipeSetup=true;let sx=0;
 function getSettings(){return JSON.parse(localStorage.getItem('spSettings')||'{}');}
 async function loadInvites(){if(!U)return;
   const q=await db.collection('users').doc(U.uid).collection('invites').where('status','==','pending').get();
-  let h='';q.forEach(d=>{const inv=d.data();const tipos={roca:'🏔️ Roca',indoor:'🏢 Indoor',entreno:'🏋️ Entreno',nota:'📝 Nota',cancelacion:'❌ Cancelación'};
+  let h='';q.forEach(d=>{const inv=d.data();const tipos={roca:t('invRoca'),indoor:t('invIndoor'),entreno:t('invEntreno'),nota:t('invNota'),cancelacion:t('invCancel')};
     const dd=new Date(inv.date).toLocaleDateString('es-ES',{weekday:'short',day:'numeric',month:'short'});
     let detail=tipos[inv.tipo]||inv.tipo;
     if(inv.lugar)detail+=' · '+inv.lugar;
@@ -364,7 +770,7 @@ function updGrToggles(){
   document.getElementById('gS').innerHTML=gs;rGr();}
 function rCal(){const mN=["ENERO","FEBRERO","MARZO","ABRIL","MAYO","JUNIO","JULIO","AGOSTO","SEPTIEMBRE","OCTUBRE","NOVIEMBRE","DICIEMBRE"];
   document.getElementById('cM').textContent=mN[cMo]+' '+cY;const f=new Date(cY,cMo,1);let sd=f.getDay();if(sd===0)sd=7;sd--;const dm=new Date(cY,cMo+1,0).getDate(),td=new Date();
-  let h='';['L','M','X','J','V','S','D'].forEach(d=>{h+=`<div class="cdh">${d}</div>`;});
+  let h='';t('calDays').forEach(d=>{h+=`<div class="cdh">${d}</div>`;});
   for(let i=0;i<sd;i++)h+='<div class="cd emp"></div>';
   for(let d=1;d<=dm;d++){const ds=`${cY}-${String(cMo+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
     const dr=R.filter(r=>r.date===ds),hr=dr.some(r=>r.lugar==='roca'),hc=dr.some(r=>r.lugar==='indoor'||r.lugar==='roco'),ht=Tr.some(t=>t.date===ds);
@@ -442,7 +848,7 @@ function filterPlFriends(){const q=document.getElementById('plFrSearch').value||
   // Restore checked
   document.querySelectorAll('.plFrCb').forEach(cb=>{if(checked.has(cb.value))cb.checked=true;});}
 async function svPlan(){const date=document.getElementById('plDt').value,notas=document.getElementById('plNo').value;
-  if(!date){alert('Pon una fecha');return;}
+  if(!date){alert(t('putDate'));return;}
   let tipo,lugar='',woData=null;
   if(plTipo==='escalar'){
     tipo=document.getElementById('plTp').value;
@@ -473,11 +879,14 @@ async function svPlan(){const date=document.getElementById('plDt').value,notas=d
 
 // ROUTES
 let vMo='';
-function drR(){let fc='';[['all','Todas'],['roca','Roca'],['indoor','Indoor'],['enc','Enc'],['cuerda','Cuerda'],['bloque','Bloque'],['auto','AutoAseg']].forEach(([k,lb])=>{fc+=`<button class="ch${rFl===k?' on':''}" onclick="rFl='${k}';drR()">${lb}</button>`;});document.getElementById('rF').innerHTML=fc;
+function drR(){let fc='';[['all',t('allRoutes')],['roca',t('rock')],['indoor',t('indoor')],['enc',t('enc')],['cuerda',t('rope')],['bloque',t('boulder')],['auto',t('autoBelay')]].forEach(([k,lb])=>{fc+=`<button class="ch${rFl===k?' on':''}" onclick="rFl='${k}';drR()">${lb}</button>`;});document.getElementById('rF').innerHTML=fc;const ab=document.getElementById('btnAddR');if(ab)ab.textContent=t('addRoute');
   const q=(document.getElementById('vQ').value||'').trim().toLowerCase();
   let fl=R.slice();if(rFl==='roca')fl=fl.filter(r=>r.lugar==='roca');if(rFl==='indoor')fl=fl.filter(r=>r.lugar==='indoor'||r.lugar==='roco');if(rFl==='enc')fl=fl.filter(r=>r.enc);if(rFl==='cuerda')fl=fl.filter(r=>r.tipo==='Cuerda');if(rFl==='bloque')fl=fl.filter(r=>r.tipo==='Bloque');if(rFl==='auto')fl=fl.filter(r=>r.tipo==='AutoAseg');
   if(q)fl=fl.filter(r=>(r.nombre||'').toLowerCase().includes(q)||(r.sitio||'').toLowerCase().includes(q)||(r.amigos||'').toLowerCase().includes(q)||(r.grado||'').toLowerCase().includes(q)||(r.tipo||'').toLowerCase().includes(q)||(r.date||'').includes(q));
-  const so=document.getElementById('rS').value;if(so==='date')fl.sort((a,b)=>b.date.localeCompare(a.date));if(so==='dateA')fl.sort((a,b)=>a.date.localeCompare(b.date));if(so==='grD')fl.sort((a,b)=>G.indexOf(b.grado)-G.indexOf(a.grado));if(so==='grA')fl.sort((a,b)=>G.indexOf(a.grado)-G.indexOf(b.grado));if(so==='lugar')fl.sort((a,b)=>(a.sitio||'').localeCompare(b.sitio||''));if(so==='amigo')fl.sort((a,b)=>(a.amigos||'').localeCompare(b.amigos||''));
+  // Update sort options
+  const rSel=document.getElementById('rS');
+  if(rSel&&rSel.options.length===6){rSel.options[0].text=t('sortDate');rSel.options[1].text=t('sortDateA');rSel.options[2].text=t('sortGrD');rSel.options[3].text=t('sortGrA');rSel.options[4].text=t('sortPlace');rSel.options[5].text=t('sortFriend');}
+  const so=rSel?rSel.value:'date';if(so==='date')fl.sort((a,b)=>b.date.localeCompare(a.date));if(so==='dateA')fl.sort((a,b)=>a.date.localeCompare(b.date));if(so==='grD')fl.sort((a,b)=>G.indexOf(b.grado)-G.indexOf(a.grado));if(so==='grA')fl.sort((a,b)=>G.indexOf(a.grado)-G.indexOf(b.grado));if(so==='lugar')fl.sort((a,b)=>(a.sitio||'').localeCompare(b.sitio||''));if(so==='amigo')fl.sort((a,b)=>(a.amigos||'').localeCompare(b.amigos||''));
   // Month dropdown (only when not searching)
   const mos=[...new Set(fl.map(r=>(r.date||'').substring(0,7)).filter(Boolean))].sort().reverse();
   if(!vMo&&mos.length)vMo=mos[0];
@@ -491,26 +900,26 @@ function drR(){let fc='';[['all','Todas'],['roca','Roca'],['indoor','Indoor'],['
     if(vMo&&vMo!=='all')fl=fl.filter(r=>(r.date||'').startsWith(vMo));
     let h=md;
     fl.forEach(r=>{h+=vc(r,true);});
-    document.getElementById('rL').innerHTML=h||'<div style="text-align:center;color:var(--text3);padding:30px">Sin vías</div>';
+    document.getElementById('rL').innerHTML=h||'<div style="text-align:center;color:var(--text3);padding:30px">'+t('noRoutes')+'</div>';
   }else{
     let h='';
     fl.forEach(r=>{h+=vc(r,true);});
-    document.getElementById('rL').innerHTML=h||'<div style="text-align:center;color:var(--text3);padding:30px">Sin vías</div>';}}
+    document.getElementById('rL').innerHTML=h||'<div style="text-align:center;color:var(--text3);padding:30px">'+t('noRoutes')+'</div>';}}
 function vc(r,ed){return `<div class="via ${r.enc?'enc':''}" ${ed?`onclick="edR('${r.id}')"`:''}><div class="vt"><div class="vg">${r.grado}</div><div class="vd">${new Date(r.date).toLocaleDateString('es-ES',{day:'numeric',month:'short'})}</div></div>${r.nombre?`<div class="vn">${r.nombre}</div>`:''}${r.sitio?`<div class="vl">📍 ${r.sitio}</div>`:''}<div class="vts"><span class="tg r">${r.lugar==='roca'?'Roca':'Indoor'}</span><span class="tg t">${r.tipo}</span>${r.metros?`<span class="tg">${r.metros}m</span>`:''}<span class="tg">Int:${r.intento||1}</span>${r.enc?'<span class="tg e">Enc ✓</span>':''}${r.amigos?`<span class="tg">👥 ${r.amigos}</span>`:''}${r.notas?'<span class="tg">💬</span>':''}</div></div>`;}
 function pSel(){const g=document.getElementById('iG');g.innerHTML='';G.forEach(x=>{g.innerHTML+=`<option>${x}</option>`;});const i=document.getElementById('iI');i.innerHTML='';for(let j=1;j<=9;j++)i.innerHTML+=`<option>${j}</option>`;}
-function addR(){eRt=null;document.getElementById('mRT').textContent='NUEVA VÍA';pSel();['iN','iL','iNo','iA'].forEach(id=>document.getElementById(id).value='');document.getElementById('iMetros').value='';document.getElementById('iFe').value=new Date().toISOString().split('T')[0];document.getElementById('iG').value='7a';document.getElementById('iE').value='0';document.getElementById('btnDelR').style.display='none';document.getElementById('mR1').classList.add('sh');}
-function edR(id){const r=R.find(x=>x.id===id);if(!r)return;eRt=id;document.getElementById('mRT').textContent='EDITAR VÍA';pSel();document.getElementById('iN').value=r.nombre||'';document.getElementById('iL').value=r.sitio||'';document.getElementById('iLT').value=r.lugar;document.getElementById('iTP').value=r.tipo;document.getElementById('iG').value=r.grado;document.getElementById('iI').value=r.intento||1;document.getElementById('iE').value=r.enc?'1':'0';document.getElementById('iNo').value=r.notas||'';document.getElementById('iA').value=r.amigos||'';document.getElementById('iFe').value=r.date;document.getElementById('iMetros').value=r.metros||'';document.getElementById('btnDelR').style.display='block';document.getElementById('mR1').classList.add('sh');}
+function addR(){eRt=null;document.getElementById('mRT').textContent=t('newRoute');pSel();['iN','iL','iNo','iA'].forEach(id=>document.getElementById(id).value='');document.getElementById('iMetros').value='';document.getElementById('iFe').value=new Date().toISOString().split('T')[0];document.getElementById('iG').value='7a';document.getElementById('iE').value='0';document.getElementById('btnDelR').style.display='none';document.getElementById('mR1').classList.add('sh');}
+function edR(id){const r=R.find(x=>x.id===id);if(!r)return;eRt=id;document.getElementById('mRT').textContent=t('editRoute');pSel();document.getElementById('iN').value=r.nombre||'';document.getElementById('iL').value=r.sitio||'';document.getElementById('iLT').value=r.lugar;document.getElementById('iTP').value=r.tipo;document.getElementById('iG').value=r.grado;document.getElementById('iI').value=r.intento||1;document.getElementById('iE').value=r.enc?'1':'0';document.getElementById('iNo').value=r.notas||'';document.getElementById('iA').value=r.amigos||'';document.getElementById('iFe').value=r.date;document.getElementById('iMetros').value=r.metros||'';document.getElementById('btnDelR').style.display='block';document.getElementById('mR1').classList.add('sh');}
 async function svR(){const int=parseInt(document.getElementById('iI').value)||1;const enc=document.getElementById('iE').value==='1';
   const flash=enc&&int===1&&document.getElementById('iFlash').value==='1';
   const avista=enc&&int===1&&document.getElementById('iAvista').value==='1';
   const amigos=document.getElementById('iA').dataset.selected||document.getElementById('iA').value;
   const metros=parseInt(document.getElementById('iMetros').value)||0;
   const d={date:document.getElementById('iFe').value,lugar:document.getElementById('iLT').value,tipo:document.getElementById('iTP').value,grado:document.getElementById('iG').value,intento:int,enc,flash,avista,nombre:document.getElementById('iN').value,sitio:document.getElementById('iL').value,notas:document.getElementById('iNo').value,amigos,metros};if(eRt)d.id=eRt;await saveRoute(d);cm('mR1');drR();rH();}
-async function delR(){if(!eRt||!confirm('¿Eliminar esta vía?'))return;await deleteRoute(eRt);cm('mR1');drR();}
+async function delR(){if(!eRt||!confirm(t('confirmDeleteRoute')))return;await deleteRoute(eRt);cm('mR1');drR();}
 function cm(id){document.getElementById(id).classList.remove('sh');if(id==='mNC')document.getElementById('mapDiv').style.display='block';}
 
 // MAP
-function drM(){let tb='';[['roca','🏔️ Roca'],['roco','🏢 Rocódromo']].forEach(([k,lb])=>{tb+=`<button class="tb${mapMode===k?' on':''}" onclick="mapMode='${k}';drM()">${lb}</button>`;});document.getElementById('mapTbs').innerHTML=tb;
+function drM(){let tb='';[['roca','🏔️ '+t('rock')],['roco','🏢 Indoor']].forEach(([k,lb])=>{tb+=`<button class="tb${mapMode===k?' on':''}" onclick="mapMode='${k}';drM()">${lb}</button>`;});document.getElementById('mapTbs').innerHTML=tb;
   const rr=mapMode==='roca'?R.filter(r=>r.lugar==='roca'):R.filter(r=>r.lugar==='indoor'||r.lugar==='roco');
   document.getElementById('mTotal').textContent=rr.length;document.getElementById('mEnc').textContent=rr.filter(r=>r.enc).length;
   const locs=buildLocs(rr);document.getElementById('mZonas').textContent=Object.keys(locs).length;
@@ -526,11 +935,11 @@ function filterMap(){const q=document.getElementById('mapQ').value.trim().toLowe
   if(match.length===1){leafMap.setView([match[0].lat,match[0].lng],10);showZone(match[0]);document.getElementById('mapResults').style.display='none';}
   else if(match.length>1){let h='';match.forEach(l=>{h+=`<div class="fr-card" style="cursor:pointer" onclick="leafMap.setView([${l.lat},${l.lng}],10);showZone(mapLocs['${l.name}'])"><div class="fr-info"><div class="fr-name" style="color:var(--rock)">${l.name}</div><div class="fr-email">${l.rs.length} vías</div></div></div>`;});
     document.getElementById('mapResults').innerHTML=h;document.getElementById('mapResults').style.display='block';window.mapLocs={};match.forEach(l=>{window.mapLocs[l.name]=l;});}
-  else{document.getElementById('mapResults').innerHTML='<div style="color:var(--text3);font-size:11px;padding:8px">No encontrado</div>';document.getElementById('mapResults').style.display='block';}}
+  else{document.getElementById('mapResults').innerHTML='<div style="color:var(--text3);font-size:11px;padding:8px">'+t('notFound')+'</div>';document.getElementById('mapResults').style.display='block';}}
 function openNewCrag(){document.getElementById('ncNm').value='';document.getElementById('ncCoords').value='';document.getElementById('ncMsg').textContent='';document.getElementById('mapDiv').style.display='none';document.getElementById('mNC').classList.add('sh');}
 async function svNewCrag(){const nm=document.getElementById('ncNm').value.trim(),raw=document.getElementById('ncCoords').value.trim(),msg=document.getElementById('ncMsg');
-  if(!nm){msg.textContent='Pon un nombre';msg.style.color='var(--red)';return;}
-  if(!raw){msg.textContent='Pega las coordenadas';msg.style.color='var(--red)';return;}
+  if(!nm){msg.textContent=t('putZoneName');msg.style.color='var(--red)';return;}
+  if(!raw){msg.textContent=t('pasteCoords');msg.style.color='var(--red)';return;}
   let lat,lng;
   // Try to extract from Google Maps URL (@lat,lng)
   const urlMatch=raw.match(/@(-?\d+\.?\d*),(-?\d+\.?\d*)/);
@@ -539,13 +948,13 @@ async function svNewCrag(){const nm=document.getElementById('ncNm').value.trim()
     const parts=raw.split(/[,\s]+/).filter(x=>x.length>0&&!isNaN(parseFloat(x)));
     if(parts.length>=2){lat=parseFloat(parts[0]);lng=parseFloat(parts[1]);}}
   if(isNaN(lat)||isNaN(lng)||lat<-90||lat>90||lng<-180||lng>180){
-    msg.textContent='No he podido leer las coordenadas. Pega algo como: 43.270854, -3.102539';msg.style.color='var(--red)';return;}
-  msg.textContent='Guardando...';msg.style.color='var(--green)';
+    msg.textContent=t('coordsError');msg.style.color='var(--red)';return;}
+  msg.textContent=t('saving');msg.style.color='var(--green)';
   try{await saveCrag({name:nm,lat,lng});cm('mNC');document.getElementById('mapDiv').style.display='block';drM();}
   catch(e){msg.textContent='Error al guardar: '+e.message;msg.style.color='var(--red)';}}
 
 // TRAINS
-function drTr(){let tb='';[['plan','Programados'],['hist','Historial'],['meso','Mesociclo'],['prog','Progreso']].forEach(([k,lb])=>{tb+=`<button class="tb${tTb===k?' on':''}" onclick="tTb='${k}';drTr()">${lb}</button>`;});document.getElementById('tT').innerHTML=tb;
+function drTr(){let tb='';[['plan',t('scheduled')],['hist',t('history')],['meso',t('mesocycle')],['prog',t('progress')]].forEach(([k,lb])=>{tb+=`<button class="tb${tTb===k?' on':''}" onclick="tTb='${k}';drTr()">${lb}</button>`;});document.getElementById('tT').innerHTML=tb;
   document.getElementById('tH').style.display=tTb==='hist'?'block':'none';document.getElementById('tP').style.display=tTb==='plan'?'block':'none';document.getElementById('tProg').style.display=tTb==='prog'?'block':'none';document.getElementById('tMeso').style.display=tTb==='meso'?'block':'none';
   if(tTb==='hist'){drHist();}
   else if(tTb==='plan'){drPlan();}
@@ -565,7 +974,7 @@ function drHist(){
   const fl=Tr.filter(t=>t.date&&t.date.startsWith(histMo)).sort((a,b)=>b.date.localeCompare(a.date));
   h+=`<div style="font-size:11px;color:var(--text3);margin-bottom:6px">${fl.length} entrenos</div>`;
   fl.forEach(t=>{h+=`<div class="trn"><div style="display:flex;justify-content:space-between"><div class="tt2">${t.tipo}</div><div style="font-size:10px;color:var(--text3)">${new Date(t.date).toLocaleDateString('es-ES',{weekday:'short',day:'numeric',month:'short'})}</div></div><div class="td">${t.detail}</div></div>`;});
-  if(!fl.length)h+='<div style="color:var(--text3);text-align:center;padding:20px">Sin entrenos este mes</div>';
+  if(!fl.length)h+='<div style="color:var(--text3);text-align:center;padding:20px">'+t('noTrainsMonth')+'</div>';
   document.getElementById('tH').innerHTML=h;}
 let woFolders=[],curFolder=null;
 async function loadFolders(){if(!U)return;const q=await db.collection('users').doc(U.uid).collection('woFolders').get();woFolders=[];q.forEach(d=>{woFolders.push({id:d.id,...d.data()});});}
@@ -587,7 +996,7 @@ function drPlan(){
     h+=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><button style="background:none;border:none;color:var(--text2);font-size:18px;cursor:pointer" onclick="curFolder=null;drTr()">◀</button><span style="font-family:'Bebas Neue';font-size:18px;color:var(--rock)">📁 ${fold?fold.name:'Carpeta'}</span></div>`;
     const fW=q?W.filter(w=>w.folder===curFolder&&(w.name||'').toLowerCase().includes(q.toLowerCase())):W.filter(w=>w.folder===curFolder);
     fW.forEach(w=>{h+=renderWoCard(w);});
-    if(!fW.length)h+='<div style="color:var(--text3);text-align:center;padding:20px;font-size:12px">Carpeta vacía · Crea un entreno</div>';
+    if(!fW.length)h+='<div style="color:var(--text3);text-align:center;padding:20px;font-size:12px">'+t('emptyFolder')+'</div>';
   }
   document.getElementById('wL').innerHTML=h;}
 function renderWoCard(w){
@@ -603,7 +1012,7 @@ function newFolder(){newFolderMode=!newFolderMode;drTr();}
 async function doNewFolder(){const inp=document.getElementById('newFolderNm');const nm=(inp?inp.value:'').trim();if(!nm){alert('Pon un nombre');return;}
   try{const ref=await db.collection('users').doc(U.uid).collection('woFolders').add({name:nm});
   woFolders.push({id:ref.id,name:nm});newFolderMode=false;drTr();}catch(e){alert('Error: '+e.message);}}
-async function delFolder(id){if(!confirm('¿Eliminar carpeta? Los entrenos se quedan sueltos.'))return;
+async function delFolder(id){if(!confirm(t('confirmDeleteFolder')))return;
   await db.collection('users').doc(U.uid).collection('woFolders').doc(id).delete();
   woFolders=woFolders.filter(f=>f.id!==id);
   // Unassign workouts from this folder
@@ -621,7 +1030,7 @@ async function doMoveWo(woId){const fId=document.getElementById('mvFolderSel').v
   const w=W.find(x=>x.id===woId);if(!w)return;
   w.folder=fId;await db.collection('users').doc(U.uid).collection('workouts').doc(woId).update({folder:fId||''});
   const el=document.getElementById('mMoveWo');if(el)el.remove();drTr();}
-async function delWo(id){if(confirm('¿Eliminar?')){await delWorkout(id);drTr();}}
+async function delWo(id){if(confirm(t('confirmDeleteWo'))){await delWorkout(id);drTr();}}
 function editWo(id){const w=W.find(x=>x.id===id);if(!w)return;openWo(w);}
 // Exercise templates
 const TPLS=[{nm:'Suspensiones',ag:'Regleta',mm:20,kg:0,modo:'time',time:7,reps:0,rep:6,ser:4,desc:3,ds:180,ang:''},
@@ -636,7 +1045,7 @@ const TPLS=[{nm:'Suspensiones',ag:'Regleta',mm:20,kg:0,modo:'time',time:7,reps:0
 {nm:'Personalizado',ag:'',mm:0,kg:0,modo:'reps',time:7,reps:10,rep:0,ser:3,desc:3,ds:120,ang:''}];
 let editWoId=null;
 function openWo(woToEdit){
-  editWoId=null;wSt=[];document.getElementById('wNm').value='';document.getElementById('mW1Title').textContent='CREAR ENTRENO';
+  editWoId=null;wSt=[];document.getElementById('wNm').value='';document.getElementById('mW1Title').textContent=t('createTrain');
   document.getElementById('ejForm').style.display='none';document.getElementById('viaForm').style.display='none';
   let fh='<option value="">— Sin carpeta —</option>';woFolders.forEach(f=>{fh+=`<option value="${f.id}"${curFolder===f.id?' selected':''}>${f.name}</option>`;});
   document.getElementById('wFolder').innerHTML=fh;
@@ -648,7 +1057,7 @@ function openWo(woToEdit){
   cust.forEach((t,i)=>{h+=`<button class="ch" style="border-color:var(--green)" onclick="loadCustomTpl(${i})">${t.nm}</button>`;});
   document.getElementById('ejTpls').innerHTML=h;
   // If editing existing workout
-  if(woToEdit){editWoId=woToEdit.id;document.getElementById('mW1Title').textContent='EDITAR ENTRENO';
+  if(woToEdit){editWoId=woToEdit.id;document.getElementById('mW1Title').textContent=t('editTrain');
     document.getElementById('wNm').value=woToEdit.name||'';
     if(woToEdit.folder)document.getElementById('wFolder').value=woToEdit.folder;
     wSt=[...(woToEdit.steps||[])];
@@ -660,7 +1069,7 @@ function loadTpl(i){const t=TPLS[i];document.getElementById('ejNm').value=t.nm;d
 function loadCustomTpl(i){const cust=JSON.parse(localStorage.getItem('spCustomTpls')||'[]');if(cust[i])loadTplData(cust[i]);}
 function loadTplData(t){document.getElementById('ejNm').value=t.nm;document.getElementById('ejAg').value=t.ag||'';document.getElementById('ejMm').value=t.mm||'';document.getElementById('ejAng').value=t.ang||'';document.getElementById('ejKg').value=t.kg||0;document.getElementById('ejModo').value=t.modo||'time';document.getElementById('ejTime').value=t.time||7;document.getElementById('ejReps').value=t.reps||0;document.getElementById('ejRep').value=t.rep||6;document.getElementById('ejSer').value=t.ser||4;document.getElementById('ejDesc').value=t.desc||3;document.getElementById('ejDS').value=t.ds||180;ejModoChg();showEjForm();}
 function ejModoChg(){const m=document.getElementById('ejModo').value;document.getElementById('ejTimeF').style.display=m==='time'?'block':'none';document.getElementById('ejRepsF').style.display=m==='reps'?'block':'none';}
-function rWS(){let h='';if(!wSt.length)h='<div style="color:var(--text3);font-size:11px;padding:6px">Añade ejercicios o vías</div>';
+function rWS(){let h='';if(!wSt.length)h='<div style="color:var(--text3);font-size:11px;padding:6px">'+t('addSteps')+'</div>';
   wSt.forEach((s,i)=>{
     const isVia=s.stepType==='via';
     const icon=isVia?'🧗':'🏋';
@@ -670,7 +1079,7 @@ function rWS(){let h='';if(!wSt.length)h='<div style="color:var(--text3);font-si
   document.getElementById('wS').innerHTML=h;}
 function moveStep(i,dir){const ni=i+dir;if(ni<0||ni>=wSt.length)return;const tmp=wSt[i];wSt[i]=wSt[ni];wSt[ni]=tmp;rWS();}
 function gv(id){const e=document.getElementById(id);return e?parseFloat(e.value)||0:0;}
-function addEj(){const nm=document.getElementById('ejNm').value.trim();if(!nm){alert('Pon nombre');return;}
+function addEj(){const nm=document.getElementById('ejNm').value.trim();if(!nm){alert(t('putName'));return;}
   const p={nm,ag:document.getElementById('ejAg').value,mm:gv('ejMm'),ang:document.getElementById('ejAng').value,kg:gv('ejKg'),modo:document.getElementById('ejModo').value,time:gv('ejTime'),reps:gv('ejReps'),rep:gv('ejRep'),ser:gv('ejSer'),desc:gv('ejDesc'),ds:gv('ejDS'),stepType:'exercise'};
   let txt=nm;const parts=[];if(p.ag)parts.push(p.ag);if(p.mm)parts.push(p.mm+'mm');if(p.ang)parts.push(p.ang);if(p.kg>0)parts.push('+'+p.kg+'kg');
   if(p.modo==='time'){if(p.ser>0&&p.rep>0)parts.push(p.ser+'x'+p.rep+' '+p.time+'s/'+p.desc+'s');else if(p.ser>0)parts.push(p.ser+'ser '+p.time+'s');else parts.push(p.time+'s');}else{if(p.ser>0&&p.reps>0)parts.push(p.ser+'x'+p.reps);else if(p.reps>0)parts.push(p.reps+'reps');}
@@ -680,11 +1089,11 @@ function addViaStep(){const grado=document.getElementById('vfGrado').value;const
   const nombre=document.getElementById('vfNombre').value.trim();
   const txt=`${grado} ${tipo}${nombre?' · '+nombre:''}`;
   wSt.push({stepType:'via',grado,tipo,nombre,txt});rWS();document.getElementById('vfNombre').value='';}
-function saveCustomTpl(){const nm=document.getElementById('ejNm').value.trim();if(!nm){alert('Pon nombre');return;}
+function saveCustomTpl(){const nm=document.getElementById('ejNm').value.trim();if(!nm){alert(t('putName'));return;}
   const t={nm,ag:document.getElementById('ejAg').value,mm:gv('ejMm'),ang:document.getElementById('ejAng').value,kg:gv('ejKg'),modo:document.getElementById('ejModo').value,time:gv('ejTime'),reps:gv('ejReps'),rep:gv('ejRep'),ser:gv('ejSer'),desc:gv('ejDesc'),ds:gv('ejDS')};
   const cust=JSON.parse(localStorage.getItem('spCustomTpls')||'[]');cust.push(t);localStorage.setItem('spCustomTpls',JSON.stringify(cust));
-  alert('Plantilla "'+nm+'" guardada');}
-async function svW(){const n=(document.getElementById('wNm').value||'').trim();if(!n||!wSt.length){alert('Pon nombre y ejercicios');return;}
+  alert(t('tplSaved').replace('{name}',nm));}
+async function svW(){const n=(document.getElementById('wNm').value||'').trim();if(!n||!wSt.length){alert(t('putNameAndEx'));return;}
   const d={name:n,steps:[...wSt]};const fld=document.getElementById('wFolder').value;if(fld)d.folder=fld;
   if(editWoId){d.id=editWoId;await db.collection('users').doc(U.uid).collection('workouts').doc(editWoId).update(d);
     const wi=W.findIndex(x=>x.id===editWoId);if(wi>=0)W[wi]={...W[wi],...d};}
@@ -707,15 +1116,15 @@ function execWo(w){exSteps=[];exWoName=w.name||'Entreno';exWoSteps=w.steps||[];
     for(let si2=0;si2<ser;si2++){
       // Add preview step before first series of each exercise (except first exercise)
       if(si2===0&&exSteps.length>0){
-        exSteps.push({label:'SIGUIENTE: '+nm,type:'preview',dur:0,info:detStr,detail:p.modo==='time'?`${ser} series × ${rep} reps × ${p.time}s`:`${ser} series × ${p.reps||0} reps`});}
-      if(p.modo==='time'){for(let ri=0;ri<(rep||1);ri++){exSteps.push({label:nm,type:'work',dur:p.time||7,info:`Serie ${si2+1}/${ser} · Rep ${ri+1}/${rep||1}`,detail:detStr});if(p.desc>0&&ri<(rep||1)-1)exSteps.push({label:'DESCANSO',type:'rest',dur:p.desc,info:'Entre reps',detail:''});}}
-      else{exSteps.push({label:nm,type:'work',dur:0,info:`Serie ${si2+1}/${ser} · ${p.reps||0} reps`,detail:detStr});}
-      if(p.ds>0&&si2<ser-1)exSteps.push({label:'DESCANSO SERIE',type:'rest',dur:p.ds,info:'Descanso entre series',detail:''});}});
-  if(!exSteps.length){alert('Entreno vacío');return;}
-  exIdx=0;exPaused=true;showExStep();document.getElementById('exPlayBtn').textContent='▶ EMPEZAR';document.getElementById('mExec').style.display='block';}
+        exSteps.push({label:t('next')+' '+nm,type:'preview',dur:0,info:detStr,detail:p.modo==='time'?`${ser} series × ${rep} reps × ${p.time}s`:`${ser} series × ${p.reps||0} reps`});}
+      if(p.modo==='time'){for(let ri=0;ri<(rep||1);ri++){exSteps.push({label:nm,type:'work',dur:p.time||7,info:`${t('serie')} ${si2+1}/${ser} · ${t('rep')} ${ri+1}/${rep||1}`,detail:detStr});if(p.desc>0&&ri<(rep||1)-1)exSteps.push({label:t('rest'),type:'rest',dur:p.desc,info:t('betweenReps'),detail:''});}}
+      else{exSteps.push({label:nm,type:'work',dur:0,info:`${t('serie')} ${si2+1}/${ser} · ${p.reps||0} ${t('reps')}`,detail:detStr});}
+      if(p.ds>0&&si2<ser-1)exSteps.push({label:t('seriesRest'),type:'rest',dur:p.ds,info:t('betweenSeries'),detail:''});}});
+  if(!exSteps.length){alert(t('emptyTrain'));return;}
+  exIdx=0;exPaused=true;showExStep();document.getElementById('exPlayBtn').textContent=t('start');document.getElementById('mExec').style.display='block';}
 function showExStep(){
   const ni=document.getElementById('exNextInfo');
-  if(exIdx>=exSteps.length){document.getElementById('exTitle').textContent='¡COMPLETADO!';document.getElementById('exStep').textContent='';document.getElementById('exTimer').textContent='✓';document.getElementById('exTimer').style.color='var(--green)';document.getElementById('exInfo').textContent='Buen entreno 💪';document.getElementById('exDetail').textContent='';ni.style.display='none';document.getElementById('exBar').style.width='100%';
+  if(exIdx>=exSteps.length){document.getElementById('exTitle').textContent=t('completed');document.getElementById('exStep').textContent='';document.getElementById('exTimer').textContent='✓';document.getElementById('exTimer').style.color='var(--green)';document.getElementById('exInfo').textContent=t('goodTraining');document.getElementById('exDetail').textContent='';ni.style.display='none';document.getElementById('exBar').style.width='100%';
   document.getElementById('exViaBtn').style.display='none';
   // Unlock orientation
   try{if(exLandLock&&screen.orientation&&screen.orientation.unlock)screen.orientation.unlock();}catch(e){}
@@ -723,7 +1132,7 @@ function showExStep(){
   return;}
   const s=exSteps[exIdx];
   document.getElementById('exTitle').textContent=s.label;
-  document.getElementById('exStep').textContent=`PASO ${exIdx+1} / ${exSteps.length}`;
+  document.getElementById('exStep').textContent=`${t('step')} ${exIdx+1} / ${exSteps.length}`;
   document.getElementById('exInfo').textContent=s.info||'';
   document.getElementById('exDetail').textContent=s.detail||'';
   const isRest=s.type==='rest';const isVia=s.type==='via';const isPreview=s.type==='preview';
@@ -732,7 +1141,7 @@ function showExStep(){
   document.getElementById('exViaBtn').style.display=isVia?'flex':'none';
   // Show next exercise info
   if(!isPreview){const nxt=exSteps.slice(exIdx+1).find(x=>x.type==='work'||x.type==='via');
-    if(nxt){ni.textContent='Siguiente: '+nxt.label;ni.style.display='block';}else{ni.style.display='none';}}else{ni.style.display='none';}
+    if(nxt){ni.textContent=t('next')+' '+nxt.label;ni.style.display='block';}else{ni.style.display='none';}}else{ni.style.display='none';}
   if(isPreview){exSec=0;document.getElementById('exTimer').textContent='📋';document.getElementById('exBar').style.width=((exIdx+1)/exSteps.length*100)+'%';}
   else if(s.dur>0){exSec=s.dur;exTotalSec=s.dur;updExTimer();}
   else{exSec=0;document.getElementById('exTimer').textContent=isVia?'🧗':'→ TAP';document.getElementById('exBar').style.width=((exIdx+1)/exSteps.length*100)+'%';}}
@@ -742,7 +1151,7 @@ async function exViaDone(enc){const s=exSteps[exIdx];if(!s||s.type!=='via')retur
   await saveRoute(route);
   doAlert();nextEx();if(!exPaused&&exIdx<exSteps.length&&exSteps[exIdx].dur>0)runEx();}
 function updExTimer(){const m=Math.floor(exSec/60),ss=exSec%60;document.getElementById('exTimer').textContent=exSec>=60?`${m}:${String(ss).padStart(2,'0')}`:exSec;document.getElementById('exBar').style.width=((exIdx+(1-exSec/exTotalSec))/exSteps.length*100)+'%';}
-function toggleExec(){if(exIdx>=exSteps.length)return;exPaused=!exPaused;document.getElementById('exPlayBtn').textContent=exPaused?'▶ SEGUIR':'⏸ PAUSA';
+function toggleExec(){if(exIdx>=exSteps.length)return;exPaused=!exPaused;document.getElementById('exPlayBtn').textContent=exPaused?t('resume'):t('pause');
   if(!exPaused)runEx();}
 function runEx(){if(exPaused||exIdx>=exSteps.length)return;const s=exSteps[exIdx];
   if(s.dur>0&&exSec>0){exTimerId=setTimeout(()=>{exSec--;updExTimer();if(exSec<=0){doAlert();nextEx();}else if(exSec<=3)doBeep();runEx();},1000);}
@@ -762,29 +1171,29 @@ async function drFr(){let h='';if(!friends.length)h='<div style="color:var(--tex
   document.getElementById('frList').innerHTML=h;document.getElementById('frView').style.display='none';}
 async function openChatByEmail(email){const q=await db.collection('users').where('email','==',email).get();if(q.empty)return;const fd=q.docs[0].data();openChat(q.docs[0].id,(fd.name||email).replace(/'/g,''));}
 async function addFriend(){const raw=document.getElementById('frCode').value.trim(),msg=document.getElementById('frMsg');
-  if(!raw){msg.textContent='Pon código o email';msg.style.color='var(--red)';return;}
+  if(!raw){msg.textContent=t('putCodeOrEmail');msg.style.color='var(--red)';return;}
   let q;
   if(raw.startsWith('#')||/^\d+$/.test(raw)){
     const code=parseInt(raw.replace('#',''));
     q=await db.collection('users').where('code','==',code).get();
   }else{q=await db.collection('users').where('email','==',raw.toLowerCase()).get();}
-  if(q.empty){msg.textContent='No encontrado';msg.style.color='var(--yellow)';return;}
+  if(q.empty){msg.textContent=t('notFoundFr');msg.style.color='var(--yellow)';return;}
   const fDoc=q.docs[0],fd=fDoc.data();
-  if(fDoc.id===U.uid){msg.textContent='Ese eres tú';msg.style.color='var(--red)';return;}
-  if(friends.some(f=>f.email===fd.email)){msg.textContent='Ya es tu amigo';msg.style.color='var(--yellow)';return;}
+  if(fDoc.id===U.uid){msg.textContent=t('thatsYou');msg.style.color='var(--red)';return;}
+  if(friends.some(f=>f.email===fd.email)){msg.textContent=t('alreadyFriend');msg.style.color='var(--yellow)';return;}
   await db.collection('users').doc(U.uid).collection('friends').add({email:fd.email});friends.push({email:fd.email});
   document.getElementById('frCode').value='';msg.textContent=(fd.name||fd.email)+' añadido ✓';msg.style.color='var(--green)';drFr();}
 async function rmFr(id){await db.collection('users').doc(U.uid).collection('friends').doc(id).delete();friends=friends.filter(f=>f.id!==id);drFr();}
 async function viewFr(email){const q=await db.collection('users').where('email','==',email).get();if(q.empty)return;
-  const fuid=q.docs[0].id,fd=q.docs[0].data();document.getElementById('frViewTitle').textContent='VÍAS DE '+(fd.name||email).toUpperCase();
+  const fuid=q.docs[0].id,fd=q.docs[0].data();document.getElementById('frViewTitle').textContent=t('friendRoutes')+' '+(fd.name||email).toUpperCase();
   const rs=await db.collection('users').doc(fuid).collection('routes').orderBy('date','desc').limit(30).get();let h='';
   rs.forEach(d=>{h+=vc({id:d.id,...d.data()},false);});
-  document.getElementById('frRoutes').innerHTML=h||'<div style="color:var(--text3);font-size:11px;padding:8px">Sin vías</div>';document.getElementById('frView').style.display='block';}
+  document.getElementById('frRoutes').innerHTML=h||'<div style="color:var(--text3);font-size:11px;padding:8px">'+t('noFriendRoutes')+'</div>';document.getElementById('frView').style.display='block';}
 
 // MESOCICLOS
 const MESO_COLORS=[{name:'Base aeróbica',color:'#ffe66d'},{name:'Fuerza resistencia',color:'#4ecdc4'},{name:'Fuerza máxima',color:'#ff6b6b'},{name:'Potencia',color:'#a78bfa'},{name:'Descarga',color:'#4a9eff'},{name:'Personalizado',color:'#8a9bb0'}];
 let msFases=[];
-function drMeso(){let h='';if(!mesos.length)h='<div style="color:var(--text3);font-size:11px;text-align:center;padding:16px">Sin mesociclos</div>';
+function drMeso(){let h='';if(!mesos.length)h='<div style="color:var(--text3);font-size:11px;text-align:center;padding:16px">'+t('noMesos')+'</div>';
   mesos.forEach(m=>{h+=`<div class="meso-card"><button class="meso-del" onclick="delMeso('${m.id}')">✕</button><div style="font-family:'Bebas Neue';font-size:16px;color:var(--rock)">${m.name}</div><div style="font-size:10px;color:var(--text3);margin-bottom:6px">Inicio: ${new Date(m.start).toLocaleDateString('es-ES',{day:'numeric',month:'short'})}</div>`;
     (m.fases||[]).forEach(f=>{h+=`<div class="meso-fase"><div class="meso-dot" style="background:${f.color}"></div><div class="meso-info"><b>${f.name}</b> · ${f.weeks} sem</div></div>`;});
     h+=`</div>`;});
@@ -802,14 +1211,14 @@ function addFase(){msFases.push({name:MESO_COLORS[0].name,color:MESO_COLORS[0].c
 function rMsFases(){let h='';msFases.forEach((f,i)=>{
     let opts='';MESO_COLORS.forEach(c=>{opts+=`<option value="${c.name}" ${f.name===c.name?'selected':''}>${c.name}</option>`;});
     h+=`<div class="meso-fase"><div class="meso-dot" style="background:${f.color}"></div><select style="flex:1;background:var(--bg);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:4px;color:var(--text);font-size:11px;font-family:Nunito" onchange="msFases[${i}].name=this.value;const c=MESO_COLORS.find(x=>x.name===this.value);if(c)msFases[${i}].color=c.color;rMsFases()">${opts}</select><input type="number" value="${f.weeks}" min="1" max="8" style="width:40px;background:var(--bg);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:4px;color:var(--text);font-size:11px;text-align:center;font-family:Nunito" onchange="msFases[${i}].weeks=parseInt(this.value)||1;rMsFases()"><span style="font-size:9px;color:var(--text3)">sem</span><button class="meso-rm" onclick="msFases.splice(${i},1);rMsFases()">✕</button></div>`;});
-  if(!msFases.length)h='<div style="font-size:10px;color:var(--text3);padding:4px">Añade fases</div>';
+  if(!msFases.length)h='<div style="font-size:10px;color:var(--text3);padding:4px">'+t('addPhasesMsg')+'</div>';
   document.getElementById('msFases').innerHTML=h;}
 async function svMeso(){const nm=document.getElementById('msNm').value.trim(),start=document.getElementById('msStart').value;
-  if(!nm||!start||!msFases.length){alert('Pon nombre, fecha y al menos una fase');return;}
+  if(!nm||!start||!msFases.length){alert(t('mesoNeedAll'));return;}
   const data={name:nm,start,fases:msFases.map(f=>({name:f.name,color:f.color,weeks:f.weeks}))};
   const ref=await db.collection('users').doc(U.uid).collection('mesos').add(data);data.id=ref.id;mesos.push(data);
   cm('mMeso');tTb='meso';drTr();}
-async function delMeso(id){if(!confirm('¿Eliminar mesociclo?'))return;await db.collection('users').doc(U.uid).collection('mesos').doc(id).delete();mesos=mesos.filter(m=>m.id!==id);drMeso();}
+async function delMeso(id){if(!confirm(t('deleteMeso')))return;await db.collection('users').doc(U.uid).collection('mesos').doc(id).delete();mesos=mesos.filter(m=>m.id!==id);drMeso();}
 // Get mesociclo color for a date
 function getMesoColor(dateStr){for(const m of mesos){let d=new Date(m.start);for(const f of(m.fases||[])){for(let w=0;w<f.weeks;w++){const ws=d.toISOString().split('T')[0];const we=new Date(d);we.setDate(we.getDate()+6);const weS=we.toISOString().split('T')[0];if(dateStr>=ws&&dateStr<=weS)return f.color;d.setDate(d.getDate()+7);}}}return null;}
 
@@ -881,14 +1290,14 @@ function drDash(){const from=document.getElementById('grFrom').value,to=document
     data.push([lb.length>12?lb.slice(0,12)+'…':lb,val]);});
   // Acumulativo
   if(acum&&data.length){let cum=0;data.forEach(d=>{if(typeof d[1]==='number'){cum+=d[1];d[1]=cum;}});}
-  if(!data.length){ctx.fillStyle='#5a6a7a';ctx.font='12px Nunito';ctx.textAlign='center';ctx.fillText('Sin datos en este rango',w/2,h/2);document.getElementById('dashInfo').textContent='';return;}
+  if(!data.length){ctx.fillStyle='#5a6a7a';ctx.font='12px Nunito';ctx.textAlign='center';ctx.fillText(t('noData'),w/2,h/2);document.getElementById('dashInfo').textContent='';return;}
   const isNumeric=data.every(d=>typeof d[1]==='number');
   if(isNumeric&&(sortable||data.length<=5))drawLine(ctx,w,h,data);
   else if(isNumeric)drawBars(ctx,w,h,data);
   else drawLabels(ctx,w,h,data);
   if(isNumeric){const vals=data.map(d=>d[1]).filter(v=>v>0);if(vals.length){const sum=acum?vals[vals.length-1]:vals.reduce((a,b)=>a+b,0);document.getElementById('dashInfo').textContent=`Total: ${sum} · Media: ${Math.round((acum?sum/vals.length:sum/vals.length)*10)/10} · Máx: ${Math.max(...vals)}`;}else document.getElementById('dashInfo').textContent='';}else document.getElementById('dashInfo').textContent='';}
 let savedGraphList=JSON.parse(localStorage.getItem('spSavedGraphs')||'[]');
-function saveGraph(){const nm=prompt('Nombre del gráfico:');if(!nm)return;
+function saveGraph(){const nm=prompt(t('graphName'));if(!nm)return;
   const cfg={name:nm,x:document.getElementById('grX').value,y:document.getElementById('grY').value,src:document.getElementById('grSrc').value,filt:document.getElementById('grFilt').value,mode:document.getElementById('grMode').value};
   savedGraphList.push(cfg);localStorage.setItem('spSavedGraphs',JSON.stringify(savedGraphList));drSavedGraphs();}
 function drSavedGraphs(){let h='';savedGraphList.forEach((g,i)=>{
@@ -899,7 +1308,7 @@ function loadGraph(i){const g=savedGraphList[i];if(!g)return;
   document.getElementById('grSrc').value=g.src;document.getElementById('grMode').value=g.mode||'normal';
   updFilters();if(g.filt)document.getElementById('grFilt').value=g.filt;drDash();}
 function initDashDates(){const td=new Date(),y1=new Date(td);y1.setFullYear(y1.getFullYear()-1);document.getElementById('grFrom').value=y1.toISOString().split('T')[0];document.getElementById('grTo').value=td.toISOString().split('T')[0];
-  let h='';[['1m','1 mes'],['3m','3 meses'],['6m','6 meses'],['1y','1 año'],['all','Todo']].forEach(([k,lb])=>{h+=`<button class="ch" onclick="setDashPer('${k}')">${lb}</button>`;});document.getElementById('grPresets').innerHTML=h;updFilters();drSavedGraphs();}
+  let h='';[['1m',t('presets_1m')],['3m',t('presets_3m')],['6m',t('presets_6m')],['1y',t('presets_1y')],['all',t('presets_all')]].forEach(([k,lb])=>{h+=`<button class="ch" onclick="setDashPer('${k}')">${lb}</button>`;});document.getElementById('grPresets').innerHTML=h;updFilters();drSavedGraphs();}
 function setDashPer(p){const td=new Date();document.getElementById('grTo').value=td.toISOString().split('T')[0];let f=new Date(td);if(p==='1m')f.setMonth(f.getMonth()-1);else if(p==='3m')f.setMonth(f.getMonth()-3);else if(p==='6m')f.setMonth(f.getMonth()-6);else if(p==='1y')f.setFullYear(f.getFullYear()-1);else f=new Date('2020-01-01');document.getElementById('grFrom').value=f.toISOString().split('T')[0];}
 function groupByMonth(arr){const m={};arr.forEach(x=>{const k=(x.date||'').substring(0,7);if(k){if(!m[k])m[k]=[];m[k].push(x);}});return Object.entries(m).sort((a,b)=>a[0].localeCompare(b[0]));}
 function drawLine(ctx,w,h,data){const vals=data.map(d=>d[1]);const mx=Math.max(...vals),mn=Math.min(...vals);const range=mx-mn||1;
