@@ -192,58 +192,6 @@ firebase.initializeApp({apiKey:"AIzaSyBaBnTmI8_YuYIRGx2mdDVJSe_k4SF_eho",authDom
 const auth=firebase.auth(),db=firebase.firestore();
 let U=null,R=[],Tr=[],W=[],friends=[],plans=[],userCrags=[],mesos=[];
 
-auth.onAuthStateChanged(async u=>{document.getElementById('loadPage').style.display='none';
-  if(u){U=u;document.getElementById('loginPage').style.display='none';
-    document.getElementById('splashScreen').style.display='block';
-    document.getElementById('uPic').src=u.photoURL||'';document.getElementById('uName').textContent=u.displayName||u.email;
-    const code=parseInt(u.uid.replace(/[^0-9]/g,'').slice(0,4))||Math.floor(Math.random()*9000)+1000;
-    await db.collection('users').doc(u.uid).set({name:u.displayName,email:u.email,photo:u.photoURL,code:code},{merge:true});
-    document.getElementById('uTag').textContent='#'+code;
-    await loadData();
-    applyLang();
-    document.getElementById('langSel').value=LANG;
-    setTimeout(()=>{document.getElementById('splashScreen').style.opacity='0';
-      setTimeout(()=>{document.getElementById('splashScreen').style.display='none';document.getElementById('appWrap').style.display='block';rH();},500);
-    },2000);}
-  else{U=null;document.getElementById('loginPage').style.display='';document.getElementById('appWrap').style.display='none';document.getElementById('splashScreen').style.display='none';applyLang();}});
-function loginGoogle(){auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());}
-function logout(){auth.signOut();}
-
-async function loadData(){if(!U)return;const uid=U.uid;
-  let q=await db.collection('users').doc(uid).collection('routes').orderBy('date','desc').get();R=[];q.forEach(d=>{R.push({id:d.id,...d.data()});});
-  q=await db.collection('users').doc(uid).collection('trains').orderBy('date','desc').get();Tr=[];q.forEach(d=>{Tr.push({id:d.id,...d.data()});});
-  q=await db.collection('users').doc(uid).collection('workouts').get();W=[];q.forEach(d=>{W.push({id:d.id,...d.data()});});
-  q=await db.collection('users').doc(uid).collection('friends').get();friends=[];q.forEach(d=>{friends.push({id:d.id,...d.data()});});
-  for(const f of friends){try{const fq=await db.collection('users').where('email','==',f.email).get();
-    if(!fq.empty){const ud=fq.docs[0].data();f.name=ud.name||f.email;f.photo=ud.photo||'';}}catch(e){}}
-  q=await db.collection('users').doc(uid).collection('plans').get();plans=[];q.forEach(d=>{plans.push({id:d.id,...d.data()});});
-  q=await db.collection('crags').get();userCrags=[];q.forEach(d=>{userCrags.push({id:d.id,...d.data()});});
-  q=await db.collection('users').doc(uid).collection('mesos').get();mesos=[];q.forEach(d=>{mesos.push({id:d.id,...d.data()});});
-  q=await db.collection('users').doc(uid).collection('woFolders').get();woFolders=[];q.forEach(d=>{woFolders.push({id:d.id,...d.data()});});
-  updDL();}
-function updDL(){const s=new Set();R.forEach(r=>{if(r.sitio)s.add(r.sitio);});let dl='';[...CRAGS.keys(),...userCrags.map(c=>c.name),...s].forEach(n=>{dl+=`<option value="${n}">`;});document.getElementById('dlZ').innerHTML=dl;}
-
-async function saveRoute(data){if(!U)return;const col=db.collection('users').doc(U.uid).collection('routes');
-  if(data.id&&data.id.length>5){await col.doc(data.id).set(data);const i=R.findIndex(r=>r.id===data.id);if(i>=0)R[i]=data;}
-  else{const ref=await col.add(data);data.id=ref.id;R.unshift(data);}}
-async function deleteRoute(id){if(!U)return;await db.collection('users').doc(U.uid).collection('routes').doc(id).delete();R=R.filter(r=>r.id!==id);}
-async function saveTrain(data){if(!U)return;const ref=await db.collection('users').doc(U.uid).collection('trains').add(data);data.id=ref.id;Tr.unshift(data);}
-async function saveWorkout(data){if(!U)return;const ref=await db.collection('users').doc(U.uid).collection('workouts').add(data);data.id=ref.id;W.push(data);}
-async function delWorkout(id){if(!U)return;await db.collection('users').doc(U.uid).collection('workouts').doc(id).delete();W=W.filter(w=>w.id!==id);}
-async function savePlan(data){if(!U)return;const ref=await db.collection('users').doc(U.uid).collection('plans').add(data);data.id=ref.id;plans.push(data);}
-async function saveCrag(data){if(!U)return;const ref=await db.collection('crags').add(data);data.id=ref.id;userCrags.push(data);updDL();}
-
-// CRAGS DB
-const CRAGS=new Map([["Atauri",[42.77,-2.52]],["Etxauri",[42.83,-1.87]],["Riglos",[42.35,-0.72]],["Siurana",[41.25,0.93]],["Margalef",[41.28,0.75]],["Rodellar",[42.27,-0.08]],["Oliana",[42.07,1.31]],["Chulilla",[39.66,-0.89]],["Montanejos",[40.07,-0.53]],["Sella",[38.63,-0.27]],["Santa Linya",[41.98,0.76]],["Terradets",[42.07,0.84]],["El Chorro",[36.92,-4.77]],["Archidona",[37.09,-4.39]],["San Bartolo",[36.08,-5.63]],["Oñati",[42.98,-2.41]],["Araotz",[42.97,-2.41]],["Leitza",[43.09,-1.90]],["Tres Ponts",[42.12,1.15]],["Kalymnos",[36.96,26.98]],["Leonidio",[37.16,22.86]],["Fontainebleau",[48.40,2.63]],["Ceüse",[44.50,5.95]],["Verdon",[43.75,6.40]],["Buoux",[43.82,5.38]],["Finale Ligure",[44.17,8.34]],["Arco",[45.92,10.88]],["Loja",[37.17,-4.15]],["Teverga",[43.15,-6.08]],["Peñón de Ifach",[38.63,0.08]],["Albarracín",[40.41,-1.44]],["Cuenca",[40.06,-2.13]],["La Pedriza",[40.75,-3.87]],["Patones",[40.87,-3.57]],["Geyikbayiri",[37.15,30.48]],["Railay",[8.01,98.84]],["El Potrero Chico",[25.95,-100.47]],["Berdejo",[41.63,-1.93]],["Calcena",[41.63,-1.70]],["Morata de Jalón",[41.48,-1.47]],["Baltzola",[43.14,-2.63]],["Aizkorri",[42.95,-2.35]]]);
-function getCragCoords(name){if(!name)return null;const nl=name.toLowerCase();
-  for(const[k,v]of CRAGS){if(nl.includes(k.toLowerCase()))return{name:k,lat:v[0],lng:v[1]};}
-  for(const c of userCrags){if(nl.includes(c.name.toLowerCase()))return{name:c.name,lat:c.lat,lng:c.lng};}
-  return null;}
-
-const G=["V","6a","6a+","6b","6b+","6c","6c+","7a","7a+","7b","7b+","7c","7c+","8a","8a+","8b","8b+","8c","8c+","9a","9a+","9b","9b+","9c"];
-let cY=2026,cMo=1,cSl=null,gM='cr',gPer='year',sPer='year',rFl='all',tTb='plan',mapMode='roca',eRt=null,wSt=[],leafMap=null,markers=[],chatUnsub=null,chatFrUid=null;
-const PG={home:'ph',routes:'pv',map:'pm',train:'pt',friends:'pf',sync:'ps'},PK=Object.keys(PG);
-
 // ── i18n MULTI-IDIOMA ──
 let LANG=localStorage.getItem('spLang')||'es';
 const I18N={
@@ -640,6 +588,60 @@ function applyLang(){
   const lsub=document.getElementById('loginSubTxt');if(lsub)lsub.textContent=t('loginSub');
   const ss=document.getElementById('splashSubTxt');if(ss)ss.textContent=t('splashSub');
 }
+
+
+auth.onAuthStateChanged(async u=>{document.getElementById('loadPage').style.display='none';
+  if(u){U=u;document.getElementById('loginPage').style.display='none';
+    document.getElementById('splashScreen').style.display='block';
+    document.getElementById('uPic').src=u.photoURL||'';document.getElementById('uName').textContent=u.displayName||u.email;
+    const code=parseInt(u.uid.replace(/[^0-9]/g,'').slice(0,4))||Math.floor(Math.random()*9000)+1000;
+    await db.collection('users').doc(u.uid).set({name:u.displayName,email:u.email,photo:u.photoURL,code:code},{merge:true});
+    document.getElementById('uTag').textContent='#'+code;
+    await loadData();
+    applyLang();
+    document.getElementById('langSel').value=LANG;
+    setTimeout(()=>{document.getElementById('splashScreen').style.opacity='0';
+      setTimeout(()=>{document.getElementById('splashScreen').style.display='none';document.getElementById('appWrap').style.display='block';rH();},500);
+    },2000);}
+  else{U=null;document.getElementById('loginPage').style.display='';document.getElementById('appWrap').style.display='none';document.getElementById('splashScreen').style.display='none';applyLang();}});
+function loginGoogle(){auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());}
+function logout(){auth.signOut();}
+
+async function loadData(){if(!U)return;const uid=U.uid;
+  let q=await db.collection('users').doc(uid).collection('routes').orderBy('date','desc').get();R=[];q.forEach(d=>{R.push({id:d.id,...d.data()});});
+  q=await db.collection('users').doc(uid).collection('trains').orderBy('date','desc').get();Tr=[];q.forEach(d=>{Tr.push({id:d.id,...d.data()});});
+  q=await db.collection('users').doc(uid).collection('workouts').get();W=[];q.forEach(d=>{W.push({id:d.id,...d.data()});});
+  q=await db.collection('users').doc(uid).collection('friends').get();friends=[];q.forEach(d=>{friends.push({id:d.id,...d.data()});});
+  for(const f of friends){try{const fq=await db.collection('users').where('email','==',f.email).get();
+    if(!fq.empty){const ud=fq.docs[0].data();f.name=ud.name||f.email;f.photo=ud.photo||'';}}catch(e){}}
+  q=await db.collection('users').doc(uid).collection('plans').get();plans=[];q.forEach(d=>{plans.push({id:d.id,...d.data()});});
+  q=await db.collection('crags').get();userCrags=[];q.forEach(d=>{userCrags.push({id:d.id,...d.data()});});
+  q=await db.collection('users').doc(uid).collection('mesos').get();mesos=[];q.forEach(d=>{mesos.push({id:d.id,...d.data()});});
+  q=await db.collection('users').doc(uid).collection('woFolders').get();woFolders=[];q.forEach(d=>{woFolders.push({id:d.id,...d.data()});});
+  updDL();}
+function updDL(){const s=new Set();R.forEach(r=>{if(r.sitio)s.add(r.sitio);});let dl='';[...CRAGS.keys(),...userCrags.map(c=>c.name),...s].forEach(n=>{dl+=`<option value="${n}">`;});document.getElementById('dlZ').innerHTML=dl;}
+
+async function saveRoute(data){if(!U)return;const col=db.collection('users').doc(U.uid).collection('routes');
+  if(data.id&&data.id.length>5){await col.doc(data.id).set(data);const i=R.findIndex(r=>r.id===data.id);if(i>=0)R[i]=data;}
+  else{const ref=await col.add(data);data.id=ref.id;R.unshift(data);}}
+async function deleteRoute(id){if(!U)return;await db.collection('users').doc(U.uid).collection('routes').doc(id).delete();R=R.filter(r=>r.id!==id);}
+async function saveTrain(data){if(!U)return;const ref=await db.collection('users').doc(U.uid).collection('trains').add(data);data.id=ref.id;Tr.unshift(data);}
+async function saveWorkout(data){if(!U)return;const ref=await db.collection('users').doc(U.uid).collection('workouts').add(data);data.id=ref.id;W.push(data);}
+async function delWorkout(id){if(!U)return;await db.collection('users').doc(U.uid).collection('workouts').doc(id).delete();W=W.filter(w=>w.id!==id);}
+async function savePlan(data){if(!U)return;const ref=await db.collection('users').doc(U.uid).collection('plans').add(data);data.id=ref.id;plans.push(data);}
+async function saveCrag(data){if(!U)return;const ref=await db.collection('crags').add(data);data.id=ref.id;userCrags.push(data);updDL();}
+
+// CRAGS DB
+const CRAGS=new Map([["Atauri",[42.77,-2.52]],["Etxauri",[42.83,-1.87]],["Riglos",[42.35,-0.72]],["Siurana",[41.25,0.93]],["Margalef",[41.28,0.75]],["Rodellar",[42.27,-0.08]],["Oliana",[42.07,1.31]],["Chulilla",[39.66,-0.89]],["Montanejos",[40.07,-0.53]],["Sella",[38.63,-0.27]],["Santa Linya",[41.98,0.76]],["Terradets",[42.07,0.84]],["El Chorro",[36.92,-4.77]],["Archidona",[37.09,-4.39]],["San Bartolo",[36.08,-5.63]],["Oñati",[42.98,-2.41]],["Araotz",[42.97,-2.41]],["Leitza",[43.09,-1.90]],["Tres Ponts",[42.12,1.15]],["Kalymnos",[36.96,26.98]],["Leonidio",[37.16,22.86]],["Fontainebleau",[48.40,2.63]],["Ceüse",[44.50,5.95]],["Verdon",[43.75,6.40]],["Buoux",[43.82,5.38]],["Finale Ligure",[44.17,8.34]],["Arco",[45.92,10.88]],["Loja",[37.17,-4.15]],["Teverga",[43.15,-6.08]],["Peñón de Ifach",[38.63,0.08]],["Albarracín",[40.41,-1.44]],["Cuenca",[40.06,-2.13]],["La Pedriza",[40.75,-3.87]],["Patones",[40.87,-3.57]],["Geyikbayiri",[37.15,30.48]],["Railay",[8.01,98.84]],["El Potrero Chico",[25.95,-100.47]],["Berdejo",[41.63,-1.93]],["Calcena",[41.63,-1.70]],["Morata de Jalón",[41.48,-1.47]],["Baltzola",[43.14,-2.63]],["Aizkorri",[42.95,-2.35]]]);
+function getCragCoords(name){if(!name)return null;const nl=name.toLowerCase();
+  for(const[k,v]of CRAGS){if(nl.includes(k.toLowerCase()))return{name:k,lat:v[0],lng:v[1]};}
+  for(const c of userCrags){if(nl.includes(c.name.toLowerCase()))return{name:c.name,lat:c.lat,lng:c.lng};}
+  return null;}
+
+const G=["V","6a","6a+","6b","6b+","6c","6c+","7a","7a+","7b","7b+","7c","7c+","8a","8a+","8b","8b+","8c","8c+","9a","9a+","9b","9b+","9c"];
+let cY=2026,cMo=1,cSl=null,gM='cr',gPer='year',sPer='year',rFl='all',tTb='plan',mapMode='roca',eRt=null,wSt=[],leafMap=null,markers=[],chatUnsub=null,chatFrUid=null;
+const PG={home:'ph',routes:'pv',map:'pm',train:'pt',friends:'pf',sync:'ps'},PK=Object.keys(PG);
+
 
 function go(id){Object.values(PG).forEach(p=>document.getElementById(p).classList.remove('on'));document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));document.getElementById(PG[id]).classList.add('on');document.querySelectorAll('.nb')[PK.indexOf(id)].classList.add('on');const fns={home:rH,routes:drR,map:drM,train:drTr,friends:drFr,sync:drS};if(fns[id])fns[id]();}
 function drS(){const el=document.getElementById('sN');if(el)el.textContent=R.length+Tr.length+W.length;
