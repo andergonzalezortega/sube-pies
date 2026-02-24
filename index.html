@@ -190,11 +190,9 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <script>
 firebase.initializeApp({apiKey:"AIzaSyBaBnTmI8_YuYIRGx2mdDVJSe_k4SF_eho",authDomain:"sube-pies.firebaseapp.com",projectId:"sube-pies",storageBucket:"sube-pies.firebasestorage.app",messagingSenderId:"597414564277",appId:"1:597414564277:web:1f79b81f567b67166c89fc"});
 const auth=firebase.auth(),db=firebase.firestore();
-let U=null,R=[],Tr=[],W=[],friends=[],plans=[],userCrags=[],mesos=[];
 
-// ── i18n MULTI-IDIOMA ──
 let LANG=localStorage.getItem('spLang')||'es';
-const I18N={
+var I18N={
 es:{
   // Login
   loginBtn:'Entrar con Google',loginSub:'Diario de escalada',loginCopy:'© 2026 Sube Pies · Todos los derechos reservados',
@@ -203,8 +201,8 @@ es:{
   // Nav
   navHome:'Inicio',navRoutes:'Vías',navMap:'Mapa',navTrain:'Entrenos',navFriends:'Amigos',navSettings:'Ajustes',
   // Home
-  logout:'Salir',stats_vias:'Vías',stats_enc:'Enc',stats_entrenos:'Entrenos',planBtn:'+ Planificar',noActivity:t('noActivity'),
-  noTrainPlan:''+t('noTrainPlan')+'',trainLabel:'ENTRENO',today:'HOY',tomorrow:'MAÑANA',execute:'▶ Ejecutar',
+  logout:'Salir',stats_vias:'Vías',stats_enc:'Enc',stats_entrenos:'Entrenos',planBtn:'+ Planificar',noActivity:'Sin actividad',
+  noTrainPlan:''+'Sin entrenos programados'+'',trainLabel:'ENTRENO',today:'HOY',tomorrow:'MAÑANA',execute:'▶ Ejecutar',
   // Routes
   addRoute:'+ Añadir',searchRoute:'🔍 Buscar vía, lugar, amigo, grado...',sortLabel:'Ordenar:',
   sortDate:'Fecha ↓',sortDateA:'Fecha ↑',sortGrD:'Grado ↓',sortGrA:'Grado ↑',sortPlace:'Lugar',sortFriend:'Compañero',
@@ -223,7 +221,7 @@ es:{
   newZone:'NUEVA ZONA',newZoneHelp:'En Google Maps → busca el sitio → pulsa largo → copia las coordenadas que aparecen abajo (ej: 43.270854, -3.102539).',
   zoneName:'Nombre de la zona',zoneCoords:'Coordenadas',zoneCoordsPh:'43.270854, -3.102539',
   zoneCoordsSub:'Pega las coordenadas o la URL larga de Google Maps (la que tiene @43.27,-3.10)',
-  saveZone:'Guardar zona',notFound:t('notFoundFr'),coordsError:'No he podido leer las coordenadas. Pega algo como: 43.270854, -3.102539',
+  saveZone:'Guardar zona',notFound:'No encontrado',coordsError:'No he podido leer las coordenadas. Pega algo como: 43.270854, -3.102539',
   // Trains
   scheduled:'Programados',history:'Historial',mesocycle:'Mesociclo',progress:'Progreso',
   newTrain:'+ Entreno',folder:'📁 Carpeta',searchTrain:'🔍 Buscar entreno...',noFolder:'SIN CARPETA',
@@ -247,8 +245,8 @@ es:{
   serie:'Serie',rep:'Rep',done:'✓ Hecha',notDone:'✕ No',emptyTrain:'Entreno vacío',viaProject:'Vía proyecto',
   // Friends
   addFriend:'AÑADIR AMIGO',friendCodePh:'Código #1234 o email',myFriends:'MIS AMIGOS',
-  noFriends:t('noFriends'),chatPh:'Escribe...',
-  notFoundFr:t('notFoundFr'),thatsYou:t('thatsYou'),alreadyFriend:t('alreadyFriend'),added:'añadido ✓',
+  noFriends:'Añade amigos con su código # o email',chatPh:'Escribe...',
+  notFoundFr:'No encontrado',thatsYou:'Ese eres tú',alreadyFriend:'Ya es tu amigo',added:'añadido ✓',
   friendRoutes:'VÍAS DE',noFriendRoutes:'Sin vías',
   // Settings
   exportExcel:'EXPORTAR A EXCEL',from:'Desde',to:'Hasta',exportRoutes:'📥 Vías',exportTrains:'📥 Entrenos',
@@ -258,7 +256,7 @@ es:{
   planDay:'PLANIFICAR DÍA',whatPlan:'¿QUÉ PLAN?',climb:'🧗 Escalar',training:'🏋 Entreno',note:'📝 Nota',
   typeLabel:'Tipo',placePh:'Atauri, Sharma...',trainLabel2:'Entreno',allFolders:'— Todas —',noTrain:'— Sin entreno —',
   shareExercises:'Compartir ejercicios con invitados',notes:'Notas',notesPh:'Plan del día...',
-  inviteFriends:'INVITAR AMIGOS',searchFriend:'Buscar amigo...',savePlan:'Guardar plan',noFriendsYet:t('noFriendsYet'),
+  inviteFriends:'INVITAR AMIGOS',searchFriend:'Buscar amigo...',savePlan:'Guardar plan',noFriendsYet:'Sin amigos aún',
   deletePlan:'¿Eliminar este plan?',
   // Mesocycle
   createMeso:'CREAR MESOCICLO',mesoName:'Nombre',mesoNamePh:'Pre-temporada, Fuerza...',startDate:'Fecha inicio',
@@ -281,7 +279,7 @@ es:{
   routesSource:'Vías',trainsSource:'Entrenos',allSource:'Todo',noFilter:'— Sin filtro —',
   onlyChaineds:'✓ Solo encadenes',onlyRock:'🏔 Solo roca',onlyGym:'🏢 Solo roco',
   presets_1m:'1 mes',presets_3m:'3 meses',presets_6m:'6 meses',presets_1y:'1 año',presets_all:'Todo',
-  noData:t('noData'),noDataShort:'Sin datos',
+  noData:'Sin datos en este rango',noDataShort:'Sin datos',
   graphName:'Nombre del gráfico:',
   // Invites
   hasCancelled:'ha cancelado',cancelledPlan:'ha cancelado:',
@@ -297,7 +295,7 @@ es:{
   tplSaved:'Plantilla "{name}" guardada',
   moveTo:'Mover:',moveBtn:'Mover',
   putZoneName:'Pon un nombre',pasteCoords:'Pega las coordenadas',saving:'Guardando...',
-  putCodeOrEmail:t('putCodeOrEmail'),
+  putCodeOrEmail:'Pon código o email',
   mesoNeedAll:'Pon nombre, fecha y al menos una fase',
   // Invites types
   invRoca:'🏔️ Roca',invIndoor:'🏢 Indoor',invEntreno:'🏋️ Entreno',invNota:'📝 Nota',invCancel:'❌ Cancelación',
@@ -588,6 +586,10 @@ function applyLang(){
   const lsub=document.getElementById('loginSubTxt');if(lsub)lsub.textContent=t('loginSub');
   const ss=document.getElementById('splashSubTxt');if(ss)ss.textContent=t('splashSub');
 }
+
+let U=null,R=[],Tr=[],W=[],friends=[],plans=[],userCrags=[],mesos=[],woFolders=[],curFolder=null;
+
+// ── i18n MULTI-IDIOMA ──
 
 
 auth.onAuthStateChanged(async u=>{document.getElementById('loadPage').style.display='none';
@@ -989,7 +991,7 @@ function drHist(){
   fl.forEach(t=>{h+=`<div class="trn"><div style="display:flex;justify-content:space-between"><div class="tt2">${t.tipo}</div><div style="font-size:10px;color:var(--text3)">${new Date(t.date).toLocaleDateString('es-ES',{weekday:'short',day:'numeric',month:'short'})}</div></div><div class="td">${t.detail}</div></div>`;});
   if(!fl.length)h+='<div style="color:var(--text3);text-align:center;padding:20px">'+t('noTrainsMonth')+'</div>';
   document.getElementById('tH').innerHTML=h;}
-let woFolders=[],curFolder=null;
+// woFolders declared above
 async function loadFolders(){if(!U)return;const q=await db.collection('users').doc(U.uid).collection('woFolders').get();woFolders=[];q.forEach(d=>{woFolders.push({id:d.id,...d.data()});});}
 function drPlan(){
   let h='<div style="display:flex;gap:4px;margin-bottom:8px"><button class="btn bp" onclick="openWo()" style="flex:1;font-size:11px;padding:8px;border-radius:10px">+ Entreno</button><button class="btn bg2" onclick="newFolder()" style="width:auto;padding:8px 12px;font-size:11px;border-radius:10px;margin:0">📁 Carpeta</button></div>';
