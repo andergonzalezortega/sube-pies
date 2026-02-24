@@ -95,6 +95,14 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <button class="goog-btn" onclick="loginGoogle()"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg">Entrar con Google</button>
 <div style="color:rgba(255,255,255,.4);font-size:10px;margin-top:40px">© 2026 Sube Pies · Todos los derechos reservados</div>
 </div></div>
+<div id="splashScreen" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:999;overflow:hidden;transition:opacity .5s ease">
+<img src="inicio.jpg" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover">
+<div style="position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(to bottom,rgba(26,29,35,.2) 0%,rgba(26,29,35,.1) 40%,rgba(26,29,35,.8) 80%,rgba(26,29,35,1) 100%)"></div>
+<div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center">
+<img src="logo.png" style="width:150px;height:150px;border-radius:50%;box-shadow:0 4px 40px rgba(0,0,0,.6)">
+<div style="font-family:'Bebas Neue';font-size:36px;color:#fff;margin-top:16px;text-shadow:0 2px 20px rgba(0,0,0,.6)">SUBE PIES</div>
+<div style="color:rgba(255,255,255,.5);font-size:12px;margin-top:8px">Diario de escalada</div>
+</div></div>
 <div id="appWrap" style="display:none">
 <!-- HOME --><div id="ph" class="page on" style="overflow-y:auto;height:calc(100vh - 75px);display:none">
 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><div style="display:flex;align-items:center;gap:10px"><img src="logo.png" style="width:44px;height:44px;border-radius:50%;object-fit:cover"><div><h1 style="font-size:22px;color:var(--rock);margin:0">SUBE PIES</h1><div class="usr-bar"><img class="usr-pic" id="uPic"><span class="usr-name" id="uName"></span><span class="usr-tag" id="uTag"></span><button class="usr-out" onclick="logout()">Salir</button></div></div></div></div>
@@ -173,13 +181,17 @@ const auth=firebase.auth(),db=firebase.firestore();
 let U=null,R=[],Tr=[],W=[],friends=[],plans=[],userCrags=[],mesos=[];
 
 auth.onAuthStateChanged(async u=>{document.getElementById('loadPage').style.display='none';
-  if(u){U=u;document.getElementById('loginPage').style.display='none';document.getElementById('appWrap').style.display='block';
+  if(u){U=u;document.getElementById('loginPage').style.display='none';
+    document.getElementById('splashScreen').style.display='block';
     document.getElementById('uPic').src=u.photoURL||'';document.getElementById('uName').textContent=u.displayName||u.email;
     const code=parseInt(u.uid.replace(/[^0-9]/g,'').slice(0,4))||Math.floor(Math.random()*9000)+1000;
     await db.collection('users').doc(u.uid).set({name:u.displayName,email:u.email,photo:u.photoURL,code:code},{merge:true});
     document.getElementById('uTag').textContent='#'+code;
-    await loadData();rH();}
-  else{U=null;document.getElementById('loginPage').style.display='';document.getElementById('appWrap').style.display='none';}});
+    await loadData();
+    setTimeout(()=>{document.getElementById('splashScreen').style.opacity='0';
+      setTimeout(()=>{document.getElementById('splashScreen').style.display='none';document.getElementById('appWrap').style.display='block';rH();},500);
+    },2000);}
+  else{U=null;document.getElementById('loginPage').style.display='';document.getElementById('appWrap').style.display='none';document.getElementById('splashScreen').style.display='none';}});
 function loginGoogle(){auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());}
 function logout(){auth.signOut();}
 
