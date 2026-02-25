@@ -10,10 +10,9 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#1b2838">
 <title>Sube Pies</title>
-<link rel="manifest" href="data:application/json,{}">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -208,7 +207,7 @@ es:{
   addRoute:'+ Añadir',searchRoute:'🔍 Buscar vía, lugar, amigo, grado...',sortLabel:'Ordenar:',
   sortDate:'Fecha ↓',sortDateA:'Fecha ↑',sortGrD:'Grado ↓',sortGrA:'Grado ↑',sortPlace:'Lugar',sortFriend:'Compañero',
   allRoutes:'Todas',rock:'Roca',indoor:'Indoor',enc:'Enc',rope:'Cuerda',boulder:'Bloque',autoBelay:'AutoAseg',
-  noRoutes:'Sin vías',allMonths:'Todos los meses',routes_count:'vías',
+  noRoutes:'Sin vías',allMonths:'Todos los meses',loadMore:'CARGAR MÁS',routes_count:'vías',
   thisYear:'este año',total:'en total',
   // Route modal
   newRoute:'NUEVA VÍA',editRoute:'EDITAR VÍA',routeName:'Nombre',routeNamePh:'Diedro mágico',
@@ -243,7 +242,7 @@ es:{
   completed:'¡COMPLETADO!',goodTraining:'Buen entreno 💪',step:'PASO',next:'SIGUIENTE:',
   start:'▶ EMPEZAR',pause:'⏸ PAUSA',resume:'▶ SEGUIR',soundVibration:'Sonido + vibración',
   rest:'DESCANSO',seriesRest:'DESCANSO SERIE',betweenReps:'Entre reps',betweenSeries:'Descanso entre series',
-  serie:'Serie',rep:'Rep',done:'✓ Hecha',notDone:'✕ No',emptyTrain:'Entreno vacío',viaProject:'Vía proyecto',
+  serie:'Serie',rep:'Rep',done:'✓ Hecha',notDone:'✕ No',emptyTrain:'Entreno vacío',viaProject:'Vía proyecto',getReady:'PREPÁRATE',viaBlock:'VÍAS',
   // Friends
   addFriend:'AÑADIR AMIGO',friendCodePh:'Código #1234 o email',myFriends:'MIS AMIGOS',
   noFriends:'Añade amigos con su código # o email',chatPh:'Escribe...',
@@ -311,7 +310,7 @@ en:{
   addRoute:'+ Add',searchRoute:'🔍 Search route, place, friend, grade...',sortLabel:'Sort:',
   sortDate:'Date ↓',sortDateA:'Date ↑',sortGrD:'Grade ↓',sortGrA:'Grade ↑',sortPlace:'Place',sortFriend:'Partner',
   allRoutes:'All',rock:'Rock',indoor:'Indoor',enc:'Sent',rope:'Lead',boulder:'Boulder',autoBelay:'AutoBelay',
-  noRoutes:'No routes',allMonths:'All months',routes_count:'routes',
+  noRoutes:'No routes',allMonths:'All months',loadMore:'LOAD MORE',routes_count:'routes',
   thisYear:'this year',total:'total',
   newRoute:'NEW ROUTE',editRoute:'EDIT ROUTE',routeName:'Name',routeNamePh:'Magic dihedral',
   routePlace:'Place',routePlacePh:'Kalymnos, Siurana...',placeType:'Place type',routeType:'Route type',
@@ -339,7 +338,7 @@ en:{
   completed:'COMPLETED!',goodTraining:'Good workout 💪',step:'STEP',next:'NEXT:',
   start:'▶ START',pause:'⏸ PAUSE',resume:'▶ RESUME',soundVibration:'Sound + vibration',
   rest:'REST',seriesRest:'SET REST',betweenReps:'Between reps',betweenSeries:'Rest between sets',
-  serie:'Set',rep:'Rep',done:'✓ Done',notDone:'✕ No',emptyTrain:'Empty workout',viaProject:'Project route',
+  serie:'Set',rep:'Rep',done:'✓ Done',notDone:'✕ No',emptyTrain:'Empty workout',viaProject:'Project route',getReady:'GET READY',viaBlock:'ROUTES',
   addFriend:'ADD FRIEND',friendCodePh:'Code #1234 or email',myFriends:'MY FRIENDS',
   noFriends:'Add friends with their # code or email',chatPh:'Write...',
   notFoundFr:'Not found',thatsYou:"That's you",alreadyFriend:'Already a friend',added:'added ✓',
@@ -397,7 +396,7 @@ eu:{
   addRoute:'+ Gehitu',searchRoute:'🔍 Bilatu bia, lekua, laguna, grada...',sortLabel:'Ordenatu:',
   sortDate:'Data ↓',sortDateA:'Data ↑',sortGrD:'Grada ↓',sortGrA:'Grada ↑',sortPlace:'Lekua',sortFriend:'Laguna',
   allRoutes:'Denak',rock:'Arroka',indoor:'Indoor',enc:'Enk',rope:'Sokaz',boulder:'Blokea',autoBelay:'AutoSega',
-  noRoutes:'Biarik ez',allMonths:'Hilabete guztiak',routes_count:'bia',
+  noRoutes:'Biarik ez',allMonths:'Hilabete guztiak',loadMore:'GEHIAGO KARGATU',routes_count:'bia',
   thisYear:'aurten',total:'guztira',
   newRoute:'BIA BERRIA',editRoute:'BIA EDITATU',routeName:'Izena',routeNamePh:'Diedro magikoa',
   routePlace:'Lekua',routePlacePh:'Atauri, Galdames...',placeType:'Leku mota',routeType:'Bia mota',
@@ -425,7 +424,7 @@ eu:{
   completed:'OSATUTA!',goodTraining:'Entrenamendu ona 💪',step:'PAUSOA',next:'HURRENGOA:',
   start:'▶ HASI',pause:'⏸ PAUSATU',resume:'▶ JARRAITU',soundVibration:'Soinua + bibrazioa',
   rest:'ATSEDENA',seriesRest:'SERIE ATSEDENA',betweenReps:'Errep artean',betweenSeries:'Serie arteko atsedena',
-  serie:'Serie',rep:'Errep',done:'✓ Eginda',notDone:'✕ Ez',emptyTrain:'Entrenamendua hutsik',viaProject:'Proiektu bia',
+  serie:'Serie',rep:'Errep',done:'✓ Eginda',notDone:'✕ Ez',emptyTrain:'Entrenamendua hutsik',viaProject:'Proiektu bia',getReady:'PRESTATU',viaBlock:'BIAK',
   addFriend:'LAGUNA GEHITU',friendCodePh:'#1234 kodea edo emaila',myFriends:'NIRE LAGUNAK',
   noFriends:'Gehitu lagunak haien # kodearekin edo emailarekin',chatPh:'Idatzi...',
   notFoundFr:'Ez da aurkitu',thatsYou:'Hori zu zara',alreadyFriend:'Dagoeneko laguna da',added:'gehituta ✓',
@@ -483,7 +482,7 @@ ca:{
   addRoute:'+ Afegir',searchRoute:'🔍 Cercar via, lloc, amic, grau...',sortLabel:'Ordenar:',
   sortDate:'Data ↓',sortDateA:'Data ↑',sortGrD:'Grau ↓',sortGrA:'Grau ↑',sortPlace:'Lloc',sortFriend:'Company',
   allRoutes:'Totes',rock:'Roca',indoor:'Indoor',enc:'Enc',rope:'Corda',boulder:'Bloc',autoBelay:'AutoSeg',
-  noRoutes:'Sense vies',allMonths:'Tots els mesos',routes_count:'vies',
+  noRoutes:'Sense vies',allMonths:'Tots els mesos',loadMore:'CARREGAR MÉS',routes_count:'vies',
   thisYear:'aquest any',total:'en total',
   newRoute:'NOVA VIA',editRoute:'EDITAR VIA',routeName:'Nom',routeNamePh:'Diedre màgic',
   routePlace:'Lloc',routePlacePh:'Siurana, Margalef...',placeType:'Tipus lloc',routeType:'Tipus via',
@@ -511,7 +510,7 @@ ca:{
   completed:'COMPLETAT!',goodTraining:'Bon entreno 💪',step:'PAS',next:'SEGÜENT:',
   start:'▶ COMENÇAR',pause:'⏸ PAUSA',resume:'▶ CONTINUAR',soundVibration:'So + vibració',
   rest:'DESCANS',seriesRest:'DESCANS SÈRIE',betweenReps:'Entre reps',betweenSeries:'Descans entre sèries',
-  serie:'Sèrie',rep:'Rep',done:'✓ Feta',notDone:'✕ No',emptyTrain:'Entreno buit',viaProject:'Via projecte',
+  serie:'Sèrie',rep:'Rep',done:'✓ Feta',notDone:'✕ No',emptyTrain:'Entreno buit',viaProject:'Via projecte',getReady:'PREPARA\'T',viaBlock:'VIES',
   addFriend:'AFEGIR AMIC',friendCodePh:'Codi #1234 o email',myFriends:'ELS MEUS AMICS',
   noFriends:'Afegeix amics amb el seu codi # o email',chatPh:'Escriu...',
   notFoundFr:'No trobat',thatsYou:'Aquest ets tu',alreadyFriend:'Ja és amic teu',added:'afegit ✓',
@@ -665,7 +664,7 @@ function drCalDetail(){
   const dw=W.filter(w=>w.plannedDate===sel);
   const dd=new Date(sel);
   let h=`<div style="background:var(--bg2);border-radius:0 0 12px 12px;padding:10px 12px;border:1px solid rgba(255,255,255,.04);border-top:none">`;
-  h+=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-family:'Bebas Neue';font-size:15px;color:var(--text)">${dd.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'})}</span><button class="sbb" style="font-size:12px;padding:7px 18px" onclick="openPlan('${sel}')">+ Planificar</button></div>`;
+  h+=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-family:'Bebas Neue';font-size:15px;color:var(--text)">${dd.toLocaleDateString(LANG==='en'?'en-US':LANG==='eu'?'eu-ES':LANG==='ca'?'ca-ES':'es-ES',{weekday:'long',day:'numeric',month:'long'})}</span><button class="sbb" style="font-size:12px;padding:7px 18px" onclick="openPlan('${sel}')">+ Planificar</button></div>`;
   // Plans (with delete)
   dp.forEach(p=>{
     let icon=p.tipo==='roca'?'🏔️':p.tipo==='indoor'?'🏢':p.tipo==='entreno'?'🏋':'📝';
@@ -720,7 +719,7 @@ function drNextWo(){
   const dd=new Date(nxtDate);
   const isToday=nxtDate===td;
   const tmr=new Date();tmr.setDate(tmr.getDate()+1);const isTmr=nxtDate===tmr.toISOString().split('T')[0];
-  const dayLabel=dd.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'});
+  const dayLabel=dd.toLocaleDateString(LANG==='en'?'en-US':LANG==='eu'?'eu-ES':LANG==='ca'?'ca-ES':'es-ES',{weekday:'long',day:'numeric',month:'long'});
   const isClose=isToday||isTmr;
   const extra=isToday?' · '+t('today'):isTmr?' · '+t('tomorrow'):'';
   
@@ -749,7 +748,7 @@ function getSettings(){return JSON.parse(localStorage.getItem('spSettings')||'{}
 async function loadInvites(){if(!U)return;
   const q=await db.collection('users').doc(U.uid).collection('invites').where('status','==','pending').get();
   let h='';q.forEach(d=>{const inv=d.data();const tipos={roca:t('invRoca'),indoor:t('invIndoor'),entreno:t('invEntreno'),nota:t('invNota'),cancelacion:t('invCancel')};
-    const dd=new Date(inv.date).toLocaleDateString('es-ES',{weekday:'short',day:'numeric',month:'short'});
+    const dd=new Date(inv.date).toLocaleDateString(LANG==='en'?'en-US':LANG==='eu'?'eu-ES':LANG==='ca'?'ca-ES':'es-ES',{weekday:'short',day:'numeric',month:'short'});
     let detail=tipos[inv.tipo]||inv.tipo;
     if(inv.lugar)detail+=' · '+inv.lugar;
     if(inv.workoutName)detail+=' · 🏋 '+inv.workoutName;
@@ -894,8 +893,8 @@ async function svPlan(){const date=document.getElementById('plDt').value,notas=d
   cm('mPl');rCal();}
 
 // ROUTES
-let vMo='';
-function drR(){let fc='';[['all',t('allRoutes')],['roca',t('rock')],['indoor',t('indoor')],['enc',t('enc')],['cuerda',t('rope')],['bloque',t('boulder')],['auto',t('autoBelay')]].forEach(([k,lb])=>{fc+=`<button class="ch${rFl===k?' on':''}" onclick="rFl='${k}';drR()">${lb}</button>`;});document.getElementById('rF').innerHTML=fc;const ab=document.getElementById('btnAddR');if(ab)ab.textContent=t('addRoute');
+let vMo='',vPage=20;
+function drR(){let fc='';[['all',t('allRoutes')],['roca',t('rock')],['indoor',t('indoor')],['enc',t('enc')],['cuerda',t('rope')],['bloque',t('boulder')],['auto',t('autoBelay')]].forEach(([k,lb])=>{fc+=`<button class="ch${rFl===k?' on':''}" onclick="rFl='${k}';vPage=20;drR()">${lb}</button>`;});document.getElementById('rF').innerHTML=fc;const ab=document.getElementById('btnAddR');if(ab)ab.textContent=t('addRoute');
   const q=(document.getElementById('vQ').value||'').trim().toLowerCase();
   let fl=R.slice();if(rFl==='roca')fl=fl.filter(r=>r.lugar==='roca');if(rFl==='indoor')fl=fl.filter(r=>r.lugar==='indoor'||r.lugar==='roco');if(rFl==='enc')fl=fl.filter(r=>r.enc);if(rFl==='cuerda')fl=fl.filter(r=>r.tipo==='Cuerda');if(rFl==='bloque')fl=fl.filter(r=>r.tipo==='Bloque');if(rFl==='auto')fl=fl.filter(r=>r.tipo==='AutoAseg');
   if(q)fl=fl.filter(r=>(r.nombre||'').toLowerCase().includes(q)||(r.sitio||'').toLowerCase().includes(q)||(r.amigos||'').toLowerCase().includes(q)||(r.grado||'').toLowerCase().includes(q)||(r.tipo||'').toLowerCase().includes(q)||(r.date||'').includes(q));
@@ -906,22 +905,21 @@ function drR(){let fc='';[['all',t('allRoutes')],['roca',t('rock')],['indoor',t(
   // Month dropdown (only when not searching)
   const mos=[...new Set(fl.map(r=>(r.date||'').substring(0,7)).filter(Boolean))].sort().reverse();
   if(!vMo&&mos.length)vMo=mos[0];
+  const loc=LANG==='es'?'es-ES':LANG==='eu'?'eu-ES':LANG==='ca'?'ca-ES':'en-US';
+  let h='';
   if(!q&&mos.length>1){
-    let md='<select id="vMoSel" onchange="vMo=this.value;drR()" style="width:100%;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px;color:var(--text);font-size:13px;font-family:Nunito;margin-bottom:6px">';
-    md+='<option value="all"'+(vMo==='all'?' selected':'')+'>Todos los meses ('+fl.length+')</option>';
-    mos.forEach(m=>{const d=new Date(m+'-01');const lb=d.toLocaleDateString('es-ES',{month:'long',year:'numeric'});const cnt=fl.filter(r=>(r.date||'').startsWith(m)).length;
-      md+=`<option value="${m}"${m===vMo?' selected':''}>${lb.charAt(0).toUpperCase()+lb.slice(1)} (${cnt})</option>`;});
-    md+='</select>';document.getElementById('rL').insertAdjacentHTML('beforebegin','');
-    // Filter by month
-    if(vMo&&vMo!=='all')fl=fl.filter(r=>(r.date||'').startsWith(vMo));
-    let h=md;
-    fl.forEach(r=>{h+=vc(r,true);});
-    document.getElementById('rL').innerHTML=h||'<div style="text-align:center;color:var(--text3);padding:30px">'+t('noRoutes')+'</div>';
-  }else{
-    let h='';
-    fl.forEach(r=>{h+=vc(r,true);});
-    document.getElementById('rL').innerHTML=h||'<div style="text-align:center;color:var(--text3);padding:30px">'+t('noRoutes')+'</div>';}}
-function vc(r,ed){return `<div class="via ${r.enc?'enc':''}" ${ed?`onclick="edR('${r.id}')"`:''}><div class="vt"><div class="vg">${r.grado}</div><div class="vd">${new Date(r.date).toLocaleDateString('es-ES',{day:'numeric',month:'short'})}</div></div>${r.nombre?`<div class="vn">${r.nombre}</div>`:''}${r.sitio?`<div class="vl">📍 ${r.sitio}</div>`:''}<div class="vts"><span class="tg r">${r.lugar==='roca'?'Roca':'Indoor'}</span><span class="tg t">${r.tipo}</span>${r.metros?`<span class="tg">${r.metros}m</span>`:''}<span class="tg">Int:${r.intento||1}</span>${r.enc?'<span class="tg e">Enc ✓</span>':''}${r.amigos?`<span class="tg">👥 ${r.amigos}</span>`:''}${r.notas?'<span class="tg">💬</span>':''}</div></div>`;}
+    h+='<select id="vMoSel" onchange="vMo=this.value;vPage=20;drR()" style="width:100%;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px;color:var(--text);font-size:13px;font-family:Nunito;margin-bottom:6px">';
+    h+='<option value="all"'+(vMo==='all'?' selected':'')+'>'+t('allMonths')+' ('+fl.length+')</option>';
+    mos.forEach(m=>{const d=new Date(m+'-01');const lb=d.toLocaleDateString(loc,{month:'long',year:'numeric'});const cnt=fl.filter(r=>(r.date||'').startsWith(m)).length;
+      h+=`<option value="${m}"${m===vMo?' selected':''}>${lb.charAt(0).toUpperCase()+lb.slice(1)} (${cnt})</option>`;});
+    h+='</select>';
+    if(vMo&&vMo!=='all')fl=fl.filter(r=>(r.date||'').startsWith(vMo));}
+  const total=fl.length;
+  const visible=fl.slice(0,vPage);
+  visible.forEach(r=>{h+=vc(r,true);});
+  if(total>vPage)h+=`<button onclick="vPage+=20;drR()" style="width:100%;padding:12px;margin-top:8px;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:12px;color:var(--rock);font-family:'Bebas Neue';font-size:14px;letter-spacing:1px;cursor:pointer">${t('loadMore')} (${vPage}/${total})</button>`;
+  document.getElementById('rL').innerHTML=h||'<div style="text-align:center;color:var(--text3);padding:30px">'+t('noRoutes')+'</div>';}
+function vc(r,ed){return `<div class="via ${r.enc?'enc':''}" ${ed?`onclick="edR('${r.id}')"`:''}><div class="vt"><div class="vg">${r.grado}</div><div class="vd">${new Date(r.date).toLocaleDateString(LANG==='en'?'en-US':LANG==='eu'?'eu-ES':LANG==='ca'?'ca-ES':'es-ES',{day:'numeric',month:'short'})}</div></div>${r.nombre?`<div class="vn">${r.nombre}</div>`:''}${r.sitio?`<div class="vl">📍 ${r.sitio}</div>`:''}<div class="vts"><span class="tg r">${r.lugar==='roca'?t('rock'):t('indoor')}</span><span class="tg t">${r.tipo}</span>${r.metros?`<span class="tg">${r.metros}m</span>`:''}<span class="tg">Int:${r.intento||1}</span>${r.enc?'<span class="tg e">Enc ✓</span>':''}${r.amigos?`<span class="tg">👥 ${r.amigos}</span>`:''}${r.notas?'<span class="tg">💬</span>':''}</div></div>`;}
 function pSel(){const g=document.getElementById('iG');g.innerHTML='';G.forEach(x=>{g.innerHTML+=`<option>${x}</option>`;});const i=document.getElementById('iI');i.innerHTML='';for(let j=1;j<=9;j++)i.innerHTML+=`<option>${j}</option>`;}
 function addR(){eRt=null;document.getElementById('mRT').textContent=t('newRoute');pSel();['iN','iL','iNo','iA'].forEach(id=>document.getElementById(id).value='');document.getElementById('iMetros').value='';document.getElementById('iFe').value=new Date().toISOString().split('T')[0];document.getElementById('iG').value='7a';document.getElementById('iE').value='0';document.getElementById('btnDelR').style.display='none';document.getElementById('mR1').classList.add('sh');}
 function edR(id){const r=R.find(x=>x.id===id);if(!r)return;eRt=id;document.getElementById('mRT').textContent=t('editRoute');pSel();document.getElementById('iN').value=r.nombre||'';document.getElementById('iL').value=r.sitio||'';document.getElementById('iLT').value=r.lugar;document.getElementById('iTP').value=r.tipo;document.getElementById('iG').value=r.grado;document.getElementById('iI').value=r.intento||1;document.getElementById('iE').value=r.enc?'1':'0';document.getElementById('iNo').value=r.notas||'';document.getElementById('iA').value=r.amigos||'';document.getElementById('iFe').value=r.date;document.getElementById('iMetros').value=r.metros||'';document.getElementById('btnDelR').style.display='block';document.getElementById('mR1').classList.add('sh');}
@@ -983,13 +981,13 @@ function drHist(){
   const moArr=[...mos].sort().reverse();
   if(!histMo&&moArr.length)histMo=moArr[0];
   let h='<div style="display:flex;gap:6px;align-items:center;margin-bottom:10px"><select id="histMoSel" onchange="histMo=this.value;drHist()" style="flex:1;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px;color:var(--text);font-size:13px;font-family:Nunito">';
-  moArr.forEach(m=>{const d=new Date(m+'-01');const lb=d.toLocaleDateString('es-ES',{month:'long',year:'numeric'});
+  moArr.forEach(m=>{const d=new Date(m+'-01');const lb=d.toLocaleDateString(LANG==='en'?'en-US':LANG==='eu'?'eu-ES':LANG==='ca'?'ca-ES':'es-ES',{month:'long',year:'numeric'});
     h+=`<option value="${m}"${m===histMo?' selected':''}>${lb.charAt(0).toUpperCase()+lb.slice(1)}</option>`;});
   if(!moArr.length)h+='<option>Sin datos</option>';
   h+='</select></div>';
   const fl=Tr.filter(t=>t.date&&t.date.startsWith(histMo)).sort((a,b)=>b.date.localeCompare(a.date));
   h+=`<div style="font-size:11px;color:var(--text3);margin-bottom:6px">${fl.length} entrenos</div>`;
-  fl.forEach(t=>{h+=`<div class="trn"><div style="display:flex;justify-content:space-between"><div class="tt2">${t.tipo}</div><div style="font-size:10px;color:var(--text3)">${new Date(t.date).toLocaleDateString('es-ES',{weekday:'short',day:'numeric',month:'short'})}</div></div><div class="td">${t.detail}</div></div>`;});
+  fl.forEach(t=>{h+=`<div class="trn"><div style="display:flex;justify-content:space-between"><div class="tt2">${t.tipo}</div><div style="font-size:10px;color:var(--text3)">${new Date(t.date).toLocaleDateString(LANG==='en'?'en-US':LANG==='eu'?'eu-ES':LANG==='ca'?'ca-ES':'es-ES',{weekday:'short',day:'numeric',month:'short'})}</div></div><div class="td">${t.detail}</div></div>`;});
   if(!fl.length)h+='<div style="color:var(--text3);text-align:center;padding:20px">'+t('noTrainsMonth')+'</div>';
   document.getElementById('tH').innerHTML=h;}
 // woFolders declared above
@@ -1016,7 +1014,7 @@ function drPlan(){
   }
   document.getElementById('wL').innerHTML=h;}
 function renderWoCard(w){
-  let h=`<div class="wi"><button class="wi-del" onclick="delWo('${w.id}')">✕</button><div class="wit">${w.name}</div>${w.plannedDate?`<div class="wi-date">📅 ${new Date(w.plannedDate).toLocaleDateString('es-ES',{weekday:'short',day:'numeric',month:'short'})}</div>`:''}<div class="wis">`;
+  let h=`<div class="wi"><button class="wi-del" onclick="delWo('${w.id}')">✕</button><div class="wit">${w.name}</div>${w.plannedDate?`<div class="wi-date">📅 ${new Date(w.plannedDate).toLocaleDateString(LANG==='en'?'en-US':LANG==='eu'?'eu-ES':LANG==='ca'?'ca-ES':'es-ES',{weekday:'short',day:'numeric',month:'short'})}</div>`:''}<div class="wis">`;
   (w.steps||[]).forEach((s,i)=>{const p=s;let d=p.nm||s.txt||'?';const pts=[];if(p.ag)pts.push(p.ag);if(p.mm)pts.push(p.mm+'mm');if(p.ang)pts.push(p.ang);if(p.kg>0)pts.push('+'+p.kg+'kg');
     if(p.modo==='time')pts.push(p.time+'s×'+((p.rep||1))+'×'+(p.ser||1));else if(p.reps)pts.push((p.reps)+'r×'+(p.ser||1));
     if(pts.length)d+=' · '+pts.join(' · ');
@@ -1144,7 +1142,7 @@ function execWo(w){exSteps=[];exWoName=w.name||'Entreno';exWoSteps=w.steps||[];
       // 10s preparation before each NEW exercise (not between series of same)
       if(si2===0){
         const prepInfo=p.modo==='time'?`${ser} ser × ${rep} rep × ${p.time}s`:`${ser} ser × ${p.reps||0} reps`;
-        exSteps.push({label:'🔜 '+nm,type:'prep',dur:10,info:detStr,detail:prepInfo});
+        exSteps.push({label:'¡'+t('getReady')+'!',type:'prep',dur:10,info:nm+' · '+detStr,detail:prepInfo});
         lastExLabel=nm;}
       if(p.modo==='time'){for(let ri=0;ri<(rep||1);ri++){
         const restHint=ri<(rep||1)-1&&restAfterRep?`→ ${t('rest')} ${restAfterRep}`:si2<ser-1&&restAfterSer?`→ ${t('seriesRest')} ${restAfterSer}`:'';
@@ -1241,7 +1239,7 @@ async function viewFr(email){const q=await db.collection('users').where('email',
 const MESO_COLORS=[{name:'Base aeróbica',color:'#ffe66d'},{name:'Fuerza resistencia',color:'#4ecdc4'},{name:'Fuerza máxima',color:'#ff6b6b'},{name:'Potencia',color:'#a78bfa'},{name:'Descarga',color:'#4a9eff'},{name:'Personalizado',color:'#8a9bb0'}];
 let msFases=[];
 function drMeso(){let h='';if(!mesos.length)h='<div style="color:var(--text3);font-size:11px;text-align:center;padding:16px">'+t('noMesos')+'</div>';
-  mesos.forEach(m=>{h+=`<div class="meso-card"><button class="meso-del" onclick="delMeso('${m.id}')">✕</button><div style="font-family:'Bebas Neue';font-size:16px;color:var(--rock)">${m.name}</div><div style="font-size:10px;color:var(--text3);margin-bottom:6px">Inicio: ${new Date(m.start).toLocaleDateString('es-ES',{day:'numeric',month:'short'})}</div>`;
+  mesos.forEach(m=>{h+=`<div class="meso-card"><button class="meso-del" onclick="delMeso('${m.id}')">✕</button><div style="font-family:'Bebas Neue';font-size:16px;color:var(--rock)">${m.name}</div><div style="font-size:10px;color:var(--text3);margin-bottom:6px">Inicio: ${new Date(m.start).toLocaleDateString(LANG==='en'?'en-US':LANG==='eu'?'eu-ES':LANG==='ca'?'ca-ES':'es-ES',{day:'numeric',month:'short'})}</div>`;
     (m.fases||[]).forEach(f=>{h+=`<div class="meso-fase"><div class="meso-dot" style="background:${f.color}"></div><div class="meso-info"><b>${f.name}</b> · ${f.weeks} sem</div></div>`;});
     h+=`</div>`;});
   document.getElementById('mesoList').innerHTML=h;}
