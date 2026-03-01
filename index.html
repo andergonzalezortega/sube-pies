@@ -303,7 +303,7 @@ es:{
   // Calendar days
   calDays:['L','M','X','J','V','S','D'],
   // Confirm msgs
-  confirmDeleteRoute:'¿Eliminar esta vía?',confirmDeleteWo:'¿Eliminar?',
+  confirmDeleteRoute:'¿Eliminar esta vía?',confirmDeleteFriend:'¿Eliminar este amigo?',confirmDeleteWo:'¿Eliminar?',
   confirmDeleteFolder:'¿Eliminar carpeta? Los entrenos se quedan sueltos.',
   putDate:'Pon una fecha',putName:'Pon nombre',putNameAndEx:'Pon nombre y ejercicios',
   tplSaved:'Plantilla "{name}" guardada',
@@ -390,7 +390,7 @@ en:{
   accept:'✓ Accept',reject:'Reject',
   inviteAccepted:'Accepted ✓',inviteRejected:'Rejected',
   calDays:['M','T','W','T','F','S','S'],
-  confirmDeleteRoute:'Delete this route?',confirmDeleteWo:'Delete?',
+  confirmDeleteRoute:'Delete this route?',confirmDeleteFriend:'Delete this friend?',confirmDeleteWo:'Delete?',
   confirmDeleteFolder:'Delete folder? Workouts will be unassigned.',
   putDate:'Set a date',putName:'Set a name',putNameAndEx:'Set name and exercises',
   tplSaved:'Template "{name}" saved',
@@ -476,7 +476,7 @@ eu:{
   accept:'✓ Onartu',reject:'Baztertu',
   inviteAccepted:'Onartuta ✓',inviteRejected:'Baztertua',
   calDays:['Al','As','Az','Og','Or','Lr','Ig'],
-  confirmDeleteRoute:'Bia hau ezabatu?',confirmDeleteWo:'Ezabatu?',
+  confirmDeleteRoute:'Bia hau ezabatu?',confirmDeleteFriend:'Lagun hau ezabatu?',confirmDeleteWo:'Ezabatu?',
   confirmDeleteFolder:'Karpeta ezabatu? Entrenak karpetarik gabe geratuko dira.',
   putDate:'Jarri data bat',putName:'Jarri izena',putNameAndEx:'Jarri izena eta ariketak',
   tplSaved:'"{name}" txantiloia gordeta',
@@ -562,7 +562,7 @@ ca:{
   accept:'✓ Acceptar',reject:'Rebutjar',
   inviteAccepted:'Acceptada ✓',inviteRejected:'Rebutjada',
   calDays:['Dl','Dt','Dc','Dj','Dv','Ds','Dg'],
-  confirmDeleteRoute:'Eliminar aquesta via?',confirmDeleteWo:'Eliminar?',
+  confirmDeleteRoute:'Eliminar aquesta via?',confirmDeleteFriend:'Eliminar aquest amic?',confirmDeleteWo:'Eliminar?',
   confirmDeleteFolder:'Eliminar carpeta? Els entrenos quedaran solts.',
   putDate:'Posa una data',putName:'Posa nom',putNameAndEx:'Posa nom i exercicis',
   tplSaved:'Plantilla "{name}" desada',
@@ -1246,6 +1246,27 @@ function stopExec(){clearTimeout(exTimerId);exPaused=true;document.getElementByI
 function doAlert(){if(!document.getElementById('exSound').checked)return;try{navigator.vibrate&&navigator.vibrate([200,100,200]);}catch(e){}try{const ac=new(window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator();o.type='sine';o.frequency.value=880;o.connect(ac.destination);o.start();setTimeout(()=>o.stop(),200);}catch(e){}}
 function doBeep(){if(!document.getElementById('exSound').checked)return;try{navigator.vibrate&&navigator.vibrate(100);}catch(e){}try{const ac=new(window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator();o.type='sine';o.frequency.value=660;o.connect(ac.destination);o.start();setTimeout(()=>o.stop(),100);}catch(e){}}
 
+// CHAT
+function getChatId(uid1,uid2){return [uid1,uid2].sort().join('_');}
+function openChat(fuid,fname){chatFrUid=fuid;
+  document.getElementById('chatTitle').textContent=fname;
+  document.getElementById('chatBox').innerHTML='';
+  document.getElementById('chatIn').value='';
+  document.getElementById('mChat').classList.add('sh');
+  // Listen for messages
+  if(chatUnsub)chatUnsub();
+  const cid=getChatId(U.uid,fuid);
+  chatUnsub=db.collection('chats').doc(cid).collection('messages').orderBy('ts').onSnapshot(snap=>{
+    const box=document.getElementById('chatBox');
+    let h='';snap.forEach(d=>{const m=d.data();const isMe=m.from===U.uid;
+      const time=m.ts?new Date(m.ts.toDate()).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}):'';
+      h+=`<div class="chat-msg ${isMe?'me':'ot'}"><div class="chat-bub">${m.text}</div><div class="chat-time">${time}</div></div>`;});
+    box.innerHTML=h;box.scrollTop=box.scrollHeight;});}
+function closeChat(){if(chatUnsub){chatUnsub();chatUnsub=null;}chatFrUid=null;document.getElementById('mChat').classList.remove('sh');}
+async function sendChat(){const input=document.getElementById('chatIn');const text=input.value.trim();if(!text||!chatFrUid)return;
+  const cid=getChatId(U.uid,chatFrUid);
+  await db.collection('chats').doc(cid).collection('messages').add({from:U.uid,text,ts:firebase.firestore.FieldValue.serverTimestamp()});
+  input.value='';}
 // FRIENDS
 function shareAppLink(){const code=document.getElementById('uTag').textContent||'';
   const msg=t('shareMsg')+' '+code+' 🧗\nhttps://andergonzalezortega.github.io/sube-pies/';
@@ -1273,7 +1294,7 @@ async function addFriend(){const raw=document.getElementById('frCode').value.tri
   if(friends.some(f=>f.email===fd.email)){msg.textContent=t('alreadyFriend');msg.style.color='var(--yellow)';return;}
   await db.collection('users').doc(U.uid).collection('friends').add({email:fd.email});friends.push({email:fd.email});
   document.getElementById('frCode').value='';msg.textContent=(fd.name||fd.email)+' añadido ✓';msg.style.color='var(--green)';drFr();}
-async function rmFr(id){await db.collection('users').doc(U.uid).collection('friends').doc(id).delete();friends=friends.filter(f=>f.id!==id);drFr();}
+async function rmFr(id){if(!confirm(t('confirmDeleteFriend')))return;await db.collection('users').doc(U.uid).collection('friends').doc(id).delete();friends=friends.filter(f=>f.id!==id);drFr();}
 async function viewFr(email){const q=await db.collection('users').where('email','==',email).get();if(q.empty)return;
   const fuid=q.docs[0].id,fd=q.docs[0].data();document.getElementById('frViewTitle').textContent=t('friendRoutes')+' '+(fd.name||email).toUpperCase();
   const rs=await db.collection('users').doc(fuid).collection('routes').orderBy('date','desc').limit(30).get();let h='';
