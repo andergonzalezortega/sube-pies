@@ -99,6 +99,14 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <button class="goog-btn" onclick="loginGoogle()"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" id="loginBtnTxt">Entrar con Google</button>
 <div style="color:rgba(255,255,255,.4);font-size:10px;margin-top:40px">© 2026 Sube Pies · Todos los derechos reservados</div>
 </div></div>
+<!-- NICK MODAL --><div id="nickModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);z-index:1000;align-items:center;justify-content:center;flex-direction:column;padding:40px;text-align:center">
+<img src="logo.png" style="width:80px;height:80px;border-radius:50%;margin-bottom:16px">
+<div style="font-family:'Bebas Neue';font-size:28px;color:var(--rock);margin-bottom:8px">BIENVENIDO</div>
+<div style="color:var(--text2);font-size:13px;margin-bottom:24px">Elige tu nombre visible para otros escaladores</div>
+<input id="nickInput" placeholder="Ej: Ander_16, CrackClimber..." maxlength="20" style="width:100%;max-width:300px;background:var(--bg3);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:14px;color:var(--text);font-size:16px;font-family:Nunito;text-align:center;outline:none;margin-bottom:8px">
+<div style="color:var(--text3);font-size:10px;margin-bottom:20px">Máximo 20 caracteres · Podrás cambiarlo en Ajustes</div>
+<button id="nickSaveBtn" class="btn bp" style="max-width:300px;font-size:16px;padding:14px">Empezar a escalar 🧗</button>
+</div>
 <div id="splashScreen" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:999;overflow:hidden;transition:opacity .5s ease">
 <img src="inicio.jpg" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover">
 <div style="position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(to bottom,rgba(26,29,35,.15) 0%,rgba(26,29,35,.05) 30%,rgba(26,29,35,.6) 70%,rgba(26,29,35,1) 100%)"></div>
@@ -153,6 +161,10 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><button class="btn bp" style="font-size:12px;padding:10px" onclick="exportXL('vias')">📥 Vías</button><button class="btn bp" style="font-size:12px;padding:10px;background:var(--yellow);color:#000" onclick="exportXL('entrenos')">📥 Entrenos</button></div>
 <div id="exMsg" style="font-size:10px;margin-top:6px;text-align:center"></div>
 </div>
+<div class="card"><div class="ct" id="ctNick">NOMBRE VISIBLE</div>
+<div style="display:flex;gap:8px;align-items:center"><input id="nickEdit" maxlength="20" style="flex:1;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:9px 11px;color:var(--text);font-size:13px;font-family:Nunito;outline:none">
+<button class="btn bp" style="width:auto;padding:8px 16px;font-size:12px;margin:0" onclick="changeNick()">✓</button></div>
+<div style="font-size:10px;color:var(--text3);margin-top:4px" id="nickHint">Esto es lo que ven otros escaladores</div></div>
 <div class="card"><div class="ct" id="ctLang">IDIOMA</div>
 <select id="langSel" onchange="setLang(this.value)" style="width:100%;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:9px 11px;color:var(--text);font-size:13px;font-family:Nunito;outline:none;margin-bottom:4px">
 <option value="es">Castellano</option><option value="en">English</option><option value="eu">Euskera</option><option value="ca">Català</option>
@@ -253,7 +265,7 @@ es:{
   // Settings
   exportExcel:'EXPORTAR A EXCEL',from:'Desde',to:'Hasta',exportRoutes:'📥 Vías',exportTrains:'📥 Entrenos',
   cloudData:'DATOS EN LA NUBE',cloudRecords:'registros guardados',cloudSafe:'Tus datos están seguros en Firebase.',
-  about:'ACERCA DE',language:'IDIOMA',
+  about:'ACERCA DE',language:'IDIOMA',visibleName:'NOMBRE VISIBLE',nickHint:'Esto es lo que ven otros escaladores',
   // Plan modal
   planDay:'PLANIFICAR DÍA',whatPlan:'¿QUÉ PLAN?',climb:'🧗 Escalar',training:'🏋 Entreno',note:'📝 Nota',
   typeLabel:'Tipo',placePh:'Atauri, Sharma...',trainLabel2:'Entreno',allFolders:'— Todas —',noTrain:'— Sin entreno —',
@@ -347,7 +359,7 @@ en:{
   friendRoutes:'ROUTES OF',noFriendRoutes:'No routes',
   exportExcel:'EXPORT TO EXCEL',from:'From',to:'To',exportRoutes:'📥 Routes',exportTrains:'📥 Workouts',
   cloudData:'CLOUD DATA',cloudRecords:'saved records',cloudSafe:'Your data is safe on Firebase.',
-  about:'ABOUT',language:'LANGUAGE',
+  about:'ABOUT',language:'LANGUAGE',visibleName:'DISPLAY NAME',nickHint:'This is what other climbers see',
   planDay:'PLAN DAY',whatPlan:'WHAT PLAN?',climb:'🧗 Climb',training:'🏋 Workout',note:'📝 Note',
   typeLabel:'Type',placePh:'Kalymnos, Siurana...',trainLabel2:'Workout',allFolders:'— All —',noTrain:'— No workout —',
   shareExercises:'Share exercises with invitees',notes:'Notes',notesPh:'Day plan...',
@@ -433,7 +445,7 @@ eu:{
   friendRoutes:'BIAK:',noFriendRoutes:'Biarik ez',
   exportExcel:'EXCELERA ESPORTATU',from:'Noiztik',to:'Noiz arte',exportRoutes:'📥 Biak',exportTrains:'📥 Entrenak',
   cloudData:'HODEIKO DATUAK',cloudRecords:'erregistro gordeta',cloudSafe:'Zure datuak seguru daude Firebase-n.',
-  about:'HONI BURUZ',language:'HIZKUNTZA',
+  about:'HONI BURUZ',language:'HIZKUNTZA',visibleName:'IZEN IKUSGARRIA',nickHint:'Beste eskalatzaileek ikusten dutena da',
   planDay:'EGUNA PLANIFIKATU',whatPlan:'ZER PLAN?',climb:'🧗 Eskalatu',training:'🏋 Entrenatu',note:'📝 Oharra',
   typeLabel:'Mota',placePh:'Atauri, Sharma...',trainLabel2:'Entrenamendua',allFolders:'— Denak —',noTrain:'— Entrenamendürik gabe —',
   shareExercises:'Ariketak gonbidatuekin partekatu',notes:'Oharrak',notesPh:'Eguneko plana...',
@@ -519,7 +531,7 @@ ca:{
   friendRoutes:'VIES DE',noFriendRoutes:'Sense vies',
   exportExcel:'EXPORTAR A EXCEL',from:'Des de',to:'Fins a',exportRoutes:'📥 Vies',exportTrains:'📥 Entrenos',
   cloudData:'DADES AL NÚVOL',cloudRecords:'registres desats',cloudSafe:'Les teves dades estan segures a Firebase.',
-  about:'SOBRE',language:'IDIOMA',
+  about:'SOBRE',language:'IDIOMA',visibleName:'NOMBRE VISIBLE',nickHint:'Esto es lo que ven otros escaladores',
   planDay:'PLANIFICAR DIA',whatPlan:'QUIN PLA?',climb:'🧗 Escalar',training:'🏋 Entreno',note:'📝 Nota',
   typeLabel:'Tipus',placePh:'Siurana, Margalef...',trainLabel2:'Entreno',allFolders:'— Totes —',noTrain:'— Sense entreno —',
   shareExercises:'Compartir exercicis amb convidats',notes:'Notes',notesPh:'Pla del dia...',
@@ -597,9 +609,23 @@ let U=null,R=[],Tr=[],W=[],friends=[],plans=[],userCrags=[],mesos=[],woFolders=[
 auth.onAuthStateChanged(async u=>{document.getElementById('loadPage').style.display='none';
   if(u){U=u;document.getElementById('loginPage').style.display='none';
     document.getElementById('splashScreen').style.display='block';
-    document.getElementById('uPic').src=u.photoURL||'';document.getElementById('uName').textContent=u.displayName||u.email;
     const code=parseInt(u.uid.replace(/[^0-9]/g,'').slice(0,4))||Math.floor(Math.random()*9000)+1000;
-    await db.collection('users').doc(u.uid).set({name:u.displayName,email:u.email,photo:u.photoURL,code:code},{merge:true});
+    // Check if user has a nick
+    const userDoc=await db.collection('users').doc(u.uid).get();
+    let nick=userDoc.exists?userDoc.data().nick:'';
+    if(!nick){
+      // First login - ask for nickname
+      document.getElementById('splashScreen').style.display='none';
+      document.getElementById('nickModal').style.display='flex';
+      await new Promise(res=>{document.getElementById('nickSaveBtn').onclick=()=>{
+        nick=(document.getElementById('nickInput').value||'').trim();
+        if(!nick){nick=u.displayName?u.displayName.split(' ')[0]:'User';}
+        document.getElementById('nickModal').style.display='none';
+        document.getElementById('splashScreen').style.display='block';res();};});
+    }
+    await db.collection('users').doc(u.uid).set({name:u.displayName,email:u.email,photo:u.photoURL,code:code,nick:nick},{merge:true});
+    document.getElementById('uPic').src=u.photoURL||'';
+    document.getElementById('uName').textContent=nick;
     document.getElementById('uTag').textContent='#'+code;
     await loadData();
     applyLang();
@@ -617,7 +643,7 @@ async function loadData(){if(!U)return;const uid=U.uid;
   q=await db.collection('users').doc(uid).collection('workouts').get();W=[];q.forEach(d=>{W.push({id:d.id,...d.data()});});
   q=await db.collection('users').doc(uid).collection('friends').get();friends=[];q.forEach(d=>{friends.push({id:d.id,...d.data()});});
   for(const f of friends){try{const fq=await db.collection('users').where('email','==',f.email).get();
-    if(!fq.empty){const ud=fq.docs[0].data();f.name=ud.name||f.email;f.photo=ud.photo||'';}}catch(e){}}
+    if(!fq.empty){const ud=fq.docs[0].data();f.name=ud.nick||ud.name||f.email;f.photo=ud.photo||'';}}catch(e){}}
   q=await db.collection('users').doc(uid).collection('plans').get();plans=[];q.forEach(d=>{plans.push({id:d.id,...d.data()});});
   q=await db.collection('crags').get();userCrags=[];q.forEach(d=>{userCrags.push({id:d.id,...d.data()});});
   q=await db.collection('users').doc(uid).collection('mesos').get();mesos=[];q.forEach(d=>{mesos.push({id:d.id,...d.data()});});
@@ -653,7 +679,17 @@ function drS(){const el=document.getElementById('sN');if(el)el.textContent=R.len
   const cc=document.getElementById('ctCloud');if(cc)cc.textContent=t('cloudData');
   const ca=document.getElementById('ctAbout');if(ca)ca.textContent=t('about');
   const cl=document.getElementById('ctLang');if(cl)cl.textContent=t('language');
-  const ls=document.getElementById('langSel');if(ls)ls.value=LANG;}
+  const cn=document.getElementById('ctNick');if(cn)cn.textContent=t('visibleName');
+  const nh=document.getElementById('nickHint');if(nh)nh.textContent=t('nickHint');
+  const ls=document.getElementById('langSel');if(ls)ls.value=LANG;
+  // Load current nick
+  if(U){db.collection('users').doc(U.uid).get().then(d=>{if(d.exists){const ni=document.getElementById('nickEdit');if(ni)ni.value=d.data().nick||d.data().name||'';}});}}
+async function changeNick(){if(!U)return;const nick=(document.getElementById('nickEdit').value||'').trim();
+  if(!nick){alert(t('putName'));return;}
+  await db.collection('users').doc(U.uid).set({nick:nick},{merge:true});
+  document.getElementById('uName').textContent=nick;
+  document.getElementById('nickEdit').style.borderColor='var(--green)';
+  setTimeout(()=>{document.getElementById('nickEdit').style.borderColor='rgba(255,255,255,.08)';},1500);}
 
 // HOME
 function rH(){updStats();rCal();updGrToggles();loadInvites();setupSwipe();}
@@ -1220,7 +1256,7 @@ async function drFr(){
   const mf=document.getElementById('ctMyFriends');if(mf)mf.textContent=t('myFriends');
   let h='';if(!friends.length)h='<div style="color:var(--text3);font-size:11px;text-align:center;padding:16px">'+t('noFriends')+'</div>';
   for(const f of friends){const q=await db.collection('users').where('email','==',f.email).get();let name=f.email,photo='',code='';
-    if(!q.empty){const ud=q.docs[0].data();name=ud.name||f.email;photo=ud.photo||'';code=ud.code?'#'+ud.code:'';}
+    if(!q.empty){const ud=q.docs[0].data();name=ud.nick||ud.name||f.email;photo=ud.photo||'';code=ud.code?'#'+ud.code:'';}
     f.name=name;f.photo=photo;f.code=code;    h+=`<div class="fr-card"><img class="fr-pic" src="${photo||'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22><circle cx=%2212%22 cy=%228%22 r=%224%22 fill=%22%238a9bb0%22/><path d=%22M4 20c0-4 4-7 8-7s8 3 8 7%22 fill=%22%238a9bb0%22/></svg>'}" onclick="viewFr('${f.email}')"><div class="fr-info" onclick="viewFr('${f.email}')"><div class="fr-name">${name} <span style="font-size:9px;color:var(--rock)">${code}</span></div></div><button style="background:none;border:none;color:var(--blue);font-size:16px;cursor:pointer;padding:4px" onclick="event.stopPropagation();openChatByEmail('${f.email}')">💬</button><button class="fr-rm" onclick="event.stopPropagation();rmFr('${f.id}')">✕</button></div>`;}
   document.getElementById('frList').innerHTML=h;document.getElementById('frView').style.display='none';}
 async function openChatByEmail(email){const q=await db.collection('users').where('email','==',email).get();if(q.empty)return;const fd=q.docs[0].data();openChat(q.docs[0].id,(fd.name||email).replace(/'/g,''));}
