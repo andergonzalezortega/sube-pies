@@ -143,7 +143,8 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <canvas id="cDash" height="200" style="width:100%;background:var(--bg3);border-radius:var(--R);margin-bottom:6px"></canvas>
 <div id="dashInfo" style="font-size:10px;color:var(--text2)"></div>
 </div><div id="tMeso" style="display:none"><button class="btn bp" onclick="openMeso()" style="margin-bottom:12px">+ Crear mesociclo</button><div id="mesoList"></div></div></div>
-<!-- AMIGOS --><div id="pf" class="page"><div class="hdr"><h1>AMIGOS</h1></div><div class="card"><div class="ct">AÑADIR AMIGO</div><div style="display:flex;gap:6px"><input id="frCode" placeholder="Código #1234 o email" style="flex:1;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px;color:var(--text);font-size:12px;font-family:Nunito;outline:none"><button class="bp btn" style="width:auto;padding:8px 14px;font-size:12px;border-radius:10px" onclick="addFriend()">+</button></div><div id="frMsg" style="font-size:10px;margin-top:4px"></div></div><div class="ct" style="margin-top:12px">MIS AMIGOS</div><div id="frList"></div><div id="frView" style="display:none;margin-top:12px"></div></div>
+<!-- AMIGOS --><div id="pf" class="page"><div class="hdr"><h1>AMIGOS</h1></div><div class="card"><div class="ct">AÑADIR AMIGO</div><div style="display:flex;gap:6px"><input id="frCode" placeholder="Código #1234 o email" style="flex:1;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px;color:var(--text);font-size:12px;font-family:Nunito;outline:none"><button class="bp btn" style="width:auto;padding:8px 14px;font-size:12px;border-radius:10px" onclick="addFriend()">+</button></div><div id="frMsg" style="font-size:10px;margin-top:4px"></div></div><button onclick="shareAppLink()" style="width:100%;padding:10px;margin-top:8px;margin-bottom:12px;background:#25D366;border:none;border-radius:12px;color:#fff;font-family:'Nunito';font-weight:700;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">📲 <span id="shareAppBtn">Compartir app</span></button>
+<div class="ct" style="margin-top:12px" id="ctMyFriends">MIS AMIGOS</div><div id="frList"></div><div id="frView" style="display:none;margin-top:12px"></div></div>
 <!-- CHAT MODAL --><div class="mbg" id="mChat"><div class="mdl" style="height:70vh;display:flex;flex-direction:column"><button class="mx" onclick="closeChat()">✕</button><h2 id="chatTitle">CHAT</h2><div class="chat-wrap" id="chatBox" style="flex:1"></div><div class="chat-input"><input id="chatIn" placeholder="Escribe..." onkeydown="if(event.key==='Enter')sendChat()"><button onclick="sendChat()">→</button></div></div></div>
 <!-- AJUSTES --><div id="ps" class="page"><div class="hdr"><h1>AJUSTES</h1></div>
 <div class="card"><div class="ct" id="ctExport">EXPORTAR A EXCEL</div>
@@ -154,7 +155,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 </div>
 <div class="card"><div class="ct" id="ctLang">IDIOMA</div>
 <select id="langSel" onchange="setLang(this.value)" style="width:100%;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:9px 11px;color:var(--text);font-size:13px;font-family:Nunito;outline:none;margin-bottom:4px">
-<option value="es">🇪🇸 Castellano</option><option value="en">🇬🇧 English</option><option value="eu">🇪🇺 Euskera</option><option value="ca">🇪🇸 Català</option>
+<option value="es">Castellano</option><option value="en">English</option><option value="eu">Euskera</option><option value="ca">Català</option>
 </select></div>
 <div class="card"><div class="ct" id="ctCloud">DATOS EN LA NUBE</div><p style="font-size:12px;color:var(--text2)"><span style="font-family:'Bebas Neue';font-size:22px;color:var(--green)" id="sN">0</span> registros guardados</p><p style="font-size:10px;color:var(--text3);margin-top:4px">Tus datos están seguros en Firebase.</p></div>
 <div class="card"><div class="ct" id="ctAbout">ACERCA DE</div><p style="font-size:11px;color:var(--text2)">Sube Pies v1.0 · © 2026 · Todos los derechos reservados</p></div></div>
@@ -164,6 +165,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <!-- EJECUTOR --><div id="mExec" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:300;padding:0;transition:background .5s ease">
 <div style="display:flex;flex-direction:column;height:100%;justify-content:center;align-items:center;padding:20px;text-align:center" id="exInner">
 <button style="position:absolute;top:12px;right:16px;background:none;border:none;color:rgba(255,255,255,.5);font-size:28px;cursor:pointer;z-index:2" onclick="stopExec()">✕</button>
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;opacity:.5"><img src="logo.png" style="width:28px;height:28px;border-radius:50%"><span style="font-family:'Bebas Neue';font-size:14px;color:var(--rock);letter-spacing:2px">SUBE PIES</span></div>
 <div id="exStep" style="font-family:'Bebas Neue';font-size:14px;color:rgba(255,255,255,.4);letter-spacing:3px;margin-bottom:4px"></div>
 <div id="exTitle" style="font-family:'Bebas Neue';font-size:32px;color:var(--rock);margin-bottom:4px"></div>
 <div id="exDetail" style="font-size:12px;color:var(--rock);opacity:.7;margin-bottom:4px"></div>
@@ -246,7 +248,7 @@ es:{
   // Friends
   addFriend:'AÑADIR AMIGO',friendCodePh:'Código #1234 o email',myFriends:'MIS AMIGOS',
   noFriends:'Añade amigos con su código # o email',chatPh:'Escribe...',
-  notFoundFr:'No encontrado',thatsYou:'Ese eres tú',alreadyFriend:'Ya es tu amigo',added:'añadido ✓',
+  notFoundFr:'No encontrado',thatsYou:'Ese eres tú',alreadyFriend:'Ya es tu amigo',added:'añadido ✓',shareApp:'Compartir app',shareMsg:'¡Únete a Sube Pies! Diario de escalada gratuito. Añádeme con el código',
   friendRoutes:'VÍAS DE',noFriendRoutes:'Sin vías',
   // Settings
   exportExcel:'EXPORTAR A EXCEL',from:'Desde',to:'Hasta',exportRoutes:'📥 Vías',exportTrains:'📥 Entrenos',
@@ -341,7 +343,7 @@ en:{
   serie:'Set',rep:'Rep',done:'✓ Done',notDone:'✕ No',emptyTrain:'Empty workout',viaProject:'Project route',getReady:'GET READY',viaBlock:'ROUTES',
   addFriend:'ADD FRIEND',friendCodePh:'Code #1234 or email',myFriends:'MY FRIENDS',
   noFriends:'Add friends with their # code or email',chatPh:'Write...',
-  notFoundFr:'Not found',thatsYou:"That's you",alreadyFriend:'Already a friend',added:'added ✓',
+  notFoundFr:'Not found',thatsYou:"That's you",alreadyFriend:'Already a friend',added:'added ✓',shareApp:'Share app',shareMsg:'Join Sube Pies! Free climbing diary. Add me with code',
   friendRoutes:'ROUTES OF',noFriendRoutes:'No routes',
   exportExcel:'EXPORT TO EXCEL',from:'From',to:'To',exportRoutes:'📥 Routes',exportTrains:'📥 Workouts',
   cloudData:'CLOUD DATA',cloudRecords:'saved records',cloudSafe:'Your data is safe on Firebase.',
@@ -427,7 +429,7 @@ eu:{
   serie:'Serie',rep:'Errep',done:'✓ Eginda',notDone:'✕ Ez',emptyTrain:'Entrenamendua hutsik',viaProject:'Proiektu bia',getReady:'PRESTATU',viaBlock:'BIAK',
   addFriend:'LAGUNA GEHITU',friendCodePh:'#1234 kodea edo emaila',myFriends:'NIRE LAGUNAK',
   noFriends:'Gehitu lagunak haien # kodearekin edo emailarekin',chatPh:'Idatzi...',
-  notFoundFr:'Ez da aurkitu',thatsYou:'Hori zu zara',alreadyFriend:'Dagoeneko laguna da',added:'gehituta ✓',
+  notFoundFr:'Ez da aurkitu',thatsYou:'Hori zu zara',alreadyFriend:'Dagoeneko laguna da',added:'gehituta ✓',shareApp:'App-a partekatu',shareMsg:'Sartu Sube Pies-en! Eskalada egunkaria doakoa. Gehitu ni kodearekin',
   friendRoutes:'BIAK:',noFriendRoutes:'Biarik ez',
   exportExcel:'EXCELERA ESPORTATU',from:'Noiztik',to:'Noiz arte',exportRoutes:'📥 Biak',exportTrains:'📥 Entrenak',
   cloudData:'HODEIKO DATUAK',cloudRecords:'erregistro gordeta',cloudSafe:'Zure datuak seguru daude Firebase-n.',
@@ -513,7 +515,7 @@ ca:{
   serie:'Sèrie',rep:'Rep',done:'✓ Feta',notDone:'✕ No',emptyTrain:'Entreno buit',viaProject:'Via projecte',getReady:'PREPARA\'T',viaBlock:'VIES',
   addFriend:'AFEGIR AMIC',friendCodePh:'Codi #1234 o email',myFriends:'ELS MEUS AMICS',
   noFriends:'Afegeix amics amb el seu codi # o email',chatPh:'Escriu...',
-  notFoundFr:'No trobat',thatsYou:'Aquest ets tu',alreadyFriend:'Ja és amic teu',added:'afegit ✓',
+  notFoundFr:'No trobat',thatsYou:'Aquest ets tu',alreadyFriend:'Ja és amic teu',added:'afegit ✓',shareApp:'Compartir app',shareMsg:'Uneix-te a Sube Pies! Diari d\'escalada gratuït. Afegeix-me amb el codi',
   friendRoutes:'VIES DE',noFriendRoutes:'Sense vies',
   exportExcel:'EXPORTAR A EXCEL',from:'Des de',to:'Fins a',exportRoutes:'📥 Vies',exportTrains:'📥 Entrenos',
   cloudData:'DADES AL NÚVOL',cloudRecords:'registres desats',cloudSafe:'Les teves dades estan segures a Firebase.',
@@ -1209,7 +1211,14 @@ function doAlert(){if(!document.getElementById('exSound').checked)return;try{nav
 function doBeep(){if(!document.getElementById('exSound').checked)return;try{navigator.vibrate&&navigator.vibrate(100);}catch(e){}try{const ac=new(window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator();o.type='sine';o.frequency.value=660;o.connect(ac.destination);o.start();setTimeout(()=>o.stop(),100);}catch(e){}}
 
 // FRIENDS
-async function drFr(){let h='';if(!friends.length)h='<div style="color:var(--text3);font-size:11px;text-align:center;padding:16px">Añade amigos con su código # o email</div>';
+function shareAppLink(){const code=document.getElementById('uTag').textContent||'';
+  const msg=t('shareMsg')+' '+code+' 🧗\nhttps://andergonzalezortega.github.io/sube-pies/';
+  if(navigator.share){navigator.share({title:'Sube Pies',text:msg,url:'https://andergonzalezortega.github.io/sube-pies/'}).catch(()=>{});}
+  else{window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank');}}
+async function drFr(){
+  const sb=document.getElementById('shareAppBtn');if(sb)sb.textContent=t('shareApp');
+  const mf=document.getElementById('ctMyFriends');if(mf)mf.textContent=t('myFriends');
+  let h='';if(!friends.length)h='<div style="color:var(--text3);font-size:11px;text-align:center;padding:16px">'+t('noFriends')+'</div>';
   for(const f of friends){const q=await db.collection('users').where('email','==',f.email).get();let name=f.email,photo='',code='';
     if(!q.empty){const ud=q.docs[0].data();name=ud.name||f.email;photo=ud.photo||'';code=ud.code?'#'+ud.code:'';}
     f.name=name;f.photo=photo;f.code=code;    h+=`<div class="fr-card"><img class="fr-pic" src="${photo||'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22><circle cx=%2212%22 cy=%228%22 r=%224%22 fill=%22%238a9bb0%22/><path d=%22M4 20c0-4 4-7 8-7s8 3 8 7%22 fill=%22%238a9bb0%22/></svg>'}" onclick="viewFr('${f.email}')"><div class="fr-info" onclick="viewFr('${f.email}')"><div class="fr-name">${name} <span style="font-size:9px;color:var(--rock)">${code}</span></div></div><button style="background:none;border:none;color:var(--blue);font-size:16px;cursor:pointer;padding:4px" onclick="event.stopPropagation();openChatByEmail('${f.email}')">💬</button><button class="fr-rm" onclick="event.stopPropagation();rmFr('${f.id}')">✕</button></div>`;}
