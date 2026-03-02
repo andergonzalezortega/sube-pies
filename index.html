@@ -152,7 +152,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <div id="dashInfo" style="font-size:10px;color:var(--text2)"></div>
 </div><div id="tMeso" style="display:none"><button class="btn bp" onclick="openMeso()" style="margin-bottom:12px">+ Crear mesociclo</button><div id="mesoList"></div></div></div>
 <!-- AMIGOS --><div id="pf" class="page"><div class="hdr"><h1>AMIGOS</h1></div><div class="card"><div class="ct">AÑADIR AMIGO</div><div style="display:flex;gap:6px"><input id="frCode" placeholder="Código #1234 o email" style="flex:1;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px;color:var(--text);font-size:12px;font-family:Nunito;outline:none"><button class="bp btn" style="width:auto;padding:8px 14px;font-size:12px;border-radius:10px" onclick="addFriend()">+</button></div><div id="frMsg" style="font-size:10px;margin-top:4px"></div></div><button onclick="shareAppLink()" style="width:100%;padding:10px;margin-top:8px;margin-bottom:12px;background:#25D366;border:none;border-radius:12px;color:#fff;font-family:'Nunito';font-weight:700;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">📲 <span id="shareAppBtn">Compartir app</span></button>
-<div class="ct" style="margin-top:12px" id="ctMyFriends">MIS AMIGOS</div><div id="frList"></div><div id="frView" style="display:none;margin-top:12px"></div></div>
+<div class="ct" style="margin-top:12px" id="ctMyFriends">MIS AMIGOS</div><div id="frRequests" style="margin-bottom:8px"></div><div id="frList"></div><div id="frView" style="display:none;margin-top:12px"></div></div>
 <!-- CHAT MODAL --><div class="mbg" id="mChat"><div class="mdl" style="height:70vh;display:flex;flex-direction:column"><button class="mx" onclick="closeChat()">✕</button><h2 id="chatTitle">CHAT</h2><div class="chat-wrap" id="chatBox" style="flex:1"></div><div class="chat-input"><input id="chatIn" placeholder="Escribe..." onkeydown="if(event.key==='Enter')sendChat()"><button onclick="sendChat()">→</button></div></div></div>
 <!-- AJUSTES --><div id="ps" class="page"><div class="hdr"><h1>AJUSTES</h1></div>
 <div class="card"><div class="ct" id="ctExport">EXPORTAR A EXCEL</div>
@@ -303,7 +303,7 @@ es:{
   // Calendar days
   calDays:['L','M','X','J','V','S','D'],
   // Confirm msgs
-  confirmDeleteRoute:'¿Eliminar esta vía?',confirmDeleteFriend:'¿Eliminar este amigo?',confirmDeleteWo:'¿Eliminar?',
+  confirmDeleteRoute:'¿Eliminar esta vía?',confirmDeleteFriend:'¿Eliminar este amigo?',wantsToAdd:'quiere añadirte',requestSent:'Solicitud ya enviada',requestSentTo:'Solicitud enviada a',confirmDeleteWo:'¿Eliminar?',
   confirmDeleteFolder:'¿Eliminar carpeta? Los entrenos se quedan sueltos.',
   putDate:'Pon una fecha',putName:'Pon nombre',putNameAndEx:'Pon nombre y ejercicios',
   tplSaved:'Plantilla "{name}" guardada',
@@ -390,7 +390,7 @@ en:{
   accept:'✓ Accept',reject:'Reject',
   inviteAccepted:'Accepted ✓',inviteRejected:'Rejected',
   calDays:['M','T','W','T','F','S','S'],
-  confirmDeleteRoute:'Delete this route?',confirmDeleteFriend:'Delete this friend?',confirmDeleteWo:'Delete?',
+  confirmDeleteRoute:'Delete this route?',confirmDeleteFriend:'Delete this friend?',wantsToAdd:'wants to add you',requestSent:'Request already sent',requestSentTo:'Request sent to',confirmDeleteWo:'Delete?',
   confirmDeleteFolder:'Delete folder? Workouts will be unassigned.',
   putDate:'Set a date',putName:'Set a name',putNameAndEx:'Set name and exercises',
   tplSaved:'Template "{name}" saved',
@@ -476,7 +476,7 @@ eu:{
   accept:'✓ Onartu',reject:'Baztertu',
   inviteAccepted:'Onartuta ✓',inviteRejected:'Baztertua',
   calDays:['Al','As','Az','Og','Or','Lr','Ig'],
-  confirmDeleteRoute:'Bia hau ezabatu?',confirmDeleteFriend:'Lagun hau ezabatu?',confirmDeleteWo:'Ezabatu?',
+  confirmDeleteRoute:'Bia hau ezabatu?',confirmDeleteFriend:'Lagun hau ezabatu?',wantsToAdd:'gehitu nahi zaitu',requestSent:'Eskaera bidalita',requestSentTo:'Eskaera bidalita honi:',confirmDeleteWo:'Ezabatu?',
   confirmDeleteFolder:'Karpeta ezabatu? Entrenak karpetarik gabe geratuko dira.',
   putDate:'Jarri data bat',putName:'Jarri izena',putNameAndEx:'Jarri izena eta ariketak',
   tplSaved:'"{name}" txantiloia gordeta',
@@ -562,7 +562,7 @@ ca:{
   accept:'✓ Acceptar',reject:'Rebutjar',
   inviteAccepted:'Acceptada ✓',inviteRejected:'Rebutjada',
   calDays:['Dl','Dt','Dc','Dj','Dv','Ds','Dg'],
-  confirmDeleteRoute:'Eliminar aquesta via?',confirmDeleteFriend:'Eliminar aquest amic?',confirmDeleteWo:'Eliminar?',
+  confirmDeleteRoute:'Eliminar aquesta via?',confirmDeleteFriend:'Eliminar aquest amic?',wantsToAdd:'vol afegir-te',requestSent:'Sol·licitud ja enviada',requestSentTo:'Sol·licitud enviada a',confirmDeleteWo:'Eliminar?',
   confirmDeleteFolder:'Eliminar carpeta? Els entrenos quedaran solts.',
   putDate:'Posa una data',putName:'Posa nom',putNameAndEx:'Posa nom i exercicis',
   tplSaved:'Plantilla "{name}" desada',
@@ -1275,6 +1275,17 @@ function shareAppLink(){const code=document.getElementById('uTag').textContent||
 async function drFr(){
   const sb=document.getElementById('shareAppBtn');if(sb)sb.textContent=t('shareApp');
   const mf=document.getElementById('ctMyFriends');if(mf)mf.textContent=t('myFriends');
+  // Load pending friend requests
+  let rqH='';
+  try{const rqs=await db.collection('users').doc(U.uid).collection('friendRequests').where('status','==','pending').get();
+    rqs.forEach(d=>{const r=d.data();
+      rqH+=`<div style="background:rgba(74,158,255,.08);border:1px solid rgba(74,158,255,.2);border-radius:12px;padding:10px;margin-bottom:6px;display:flex;align-items:center;gap:8px">
+        <img src="${r.fromPhoto||''}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;background:var(--bg3)">
+        <div style="flex:1"><div style="font-size:13px;font-weight:600">${r.fromName}</div><div style="font-size:10px;color:var(--text3)">${t('wantsToAdd')}</div></div>
+        <button onclick="acceptFr('${d.id}','${r.fromUid}')" style="background:var(--green);border:none;border-radius:8px;color:#000;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer">✓</button>
+        <button onclick="rejectFr('${d.id}')" style="background:var(--red);border:none;border-radius:8px;color:#fff;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer">✕</button></div>`;});}catch(e){}
+  const rqBox=document.getElementById('frRequests');if(rqBox)rqBox.innerHTML=rqH;
+  // Show friends
   let h='';if(!friends.length)h='<div style="color:var(--text3);font-size:11px;text-align:center;padding:16px">'+t('noFriends')+'</div>';
   for(const f of friends){const q=await db.collection('users').where('email','==',f.email).get();let name=f.email,photo='',code='';
     if(!q.empty){const ud=q.docs[0].data();name=ud.nick||ud.name||f.email;photo=ud.photo||'';code=ud.code?'#'+ud.code:'';}
@@ -1292,9 +1303,41 @@ async function addFriend(){const raw=document.getElementById('frCode').value.tri
   const fDoc=q.docs[0],fd=fDoc.data();
   if(fDoc.id===U.uid){msg.textContent=t('thatsYou');msg.style.color='var(--red)';return;}
   if(friends.some(f=>f.email===fd.email)){msg.textContent=t('alreadyFriend');msg.style.color='var(--yellow)';return;}
-  await db.collection('users').doc(U.uid).collection('friends').add({email:fd.email});friends.push({email:fd.email});
-  document.getElementById('frCode').value='';msg.textContent=(fd.name||fd.email)+' añadido ✓';msg.style.color='var(--green)';drFr();}
-async function rmFr(id){if(!confirm(t('confirmDeleteFriend')))return;await db.collection('users').doc(U.uid).collection('friends').doc(id).delete();friends=friends.filter(f=>f.id!==id);drFr();}
+  // Check if request already sent
+  const existing=await db.collection('users').doc(fDoc.id).collection('friendRequests').where('fromUid','==',U.uid).where('status','==','pending').get();
+  if(!existing.empty){msg.textContent=t('requestSent');msg.style.color='var(--yellow)';return;}
+  // Send friend request to the other user
+  await db.collection('users').doc(fDoc.id).collection('friendRequests').add({
+    fromUid:U.uid,fromEmail:U.email,fromName:U.displayName||U.email,fromPhoto:U.photoURL||'',
+    status:'pending',ts:firebase.firestore.FieldValue.serverTimestamp()});
+  document.getElementById('frCode').value='';msg.textContent=t('requestSentTo')+' '+(fd.name||fd.email);msg.style.color='var(--green)';drFr();}
+async function acceptFr(reqId,fromUid){
+  // Add to both users' friend lists
+  const fromDoc=await db.collection('users').doc(fromUid).get();
+  if(!fromDoc.exists)return;
+  const fromData=fromDoc.data();
+  // Add them to my friends
+  await db.collection('users').doc(U.uid).collection('friends').add({email:fromData.email});
+  // Add me to their friends
+  await db.collection('users').doc(fromUid).collection('friends').add({email:U.email});
+  // Mark request as accepted
+  await db.collection('users').doc(U.uid).collection('friendRequests').doc(reqId).update({status:'accepted'});
+  // Reload friends
+  const fq=await db.collection('users').doc(U.uid).collection('friends').get();
+  friends=[];fq.forEach(d=>{friends.push({id:d.id,...d.data()});});
+  drFr();}
+async function rejectFr(reqId){
+  await db.collection('users').doc(U.uid).collection('friendRequests').doc(reqId).update({status:'rejected'});drFr();}
+async function rmFr(id){if(!confirm(t('confirmDeleteFriend')))return;
+  // Find friend email before deleting
+  const fr=friends.find(f=>f.id===id);
+  await db.collection('users').doc(U.uid).collection('friends').doc(id).delete();
+  // Also remove me from their friend list
+  if(fr&&fr.email){try{const q=await db.collection('users').where('email','==',fr.email).get();
+    if(!q.empty){const fuid=q.docs[0].id;
+      const theirFr=await db.collection('users').doc(fuid).collection('friends').where('email','==',U.email).get();
+      theirFr.forEach(async d=>{await d.ref.delete();});}}catch(e){}}
+  friends=friends.filter(f=>f.id!==id);drFr();}
 async function viewFr(email){const q=await db.collection('users').where('email','==',email).get();if(q.empty)return;
   const fuid=q.docs[0].id,fd=q.docs[0].data();document.getElementById('frViewTitle').textContent=t('friendRoutes')+' '+(fd.name||email).toUpperCase();
   const rs=await db.collection('users').doc(fuid).collection('routes').orderBy('date','desc').limit(30).get();let h='';
