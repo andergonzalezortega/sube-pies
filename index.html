@@ -1544,90 +1544,151 @@ function exportDayCard(){
   const dr=R.filter(r=>r.date===sel);
   const dt=Tr.filter(t=>t.date===sel);
   if(!dr.length&&!dt.length){alert(t('nothingToExport'));return;}
+  // Show photo picker modal
+  const modal=document.createElement('div');
+  modal.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.85);z-index:300;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)';
+  modal.innerHTML=`<div style="background:var(--bg2);border-radius:16px;padding:20px;width:90%;max-width:340px;text-align:center">
+    <h2 style="font-family:'Bebas Neue';font-size:20px;color:var(--rock);margin-bottom:12px">EXPORTAR DÍA</h2>
+    <p style="font-size:12px;color:var(--text2);margin-bottom:16px">Elige una foto de fondo para tu resumen</p>
+    <button id="expCamera" style="width:100%;padding:14px;background:var(--rock);border:none;border-radius:12px;color:#000;font-family:'Nunito';font-weight:700;font-size:14px;cursor:pointer;margin-bottom:8px">📷 Hacer foto</button>
+    <button id="expGallery" style="width:100%;padding:14px;background:var(--bg3);border:1px solid rgba(255,255,255,.1);border-radius:12px;color:var(--text);font-family:'Nunito';font-weight:700;font-size:14px;cursor:pointer;margin-bottom:8px">🖼️ Elegir de galería</button>
+    <button id="expNoPhoto" style="width:100%;padding:14px;background:var(--bg3);border:1px solid rgba(255,255,255,.06);border-radius:12px;color:var(--text2);font-family:'Nunito';font-weight:600;font-size:13px;cursor:pointer;margin-bottom:8px">Sin foto</button>
+    <button onclick="this.closest('div').parentElement.remove()" style="width:100%;padding:10px;background:none;border:none;color:var(--text3);font-size:12px;cursor:pointer">Cancelar</button>
+    <input type="file" id="expFileInput" accept="image/*" style="display:none">
+  </div>`;
+  document.body.appendChild(modal);
+  document.getElementById('expCamera').onclick=()=>{const inp=document.getElementById('expFileInput');inp.setAttribute('capture','environment');inp.click();};
+  document.getElementById('expGallery').onclick=()=>{const inp=document.getElementById('expFileInput');inp.removeAttribute('capture');inp.click();};
+  document.getElementById('expNoPhoto').onclick=()=>{modal.remove();buildDayImage(null,sel,dr,dt);};
+  document.getElementById('expFileInput').onchange=(e)=>{
+    const file=e.target.files[0];if(!file){return;}
+    const reader=new FileReader();
+    reader.onload=(ev)=>{const img=new Image();img.onload=()=>{modal.remove();buildDayImage(img,sel,dr,dt);};img.src=ev.target.result;};
+    reader.readAsDataURL(file);};}
+function buildDayImage(bgImg,sel,dr,dt){
   const cv=document.createElement('canvas');cv.width=1080;cv.height=1920;
   const ctx=cv.getContext('2d');
-  // Background gradient
-  const grad=ctx.createLinearGradient(0,0,0,1920);
-  grad.addColorStop(0,'#1a2a3a');grad.addColorStop(0.4,'#0d1b2a');grad.addColorStop(1,'#1b2838');
-  ctx.fillStyle=grad;ctx.fillRect(0,0,1080,1920);
-  // Mountain silhouette
-  ctx.fillStyle='rgba(212,165,116,.06)';ctx.beginPath();ctx.moveTo(0,1400);ctx.lineTo(200,900);ctx.lineTo(350,1100);ctx.lineTo(540,700);ctx.lineTo(730,1000);ctx.lineTo(880,800);ctx.lineTo(1080,1100);ctx.lineTo(1080,1400);ctx.fill();
-  // Logo circle
-  ctx.beginPath();ctx.arc(540,200,60,0,Math.PI*2);ctx.fillStyle='rgba(212,165,116,.15)';ctx.fill();
-  ctx.font='bold 24px Nunito';ctx.fillStyle='#d4a574';ctx.textAlign='center';ctx.fillText('SUBE PIES',540,210);
+  // Background
+  if(bgImg){
+    // Cover-fit the image
+    const imgR=bgImg.width/bgImg.height;const cvR=1080/1920;
+    let sw=bgImg.width,sh=bgImg.height,sx=0,sy=0;
+    if(imgR>cvR){sw=bgImg.height*cvR;sx=(bgImg.width-sw)/2;}
+    else{sh=bgImg.width/cvR;sy=(bgImg.height-sh)/2;}
+    ctx.drawImage(bgImg,sx,sy,sw,sh,0,0,1080,1920);
+    // Dark overlay
+    const ov=ctx.createLinearGradient(0,0,0,1920);
+    ov.addColorStop(0,'rgba(0,0,0,.55)');ov.addColorStop(0.3,'rgba(0,0,0,.4)');
+    ov.addColorStop(0.6,'rgba(0,0,0,.5)');ov.addColorStop(1,'rgba(0,0,0,.7)');
+    ctx.fillStyle=ov;ctx.fillRect(0,0,1080,1920);
+  }else{
+    const grad=ctx.createLinearGradient(0,0,0,1920);
+    grad.addColorStop(0,'#1a2a3a');grad.addColorStop(0.4,'#0d1b2a');grad.addColorStop(1,'#1b2838');
+    ctx.fillStyle=grad;ctx.fillRect(0,0,1080,1920);
+    // Mountain silhouette
+    ctx.fillStyle='rgba(212,165,116,.06)';ctx.beginPath();
+    ctx.moveTo(0,1400);ctx.lineTo(200,900);ctx.lineTo(350,1100);ctx.lineTo(540,700);ctx.lineTo(730,1000);ctx.lineTo(880,800);ctx.lineTo(1080,1100);ctx.lineTo(1080,1400);ctx.fill();}
+  // Logo top
+  ctx.textAlign='center';
+  ctx.font='bold 20px Nunito';ctx.fillStyle='rgba(212,165,116,.7)';
+  ctx.fillText('SUBE PIES',540,60);
+  // Small line under logo
+  ctx.fillStyle='rgba(212,165,116,.3)';ctx.fillRect(460,72,160,2);
   // Date
   const dd=new Date(sel);
   const loc=LANG==='en'?'en-US':LANG==='eu'?'eu-ES':LANG==='ca'?'ca-ES':'es-ES';
-  ctx.font='bold 42px Nunito';ctx.fillStyle='#e8e0d8';
-  ctx.fillText(dd.toLocaleDateString(loc,{weekday:'long',day:'numeric',month:'long'}).toUpperCase(),540,340);
-  // Location
+  ctx.font='300 26px Nunito';ctx.fillStyle='rgba(255,255,255,.6)';
+  ctx.fillText(dd.toLocaleDateString(loc,{weekday:'long',day:'numeric',month:'long',year:'numeric'}).toUpperCase(),540,120);
+  // BIG LOCATION
   const locs=[...new Set(dr.map(r=>r.sitio).filter(Boolean))];
-  if(locs.length){ctx.font='22px Nunito';ctx.fillStyle='#8a9bb0';ctx.fillText('📍 '+locs.join(' · '),540,390);}
-  // Stats bar
-  let y=460;
+  const mainLoc=locs.length?locs[0].toUpperCase():'';
+  if(mainLoc){
+    // Dynamic font size to fill width
+    let fontSize=140;ctx.font='bold '+fontSize+'px Nunito';
+    while(ctx.measureText(mainLoc).width>980&&fontSize>40){fontSize-=4;ctx.font='bold '+fontSize+'px Nunito';}
+    ctx.fillStyle='#ffffff';
+    ctx.shadowColor='rgba(0,0,0,.5)';ctx.shadowBlur=20;
+    ctx.fillText(mainLoc,540,280);
+    ctx.shadowBlur=0;
+    // Secondary locations
+    if(locs.length>1){
+      ctx.font='24px Nunito';ctx.fillStyle='rgba(255,255,255,.5)';
+      ctx.fillText(locs.slice(1).map(l=>l.toUpperCase()).join(' · '),540,320);}}
+  // Stats boxes
+  let y=mainLoc?370:200;
   const enc=dr.filter(r=>r.enc).length;
   const total=dr.length;
   const metros=dr.reduce((a,r)=>a+(r.metros||0),0);
   const maxGrade=dr.length?dr.reduce((a,r)=>G.indexOf(r.grado)>G.indexOf(a.grado)?r:a).grado:'';
-  // Draw stat boxes
-  ctx.fillStyle='rgba(255,255,255,.05)';
-  const statW=230,statH=100,gap=30;
   const stats=[];
-  if(total)stats.push({v:total,l:t('routes')});
-  if(enc)stats.push({v:enc,l:t('enc')});
+  if(total)stats.push({v:''+total,l:t('routes')});
+  if(enc)stats.push({v:''+enc,l:'✓ '+t('enc')});
   if(maxGrade)stats.push({v:maxGrade,l:'MAX'});
   if(metros)stats.push({v:metros+'m',l:t('meters')});
-  const totalW=stats.length*statW+(stats.length-1)*gap;
-  let sx=(1080-totalW)/2;
-  stats.forEach(s=>{
-    ctx.fillStyle='rgba(255,255,255,.05)';
-    ctx.beginPath();ctx.roundRect(sx,y,statW,statH,12);ctx.fill();
-    ctx.font='bold 44px Nunito';ctx.fillStyle='#d4a574';ctx.textAlign='center';
-    ctx.fillText(s.v,sx+statW/2,y+52);
-    ctx.font='14px Nunito';ctx.fillStyle='#8a9bb0';
-    ctx.fillText(s.l,sx+statW/2,y+80);
-    sx+=statW+gap;});
+  if(stats.length){
+    const boxW=200,boxH=90,gap=20;
+    const totalW=stats.length*boxW+(stats.length-1)*gap;
+    let sx=(1080-totalW)/2;
+    stats.forEach(s=>{
+      ctx.fillStyle='rgba(0,0,0,.4)';
+      ctx.beginPath();ctx.roundRect(sx,y,boxW,boxH,14);ctx.fill();
+      ctx.strokeStyle='rgba(212,165,116,.3)';ctx.lineWidth=1;
+      ctx.beginPath();ctx.roundRect(sx,y,boxW,boxH,14);ctx.stroke();
+      ctx.font='bold 40px Nunito';ctx.fillStyle='#d4a574';ctx.textAlign='center';
+      ctx.fillText(s.v,sx+boxW/2,y+48);
+      ctx.font='12px Nunito';ctx.fillStyle='rgba(255,255,255,.5)';
+      ctx.fillText(s.l.toUpperCase(),sx+boxW/2,y+72);
+      sx+=boxW+gap;});
+    y+=boxH+30;}
   // Routes list
-  y=600;ctx.textAlign='left';
+  ctx.textAlign='left';
   dr.forEach(r=>{
-    if(y>1700)return;
+    if(y>1750)return;
     const isEnc=r.enc;
-    // Route card background
-    ctx.fillStyle=isEnc?'rgba(78,205,196,.08)':'rgba(255,255,255,.03)';
-    ctx.beginPath();ctx.roundRect(80,y,920,70,12);ctx.fill();
-    // Left accent
+    // Card bg
+    ctx.fillStyle=isEnc?'rgba(78,205,196,.1)':'rgba(255,255,255,.05)';
+    ctx.beginPath();ctx.roundRect(60,y,960,72,14);ctx.fill();
+    // Left accent bar
     ctx.fillStyle=isEnc?'#4ecdc4':'#d4a574';
-    ctx.beginPath();ctx.roundRect(80,y,5,70,3);ctx.fill();
+    ctx.beginPath();ctx.roundRect(60,y+8,4,56,2);ctx.fill();
     // Grade
-    ctx.font='bold 36px Nunito';ctx.fillStyle=isEnc?'#4ecdc4':'#d4a574';
-    ctx.fillText(r.grado,110,y+45);
-    // Name and details
-    ctx.font='18px Nunito';ctx.fillStyle='#e8e0d8';
-    const nm=r.nombre||r.tipo;ctx.fillText(nm,280,y+35);
-    ctx.font='14px Nunito';ctx.fillStyle='#8a9bb0';
+    ctx.font='bold 34px Nunito';ctx.fillStyle=isEnc?'#4ecdc4':'#d4a574';
+    ctx.textAlign='left';ctx.fillText(r.grado,88,y+46);
+    // Name
+    ctx.font='600 20px Nunito';ctx.fillStyle='#e8e0d8';
+    const nm=r.nombre||r.tipo;
+    ctx.fillText(nm.length>30?nm.slice(0,30)+'…':nm,250,y+35);
+    // Details
+    ctx.font='14px Nunito';ctx.fillStyle='rgba(255,255,255,.4)';
     let det=r.tipo;
     if(r.metros)det+=' · '+r.metros+'m';
-    if(r.enc){det+=' · ✓';if(r.flash)det+=' ⚡';if(r.avista)det+=' 👁';}
+    if(isEnc){det+=' · ✓ Enc';if(r.flash)det+=' ⚡ Flash';if(r.avista)det+=' 👁 A vista';}
     else det+=' · Int '+r.intento;
-    ctx.fillText(det,280,y+58);
-    y+=82;});
+    ctx.fillText(det,250,y+58);
+    // Enc checkmark
+    if(isEnc){ctx.font='bold 28px Nunito';ctx.textAlign='right';ctx.fillStyle='#4ecdc4';ctx.fillText('✓',990,y+46);ctx.textAlign='left';}
+    y+=84;});
   // Workouts
-  if(dt.length){
-    ctx.font='bold 20px Nunito';ctx.fillStyle='#ffe66d';ctx.textAlign='left';
-    ctx.fillText('🏋️ '+t('workouts'),100,y+30);y+=40;
+  if(dt.length&&y<1700){
+    y+=10;
+    ctx.font='bold 22px Nunito';ctx.fillStyle='#ffe66d';ctx.textAlign='left';
+    ctx.fillText('🏋️ '+t('workouts'),80,y+20);y+=40;
     dt.forEach(tr=>{
-      ctx.font='16px Nunito';ctx.fillStyle='#e8e0d8';
-      ctx.fillText(tr.detail||tr.tipo||'Entreno',120,y+20);y+=30;});}
+      if(y>1750)return;
+      ctx.font='18px Nunito';ctx.fillStyle='rgba(255,255,255,.6)';
+      ctx.fillText(tr.detail||tr.tipo||'Entreno',100,y+20);y+=30;});}
   // Bottom branding
-  ctx.textAlign='center';ctx.font='16px Nunito';ctx.fillStyle='rgba(212,165,116,.3)';
-  ctx.fillText('sube-pies.app  🧗',540,1860);
-  // Download
+  ctx.textAlign='center';ctx.font='bold 18px Nunito';ctx.fillStyle='rgba(212,165,116,.4)';
+  ctx.fillText('🧗  SUBE PIES',540,1880);
+  // Download/Share
   cv.toBlob(blob=>{
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');a.href=url;
-    a.download='SubePies_'+sel+'.png';a.click();
-    URL.revokeObjectURL(url);
+    const file=new File([blob],'SubePies_'+sel+'.png',{type:'image/png'});
+    if(navigator.canShare&&navigator.canShare({files:[file]})){
+      navigator.share({files:[file],title:'Sube Pies - '+sel}).catch(()=>{
+        downloadBlob(blob,sel);});}
+    else{downloadBlob(blob,sel);}
   },'image/png');}
+function downloadBlob(blob,sel){const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='SubePies_'+sel+'.png';a.click();URL.revokeObjectURL(url);}
 function setDashPer(p){const td=new Date();document.getElementById('grTo').value=td.toISOString().split('T')[0];let f=new Date(td);if(p==='1m')f.setMonth(f.getMonth()-1);else if(p==='3m')f.setMonth(f.getMonth()-3);else if(p==='6m')f.setMonth(f.getMonth()-6);else if(p==='1y')f.setFullYear(f.getFullYear()-1);else f=new Date('2020-01-01');document.getElementById('grFrom').value=f.toISOString().split('T')[0];}
 function groupByMonth(arr){const m={};arr.forEach(x=>{const k=(x.date||'').substring(0,7);if(k){if(!m[k])m[k]=[];m[k].push(x);}});return Object.entries(m).sort((a,b)=>a[0].localeCompare(b[0]));}
 function drawLine(ctx,w,h,data){const vals=data.map(d=>d[1]);const mx=Math.max(...vals),mn=Math.min(...vals);const range=mx-mn||1;
