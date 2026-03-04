@@ -308,7 +308,7 @@ es:{
   // Calendar days
   calDays:['L','M','X','J','V','S','D'],
   // Confirm msgs
-  confirmDeleteRoute:'¿Eliminar esta vía?',confirmDeleteFriend:'¿Eliminar este amigo?',wantsToAdd:'quiere añadirte',requestSent:'Solicitud ya enviada',requestSentTo:'Solicitud enviada a',confirmDeleteWo:'¿Eliminar?',
+  confirmDeleteRoute:'¿Eliminar esta vía?',confirmDeleteFriend:'¿Eliminar este amigo?',wantsToAdd:'quiere añadirte',requestSent:'Solicitud ya enviada',requestSentTo:'Solicitud enviada a',shareWithFriend:'Compartir con amigo (escribe nombre):',sentTo:'Enviado a',confirmDeleteWo:'¿Eliminar?',
   confirmDeleteFolder:'¿Eliminar carpeta? Los entrenos se quedan sueltos.',
   putDate:'Pon una fecha',putName:'Pon nombre',putNameAndEx:'Pon nombre y ejercicios',
   tplSaved:'Plantilla "{name}" guardada',
@@ -395,7 +395,7 @@ en:{
   accept:'✓ Accept',reject:'Reject',
   inviteAccepted:'Accepted ✓',inviteRejected:'Rejected',
   calDays:['M','T','W','T','F','S','S'],
-  confirmDeleteRoute:'Delete this route?',confirmDeleteFriend:'Delete this friend?',wantsToAdd:'wants to add you',requestSent:'Request already sent',requestSentTo:'Request sent to',confirmDeleteWo:'Delete?',
+  confirmDeleteRoute:'Delete this route?',confirmDeleteFriend:'Delete this friend?',wantsToAdd:'wants to add you',requestSent:'Request already sent',requestSentTo:'Request sent to',shareWithFriend:'Share with friend (type name):',sentTo:'Sent to',confirmDeleteWo:'Delete?',
   confirmDeleteFolder:'Delete folder? Workouts will be unassigned.',
   putDate:'Set a date',putName:'Set a name',putNameAndEx:'Set name and exercises',
   tplSaved:'Template "{name}" saved',
@@ -481,7 +481,7 @@ eu:{
   accept:'✓ Onartu',reject:'Baztertu',
   inviteAccepted:'Onartuta ✓',inviteRejected:'Baztertua',
   calDays:['Al','As','Az','Og','Or','Lr','Ig'],
-  confirmDeleteRoute:'Bia hau ezabatu?',confirmDeleteFriend:'Lagun hau ezabatu?',wantsToAdd:'gehitu nahi zaitu',requestSent:'Eskaera bidalita',requestSentTo:'Eskaera bidalita honi:',confirmDeleteWo:'Ezabatu?',
+  confirmDeleteRoute:'Bia hau ezabatu?',confirmDeleteFriend:'Lagun hau ezabatu?',wantsToAdd:'gehitu nahi zaitu',requestSent:'Eskaera bidalita',requestSentTo:'Eskaera bidalita honi:',shareWithFriend:'Lagunarekin partekatu (izena idatzi):',sentTo:'Bidalita honi:',confirmDeleteWo:'Ezabatu?',
   confirmDeleteFolder:'Karpeta ezabatu? Entrenak karpetarik gabe geratuko dira.',
   putDate:'Jarri data bat',putName:'Jarri izena',putNameAndEx:'Jarri izena eta ariketak',
   tplSaved:'"{name}" txantiloia gordeta',
@@ -567,7 +567,7 @@ ca:{
   accept:'✓ Acceptar',reject:'Rebutjar',
   inviteAccepted:'Acceptada ✓',inviteRejected:'Rebutjada',
   calDays:['Dl','Dt','Dc','Dj','Dv','Ds','Dg'],
-  confirmDeleteRoute:'Eliminar aquesta via?',confirmDeleteFriend:'Eliminar aquest amic?',wantsToAdd:'vol afegir-te',requestSent:'Sol·licitud ja enviada',requestSentTo:'Sol·licitud enviada a',confirmDeleteWo:'Eliminar?',
+  confirmDeleteRoute:'Eliminar aquesta via?',confirmDeleteFriend:'Eliminar aquest amic?',wantsToAdd:'vol afegir-te',requestSent:'Sol·licitud ja enviada',requestSentTo:'Sol·licitud enviada a',shareWithFriend:'Compartir amb amic (escriu nom):',sentTo:'Enviat a',confirmDeleteWo:'Eliminar?',
   confirmDeleteFolder:'Eliminar carpeta? Els entrenos quedaran solts.',
   putDate:'Posa una data',putName:'Posa nom',putNameAndEx:'Posa nom i exercicis',
   tplSaved:'Plantilla "{name}" desada',
@@ -1089,6 +1089,44 @@ async function doMoveWo(woId){const fId=document.getElementById('mvFolderSel').v
   const el=document.getElementById('mMoveWo');if(el)el.remove();drTr();}
 async function delWo(id){if(confirm(t('confirmDeleteWo'))){await delWorkout(id);drTr();}}
 function editWo(id){const w=W.find(x=>x.id===id);if(!w)return;openWo(w);}
+async function shareWo(woId){const w=W.find(x=>x.id===woId);if(!w)return;
+  if(!friends.length){alert(t('noFriends'));return;}
+  let opts='';friends.forEach(f=>{opts+=`<option value="${f.email}">${f.name||f.email}</option>`;});
+  const el=document.createElement('div');el.innerHTML=`<select id="_swSel" style="width:100%;padding:8px;background:var(--bg3);color:var(--text);border:1px solid rgba(255,255,255,.1);border-radius:8px;font-family:Nunito">${opts}</select>`;
+  document.body.appendChild(el);
+  const email=prompt(t('shareWithFriend')+'\n'+friends.map(f=>f.name||f.email).join(', '));
+  el.remove();
+  if(!email)return;
+  const fr=friends.find(f=>(f.name||'').toLowerCase()===email.toLowerCase()||f.email.toLowerCase()===email.toLowerCase());
+  if(!fr){alert(t('notFoundFr'));return;}
+  const q=await db.collection('users').where('email','==',fr.email).get();
+  if(q.empty)return;
+  const fuid=q.docs[0].id;
+  const cid=getChatId(U.uid,fuid);
+  const msg='🏋️ '+w.name+': '+w.steps.map(s=>s.type==='exercise'?s.name:'🧗 '+s.grade).join(', ');
+  await db.collection('chats').doc(cid).collection('messages').add({from:U.uid,text:msg,ts:firebase.firestore.FieldValue.serverTimestamp()});
+  alert('✓ '+t('sentTo')+' '+(fr.name||fr.email));}
+function chkFlashAvista(){const enc=document.getElementById('iE').value==='1';
+  const int=parseInt(document.getElementById('iI').value)||1;
+  const show=enc&&int===1;
+  document.getElementById('fFlash').style.display=show?'block':'none';
+  document.getElementById('fAvista').style.display=show?'block':'none';
+  if(!show){document.getElementById('iFlash').value='0';document.getElementById('iAvista').value='0';}}
+function filterRouteFriends(){const q=(document.getElementById('iA').value||'').toLowerCase();
+  const sug=document.getElementById('rFriendSug');
+  if(!q||!friends.length){sug.style.display='none';return;}
+  const cur=(document.getElementById('iA').value||'').split(',').map(s=>s.trim().toLowerCase());
+  const matches=friends.filter(f=>(f.name||f.email).toLowerCase().includes(q)&&!cur.includes((f.name||f.email).toLowerCase()));
+  if(!matches.length){sug.style.display='none';return;}
+  let h='';matches.slice(0,5).forEach(f=>{
+    h+=`<div onclick="pickRouteFriend('${(f.name||f.email).replace(/'/g,'')}')" style="padding:6px 10px;cursor:pointer;font-size:12px;color:var(--text);border-bottom:1px solid rgba(255,255,255,.04)">${f.name||f.email}</div>`;});
+  sug.innerHTML=h;sug.style.display='block';
+  sug.style.cssText='display:block;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:8px;margin-top:4px;max-height:150px;overflow-y:auto';}
+function pickRouteFriend(name){const input=document.getElementById('iA');
+  const parts=input.value.split(',').map(s=>s.trim()).filter(Boolean);
+  parts.pop();parts.push(name);
+  input.value=parts.join(', ')+', ';
+  document.getElementById('rFriendSug').style.display='none';input.focus();}
 // Exercise templates
 const TPLS=[{nm:'Suspensiones',ag:'Regleta',mm:20,kg:0,modo:'time',time:7,reps:0,rep:6,ser:4,desc:3,ds:180,ang:''},
 {nm:'Bloqueos',ag:'Regleta',mm:20,kg:0,modo:'time',time:10,reps:0,rep:3,ser:3,desc:30,ds:180,ang:'90°'},
