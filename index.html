@@ -191,7 +191,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <div class="card"><div class="ct" id="ctCloud">DATOS EN LA NUBE</div><p style="font-size:12px;color:var(--text2)"><span style="font-family:'Bebas Neue';font-size:22px;color:var(--green)" id="sN">0</span> registros guardados</p><p style="font-size:10px;color:var(--text3);margin-top:4px">Tus datos están seguros en Firebase.</p></div>
 <div class="card"><div class="ct" id="ctAbout">ACERCA DE</div><p style="font-size:11px;color:var(--text2)">Sube Pies v1.0 · © 2026 · Todos los derechos reservados</p></div></div>
 </div>
-<!-- MODAL ROUTE --><div class="mbg" id="mR1"><div class="mdl"><button class="mx" onclick="cm('mR1')">✕</button><h2 id="mRT">VÍA</h2><div class="fl"><label>Nombre</label><input id="iN" placeholder="Diedro mágico"></div><div class="fl"><label>Lugar</label><input id="iL" placeholder="Atauri, Galdames..." list="dlZ"><datalist id="dlZ"></datalist></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="fl"><label>Tipo lugar</label><select id="iLT" onchange="chkRouteFields()"><option value="roca">Roca</option><option value="indoor">Indoor</option></select></div><div class="fl"><label>Tipo vía</label><select id="iTP" onchange="chkRouteFields()"><option>Cuerda</option><option>Bloque</option><option>Top Rope</option><option>Largos</option></select></div></div><div id="fEstilo" style="display:none"><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="fl"><label>Estilo</label><select id="iEstilo"><option value="">—</option><option value="deportiva">Deportiva</option><option value="clasica">Clásica</option></select></div><div class="fl" id="fNLargos" style="display:none"><label>Nº largos</label><input type="number" id="iNLargos" min="2" max="30" value="2" onchange="buildLargosGrades()"></div></div></div><div id="fLargosGrades" style="display:none;background:var(--bg3);border-radius:10px;padding:8px;margin-bottom:8px"><div class="ct" style="margin-bottom:4px">GRADO POR LARGO</div><div id="largosGradeList"></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px"><div class="fl"><label>Grado</label><select id="iG"></select></div><div class="fl"><label>Intento</label><select id="iI" onchange="chkFlashAvista()"></select></div><div class="fl"><label>Metros</label><input type="number" id="iMetros" placeholder="—" min="0" max="500" style="width:100%"></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px"><div class="fl"><label>Encadenado</label><select id="iE" onchange="chkFlashAvista()"><option value="1">Sí</option><option value="0">No</option></select></div><div class="fl" id="fFlash"><label>Flash</label><select id="iFlash"><option value="0">No</option><option value="1">Sí</option></select></div><div class="fl" id="fAvista"><label>A vista</label><select id="iAvista"><option value="0">No</option><option value="1">Sí</option></select></div></div><div class="fl"><label>Sensaciones</label><textarea id="iNo" placeholder="Beta, condiciones..."></textarea></div><div class="fl"><label>Compañeros</label><div id="rFriendChips" style="display:flex;gap:3px;flex-wrap:wrap;margin-bottom:4px"></div><input id="iA" placeholder="Escribe o elige amigos..." oninput="filterRouteFriends()"><div id="rFriendSug" style="display:none"></div></div><div class="fl"><label>Fecha</label><input type="date" id="iFe"></div><button class="btn bp" onclick="svR()">Guardar</button><button class="btn bdel" id="btnDelR" style="display:none" onclick="delR()">🗑️ Eliminar vía</button><button class="btn bg2" onclick="cm('mR1')">Cancelar</button></div></div>
+<!-- MODAL ROUTE --><div class="mbg" id="mR1"><div class="mdl"><button class="mx" onclick="cm('mR1')">✕</button><h2 id="mRT">VÍA</h2><div class="fl"><label>Nombre</label><input id="iN" placeholder="Diedro mágico"></div><div class="fl"><label>Lugar</label><input id="iL" placeholder="Atauri, Galdames..." list="dlZ"><datalist id="dlZ"></datalist></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="fl"><label>Tipo lugar</label><select id="iLT" onchange="chkRouteFields()"><option value="roca">Roca</option><option value="indoor">Indoor</option></select></div><div class="fl"><label>Tipo vía</label><select id="iTP" onchange="chkRouteFields()"><option>Cuerda</option><option>Bloque</option><option>Top Rope</option><option>Largos</option></select></div></div><div id="fEstilo" style="display:none"><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="fl"><label>Estilo</label><select id="iEstilo"><option value="">—</option><option value="deportiva">Deportiva</option><option value="clasica">Clásica</option></select></div><div class="fl" id="fNLargos" style="display:none"><label>Nº largos</label><input type="number" id="iNLargos" min="2" max="30" value="2" onchange="buildLargosGrades()"></div></div></div><div id="fLargosGrades" style="display:none;background:var(--bg3);border-radius:10px;padding:8px;margin-bottom:8px"><div class="ct" style="margin-bottom:4px">GRADO POR LARGO</div><div id="largosGradeList"></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px"><div class="fl"><label>Grado</label><select id="iG"></select></div><div class="fl"><label>Intento</label><select id="iI" onchange="chkFlashAvista()"></select></div><div class="fl"><label>Metros</label><input type="number" id="iMetros" placeholder="—" min="0" max="500" style="width:100%"></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px"><div class="fl"><label>Encadenado</label><select id="iE" onchange="chkFlashAvista()"><option value="1">Sí</option><option value="0">No</option></select></div><div class="fl" id="fFlash"><label>Flash</label><select id="iFlash"><option value="0">No</option><option value="1">Sí</option></select></div><div class="fl" id="fAvista"><label>A vista</label><select id="iAvista"><option value="0">No</option><option value="1">Sí</option></select></div></div><div class="fl"><label>Sensaciones</label><textarea id="iNo" placeholder="Beta, condiciones..."></textarea></div><div class="fl"><label>Compañeros</label><div id="rFriendChips" style="display:flex;gap:3px;flex-wrap:wrap;margin-bottom:4px"></div><input id="iA" placeholder="Escribe o elige amigos..." oninput="filterRouteFriends()"><div id="rFriendSug" style="display:none"></div></div><div class="fl"><label>Fecha</label><input type="date" id="iFe"></div><button class="btn bp" onclick="svR()">Guardar</button><button class="btn" id="btnShareR" style="display:none;background:var(--blue);color:#fff" onclick="shareRoute()">👥 Compartir vía con amigos</button><button class="btn bdel" id="btnDelR" style="display:none" onclick="delR()">🗑️ Eliminar vía</button><button class="btn bg2" onclick="cm('mR1')">Cancelar</button></div></div>
 <!-- MODAL WORKOUT --><div class="mbg" id="mW1"><div class="mdl"><button class="mx" onclick="cm('mW1')">✕</button><h2 id="mW1Title">CREAR ENTRENO</h2><div class="fl"><label>Nombre</label><input id="wNm" placeholder="Fuerza dedos"></div><div class="fl"><label>Carpeta</label><select id="wFolder"><option value="">— Sin carpeta —</option></select></div><div class="ct">PASOS</div><div id="wS"></div><div style="display:flex;gap:4px;margin-top:8px;margin-bottom:8px"><div class="ct" style="flex:1;margin:0">AÑADIR</div><button class="ch on" style="font-size:10px" onclick="showEjForm()">🏋 Ejercicio</button><button class="ch" style="font-size:10px" onclick="showViaForm()">🧗 Vía</button></div><div style="display:flex;gap:3px;margin-bottom:8px;flex-wrap:wrap" id="ejTpls"></div><div id="ejForm" style="display:none;background:var(--bg3);border-radius:10px;padding:10px;margin-bottom:8px"><div class="fl"><label>Nombre</label><input id="ejNm" placeholder="Suspensiones, Dominadas..."></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><div class="fl"><label>Agarre</label><select id="ejAg"><option value="">— Ninguno —</option><option>Regleta</option><option>Cazo</option><option>Pinza</option><option>Romo</option><option>Bidedo</option><option>Unidedo</option><option>Barra</option></select></div><div class="fl"><label>Tamaño (mm)</label><input id="ejMm" type="number" placeholder="20"></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><div class="fl"><label>Ángulo</label><select id="ejAng"><option value="">—</option><option>0°</option><option>15°</option><option>30°</option><option>45°</option><option>90°</option><option>120°</option></select></div><div class="fl"><label>Lastre (kg)</label><input id="ejKg" type="number" value="0"></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px"><div class="fl"><label>Modo</label><select id="ejModo" onchange="ejModoChg()"><option value="time">Tiempo</option><option value="reps">Reps</option></select></div><div class="fl" id="ejTimeF"><label>Tiempo (s)</label><input id="ejTime" type="number" value="7"></div><div class="fl" id="ejRepsF" style="display:none"><label>Reps</label><input id="ejReps" type="number" value="10"></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px"><div class="fl"><label>Series</label><input id="ejSer" type="number" value="4"></div><div class="fl"><label>Reps/serie</label><input id="ejRep" type="number" value="6"></div><div class="fl"><label>Descanso (s)</label><input id="ejDesc" type="number" value="3"></div></div><div class="fl"><label>Desc. entre series (s)</label><input id="ejDS" type="number" value="180"></div><div style="display:flex;gap:4px"><button class="btn bp" style="flex:1;font-size:12px;padding:8px" onclick="addEj()">+ Añadir</button><button class="btn bg2" style="width:auto;padding:8px 12px;font-size:10px;margin:0" onclick="saveCustomTpl()">💾 Guardar plantilla</button></div></div><div id="viaForm" style="display:none;background:var(--bg3);border-radius:10px;padding:10px;margin-bottom:8px"><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><div class="fl"><label>Grado</label><select id="vfGrado"></select></div><div class="fl"><label>Tipo</label><select id="vfTipo"><option>Cuerda</option><option>Bloque</option><option>Top Rope</option></select></div></div><div class="fl"><label>Nombre (opcional)</label><input id="vfNombre" placeholder="La rambla..."></div><button class="btn bp" style="font-size:12px;padding:8px" onclick="addViaStep()">+ Añadir vía</button></div><hr style="border:none;border-top:1px solid var(--bg4);margin:10px 0"><button class="btn bp" onclick="svW()">Guardar entreno</button><button class="btn bg2" onclick="cm('mW1')">Cancelar</button></div></div>
 <!-- EJECUTOR --><div id="mExec" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:300;padding:0;transition:background .5s ease">
 <div style="display:flex;flex-direction:column;height:100%;justify-content:center;align-items:center;padding:20px;text-align:center" id="exInner">
@@ -687,7 +687,7 @@ function getCragCoords(name){if(!name)return null;const nl=name.toLowerCase();
   for(const c of userCrags){if(nl.includes(c.name.toLowerCase()))return{name:c.name,lat:c.lat,lng:c.lng};}
   return null;}
 
-const G=["IV","IV+","V","V+","6a","6a+","6b","6b+","6c","6c+","7a","7a+","7b","7b+","7c","7c+","8a","8a+","8b","8b+","8c","8c+","9a","9a+","9b","9b+","9c"];
+const G=["I","I+","II","II+","III","III+","IV","IV+","V","V+","6a","6a+","6b","6b+","6c","6c+","7a","7a+","7b","7b+","7c","7c+","8a","8a+","8b","8b+","8c","8c+","9a","9a+","9b","9b+","9c"];
 let cY=new Date().getFullYear(),cMo=new Date().getMonth(),cSl=null,gM='cr',gPer='year',sPer='year',rFl='all',tTb='plan',mapMode='roca',eRt=null,wSt=[],leafMap=null,markers=[],chatUnsub=null,chatFrUid=null;
 const PG={home:'ph',routes:'pv',map:'pm',train:'pt',friends:'pf',sync:'ps'},PK=Object.keys(PG);
 
@@ -823,6 +823,8 @@ async function loadInvites(){if(!U)return;
     if(inv.workoutName)detail+=' · 🏋 '+inv.workoutName;
     if(inv.type==='cancel'){
       h+=`<div class="inv-card" style="border-color:var(--red);background:linear-gradient(135deg,rgba(255,107,107,.15),rgba(255,107,107,.05))"><div class="inv-who" style="color:var(--red)">❌ ${inv.fromName} ha cancelado</div><div class="inv-det">${inv.notas||detail} · ${dd}</div><div class="inv-btns"><button class="inv-yes" onclick="answerInv('${d.id}','accepted')">OK, mantener mi plan</button><button class="inv-no" onclick="answerInv('${d.id}','rejected')">Eliminar mi plan</button></div></div>`;
+    }else if(inv.type==='sharedRoute'){
+      h+=`<div class="inv-card" style="border-color:var(--blue);background:linear-gradient(135deg,rgba(78,205,196,.1),rgba(78,205,196,.03))"><div class="inv-who" style="color:var(--blue)">🧗 ${inv.fromName} ha compartido una vía</div><div class="inv-det">${inv.notas||''} · ${dd}</div><div class="inv-btns"><button class="inv-yes" onclick="answerInv('${d.id}','accepted')">✓ Añadir a mis vías</button><button class="inv-no" onclick="answerInv('${d.id}','rejected')">✕ No, gracias</button></div></div>`;
     }else{
       h+=`<div class="inv-card"><div class="inv-who">${inv.fromName} te invita</div><div class="inv-det">${detail} · ${dd}</div>${inv.notas?`<div style="font-size:10px;color:var(--text3)">${inv.notas}</div>`:''}<div class="inv-btns"><button class="inv-yes" onclick="answerInv('${d.id}','accepted')">✓ Aceptar</button><button class="inv-no" onclick="answerInv('${d.id}','rejected')">✕ Rechazar</button></div></div>`;}});
   document.getElementById('invBanner').innerHTML=h;}
@@ -831,13 +833,53 @@ async function answerInv(id,status){if(!U)return;
   const doc=await ref.get();if(!doc.exists)return;const inv=doc.data();
   await ref.update({status});
   if(status==='accepted'){
-    const plan={date:inv.date,tipo:inv.tipo,lugar:inv.lugar||'',notas:'Con '+inv.fromName};
-    if(inv.workoutName)plan.workoutName=inv.workoutName;
-    if(inv.workoutSteps){plan.workoutSteps=inv.workoutSteps;
-      // Also save as a workout for the user
-      await saveWorkout({name:inv.workoutName+' (de '+inv.fromName+')',steps:inv.workoutSteps,plannedDate:inv.date});}
-    await savePlan(plan);}
+    if(inv.type==='sharedRoute'&&inv.routeData){
+      // Save as a new route for this user
+      const rd={...inv.routeData};delete rd.id;
+      rd.notas=(rd.notas?rd.notas+' · ':'')+'Compartida por '+inv.fromName;
+      await saveRoute(rd);drR();rH();
+    }else{
+      const plan={date:inv.date,tipo:inv.tipo,lugar:inv.lugar||'',notas:'Con '+inv.fromName};
+      if(inv.workoutName)plan.workoutName=inv.workoutName;
+      if(inv.workoutSteps){plan.workoutSteps=inv.workoutSteps;
+        await saveWorkout({name:inv.workoutName+' (de '+inv.fromName+')',steps:inv.workoutSteps,plannedDate:inv.date});}
+      await savePlan(plan);}}
   loadInvites();rCal();}
+async function shareRoute(){
+  if(!U||!eRt)return;
+  const r=R.find(x=>x.id===eRt);if(!r)return;
+  // Build friend list
+  if(!friends.length){alert('No tienes amigos añadidos');return;}
+  const modal=document.createElement('div');
+  modal.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.85);z-index:300;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)';
+  let fhtml='';friends.forEach((f,i)=>{
+    fhtml+=`<label style="display:flex;align-items:center;gap:8px;padding:8px;background:var(--bg3);border-radius:10px;cursor:pointer"><input type="checkbox" id="srF${i}" value="${f.email||f.uid}" data-uid="${f.uid}"><span style="font-size:13px;color:var(--text)">${f.name||f.email}</span></label>`;});
+  modal.innerHTML=`<div style="background:var(--bg2);border-radius:16px;padding:20px;width:90%;max-width:340px">
+    <h2 style="font-family:'Bebas Neue';font-size:18px;color:var(--blue);margin-bottom:8px">COMPARTIR VÍA</h2>
+    <p style="font-size:11px;color:var(--text2);margin-bottom:10px">${r.grado} ${r.nombre||r.tipo} · ${r.sitio||''}</p>
+    <div style="display:flex;flex-direction:column;gap:4px;max-height:300px;overflow-y:auto;margin-bottom:12px">${fhtml}</div>
+    <button id="srSend" style="width:100%;padding:12px;background:var(--blue);border:none;border-radius:12px;color:#fff;font-family:'Nunito';font-weight:700;font-size:14px;cursor:pointer">Enviar</button>
+    <button onclick="this.closest('div').parentElement.remove()" style="width:100%;padding:8px;background:none;border:none;color:var(--text3);font-size:12px;cursor:pointer;margin-top:4px">Cancelar</button>
+  </div>`;
+  document.body.appendChild(modal);
+  document.getElementById('srSend').onclick=async function(){
+    const fromName=U.displayName||U.email;
+    const routeData={date:r.date,lugar:r.lugar,tipo:r.tipo,grado:r.grado,nombre:r.nombre,sitio:r.sitio,notas:r.notas||'',amigos:r.amigos||'',metros:r.metros||0,intento:1,enc:false,flash:false,avista:false};
+    if(r.estilo)routeData.estilo=r.estilo;
+    if(r.largos)routeData.largos=r.largos;
+    if(r.nLargos)routeData.nLargos=r.nLargos;
+    let sent=0;
+    for(let i=0;i<friends.length;i++){
+      const cb=document.getElementById('srF'+i);
+      if(cb&&cb.checked){
+        const fuid=cb.getAttribute('data-uid');
+        try{await db.collection('users').doc(fuid).collection('invites').add({
+          from:U.uid,fromName,date:r.date,tipo:'sharedRoute',type:'sharedRoute',
+          lugar:r.sitio||'',notas:fromName+' ha compartido: '+r.grado+' '+(r.nombre||r.tipo),
+          routeData,status:'pending',
+          ts:firebase.firestore.FieldValue.serverTimestamp()});sent++;}catch(e){console.error(e);}}}
+    modal.remove();
+    if(sent)alert('Vía compartida con '+sent+' amigo'+(sent>1?'s':''));};}
 function updStats(){const y=new Date().getFullYear(),yr=R.filter(r=>new Date(r.date).getFullYear()===y);
   let sp='';[['year','Año'],['life','Siempre']].forEach(([k,lb])=>{sp+=`<button class="gp${sPer===k?' on':''}" onclick="sPer='${k}';updStats()">${lb}</button>`;});
   document.getElementById('sPer').innerHTML=sp;
@@ -991,13 +1033,14 @@ function drR(){let fc='';[['all',t('allRoutes')],['roca',t('rock')],['indoor',t(
 function vc(r,ed){let largosInfo='';if(r.tipo==='Largos'&&r.largos){largosInfo=r.largos.map((g,i)=>`<span class="tg" style="font-size:9px">L${i+1}:${g}</span>`).join('');}
   return `<div class="via ${r.enc?'enc':''}" ${ed?`onclick="edR('${r.id}')"`:''}><div class="vt"><div class="vg">${r.grado}</div><div class="vd">${new Date(r.date).toLocaleDateString(LANG==='en'?'en-US':LANG==='eu'?'eu-ES':LANG==='ca'?'ca-ES':'es-ES',{day:'numeric',month:'short'})}</div></div>${r.nombre?`<div class="vn">${r.nombre}</div>`:''}${r.sitio?`<div class="vl">📍 ${r.sitio}</div>`:''}<div class="vts"><span class="tg r">${r.lugar==='roca'?t('rock'):t('indoor')}</span><span class="tg t">${r.tipo}</span>${r.estilo?`<span class="tg" style="background:${r.estilo==='clasica'?'var(--yellow)':'var(--blue)'}88;color:#fff">${r.estilo==='clasica'?'Clásica':'Dep.'}</span>`:''}${r.metros?`<span class="tg">${r.metros}m</span>`:''}<span class="tg">Int:${r.intento||1}</span>${r.enc?'<span class="tg e">Enc ✓</span>':''}${r.amigos?`<span class="tg">👥 ${r.amigos}</span>`:''}${r.notas?'<span class="tg">💬</span>':''}${largosInfo}</div></div>`;}
 function pSel(){const g=document.getElementById('iG');g.innerHTML='';G.forEach(x=>{g.innerHTML+=`<option>${x}</option>`;});const i=document.getElementById('iI');i.innerHTML='';for(let j=1;j<=9;j++)i.innerHTML+=`<option>${j}</option>`;}
-function addR(){eRt=null;document.getElementById('mRT').textContent=t('newRoute');pSel();['iN','iL','iNo','iA'].forEach(id=>document.getElementById(id).value='');document.getElementById('iMetros').value='';document.getElementById('iFe').value=new Date().toISOString().split('T')[0];document.getElementById('iG').value='7a';document.getElementById('iE').value='0';document.getElementById('iEstilo').value='';document.getElementById('iNLargos').value='2';document.getElementById('btnDelR').style.display='none';chkRouteFields();document.getElementById('mR1').classList.add('sh');}
+function addR(){eRt=null;document.getElementById('mRT').textContent=t('newRoute');pSel();['iN','iL','iNo','iA'].forEach(id=>document.getElementById(id).value='');document.getElementById('iMetros').value='';document.getElementById('iFe').value=new Date().toISOString().split('T')[0];document.getElementById('iG').value='7a';document.getElementById('iE').value='0';document.getElementById('iEstilo').value='';document.getElementById('iNLargos').value='2';document.getElementById('btnDelR').style.display='none';document.getElementById('btnShareR').style.display='none';chkRouteFields();document.getElementById('mR1').classList.add('sh');}
 function edR(id){const r=R.find(x=>x.id===id);if(!r)return;eRt=id;document.getElementById('mRT').textContent=t('editRoute');pSel();document.getElementById('iN').value=r.nombre||'';document.getElementById('iL').value=r.sitio||'';document.getElementById('iLT').value=r.lugar;document.getElementById('iTP').value=r.tipo;document.getElementById('iG').value=r.grado;document.getElementById('iI').value=r.intento||1;document.getElementById('iE').value=r.enc?'1':'0';document.getElementById('iNo').value=r.notas||'';document.getElementById('iA').value=r.amigos||'';document.getElementById('iFe').value=r.date;document.getElementById('iMetros').value=r.metros||'';document.getElementById('btnDelR').style.display='block';
   chkRouteFields();
   if(r.estilo)document.getElementById('iEstilo').value=r.estilo;
   if(r.tipo==='Largos'&&r.nLargos){document.getElementById('iNLargos').value=r.nLargos;buildLargosGrades();
     if(r.largos){r.largos.forEach((g,i)=>{const sel=document.getElementById('iLG'+(i+1));if(sel)sel.value=g;});}}
   chkFlashAvista();
+  document.getElementById('btnShareR').style.display='block';
   document.getElementById('mR1').classList.add('sh');}
 async function svR(){const int=parseInt(document.getElementById('iI').value)||1;const enc=document.getElementById('iE').value==='1';
   const flash=enc&&int===1&&document.getElementById('iFlash').value==='1';
@@ -1685,8 +1728,15 @@ function drawBody(ctx,cv,sel,dr,dt,logo){
       if(isEnc){ctx.font='bold 26px Nunito';ctx.textAlign='right';ctx.fillStyle='#4ecdc4';ctx.fillText('\u2713',1000,y+36);ctx.textAlign='left';}
       y+=58;
       if(r.largos&&r.largos.length){
-        ctx.font='16px Nunito';ctx.fillStyle='rgba(212,165,116,.5)';
-        ctx.fillText('    '+r.largos.map(function(g,i){return 'L'+(i+1)+':'+g;}).join('  '),82,y+10);y+=22;}});
+        r.largos.forEach(function(g,i){
+          if(y>1700)return;
+          ctx.fillStyle='rgba(212,165,116,.04)';ctx.beginPath();ctx.roundRect(100,y,880,32,6);ctx.fill();
+          ctx.fillStyle='rgba(212,165,116,.2)';ctx.beginPath();ctx.roundRect(100,y+4,3,24,2);ctx.fill();
+          ctx.font='bold 16px Nunito';ctx.fillStyle='rgba(212,165,116,.6)';
+          ctx.fillText('L'+(i+1),118,y+22);
+          ctx.font='bold 18px Nunito';ctx.fillStyle='rgba(255,255,255,.6)';
+          ctx.fillText(g,160,y+22);
+          y+=36;});y+=6;}});
     y+=15;});
   var dw2=W.filter(function(w){return w.plannedDate===sel;});
   var allWo2=[];
