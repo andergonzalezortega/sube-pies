@@ -747,7 +747,7 @@ function drCalDetail(){
   // Trainings done - with exercise breakdown
   dt.forEach(tr=>{
     let steps=tr.woSteps||[];
-    if(!steps.length){const match=W.find(w=>w.name===(tr.detail||''));if(match)steps=match.steps||[];}
+    if(!steps.length){const tname=(tr.detail||'').replace(/\s*\(\d+\s*pasos?\)/i,'').trim();const match=W.find(w=>w.name===tname||(tr.detail||'').startsWith(w.name));if(match)steps=match.steps||[];}
     h+=`<div style="font-size:11px;color:var(--yellow);padding:3px 0;font-weight:700">🏋 ${tr.detail||tr.tipo}</div>`;
     if(steps.length){steps.forEach(s=>{
       if(s.type==='exercise'){
@@ -1604,15 +1604,18 @@ function drawAll(ctx,cv,bgImg,sel,dr,dt){
 function drawBody(ctx,cv,sel,dr,dt,logo){
   var y=10;
   ctx.textAlign='center';
-  if(logo){ctx.drawImage(logo,470,y,42,42);
-    ctx.font='bold 36px Nunito';ctx.fillStyle='#d4a574';ctx.fillText('SUBE PIES',595,y+34);}
-  else{ctx.font='bold 36px Nunito';ctx.fillStyle='#d4a574';ctx.fillText('SUBE PIES',540,y+34);}
-  y+=52;ctx.fillStyle='rgba(212,165,116,.3)';ctx.fillRect(380,y,320,2);y+=20;
+  ctx.font='bold 52px Nunito';ctx.fillStyle='#d4a574';
+  ctx.fillText('SUBE PIES',540,y+42);
+  y+=58;ctx.fillStyle='rgba(212,165,116,.3)';ctx.fillRect(340,y,400,2);y+=8;
+  var uName=(U&&U.displayName?U.displayName:'');
+  var uCode=document.getElementById('uTag')?document.getElementById('uTag').textContent:'';
+  if(uName||uCode){ctx.font='bold 20px Nunito';ctx.fillStyle='rgba(255,255,255,.45)';
+    ctx.fillText(uName+(uCode?' '+uCode:''),540,y+16);y+=28;}
   var dd=new Date(sel);
   var lc=LANG==='en'?'en-US':LANG==='eu'?'eu-ES':LANG==='ca'?'ca-ES':'es-ES';
-  ctx.font='300 26px Nunito';ctx.fillStyle='rgba(255,255,255,.55)';
-  ctx.fillText(dd.toLocaleDateString(lc,{weekday:'long',day:'numeric',month:'long',year:'numeric'}).toUpperCase(),540,y+10);
-  y+=40;
+  ctx.font='300 24px Nunito';ctx.fillStyle='rgba(255,255,255,.45)';
+  ctx.fillText(dd.toLocaleDateString(lc,{weekday:'long',day:'numeric',month:'long',year:'numeric'}).toUpperCase(),540,y+14);
+  y+=36;
   var locGrp={};dr.forEach(function(r){var k=r.sitio||'';if(!locGrp[k])locGrp[k]=[];locGrp[k].push(r);});
   var locKeys=Object.keys(locGrp);
   locKeys.forEach(function(sitio){
@@ -1648,13 +1651,13 @@ function drawBody(ctx,cv,sel,dr,dt,logo){
   var allWo2=[];
   dt.forEach(function(tr){
     var steps=tr.woSteps||[];
-    if(!steps.length){var match=W.find(function(w){return w.name===(tr.detail||'');});if(match)steps=match.steps||[];}
+    if(!steps.length){var tname=(tr.detail||'').replace(/\s*\(\d+\s*pasos?\)/i,'').trim();var match=W.find(function(w){return w.name===tname||(tr.detail||'').startsWith(w.name);});if(match)steps=match.steps||[];}
     allWo2.push({name:tr.detail||tr.tipo||'Entreno',steps:steps});});
   dw2.forEach(function(w){
     if(!allWo2.some(function(a){return a.name===w.name;}))allWo2.push({name:w.name||'Entreno',steps:w.steps||[]});});
   allWo2.forEach(function(wo){
     if(y>1680)return;
-    var woName=(wo.name||'Entreno').toUpperCase();
+    var woName=(wo.name||'Entreno').replace(/\s*\(\d+\s*pasos?\)/i,'').toUpperCase();
     var fs2=80;ctx.font='bold '+fs2+'px Nunito';
     while(ctx.measureText(woName).width>960&&fs2>40){fs2-=4;ctx.font='bold '+fs2+'px Nunito';}
     ctx.textAlign='center';ctx.fillStyle='#ffe66d';
