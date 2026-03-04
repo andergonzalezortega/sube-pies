@@ -750,12 +750,13 @@ function drCalDetail(){
     if(!steps.length){const tname=(tr.detail||'').replace(/\s*\(\d+\s*pasos?\)/i,'').trim();const match=W.find(w=>w.name===tname||(tr.detail||'').startsWith(w.name));if(match)steps=match.steps||[];}
     h+=`<div style="font-size:11px;color:var(--yellow);padding:3px 0;font-weight:700">🏋 ${tr.detail||tr.tipo}</div>`;
     if(steps.length){steps.forEach(s=>{
-      if(s.type==='exercise'){
-        const nm=s.name||s.nm||s.txt||'';
-        let d2=[];if(s.ser)d2.push(s.ser+'s');if(s.rep)d2.push(s.rep+'r');if(s.time)d2.push(s.time+'s');
+      const isVia=s.stepType==='via';
+      if(isVia){h+=`<div style="font-size:10px;color:var(--rock);padding:1px 0 1px 12px">🧗 ${s.grado||'?'} ${s.nombre||''}</div>`;}
+      else{const nm=s.nm||s.name||s.txt||'';if(!nm)return;
+        let d2=[];if(s.ser)d2.push(s.ser+'s');if(s.rep)d2.push(s.rep+'r');
+        if(s.modo==='time'&&s.time)d2.push(s.time+'s');
         if(s.kg&&parseFloat(s.kg)>0)d2.push('+'+s.kg+'kg');if(s.ag)d2.push(s.ag);if(s.mm)d2.push(s.mm+'mm');
-        h+=`<div style="font-size:10px;color:var(--text2);padding:1px 0 1px 12px">· ${nm} <span style="color:var(--text3)">${d2.join(' ')}</span></div>`;}
-      else if(s.type==='via'){h+=`<div style="font-size:10px;color:var(--rock);padding:1px 0 1px 12px">🧗 ${s.grade||'?'} ${s.nombre||''}</div>`;}});}});
+        h+=`<div style="font-size:10px;color:var(--text2);padding:1px 0 1px 12px">· ${nm} <span style="color:var(--text3)">${d2.join(' ')}</span></div>`;}});}});
   if(!dp.length&&!dr.length&&!dt.length&&!dw.length){h+=`<div style="font-size:11px;color:var(--text3);padding:4px 0">Sin actividad</div>`;}
   h+='</div>';el.innerHTML=h;}
 async function delPlan(planId){
@@ -1128,7 +1129,7 @@ async function shareWo(woId){const w=W.find(x=>x.id===woId);if(!w)return;
   if(q.empty)return;
   const fuid=q.docs[0].id;
   const cid=getChatId(U.uid,fuid);
-  const msg='🏋️ '+w.name+': '+w.steps.map(s=>s.type==='exercise'?s.name:'🧗 '+s.grade).join(', ');
+  const msg='🏋️ '+w.name+': '+w.steps.map(s=>s.stepType==='via'?'🧗 '+(s.grado||'?'):(s.nm||s.txt||'')).filter(Boolean).join(', ');
   await db.collection('chats').doc(cid).collection('messages').add({from:U.uid,text:msg,ts:firebase.firestore.FieldValue.serverTimestamp()});
   alert('✓ '+t('sentTo')+' '+(fr.name||fr.email));}
 function chkFlashAvista(){const enc=document.getElementById('iE').value==='1';
@@ -1668,8 +1669,16 @@ function drawBody(ctx,cv,sel,dr,dt,logo){
     if(wo.steps&&wo.steps.length){
       wo.steps.forEach(function(s){
         if(y>1720)return;
-        if(s.type==='exercise'){
-          var nm2=s.name||s.nm||s.txt||'';
+        var isVia=s.stepType==='via';
+        if(isVia){
+          ctx.fillStyle='rgba(212,165,116,.06)';ctx.beginPath();ctx.roundRect(60,y,960,42,8);ctx.fill();
+          ctx.fillStyle='#d4a574';ctx.beginPath();ctx.roundRect(60,y+6,4,30,2);ctx.fill();
+          ctx.font='bold 22px Nunito';ctx.fillStyle='#d4a574';
+          ctx.fillText(num+'. '+(s.grado||'?')+' '+(s.nombre||''),82,y+28);
+          num++;y+=48;}
+        else{
+          var nm2=s.nm||s.name||s.txt||'';
+          if(!nm2)return;
           ctx.fillStyle='rgba(255,255,255,.04)';ctx.beginPath();ctx.roundRect(60,y,960,48,10);ctx.fill();
           ctx.fillStyle='#ffe66d';ctx.beginPath();ctx.roundRect(60,y+6,4,36,2);ctx.fill();
           ctx.font='bold 22px Nunito';ctx.fillStyle='#ffe66d';
@@ -1679,17 +1688,13 @@ function drawBody(ctx,cv,sel,dr,dt,logo){
           var d2=[];
           if(s.ag)d2.push(s.ag);if(s.mm)d2.push(s.mm+'mm');
           if(s.ser)d2.push(s.ser+'ser');if(s.rep)d2.push(s.rep+'rep');
-          if(s.reps)d2.push(s.reps+'reps');if(s.time)d2.push(s.time+'s');
+          if(s.reps)d2.push(s.reps+'reps');
+          if(s.modo==='time'&&s.time)d2.push(s.time+'s');
           if(s.kg&&parseFloat(s.kg)>0)d2.push('+'+s.kg+'kg');
           if(s.ang)d2.push(s.ang);
           ctx.font='16px Nunito';ctx.fillStyle='rgba(255,255,255,.35)';ctx.textAlign='right';
           ctx.fillText(d2.join(' \u00b7 '),1000,y+32);ctx.textAlign='left';
-          num++;y+=54;}
-        else if(s.type==='via'){
-          ctx.fillStyle='rgba(212,165,116,.06)';ctx.beginPath();ctx.roundRect(60,y,960,42,8);ctx.fill();
-          ctx.font='bold 22px Nunito';ctx.fillStyle='#d4a574';
-          ctx.fillText(num+'. '+(s.grade||'?')+' '+(s.nombre||''),82,y+28);
-          num++;y+=48;}});}
+          num++;y+=54;}});}
     y+=15;});
   ctx.textAlign='center';
   ctx.fillStyle='rgba(0,0,0,.5)';ctx.beginPath();ctx.roundRect(240,1815,600,90,45);ctx.fill();
