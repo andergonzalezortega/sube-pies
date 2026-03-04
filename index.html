@@ -1346,14 +1346,13 @@ async function addFriend(){const raw=document.getElementById('frCode').value.tri
   const fDoc=q.docs[0],fd=fDoc.data();
   if(fDoc.id===U.uid){msg.textContent=t('thatsYou');msg.style.color='var(--red)';return;}
   if(friends.some(f=>f.email===fd.email)){msg.textContent=t('alreadyFriend');msg.style.color='var(--yellow)';return;}
-  // Check if request already sent
-  const existing=await db.collection('users').doc(fDoc.id).collection('friendRequests').where('fromUid','==',U.uid).where('status','==','pending').get();
-  if(!existing.empty){msg.textContent=t('requestSent');msg.style.color='var(--yellow)';return;}
   // Send friend request to the other user
-  await db.collection('users').doc(fDoc.id).collection('friendRequests').add({
+  try{await db.collection('users').doc(fDoc.id).collection('friendRequests').add({
     fromUid:U.uid,fromEmail:U.email,fromName:U.displayName||U.email,fromPhoto:U.photoURL||'',
     status:'pending',ts:firebase.firestore.FieldValue.serverTimestamp()});
-  document.getElementById('frCode').value='';msg.textContent=t('requestSentTo')+' '+(fd.name||fd.email);msg.style.color='var(--green)';drFr();}
+  document.getElementById('frCode').value='';msg.textContent=t('requestSentTo')+' '+(fd.name||fd.email);msg.style.color='var(--green)';
+  }catch(e){msg.textContent='Error: '+e.message;msg.style.color='var(--red)';}
+  drFr();}
 async function acceptFr(reqId,fromUid){
   // Add to both users' friend lists
   const fromDoc=await db.collection('users').doc(fromUid).get();
