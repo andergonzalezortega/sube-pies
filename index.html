@@ -174,6 +174,11 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <div class="chat-input" style="padding-top:8px;flex-shrink:0"><input id="chatIn" placeholder="Escribe..." onkeydown="if(event.key==='Enter')sendChat()" style="flex:1;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:10px 14px;color:var(--text);font-size:13px;font-family:'Nunito';outline:none"><button onclick="sendChat()" style="background:var(--rock);border:none;color:#000;width:40px;height:40px;border-radius:50%;font-size:16px;cursor:pointer;font-weight:700;flex-shrink:0">→</button></div>
 </div></div>
 <!-- AJUSTES --><div id="ps" class="page"><div class="hdr"><h1>AJUSTES</h1></div>
+<div class="card"><div class="ct">VISTA INICIO</div>
+<div class="fl"><label>Días a mostrar en inicio</label>
+<select id="setDaysVista" onchange="saveDaysVista()" style="width:100%;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:9px;color:var(--text);font-size:13px;font-family:Nunito">
+<option value="5">5 días</option><option value="7">7 días</option><option value="14">14 días</option><option value="30">30 días</option><option value="0">Todo</option>
+</select></div></div>
 <div class="card"><div class="ct" id="ctExport">EXPORTAR A EXCEL</div>
 <div style="display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap" id="exPer"></div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px"><div class="fl" style="margin:0"><label>Desde</label><input type="date" id="exFrom"></div><div class="fl" style="margin:0"><label>Hasta</label><input type="date" id="exTo"></div></div>
@@ -256,7 +261,7 @@ es:{
   zoneCoordsSub:'Pega las coordenadas o la URL larga de Google Maps (la que tiene @43.27,-3.10)',
   saveZone:'Guardar zona',notFound:'No encontrado',coordsError:'No he podido leer las coordenadas. Pega algo como: 43.270854, -3.102539',
   // Trains
-  scheduled:'Programados',history:'Historial',mesocycle:'Mesociclo',progress:'Progreso',
+  scheduled:'Mis Entrenos',history:'Historial',mesocycle:'Mesociclo',progress:'Progreso',
   newTrain:'+ Entreno',folder:'📁 Carpeta',searchTrain:'🔍 Buscar entreno...',noFolder:'SIN CARPETA',
   emptyFolder:'Carpeta vacía · Crea un entreno',noTrainsMonth:'Sin entrenos este mes',trainCount:'entrenos',
   // Workout modal
@@ -324,7 +329,7 @@ es:{
   // Confirm msgs
   confirmDeleteRoute:'¿Eliminar esta vía?',confirmDeleteFriend:'¿Eliminar este amigo?',wantsToAdd:'quiere añadirte',requestSent:'Solicitud ya enviada',requestSentTo:'Solicitud enviada a',shareWithFriend:'Compartir con amigo (escribe nombre):',sentTo:'Enviado a',nothingToExport:'No hay actividad para exportar',routes:'VÍAS',meters:'METROS',workouts:'ENTRENOS',confirmDeleteWo:'¿Eliminar?',
   confirmDeleteFolder:'¿Eliminar carpeta? Los entrenos se quedan sueltos.',
-  putDate:'Pon una fecha',putName:'Pon nombre',putNameAndEx:'Pon nombre y ejercicios',
+  putDate:'Pon una fecha',putName:'Pon nombre',putNameAndEx:'Pon nombre y ejercicios',putExercises:'Añade al menos un ejercicio',
   tplSaved:'Plantilla "{name}" guardada',
   moveTo:'Mover:',moveBtn:'Mover',
   putZoneName:'Pon un nombre',pasteCoords:'Pega las coordenadas',saving:'Guardando...',
@@ -356,7 +361,7 @@ en:{
   zoneName:'Zone name',zoneCoords:'Coordinates',zoneCoordsPh:'43.270854, -3.102539',
   zoneCoordsSub:'Paste coordinates or the long Google Maps URL (with @43.27,-3.10)',
   saveZone:'Save zone',notFound:'Not found',coordsError:'Could not read coordinates. Paste like: 43.270854, -3.102539',
-  scheduled:'Scheduled',history:'History',mesocycle:'Mesocycle',progress:'Progress',
+  scheduled:'My Workouts',history:'History',mesocycle:'Mesocycle',progress:'Progress',
   newTrain:'+ Workout',folder:'📁 Folder',searchTrain:'🔍 Search workout...',noFolder:'NO FOLDER',
   emptyFolder:'Empty folder · Create a workout',noTrainsMonth:'No workouts this month',trainCount:'workouts',
   createTrain:'CREATE WORKOUT',editTrain:'EDIT WORKOUT',trainName:'Name',trainNamePh:'Finger strength',
@@ -442,7 +447,7 @@ eu:{
   zoneName:'Zonaren izena',zoneCoords:'Koordenatuak',zoneCoordsPh:'43.270854, -3.102539',
   zoneCoordsSub:'Itsatsi koordenatuak edo Google Maps-eko URL luzea (@43.27,-3.10 duena)',
   saveZone:'Zona gorde',notFound:'Ez da aurkitu',coordsError:'Ezin izan ditut koordenatuak irakurri. Itsatsi honelako zerbait: 43.270854, -3.102539',
-  scheduled:'Programatuak',history:'Historiala',mesocycle:'Mesotzikloa',progress:'Aurrerakuntza',
+  scheduled:'Nire Entrenuak',history:'Historiala',mesocycle:'Mesotzikloa',progress:'Aurrerakuntza',
   newTrain:'+ Entrenamendua',folder:'📁 Karpeta',searchTrain:'🔍 Entrenamendua bilatu...',noFolder:'KARPETARIK GABE',
   emptyFolder:'Karpeta hutsik · Sortu entrenamendua',noTrainsMonth:'Hilabete honetan entrenarik ez',trainCount:'entrena',
   createTrain:'ENTRENAMENDUA SORTU',editTrain:'ENTRENAMENDUA EDITATU',trainName:'Izena',trainNamePh:'Hatz indarra',
@@ -528,7 +533,7 @@ ca:{
   zoneName:'Nom de la zona',zoneCoords:'Coordenades',zoneCoordsPh:'43.270854, -3.102539',
   zoneCoordsSub:'Enganxa les coordenades o la URL llarga de Google Maps (la que té @43.27,-3.10)',
   saveZone:'Desar zona',notFound:'No trobat',coordsError:'No he pogut llegir les coordenades. Enganxa algo com: 43.270854, -3.102539',
-  scheduled:'Programats',history:'Historial',mesocycle:'Mesocicle',progress:'Progrés',
+  scheduled:'Els Meus Entrenos',history:'Historial',mesocycle:'Mesocicle',progress:'Progrés',
   newTrain:'+ Entreno',folder:'📁 Carpeta',searchTrain:'🔍 Cercar entreno...',noFolder:'SENSE CARPETA',
   emptyFolder:'Carpeta buida · Crea un entreno',noTrainsMonth:'Sense entrenos aquest mes',trainCount:'entrenos',
   createTrain:'CREAR ENTRENO',editTrain:'EDITAR ENTRENO',trainName:'Nom',trainNamePh:'Força dits',
@@ -583,7 +588,7 @@ ca:{
   calDays:['Dl','Dt','Dc','Dj','Dv','Ds','Dg'],
   confirmDeleteRoute:'Eliminar aquesta via?',confirmDeleteFriend:'Eliminar aquest amic?',wantsToAdd:'vol afegir-te',requestSent:'Sol·licitud ja enviada',requestSentTo:'Sol·licitud enviada a',shareWithFriend:'Compartir amb amic (escriu nom):',sentTo:'Enviat a',nothingToExport:'No hi ha activitat per exportar',routes:'VIES',meters:'METRES',workouts:'ENTRENOS',confirmDeleteWo:'Eliminar?',
   confirmDeleteFolder:'Eliminar carpeta? Els entrenos quedaran solts.',
-  putDate:'Posa una data',putName:'Posa nom',putNameAndEx:'Posa nom i exercicis',
+  putDate:'Posa una data',putName:'Posa nom',putNameAndEx:'Posa nom i exercicis',putExercises:'Afegeix almenys un exercici',
   tplSaved:'Plantilla "{name}" desada',
   moveTo:'Moure:',moveBtn:'Moure',
   putZoneName:'Posa un nom',pasteCoords:'Enganxa les coordenades',saving:'Desant...',
@@ -774,28 +779,46 @@ async function delPlan(planId){
             status:'pending',ts:firebase.firestore.FieldValue.serverTimestamp(),type:'cancel'});}}catch(e){}}}
   await db.collection('users').doc(U.uid).collection('plans').doc(planId).delete();
   plans=plans.filter(x=>x.id!==planId);rCal();}
-let nwoIdx=-1; // Index into workout days, -1 = auto
+let nwoIdx=-1,homeFilter='all'; // all, entreno, escalada
 function drNextWo(){
   const td=new Date().toISOString().split('T')[0];
   const el=document.getElementById('homeNextWo');
-  const dates=[...new Set(W.filter(w=>w.plannedDate).map(w=>w.plannedDate))].sort();
-  if(!dates.length){el.innerHTML=`<div style="text-align:center;padding:12px"><span style="color:var(--text3);font-size:12px">'+t('noTrainPlan')+'</span></div>`;return;}
-  // Auto: find nearest future date
-  if(nwoIdx<0){nwoIdx=dates.findIndex(d=>d>=td);if(nwoIdx<0)nwoIdx=dates.length-1;}
-  if(nwoIdx>=dates.length)nwoIdx=0;if(nwoIdx<0)nwoIdx=dates.length-1;
-  const nxtDate=dates[nwoIdx];
+  // Collect all upcoming dates from workouts AND plans
+  const woDates=[...new Set(W.filter(w=>w.plannedDate).map(w=>w.plannedDate))];
+  const plDates=[...new Set(plans.filter(p=>p.date).map(p=>p.date))];
+  let allDates=[...new Set([...woDates,...plDates])].sort();
+  // Filter by days vista setting
+  const daysVista=loadDaysVista();
+  if(daysVista>0){const maxDate=new Date();maxDate.setDate(maxDate.getDate()+daysVista);const maxStr=maxDate.toISOString().split('T')[0];allDates=allDates.filter(d=>d<=maxStr);}
+  if(!allDates.length){el.innerHTML=`<div style="text-align:center;padding:12px"><span style="color:var(--text3);font-size:12px">${t('noTrainPlan')}</span></div>`;return;}
+  if(nwoIdx<0){nwoIdx=allDates.findIndex(d=>d>=td);if(nwoIdx<0)nwoIdx=allDates.length-1;}
+  if(nwoIdx>=allDates.length)nwoIdx=0;if(nwoIdx<0)nwoIdx=allDates.length-1;
+  const nxtDate=allDates[nwoIdx];
   const dw=W.filter(w=>w.plannedDate===nxtDate);
+  const dp=plans.filter(p=>p.date===nxtDate&&(p.tipo==='roca'||p.tipo==='indoor'));
   const dd=new Date(nxtDate);
   const isToday=nxtDate===td;
   const tmr=new Date();tmr.setDate(tmr.getDate()+1);const isTmr=nxtDate===tmr.toISOString().split('T')[0];
   const dayLabel=dd.toLocaleDateString(LANG==='en'?'en-US':LANG==='eu'?'eu-ES':LANG==='ca'?'ca-ES':'es-ES',{weekday:'long',day:'numeric',month:'long'});
   const isClose=isToday||isTmr;
   const extra=isToday?' · '+t('today'):isTmr?' · '+t('tomorrow'):'';
-  
-  let h=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-family:'Bebas Neue';font-size:13px;color:var(--text3);letter-spacing:1px">ENTRENO · <span style="color:${isClose?'var(--green)':'var(--rock)'}"> ${dayLabel.toUpperCase()}${extra}</span></span>`;
-  if(dates.length>1)h+=`<span style="font-size:10px;color:var(--text3)">${nwoIdx+1}/${dates.length} ◀ ▶</span>`;
+  let h=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><span style="font-family:'Bebas Neue';font-size:13px;color:var(--text3);letter-spacing:1px"><span style="color:${isClose?'var(--green)':'var(--rock)'}"> ${dayLabel.toUpperCase()}${extra}</span></span>`;
+  if(allDates.length>1)h+=`<span style="font-size:10px;color:var(--text3)">${nwoIdx+1}/${allDates.length} ◀ ▶</span>`;
   h+=`</div>`;
-  dw.forEach(w=>{
+  // Filter buttons
+  h+=`<div style="display:flex;gap:3px;margin-bottom:6px">`;
+  [['all','Todo'],['entreno','🏋 Entrenos'],['escalada','🧗 Escaladas']].forEach(([k,lb])=>{
+    h+=`<button class="ch${homeFilter===k?' on':''}" style="font-size:10px;padding:3px 8px" onclick="homeFilter='${k}';drNextWo()">${lb}</button>`;});
+  h+=`</div>`;
+  // Show plans (escaladas)
+  if(homeFilter!=='entreno'){dp.forEach(p=>{
+    const icon=p.tipo==='roca'?'🏔️':'🏢';
+    h+=`<div style="background:rgba(212,165,116,.06);border-radius:8px;padding:8px;margin-bottom:4px;border-left:3px solid var(--rock)">`;
+    h+=`<div style="font-family:'Bebas Neue';font-size:14px;color:var(--rock)">${icon} ${p.lugar||p.tipo}</div>`;
+    if(p.notas)h+=`<div style="font-size:10px;color:var(--text3)">${p.notas}</div>`;
+    h+=`</div>`;});}
+  // Show workouts
+  if(homeFilter!=='escalada'){dw.forEach(w=>{
     h+=`<div style="background:rgba(76,175,80,.06);border-radius:8px;padding:8px;margin-bottom:4px;border-left:3px solid var(--green)">`;
     h+=`<div style="font-family:'Bebas Neue';font-size:16px;color:var(--green);margin-bottom:4px">${w.name}</div>`;
     (w.steps||[]).forEach((s,i)=>{let nm=s.nm||s.txt||'';const pts=[];
@@ -803,7 +826,8 @@ function drNextWo(){
       if(s.modo==='time')pts.push(s.time+'s×'+(s.rep||1)+'r×'+(s.ser||1)+'ser');
       else if(s.reps)pts.push(s.reps+'r×'+(s.ser||1)+'ser');
       h+=`<div style="font-size:11px;color:var(--text2);padding:1px 0">${i+1}. ${nm}${pts.length?' · '+pts.join(' · '):''}</div>`;});
-    h+=`<div style="margin-top:6px"><button class="sbb" style="font-size:11px;padding:5px 12px" onclick='execWo(${JSON.stringify(w).replace(/'/g,"&#39;")})'>▶ Ejecutar</button></div></div>`;});
+    h+=`<div style="margin-top:6px"><button class="sbb" style="font-size:11px;padding:5px 12px" onclick='execWo(${JSON.stringify(w).replace(/'/g,"&#39;")})'>▶ Ejecutar</button></div></div>`;});}
+  if(!dp.length&&!dw.length)h+=`<div style="font-size:11px;color:var(--text3);padding:4px">Sin actividad planificada</div>`;
   el.innerHTML=h;}
 let _swipeSetup=false;
 function setupSwipe(){if(_swipeSetup)return;_swipeSetup=true;let sx=0;
@@ -814,6 +838,8 @@ function setupSwipe(){if(_swipeSetup)return;_swipeSetup=true;let sx=0;
 // Bolt (disabled for now)
 // Settings (Bolt disabled)
 function getSettings(){return JSON.parse(localStorage.getItem('spSettings')||'{}');}
+function saveDaysVista(){const v=document.getElementById('setDaysVista').value;const s=getSettings();s.daysVista=parseInt(v);localStorage.setItem('spSettings',JSON.stringify(s));drNextWo();}
+function loadDaysVista(){const s=getSettings();const v=s.daysVista||5;const sel=document.getElementById('setDaysVista');if(sel)sel.value=v;return v;}
 async function loadInvites(){if(!U)return;
   const q=await db.collection('users').doc(U.uid).collection('invites').where('status','==','pending').get();
   let h='';q.forEach(d=>{const inv=d.data();const tipos={roca:t('invRoca'),indoor:t('invIndoor'),entreno:t('invEntreno'),nota:t('invNota'),cancelacion:t('invCancel')};
@@ -947,7 +973,9 @@ function updPlWoList(){
   let wh='<option value="">— Sin entreno —</option>';
   fW.forEach(w=>{wh+=`<option value="${w.id}">${w.name}</option>`;});
   document.getElementById('plWoSel').innerHTML=wh;
-  document.getElementById('plWoPreview').style.display='none';}
+  // Default to first workout if available
+  if(fW.length){document.getElementById('plWoSel').value=fW[0].id;updPlWoPreview();}
+  else{document.getElementById('plWoPreview').style.display='none';}}
 function updPlWoPreview(){
   const woId=document.getElementById('plWoSel').value;
   const prev=document.getElementById('plWoPreview');
@@ -982,6 +1010,7 @@ async function svPlan(){const date=document.getElementById('plDt').value,notas=d
   }else if(plTipo==='entreno'){
     tipo='entreno';
     const woId=document.getElementById('plWoSel').value;
+    if(!woId){alert('Selecciona un entreno');return;}
     if(woId){woData=W.find(x=>x.id===woId);}
   }else{tipo='nota';}
   const invited=[];
@@ -1293,7 +1322,10 @@ function saveCustomTpl(){const nm=document.getElementById('ejNm').value.trim();i
   const tpl={nm,ag:document.getElementById('ejAg').value,mm:gv('ejMm'),ang:document.getElementById('ejAng').value,kg:gv('ejKg'),modo:document.getElementById('ejModo').value,time:gv('ejTime'),reps:gv('ejReps'),rep:gv('ejRep'),ser:gv('ejSer'),desc:gv('ejDesc'),ds:gv('ejDS')};
   const cust=JSON.parse(localStorage.getItem('spCustomTpls')||'[]');cust.push(tpl);localStorage.setItem('spCustomTpls',JSON.stringify(cust));
   alert(t('tplSaved').replace('{name}',nm));}
-async function svW(){const n=(document.getElementById('wNm').value||'').trim();if(!n||!wSt.length){alert(t('putNameAndEx'));return;}
+async function svW(){const n=(document.getElementById('wNm').value||'').trim();
+  if(!n&&!wSt.length){alert(t('putNameAndEx'));return;}
+  if(!n){alert(t('putName'));return;}
+  if(!wSt.length){alert(t('putExercises'));return;}
   const d={name:n,steps:[...wSt]};const fld=document.getElementById('wFolder').value;if(fld)d.folder=fld;
   if(editWoId){d.id=editWoId;await db.collection('users').doc(U.uid).collection('workouts').doc(editWoId).update(d);
     const wi=W.findIndex(x=>x.id===editWoId);if(wi>=0)W[wi]={...W[wi],...d};}
