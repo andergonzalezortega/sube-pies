@@ -220,8 +220,8 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <!-- NAV --><nav class="nav">
 <button class="nb on" onclick="go('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h3m10-11v10a1 1 0 01-1 1h-3m-4 0v-6"/></svg>Inicio</button>
 <button class="nb" onclick="go('routes')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>Vías</button>
-<button class="nb" onclick="go('train')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>Entrenos</button>
 <button class="nb" onclick="go('map')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Mapa</button>
+<button class="nb" onclick="go('train')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>Entrenos</button>
 <button class="nb" onclick="go('friends')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>Amigos</button>
 <button class="nb" onclick="go('sync')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Ajustes</button>
 </nav>
@@ -694,7 +694,7 @@ function getCragCoords(name){if(!name)return null;const nl=name.toLowerCase();
 
 const G=["I","I+","II","II+","III","III+","IV","IV+","V","V+","6a","6a+","6b","6b+","6c","6c+","7a","7a+","7b","7b+","7c","7c+","8a","8a+","8b","8b+","8c","8c+","9a","9a+","9b","9b+","9c"];
 let cY=new Date().getFullYear(),cMo=new Date().getMonth(),cSl=null,gM='cr',gPer='year',sPer='year',rFl='all',tTb='plan',mapMode='roca',eRt=null,wSt=[],leafMap=null,markers=[],chatUnsub=null,chatFrUid=null;
-const PG={home:'ph',routes:'pv',train:'pt',map:'pm',friends:'pf',sync:'ps'},PK=Object.keys(PG);
+const PG={home:'ph',routes:'pv',map:'pm',train:'pt',friends:'pf',sync:'ps'},PK=Object.keys(PG);
 
 
 function go(id){Object.values(PG).forEach(p=>document.getElementById(p).classList.remove('on'));document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));document.getElementById(PG[id]).classList.add('on');document.querySelectorAll('.nb')[PK.indexOf(id)].classList.add('on');const fns={home:rH,routes:drR,map:drM,train:drTr,friends:drFr,sync:drS};if(fns[id])fns[id]();}
@@ -849,9 +849,20 @@ function exportXL(tipo){
     R.filter(r=>r.date>=from&&r.date<=to).forEach(r=>{
       csv+=`"${r.date}","${r.grado}","${(r.nombre||'').replace(/"/g,'""')}","${(r.sitio||'').replace(/"/g,'""')}","${r.tipo}","${r.lugar}",${r.intento||1},${r.enc?1:0},${r.flash?1:0},${r.avista?1:0},${r.metros||0},"${r.estilo||''}","${(r.amigos||'').replace(/"/g,'""')}","${(r.notas||'').replace(/"/g,'""')}"\n`;rows++;});
   }else{
-    csv='Fecha,Entreno,Detalle\n';
+    csv='Fecha,Entreno,Ejercicio,Agarre,Tamaño(mm),Angulo,Series,Reps,Tiempo(s),Lastre(kg),Descanso(s),Tipo\n';
     Tr.filter(t=>t.date>=from&&t.date<=to).forEach(t=>{
-      csv+=`"${t.date}","${(t.detail||t.tipo||'').replace(/"/g,'""')}","${(t.tipo||'').replace(/"/g,'""')}"\n`;rows++;});
+      const woName=(t.detail||t.tipo||'').replace(/\s*\(\d+\s*pasos?\)/i,'').trim();
+      let steps=t.woSteps||[];
+      if(!steps.length){const match=W.find(w=>w.name===woName||(t.detail||'').startsWith(w.name));if(match)steps=match.steps||[];}
+      if(steps.length){
+        steps.forEach(s=>{
+          if(s.stepType==='via'){
+            csv+=`"${t.date}","${woName}","${s.grado||''} ${s.nombre||''}","","","","","","","","","${s.tipo||'Via'}"\n`;
+          }else{
+            const nm=s.nm||s.name||s.txt||'';
+            csv+=`"${t.date}","${woName}","${nm}","${s.ag||''}",${s.mm||''},"${s.ang||''}",${s.ser||''},${s.rep||s.reps||''},${s.time||''},${s.kg||0},${s.ds||''},"Ejercicio"\n`;}
+          rows++;});
+      }else{csv+=`"${t.date}","${woName}","","","","","","","","","",""\n`;rows++;}});
   }
   if(!rows){msg.textContent='Sin datos en ese rango';return;}
   const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'});
