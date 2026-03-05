@@ -261,7 +261,7 @@ es:{
   zoneCoordsSub:'Pega las coordenadas o la URL larga de Google Maps (la que tiene @43.27,-3.10)',
   saveZone:'Guardar zona',notFound:'No encontrado',coordsError:'No he podido leer las coordenadas. Pega algo como: 43.270854, -3.102539',
   // Trains
-  scheduled:'Mis Entrenos',history:'Historial',mesocycle:'Mesociclo',progress:'Progreso',
+  scheduled:'Definidos',history:'Historial',mesocycle:'Mesociclo',progress:'Progreso',
   newTrain:'+ Entreno',folder:'📁 Carpeta',searchTrain:'🔍 Buscar entreno...',noFolder:'SIN CARPETA',
   emptyFolder:'Carpeta vacía · Crea un entreno',noTrainsMonth:'Sin entrenos este mes',trainCount:'entrenos',
   // Workout modal
@@ -361,7 +361,7 @@ en:{
   zoneName:'Zone name',zoneCoords:'Coordinates',zoneCoordsPh:'43.270854, -3.102539',
   zoneCoordsSub:'Paste coordinates or the long Google Maps URL (with @43.27,-3.10)',
   saveZone:'Save zone',notFound:'Not found',coordsError:'Could not read coordinates. Paste like: 43.270854, -3.102539',
-  scheduled:'My Workouts',history:'History',mesocycle:'Mesocycle',progress:'Progress',
+  scheduled:'Defined',history:'History',mesocycle:'Mesocycle',progress:'Progress',
   newTrain:'+ Workout',folder:'📁 Folder',searchTrain:'🔍 Search workout...',noFolder:'NO FOLDER',
   emptyFolder:'Empty folder · Create a workout',noTrainsMonth:'No workouts this month',trainCount:'workouts',
   createTrain:'CREATE WORKOUT',editTrain:'EDIT WORKOUT',trainName:'Name',trainNamePh:'Finger strength',
@@ -447,7 +447,7 @@ eu:{
   zoneName:'Zonaren izena',zoneCoords:'Koordenatuak',zoneCoordsPh:'43.270854, -3.102539',
   zoneCoordsSub:'Itsatsi koordenatuak edo Google Maps-eko URL luzea (@43.27,-3.10 duena)',
   saveZone:'Zona gorde',notFound:'Ez da aurkitu',coordsError:'Ezin izan ditut koordenatuak irakurri. Itsatsi honelako zerbait: 43.270854, -3.102539',
-  scheduled:'Nire Entrenuak',history:'Historiala',mesocycle:'Mesotzikloa',progress:'Aurrerakuntza',
+  scheduled:'Definitutakoak',history:'Historiala',mesocycle:'Mesotzikloa',progress:'Aurrerakuntza',
   newTrain:'+ Entrenamendua',folder:'📁 Karpeta',searchTrain:'🔍 Entrenamendua bilatu...',noFolder:'KARPETARIK GABE',
   emptyFolder:'Karpeta hutsik · Sortu entrenamendua',noTrainsMonth:'Hilabete honetan entrenarik ez',trainCount:'entrena',
   createTrain:'ENTRENAMENDUA SORTU',editTrain:'ENTRENAMENDUA EDITATU',trainName:'Izena',trainNamePh:'Hatz indarra',
@@ -533,7 +533,7 @@ ca:{
   zoneName:'Nom de la zona',zoneCoords:'Coordenades',zoneCoordsPh:'43.270854, -3.102539',
   zoneCoordsSub:'Enganxa les coordenades o la URL llarga de Google Maps (la que té @43.27,-3.10)',
   saveZone:'Desar zona',notFound:'No trobat',coordsError:'No he pogut llegir les coordenades. Enganxa algo com: 43.270854, -3.102539',
-  scheduled:'Els Meus Entrenos',history:'Historial',mesocycle:'Mesocicle',progress:'Progrés',
+  scheduled:'Definits',history:'Historial',mesocycle:'Mesocicle',progress:'Progrés',
   newTrain:'+ Entreno',folder:'📁 Carpeta',searchTrain:'🔍 Cercar entreno...',noFolder:'SENSE CARPETA',
   emptyFolder:'Carpeta buida · Crea un entreno',noTrainsMonth:'Sense entrenos aquest mes',trainCount:'entrenos',
   createTrain:'CREAR ENTRENO',editTrain:'EDITAR ENTRENO',trainName:'Nom',trainNamePh:'Força dits',
@@ -738,8 +738,9 @@ function drCalDetail(){
     if(p.invited&&p.invited.length){const names=p.invited.map(e=>{const f=friends.find(fr=>fr.email===e);return f?(f.name||e):e;});
       h+=`<span style="color:var(--blue)">👥 ${names.join(', ')}</span> `;}
     h+=`<button style="background:none;border:none;color:var(--red);font-size:12px;cursor:pointer;margin-left:auto;flex-shrink:0" onclick="delPlan('${p.id}')">✕</button></div>`;});
-  // Workouts planned
-  dw.forEach(w=>{
+  // Workouts planned (only show if NOT already shown as a plan)
+  const planWoNames=dp.filter(p=>p.workoutName).map(p=>p.workoutName);
+  dw.filter(w=>!planWoNames.includes(w.name)).forEach(w=>{
     h+=`<div style="font-size:11px;padding:2px 0;color:var(--purple)">🏋 ${w.name}</div>`;});
   // Routes as compact table
   if(dr.length){
@@ -790,9 +791,12 @@ function drNextWo(){
   // Filter by days vista setting
   const daysVista=loadDaysVista();
   if(daysVista>0){const maxDate=new Date();maxDate.setDate(maxDate.getDate()+daysVista);const maxStr=maxDate.toISOString().split('T')[0];allDates=allDates.filter(d=>d<=maxStr);}
+  // Filter dates by content type
+  if(homeFilter==='entreno')allDates=allDates.filter(d=>W.some(w=>w.plannedDate===d));
+  if(homeFilter==='escalada')allDates=allDates.filter(d=>plans.some(p=>p.date===d&&(p.tipo==='roca'||p.tipo==='indoor')));
   if(!allDates.length){el.innerHTML=`<div style="text-align:center;padding:12px"><span style="color:var(--text3);font-size:12px">${t('noTrainPlan')}</span></div>`;return;}
-  if(nwoIdx<0){nwoIdx=allDates.findIndex(d=>d>=td);if(nwoIdx<0)nwoIdx=allDates.length-1;}
-  if(nwoIdx>=allDates.length)nwoIdx=0;if(nwoIdx<0)nwoIdx=allDates.length-1;
+  if(nwoIdx<0||nwoIdx>=allDates.length){nwoIdx=allDates.findIndex(d=>d>=td);if(nwoIdx<0)nwoIdx=allDates.length-1;}
+  if(nwoIdx>=allDates.length)nwoIdx=allDates.length-1;if(nwoIdx<0)nwoIdx=0;
   const nxtDate=allDates[nwoIdx];
   const dw=W.filter(w=>w.plannedDate===nxtDate);
   const dp=plans.filter(p=>p.date===nxtDate&&(p.tipo==='roca'||p.tipo==='indoor'));
@@ -808,7 +812,7 @@ function drNextWo(){
   // Filter buttons
   h+=`<div style="display:flex;gap:3px;margin-bottom:6px">`;
   [['all','Todo'],['entreno','🏋 Entrenos'],['escalada','🧗 Escaladas']].forEach(([k,lb])=>{
-    h+=`<button class="ch${homeFilter===k?' on':''}" style="font-size:10px;padding:3px 8px" onclick="homeFilter='${k}';drNextWo()">${lb}</button>`;});
+    h+=`<button class="ch${homeFilter===k?' on':''}" style="font-size:10px;padding:3px 8px" onclick="homeFilter='${k}';nwoIdx=-1;drNextWo()">${lb}</button>`;});
   h+=`</div>`;
   // Show plans (escaladas)
   if(homeFilter!=='entreno'){dp.forEach(p=>{
