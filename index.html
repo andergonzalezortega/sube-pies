@@ -19,6 +19,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-messaging-compat.js"></script>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
 <style>
 :root{--bg:#141e2b;--bg2:#1b2838;--bg3:#243447;--bg4:#2d4055;--rock:#d4a574;--rockD:#8b6842;--green:#4ecdc4;--greenD:#2ea89f;--red:#ff6b6b;--yellow:#ffe66d;--blue:#4a9eff;--purple:#a78bfa;--text:#e8e0d8;--text2:#8a9bb0;--text3:#5a6a7a;--R:16px;}
@@ -174,6 +175,12 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <div class="chat-input" style="padding-top:8px;flex-shrink:0"><input id="chatIn" placeholder="Escribe..." onkeydown="if(event.key==='Enter')sendChat()" style="flex:1;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:10px 14px;color:var(--text);font-size:13px;font-family:'Nunito';outline:none"><button onclick="sendChat()" style="background:var(--rock);border:none;color:#000;width:40px;height:40px;border-radius:50%;font-size:16px;cursor:pointer;font-weight:700;flex-shrink:0">→</button></div>
 </div></div>
 <!-- AJUSTES --><div id="ps" class="page"><div class="hdr"><h1>AJUSTES</h1></div>
+<div class="card"><div class="ct">NOTIFICACIONES</div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0">
+<span style="font-size:12px;color:var(--text2)">Notificaciones push</span>
+<button id="btnNotifToggle" onclick="toggleNotifications()" style="padding:8px 16px;border:none;border-radius:10px;font-family:'Nunito';font-weight:700;font-size:12px;cursor:pointer;background:var(--bg3);color:var(--text2)">Activar</button>
+</div>
+<div style="font-size:10px;color:var(--text3);margin-top:4px" id="notifStatus">Invitaciones, chats, recordatorios de entreno</div></div>
 <div class="card"><div class="ct">VISTA INICIO</div>
 <div class="fl"><label>Días a mostrar en inicio</label>
 <select id="setDaysVista" onchange="saveDaysVista()" style="width:100%;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:9px;color:var(--text);font-size:13px;font-family:Nunito">
@@ -652,6 +659,7 @@ auth.onAuthStateChanged(async u=>{document.getElementById('loadPage').style.disp
     document.getElementById('uName').textContent=nick;
     document.getElementById('uTag').textContent='#'+code;
     await loadData();
+    initNotifications();
     applyLang();
     document.getElementById('langSel').value=LANG;
     setTimeout(()=>{document.getElementById('splashScreen').style.opacity='0';
@@ -660,6 +668,59 @@ auth.onAuthStateChanged(async u=>{document.getElementById('loadPage').style.disp
   else{U=null;document.getElementById('loginPage').style.display='';document.getElementById('appWrap').style.display='none';document.getElementById('splashScreen').style.display='none';applyLang();}});
 function loginGoogle(){auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());}
 function logout(){auth.signOut();}
+
+// PUSH NOTIFICATIONS
+let messaging=null;
+async function initNotifications(){
+  if(!U)return;
+  try{
+    if(!('Notification' in window)){console.log('Notifications not supported');return;}
+    messaging=firebase.messaging();
+    const permission=await Notification.requestPermission();
+    if(permission!=='granted'){console.log('Notification permission denied');return;}
+    // Get FCM token - you need to generate a VAPID key in Firebase Console > Cloud Messaging
+    const token=await messaging.getToken({vapidKey:'BI-nNJsYj4BLLI-kw_CgnOQI-gizxB4SEMycTj0v4oq7_MSyU5pZ2Mw9yvP0oqSV6pLZ1doEpb_SjgNqELj2jao'});
+    if(token){
+      // Save token to Firestore for this user
+      await db.collection('users').doc(U.uid).set({fcmToken:token,fcmUpdated:new Date().toISOString()},{merge:true});
+      console.log('FCM token saved');}
+    // Handle foreground messages
+    messaging.onMessage((payload)=>{
+      const n=payload.notification||{};
+      const title=n.title||'Sube Pies';
+      const body=n.body||'';
+      // Show in-app notification banner
+      showInAppNotif(title,body,payload.data);});
+  }catch(e){console.log('FCM setup error:',e);}}
+function showInAppNotif(title,body,data){
+  const el=document.createElement('div');
+  el.style.cssText='position:fixed;top:0;left:0;right:0;z-index:400;padding:12px 16px;background:linear-gradient(135deg,var(--rock),#b8956a);color:#000;font-family:Nunito;animation:fu .3s ease;display:flex;align-items:center;gap:10px;cursor:pointer';
+  el.innerHTML=`<div style="flex:1"><div style="font-weight:700;font-size:13px">${title}</div><div style="font-size:11px;opacity:.8">${body}</div></div><button style="background:none;border:none;font-size:18px;cursor:pointer;color:#000" onclick="this.parentElement.remove()">✕</button>`;
+  el.onclick=(e)=>{if(e.target.tagName!=='BUTTON'){el.remove();
+    if(data&&data.type==='chat')go('friends');
+    else if(data&&data.type==='invite')go('home');
+    else if(data&&data.type==='friendAccept')go('friends');}};
+  document.body.appendChild(el);
+  setTimeout(()=>{if(el.parentElement)el.remove();},6000);}
+async function toggleNotifications(){
+  if(!('Notification' in window)){alert('Tu navegador no soporta notificaciones');return;}
+  const perm=Notification.permission;
+  if(perm==='granted'){
+    // Already active
+    alert('Las notificaciones ya están activadas');return;}
+  if(perm==='denied'){
+    alert('Las notificaciones están bloqueadas. Ve a ajustes del navegador para activarlas.');return;}
+  await initNotifications();
+  updNotifStatus();}
+function updNotifStatus(){
+  const btn=document.getElementById('btnNotifToggle');
+  const st=document.getElementById('notifStatus');
+  if(!btn)return;
+  if(!('Notification' in window)){btn.textContent='No disponible';btn.style.background='var(--bg3)';st.textContent='Tu navegador no soporta notificaciones';return;}
+  const perm=Notification.permission;
+  if(perm==='granted'){btn.textContent='Activadas ✓';btn.style.background='var(--green)';btn.style.color='#000';st.textContent='Recibirás notificaciones de invitaciones, chats y recordatorios';}
+  else if(perm==='denied'){btn.textContent='Bloqueadas';btn.style.background='var(--red)';btn.style.color='#fff';st.textContent='Desbloquéalas en ajustes del navegador';}
+  else{btn.textContent='Activar';btn.style.background='var(--rock)';btn.style.color='#000';st.textContent='Invitaciones, chats, recordatorios de entreno';}}
 
 async function loadData(){if(!U)return;const uid=U.uid;
   let q=await db.collection('users').doc(uid).collection('routes').orderBy('date','desc').get();R=[];q.forEach(d=>{R.push({id:d.id,...d.data()});});
@@ -672,7 +733,67 @@ async function loadData(){if(!U)return;const uid=U.uid;
   q=await db.collection('crags').get();userCrags=[];q.forEach(d=>{userCrags.push({id:d.id,...d.data()});});
   q=await db.collection('users').doc(uid).collection('mesos').get();mesos=[];q.forEach(d=>{mesos.push({id:d.id,...d.data()});});
   q=await db.collection('users').doc(uid).collection('woFolders').get();woFolders=[];q.forEach(d=>{woFolders.push({id:d.id,...d.data()});});
+  // Seed default workouts for new users
+  if(!W.length&&!woFolders.length){await seedDefaults();}
   updDL();}
+async function seedDefaults(){if(!U)return;
+  const uid=U.uid;
+  // Create folders
+  const folders={};
+  for(const fn of ['Fuerza de Dedos','Tracción y Fuerza','Resistencia','Calentamiento y Compensación']){
+    const ref=await db.collection('users').doc(uid).collection('woFolders').add({name:fn});
+    folders[fn]={id:ref.id,name:fn};woFolders.push(folders[fn]);}
+  // Helper
+  const ej=(nm,ag,mm,kg,modo,time,reps,rep,ser,desc,ds,ang)=>({nm,ag:ag||'',mm:mm||0,kg:kg||0,modo:modo||'time',time:time||0,reps:reps||0,rep:rep||0,ser:ser||1,desc:desc||0,ds:ds||180,ang:ang||''});
+  const defWos=[
+    {name:'Suspensiones intermitentes',folder:folders['Fuerza de Dedos'].id,steps:[
+      ej('Calentamiento gomas hombros','',0,0,'reps',0,10,0,2,0,60),
+      ej('Suspensiones cazo calentamiento','Cazo',0,0,'time',10,0,3,3,5,60),
+      ej('Suspensiones regleta 25mm','Regleta',25,0,'time',7,0,6,4,3,180),
+      ej('Suspensiones regleta 20mm','Regleta',20,0,'time',7,0,6,4,3,180),
+      ej('Suspensiones regleta 15mm','Regleta',15,0,'time',5,0,4,3,3,240)]},
+    {name:'Fuerza máxima dedos',folder:folders['Fuerza de Dedos'].id,steps:[
+      ej('Calentamiento suspensiones cazo','Cazo',0,0,'time',10,0,3,3,5,60),
+      ej('Suspensiones lastradas 20mm','Regleta',20,10,'time',10,0,1,5,0,180),
+      ej('Suspensiones lastradas 18mm','Regleta',18,5,'time',10,0,1,4,0,180),
+      ej('Suspensiones mín regleta (sin lastre)','Regleta',14,0,'time',7,0,1,4,0,180)]},
+    {name:'Tracción y dominadas',folder:folders['Tracción y Fuerza'].id,steps:[
+      ej('Calentamiento gomas hombros','',0,0,'reps',0,10,0,2,0,60),
+      ej('Dominadas en barra','Barra',0,0,'reps',0,8,0,4,0,120),
+      ej('Dominadas lastradas','Barra',0,10,'reps',0,5,0,4,0,180),
+      ej('Bloqueos a 90°','Barra',0,0,'time',10,0,1,4,0,120,'90°'),
+      ej('Remo invertido / TRX','',0,0,'reps',0,12,0,3,0,90)]},
+    {name:'Campus y potencia',folder:folders['Tracción y Fuerza'].id,steps:[
+      ej('Campus ascensos +1','Regleta',22,0,'reps',0,6,0,4,0,180),
+      ej('Campus dobles','Regleta',22,0,'reps',0,4,0,3,0,180),
+      ej('Dominadas explosivas','Barra',0,0,'reps',0,5,0,4,0,120),
+      ej('Lanzamientos a presa','Cazo',0,0,'reps',0,6,0,3,0,120)]},
+    {name:'Resistencia 4x4 boulder',folder:folders['Resistencia'].id,steps:[
+      {stepType:'via',grado:'6a',tipo:'Bloque',nombre:'Boulder fácil 1'},
+      {stepType:'via',grado:'6a+',tipo:'Bloque',nombre:'Boulder fácil 2'},
+      {stepType:'via',grado:'6b',tipo:'Bloque',nombre:'Boulder medio 1'},
+      {stepType:'via',grado:'6b+',tipo:'Bloque',nombre:'Boulder medio 2'}]},
+    {name:'Continuidad en muro',folder:folders['Resistencia'].id,steps:[
+      ej('Travesía continua vertical','Cazo',0,0,'time',300,0,1,4,0,300),
+      ej('Travesía en desplome','Cazo',0,0,'time',180,0,1,3,0,300)]},
+    {name:'Calentamiento completo',folder:folders['Calentamiento y Compensación'].id,steps:[
+      ej('Gomas rotación externa','',0,0,'reps',0,15,0,2,0,30),
+      ej('Gomas movilidad hombros','',0,0,'reps',0,10,0,2,0,30),
+      ej('Flexiones suaves','',0,0,'reps',0,10,0,2,0,60),
+      ej('Suspensiones cazo (calent.)','Cazo',0,0,'time',10,0,3,2,5,60),
+      {stepType:'via',grado:'V+',tipo:'Bloque',nombre:'Boulder muy fácil'},
+      {stepType:'via',grado:'6a',tipo:'Bloque',nombre:'Boulder fácil'}]},
+    {name:'Compensación y antagonistas',folder:folders['Calentamiento y Compensación'].id,steps:[
+      ej('Flexiones','',0,0,'reps',0,15,0,3,0,90),
+      ej('Press hombro con gomas','',0,0,'reps',0,12,0,3,0,90),
+      ej('Extensiones tríceps','',0,0,'reps',0,12,0,3,0,60),
+      ej('Pronación muñeca','',0,0,'reps',0,15,0,2,0,60),
+      ej('Extensión dedos con goma','',0,0,'reps',0,20,0,3,0,60),
+      ej('Plancha frontal','',0,0,'time',45,0,1,3,0,90),
+      ej('Plancha lateral','',0,0,'time',30,0,1,3,0,60)]}];
+  for(const wo of defWos){
+    const ref=await db.collection('users').doc(uid).collection('workouts').add(wo);
+    W.push({id:ref.id,...wo});}}
 function updDL(){const s=new Set();R.forEach(r=>{if(r.sitio)s.add(r.sitio);});let dl='';[...CRAGS.keys(),...userCrags.map(c=>c.name),...s].forEach(n=>{dl+=`<option value="${n}">`;});document.getElementById('dlZ').innerHTML=dl;}
 
 async function saveRoute(data){if(!U)return;const col=db.collection('users').doc(U.uid).collection('routes');
@@ -706,6 +827,7 @@ function drS(){const el=document.getElementById('sN');if(el)el.textContent=R.len
   const cn=document.getElementById('ctNick');if(cn)cn.textContent=t('visibleName');
   const nh=document.getElementById('nickHint');if(nh)nh.textContent=t('nickHint');
   const ls=document.getElementById('langSel');if(ls)ls.value=LANG;
+  updNotifStatus();
   // Load current nick
   if(U){db.collection('users').doc(U.uid).get().then(d=>{if(d.exists){const ni=document.getElementById('nickEdit');if(ni)ni.value=d.data().nick||d.data().name||'';}});}}
 async function changeNick(){if(!U)return;const nick=(document.getElementById('nickEdit').value||'').trim();
