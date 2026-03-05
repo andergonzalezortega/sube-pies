@@ -214,7 +214,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <div style="display:flex;gap:12px;align-items:center"><button class="sbb" onclick="prevExec()" style="background:rgba(255,255,255,.1);color:var(--text2);font-size:13px;padding:12px 20px">⏮</button><button class="sbb" id="exPlayBtn" onclick="toggleExec()" style="font-size:18px;padding:14px 36px;min-width:140px">▶ EMPEZAR</button><button class="sbb" onclick="skipExec()" style="background:rgba(255,255,255,.1);color:var(--text2);font-size:13px;padding:12px 20px">⏭</button></div>
 <label style="display:flex;align-items:center;gap:6px;margin-top:16px;font-size:12px;color:rgba(255,255,255,.4);cursor:pointer"><input type="checkbox" id="exSound" checked style="accent-color:var(--rock)"> Sonido + vibración</label>
 </div></div>
-<!-- MODAL PLAN --><div class="mbg" id="mPl"><div class="mdl"><button class="mx" onclick="cm('mPl')">✕</button><h2>PLANIFICAR DÍA</h2><div class="fl"><label>Fecha</label><input type="date" id="plDt"></div><div class="ct" style="margin-top:6px">¿QUÉ PLAN?</div><div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px"><button class="ch" id="plBtnEsc" onclick="setPlTipo('escalar')">🧗 Escalar</button><button class="ch" id="plBtnEnt" onclick="setPlTipo('entreno')">🏋 Entreno</button><button class="ch" id="plBtnNot" onclick="setPlTipo('nota')">📝 Nota</button></div><div id="plEscalar" style="display:none"><div class="fl"><label>Tipo</label><select id="plTp"><option value="roca">🏔️ Roca</option><option value="indoor">🏢 Indoor</option></select></div><div class="fl"><label>Lugar</label><input id="plLg" placeholder="Atauri, Sharma..." list="dlZ"></div></div><div id="plEntreno" style="display:none"><div class="fl"><label>Carpeta</label><select id="plFolderSel" onchange="updPlWoList()"><option value="">— Todas —</option></select></div><div class="fl"><label>Entreno</label><select id="plWoSel" onchange="updPlWoPreview()"><option value="">— Sin entreno —</option></select></div><div id="plWoPreview" style="display:none;background:var(--bg3);border-radius:8px;padding:6px 8px;margin-bottom:8px;font-size:10px;color:var(--text2)"></div><div class="fl"><label><input type="checkbox" id="plShareWo" checked style="accent-color:var(--rock)"> Compartir ejercicios con invitados</label></div></div><div class="fl"><label>Notas</label><input id="plNo" placeholder="Plan del día..."></div><div class="ct" style="margin-top:6px">INVITAR AMIGOS</div><div class="fl"><input id="plFrSearch" placeholder="Buscar amigo..." oninput="filterPlFriends()" style="background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:7px 10px;color:var(--text);font-size:12px;font-family:Nunito;outline:none;width:100%;margin-bottom:4px"></div><div id="plFriends"></div><button class="btn bp" onclick="svPlan()">Guardar plan</button><button class="btn bg2" onclick="cm('mPl')">Cancelar</button></div></div>
+<!-- MODAL PLAN --><div class="mbg" id="mPl"><div class="mdl"><button class="mx" onclick="cm('mPl')">✕</button><h2>PLANIFICAR DÍA</h2><div class="fl"><label>Fecha inicio</label><input type="date" id="plDt"></div><div class="fl"><label>Fecha fin (opcional, para varios días)</label><input type="date" id="plDtEnd"></div><div class="ct" style="margin-top:6px">¿QUÉ PLAN?</div><div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px"><button class="ch" id="plBtnEsc" onclick="setPlTipo('escalar')">🧗 Escalar</button><button class="ch" id="plBtnEnt" onclick="setPlTipo('entreno')">🏋 Entreno</button><button class="ch" id="plBtnNot" onclick="setPlTipo('nota')">📝 Nota</button></div><div id="plEscalar" style="display:none"><div class="fl"><label>Tipo</label><select id="plTp"><option value="roca">🏔️ Roca</option><option value="indoor">🏢 Indoor</option></select></div><div class="fl"><label>Lugar</label><input id="plLg" placeholder="Atauri, Sharma..." list="dlZ"></div></div><div id="plEntreno" style="display:none"><div class="fl"><label>Carpeta</label><select id="plFolderSel" onchange="updPlWoList()"><option value="">— Todas —</option></select></div><div class="fl"><label>Entreno</label><select id="plWoSel" onchange="updPlWoPreview()"><option value="">— Sin entreno —</option></select></div><div id="plWoPreview" style="display:none;background:var(--bg3);border-radius:8px;padding:6px 8px;margin-bottom:8px;font-size:10px;color:var(--text2)"></div><div class="fl"><label><input type="checkbox" id="plShareWo" checked style="accent-color:var(--rock)"> Compartir ejercicios con invitados</label></div></div><div class="fl"><label>Notas</label><input id="plNo" placeholder="Plan del día..."></div><div class="ct" style="margin-top:6px">INVITAR AMIGOS</div><div class="fl"><input id="plFrSearch" placeholder="Buscar amigo..." oninput="filterPlFriends()" style="background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:7px 10px;color:var(--text);font-size:12px;font-family:Nunito;outline:none;width:100%;margin-bottom:4px"></div><div id="plFriends"></div><button class="btn bp" onclick="svPlan()">Guardar plan</button><button class="btn bg2" onclick="cm('mPl')">Cancelar</button></div></div>
 <!-- MODAL NEW CRAG --><div class="mbg" id="mNC"><div class="mdl"><button class="mx" onclick="cm('mNC')">✕</button><h2>NUEVA ZONA</h2><p style="font-size:12px;color:var(--text2);margin-bottom:12px">En Google Maps → busca el sitio → pulsa largo → copia las coordenadas que aparecen abajo (ej: 43.270854, -3.102539).</p><div class="fl"><label>Nombre de la zona</label><input id="ncNm" placeholder="Galdames"></div><div class="fl"><label>Coordenadas</label><input id="ncCoords" placeholder="43.270854, -3.102539"><small>Pega las coordenadas o la URL larga de Google Maps (la que tiene @43.27,-3.10)</small></div><div id="ncMsg" style="font-size:11px;margin-bottom:8px"></div><button class="btn bp" onclick="svNewCrag()">Guardar zona</button><button class="btn bg2" onclick="cm('mNC')">Cancelar</button></div></div>
 <!-- MESOCICLO --><div class="mbg" id="mMeso"><div class="mdl"><button class="mx" onclick="cm('mMeso')">✕</button><h2>CREAR MESOCICLO</h2><div class="fl"><label>Nombre</label><input id="msNm" placeholder="Pre-temporada, Fuerza..."></div><div class="fl"><label>Fecha inicio</label><input type="date" id="msStart"></div><div class="ct">FASES</div><div id="msFases"></div><button class="btn bg2" style="font-size:11px;margin-bottom:10px" onclick="addFase()">+ Añadir fase</button><div id="msPrev" style="display:none;margin-bottom:10px"></div><hr style="border:none;border-top:1px solid var(--bg4);margin:10px 0"><button class="btn bp" onclick="svMeso()">Guardar mesociclo</button><button class="btn bg2" onclick="cm('mMeso')">Cancelar</button></div></div>
 <!-- NAV --><nav class="nav">
@@ -723,7 +723,12 @@ function drCalDetail(){
   const dp=plans.filter(p=>p.date===sel);
   const dr=R.filter(r=>r.date===sel);
   const dt=Tr.filter(t=>t.date===sel);
-  const dw=W.filter(w=>w.plannedDate===sel);
+  const dw=W.filter(w=>{
+    if(!w.plannedDate||w.plannedDate!==sel)return false;
+    // Auto-expire: if planned date is >7 days old and not executed, hide it
+    const daysDiff=(new Date()-new Date(w.plannedDate))/(1000*60*60*24);
+    if(daysDiff>7){const executed=Tr.some(t=>t.date===w.plannedDate&&(t.detail||'').includes(w.name));if(!executed)return false;}
+    return true;});
   const dd=new Date(sel);
   let h=`<div style="background:var(--bg2);border-radius:0 0 12px 12px;padding:10px 12px;border:1px solid rgba(255,255,255,.04);border-top:none">`;
   h+=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-family:'Bebas Neue';font-size:15px;color:var(--text)">${dd.toLocaleDateString(LANG==='en'?'en-US':LANG==='eu'?'eu-ES':LANG==='ca'?'ca-ES':'es-ES',{weekday:'long',day:'numeric',month:'long'})}</span></div>`;
@@ -779,21 +784,23 @@ async function delPlan(planId){
             lugar:p.lugar||'',notas:fromName+' ha cancelado: '+(p.workoutName||p.lugar||p.notas||'plan'),
             status:'pending',ts:firebase.firestore.FieldValue.serverTimestamp(),type:'cancel'});}}catch(e){}}}
   await db.collection('users').doc(U.uid).collection('plans').doc(planId).delete();
+  // Also clear plannedDate from any workout linked to this plan
+  if(p.workoutName){const wo=W.find(w=>w.name===p.workoutName&&w.plannedDate===p.date);
+    if(wo&&wo.id){wo.plannedDate='';try{await db.collection('users').doc(U.uid).collection('workouts').doc(wo.id).update({plannedDate:''});}catch(e){}}}
   plans=plans.filter(x=>x.id!==planId);rCal();}
-let nwoIdx=-1,homeFilter='all'; // all, entreno, escalada
+let nwoIdx=-1; // all, entreno, escalada
 function drNextWo(){
   const td=new Date().toISOString().split('T')[0];
   const el=document.getElementById('homeNextWo');
   // Collect all upcoming dates from workouts AND plans
   const woDates=[...new Set(W.filter(w=>w.plannedDate).map(w=>w.plannedDate))];
-  const plDates=[...new Set(plans.filter(p=>p.date).map(p=>p.date))];
+  const plDates=[];
   let allDates=[...new Set([...woDates,...plDates])].sort();
   // Filter by days vista setting
   const daysVista=loadDaysVista();
   if(daysVista>0){const maxDate=new Date();maxDate.setDate(maxDate.getDate()+daysVista);const maxStr=maxDate.toISOString().split('T')[0];allDates=allDates.filter(d=>d<=maxStr);}
   // Filter dates by content type
-  if(homeFilter==='entreno')allDates=allDates.filter(d=>W.some(w=>w.plannedDate===d));
-  if(homeFilter==='escalada')allDates=allDates.filter(d=>plans.some(p=>p.date===d&&(p.tipo==='roca'||p.tipo==='indoor')));
+
   if(!allDates.length){el.innerHTML=`<div style="text-align:center;padding:12px"><span style="color:var(--text3);font-size:12px">${t('noTrainPlan')}</span></div>`;return;}
   if(nwoIdx<0||nwoIdx>=allDates.length){nwoIdx=allDates.findIndex(d=>d>=td);if(nwoIdx<0)nwoIdx=allDates.length-1;}
   if(nwoIdx>=allDates.length)nwoIdx=allDates.length-1;if(nwoIdx<0)nwoIdx=0;
@@ -809,20 +816,8 @@ function drNextWo(){
   let h=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><span style="font-family:'Bebas Neue';font-size:13px;color:var(--text3);letter-spacing:1px"><span style="color:${isClose?'var(--green)':'var(--rock)'}"> ${dayLabel.toUpperCase()}${extra}</span></span>`;
   if(allDates.length>1)h+=`<span style="font-size:10px;color:var(--text3)">${nwoIdx+1}/${allDates.length} ◀ ▶</span>`;
   h+=`</div>`;
-  // Filter buttons
-  h+=`<div style="display:flex;gap:3px;margin-bottom:6px">`;
-  [['all','Todo'],['entreno','🏋 Entrenos'],['escalada','🧗 Escaladas']].forEach(([k,lb])=>{
-    h+=`<button class="ch${homeFilter===k?' on':''}" style="font-size:10px;padding:3px 8px" onclick="homeFilter='${k}';nwoIdx=-1;drNextWo()">${lb}</button>`;});
-  h+=`</div>`;
-  // Show plans (escaladas)
-  if(homeFilter!=='entreno'){dp.forEach(p=>{
-    const icon=p.tipo==='roca'?'🏔️':'🏢';
-    h+=`<div style="background:rgba(212,165,116,.06);border-radius:8px;padding:8px;margin-bottom:4px;border-left:3px solid var(--rock)">`;
-    h+=`<div style="font-family:'Bebas Neue';font-size:14px;color:var(--rock)">${icon} ${p.lugar||p.tipo}</div>`;
-    if(p.notas)h+=`<div style="font-size:10px;color:var(--text3)">${p.notas}</div>`;
-    h+=`</div>`;});}
   // Show workouts
-  if(homeFilter!=='escalada'){dw.forEach(w=>{
+  dw.forEach(w=>{
     h+=`<div style="background:rgba(76,175,80,.06);border-radius:8px;padding:8px;margin-bottom:4px;border-left:3px solid var(--green)">`;
     h+=`<div style="font-family:'Bebas Neue';font-size:16px;color:var(--green);margin-bottom:4px">${w.name}</div>`;
     (w.steps||[]).forEach((s,i)=>{let nm=s.nm||s.txt||'';const pts=[];
@@ -830,8 +825,8 @@ function drNextWo(){
       if(s.modo==='time')pts.push(s.time+'s×'+(s.rep||1)+'r×'+(s.ser||1)+'ser');
       else if(s.reps)pts.push(s.reps+'r×'+(s.ser||1)+'ser');
       h+=`<div style="font-size:11px;color:var(--text2);padding:1px 0">${i+1}. ${nm}${pts.length?' · '+pts.join(' · '):''}</div>`;});
-    h+=`<div style="margin-top:6px"><button class="sbb" style="font-size:11px;padding:5px 12px" onclick='execWo(${JSON.stringify(w).replace(/'/g,"&#39;")})'>▶ Ejecutar</button></div></div>`;});}
-  if(!dp.length&&!dw.length)h+=`<div style="font-size:11px;color:var(--text3);padding:4px">Sin actividad planificada</div>`;
+    h+=`<div style="margin-top:6px"><button class="sbb" style="font-size:11px;padding:5px 12px" onclick='execWo(${JSON.stringify(w).replace(/'/g,"&#39;")})'>▶ Ejecutar</button></div></div>`;});
+  if(!dw.length)h+=`<div style="font-size:11px;color:var(--text3);padding:4px">${t('noTrainPlan')}</div>`;
   el.innerHTML=h;}
 let _swipeSetup=false;
 function setupSwipe(){if(_swipeSetup)return;_swipeSetup=true;let sx=0;
@@ -959,7 +954,7 @@ function setPlTipo(t){plTipo=t;
   document.getElementById('plEntreno').style.display=t==='entreno'?'block':'none';
   document.querySelectorAll('#plBtnEsc,#plBtnEnt,#plBtnNot').forEach(b=>b.classList.remove('on'));
   document.getElementById(t==='escalar'?'plBtnEsc':t==='entreno'?'plBtnEnt':'plBtnNot').classList.add('on');}
-function openPlan(dt){document.getElementById('plDt').value=dt;document.getElementById('plLg').value='';document.getElementById('plNo').value='';
+function openPlan(dt){document.getElementById('plDt').value=dt;document.getElementById('plDtEnd').value='';document.getElementById('plLg').value='';document.getElementById('plNo').value='';
   document.getElementById('plFrSearch').value='';
   plTipo='escalar';setPlTipo('escalar');
   // Populate folder selector
@@ -1005,8 +1000,14 @@ function filterPlFriends(){const q=document.getElementById('plFrSearch').value||
   drPlFriends(q);
   // Restore checked
   document.querySelectorAll('.plFrCb').forEach(cb=>{if(checked.has(cb.value))cb.checked=true;});}
-async function svPlan(){const date=document.getElementById('plDt').value,notas=document.getElementById('plNo').value;
+async function svPlan(){const date=document.getElementById('plDt').value,dateEnd=document.getElementById('plDtEnd').value,notas=document.getElementById('plNo').value;
   if(!date){alert(t('putDate'));return;}
+  // Build list of dates
+  const dates=[date];
+  if(dateEnd&&dateEnd>date){
+    let d=new Date(date);const end=new Date(dateEnd);
+    d.setDate(d.getDate()+1);
+    while(d<=end){dates.push(d.toISOString().split('T')[0]);d.setDate(d.getDate()+1);}}
   let tipo,lugar='',woData=null;
   if(plTipo==='escalar'){
     tipo=document.getElementById('plTp').value;
@@ -1020,20 +1021,22 @@ async function svPlan(){const date=document.getElementById('plDt').value,notas=d
   const invited=[];
   document.querySelectorAll('.plFrCb:checked').forEach(cb=>{invited.push(cb.value);});
   const shareWo=document.getElementById('plShareWo')&&document.getElementById('plShareWo').checked;
-  const plan={date,tipo:tipo||'nota',lugar,notas,invited};
-  if(woData){plan.workoutName=woData.name;if(shareWo)plan.workoutSteps=woData.steps;
-    if(woData.id){await db.collection('users').doc(U.uid).collection('workouts').doc(woData.id).update({plannedDate:date});woData.plannedDate=date;}}
-  await savePlan(plan);
-  // Send invites to each friend
-  if(invited.length&&U){
-    const fromName=U.displayName||U.email;
-    for(const email of invited){
-      try{const q=await db.collection('users').where('email','==',email).get();
-      if(!q.empty){const fuid=q.docs[0].id;
-        const inv={from:U.uid,fromName,fromEmail:U.email,date,tipo:tipo||'nota',lugar,notas,status:'pending',ts:firebase.firestore.FieldValue.serverTimestamp()};
-        if(woData){inv.workoutName=woData.name;if(shareWo)inv.workoutSteps=woData.steps;inv.type='workout';}
-        else inv.type='plan';
-        await db.collection('users').doc(fuid).collection('invites').add(inv);}}catch(e){console.error('Invite error:',e);}}}
+  // Create plan for each date in range
+  for(const dt of dates){
+    const plan={date:dt,tipo:tipo||'nota',lugar,notas,invited};
+    if(woData){plan.workoutName=woData.name;if(shareWo)plan.workoutSteps=woData.steps;
+      if(woData.id&&dt===date){await db.collection('users').doc(U.uid).collection('workouts').doc(woData.id).update({plannedDate:dt});woData.plannedDate=dt;}}
+    await savePlan(plan);
+    // Send invites to each friend
+    if(invited.length&&U){
+      const fromName=U.displayName||U.email;
+      for(const email of invited){
+        try{const q=await db.collection('users').where('email','==',email).get();
+        if(!q.empty){const fuid=q.docs[0].id;
+          const inv={from:U.uid,fromName,fromEmail:U.email,date:dt,tipo:tipo||'nota',lugar,notas,status:'pending',ts:firebase.firestore.FieldValue.serverTimestamp()};
+          if(woData){inv.workoutName=woData.name;if(shareWo)inv.workoutSteps=woData.steps;inv.type='workout';}
+          else inv.type='plan';
+          await db.collection('users').doc(fuid).collection('invites').add(inv);}}catch(e){console.error('Invite error:',e);}}}}
   cm('mPl');rCal();}
 
 // ROUTES
@@ -1093,19 +1096,19 @@ async function delR(){if(!eRt||!confirm(t('confirmDeleteRoute')))return;await de
 function cm(id){document.getElementById(id).classList.remove('sh');if(id==='mNC')document.getElementById('mapDiv').style.display='block';}
 
 // MAP
-function drM(){let tb='';[['roca','🏔️ '+t('rock')],['roco','🏢 Indoor']].forEach(([k,lb])=>{tb+=`<button class="tb${mapMode===k?' on':''}" onclick="mapMode='${k}';drM()">${lb}</button>`;});document.getElementById('mapTbs').innerHTML=tb;
-  const rr=mapMode==='roca'?R.filter(r=>r.lugar==='roca'):R.filter(r=>r.lugar==='indoor'||r.lugar==='roco');
+function drM(){document.getElementById('mapTbs').innerHTML='';
+  const rr=R.filter(r=>r.lugar==='roca');
   document.getElementById('mTotal').textContent=rr.length;document.getElementById('mEnc').textContent=rr.filter(r=>r.enc).length;
   const locs=buildLocs(rr);document.getElementById('mZonas').textContent=Object.keys(locs).length;
   if(!leafMap){leafMap=L.map('mapDiv',{zoomControl:false}).setView([40.4,-2.5],5);L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'©OSM',maxZoom:18}).addTo(leafMap);L.control.zoom({position:'topright'}).addTo(leafMap);}
-  markers.forEach(m=>leafMap.removeLayer(m));markers=[];const bounds=[],col=mapMode==='roca'?'#d4a574':'#4ecdc4';
+  markers.forEach(m=>leafMap.removeLayer(m));markers=[];const bounds=[],col='#d4a574';
   Object.values(locs).forEach(l=>{const sz=Math.min(8+l.rs.length*3,28);const icon=L.divIcon({className:'',html:`<div style="width:${sz}px;height:${sz}px;background:${col};border-radius:50%;border:2px solid #fff;opacity:.9;display:flex;align-items:center;justify-content:center;font-size:${Math.max(9,sz/2.5)}px;font-weight:700;color:#000;font-family:Nunito">${l.rs.length}</div>`,iconSize:[sz,sz],iconAnchor:[sz/2,sz/2]});const m=L.marker([l.lat,l.lng],{icon}).addTo(leafMap);m.bindPopup(`<b style="font-family:'Bebas Neue';font-size:14px;color:${col}">${l.name}</b><br>${l.rs.length} vías · ${l.enc} enc.`);m.on('click',()=>showZone(l));markers.push(m);bounds.push([l.lat,l.lng]);});
   if(bounds.length>1)leafMap.fitBounds(bounds,{padding:[20,20]});else if(bounds.length===1)leafMap.setView(bounds[0],10);
   setTimeout(()=>leafMap.invalidateSize(),100);document.getElementById('mRt').innerHTML='';document.getElementById('mapResults').style.display='none';document.getElementById('mapQ').value='';}
 function buildLocs(rr){const locs={};rr.forEach(r=>{if(!r.sitio)return;const c=getCragCoords(r.sitio);if(c){if(!locs[c.name])locs[c.name]={...c,rs:[],enc:0};locs[c.name].rs.push(r);if(r.enc)locs[c.name].enc++;}});return locs;}
 function showZone(l){let h=`<div style="font-family:'Bebas Neue';font-size:16px;color:var(--rock);margin:8px 0">${l.name} — ${l.rs.length} vías (${l.enc} enc.)</div>`;l.rs.forEach(r=>{h+=vc(r,true);});document.getElementById('mRt').innerHTML=h;}
 function filterMap(){const q=document.getElementById('mapQ').value.trim().toLowerCase();if(!q){document.getElementById('mapResults').style.display='none';return;}
-  const rr=mapMode==='roca'?R.filter(r=>r.lugar==='roca'):R.filter(r=>r.lugar==='indoor'||r.lugar==='roco');const locs=buildLocs(rr);const match=Object.values(locs).filter(l=>l.name.toLowerCase().includes(q));
+  const rr=R.filter(r=>r.lugar==='roca');const locs=buildLocs(rr);const match=Object.values(locs).filter(l=>l.name.toLowerCase().includes(q));
   if(match.length===1){leafMap.setView([match[0].lat,match[0].lng],10);showZone(match[0]);document.getElementById('mapResults').style.display='none';}
   else if(match.length>1){let h='';match.forEach(l=>{h+=`<div class="fr-card" style="cursor:pointer" onclick="leafMap.setView([${l.lat},${l.lng}],10);showZone(mapLocs['${l.name}'])"><div class="fr-info"><div class="fr-name" style="color:var(--rock)">${l.name}</div><div class="fr-email">${l.rs.length} vías</div></div></div>`;});
     document.getElementById('mapResults').innerHTML=h;document.getElementById('mapResults').style.display='block';window.mapLocs={};match.forEach(l=>{window.mapLocs[l.name]=l;});}
@@ -1469,6 +1472,15 @@ async function drFr(){
         <button onclick="acceptFr('${d.id}','${r.fromUid}')" style="background:var(--green);border:none;border-radius:8px;color:#000;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer">✓</button>
         <button onclick="rejectFr('${d.id}')" style="background:var(--red);border:none;border-radius:8px;color:#fff;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer">✕</button></div>`;});}catch(e){}
   const rqBox=document.getElementById('frRequests');if(rqBox)rqBox.innerHTML=rqH;
+  // Show sent pending requests
+  let sentH='';
+  try{const sqs=await db.collection('users').doc(U.uid).collection('sentRequests').where('status','==','pending').get();
+    sqs.forEach(d=>{const s=d.data();
+      sentH+=`<div style="background:rgba(212,165,116,.06);border:1px solid rgba(212,165,116,.15);border-radius:12px;padding:8px 10px;margin-bottom:4px;display:flex;align-items:center;gap:8px">
+        <span style="font-size:12px;color:var(--rock)">⏳</span>
+        <div style="flex:1;font-size:12px;color:var(--text2)">Enviada a <b>${s.toName||s.toEmail}</b></div>
+        <span style="font-size:10px;color:var(--text3)">Pendiente</span></div>`;});}catch(e){}
+  if(sentH){const box=document.getElementById('frRequests');if(box)box.innerHTML+=sentH;}
   // Show friends
   let h='';if(!friends.length)h='<div style="color:var(--text3);font-size:11px;text-align:center;padding:16px">'+t('noFriends')+'</div>';
   for(const f of friends){const q=await db.collection('users').where('email','==',f.email).get();let name=f.email,photo='',code='';
@@ -1487,9 +1499,16 @@ async function addFriend(){const raw=document.getElementById('frCode').value.tri
   const fDoc=q.docs[0],fd=fDoc.data();
   if(fDoc.id===U.uid){msg.textContent=t('thatsYou');msg.style.color='var(--red)';return;}
   if(friends.some(f=>f.email===fd.email)){msg.textContent=t('alreadyFriend');msg.style.color='var(--yellow)';return;}
+  // Check if already sent
+  try{const existing=await db.collection('users').doc(U.uid).collection('sentRequests').where('toUid','==',fDoc.id).where('status','==','pending').get();
+    if(!existing.empty){msg.textContent='Ya has enviado una solicitud a '+(fd.name||fd.email);msg.style.color='var(--yellow)';return;}}catch(e){}
   // Send friend request to the other user
   try{await db.collection('users').doc(fDoc.id).collection('friendRequests').add({
     fromUid:U.uid,fromEmail:U.email,fromName:U.displayName||U.email,fromPhoto:U.photoURL||'',
+    status:'pending',ts:firebase.firestore.FieldValue.serverTimestamp()});
+  // Also save on our side as sent request
+  await db.collection('users').doc(U.uid).collection('sentRequests').add({
+    toUid:fDoc.id,toEmail:fd.email,toName:fd.name||fd.email,
     status:'pending',ts:firebase.firestore.FieldValue.serverTimestamp()});
   document.getElementById('frCode').value='';msg.textContent=t('requestSentTo')+' '+(fd.name||fd.email);msg.style.color='var(--green)';
   }catch(e){msg.textContent='Error: '+e.message;msg.style.color='var(--red)';}
