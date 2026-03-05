@@ -839,6 +839,26 @@ function setupSwipe(){if(_swipeSetup)return;_swipeSetup=true;let sx=0;
 function getSettings(){return JSON.parse(localStorage.getItem('spSettings')||'{}');}
 function saveDaysVista(){const v=document.getElementById('setDaysVista').value;const s=getSettings();s.daysVista=parseInt(v);localStorage.setItem('spSettings',JSON.stringify(s));drNextWo();}
 function loadDaysVista(){const s=getSettings();const v=s.daysVista||5;const sel=document.getElementById('setDaysVista');if(sel)sel.value=v;return v;}
+function exportXL(tipo){
+  const from=document.getElementById('exFrom').value,to=document.getElementById('exTo').value;
+  const msg=document.getElementById('exMsg');
+  if(!from||!to){msg.textContent='Selecciona fechas';return;}
+  let csv='',rows=0;
+  if(tipo==='vias'){
+    csv='Fecha,Grado,Nombre,Sitio,Tipo,Lugar,Intento,Encadenado,Flash,AVista,Metros,Estilo,Compañeros,Notas\n';
+    R.filter(r=>r.date>=from&&r.date<=to).forEach(r=>{
+      csv+=`"${r.date}","${r.grado}","${(r.nombre||'').replace(/"/g,'""')}","${(r.sitio||'').replace(/"/g,'""')}","${r.tipo}","${r.lugar}",${r.intento||1},${r.enc?1:0},${r.flash?1:0},${r.avista?1:0},${r.metros||0},"${r.estilo||''}","${(r.amigos||'').replace(/"/g,'""')}","${(r.notas||'').replace(/"/g,'""')}"\n`;rows++;});
+  }else{
+    csv='Fecha,Entreno,Detalle\n';
+    Tr.filter(t=>t.date>=from&&t.date<=to).forEach(t=>{
+      csv+=`"${t.date}","${(t.detail||t.tipo||'').replace(/"/g,'""')}","${(t.tipo||'').replace(/"/g,'""')}"\n`;rows++;});
+  }
+  if(!rows){msg.textContent='Sin datos en ese rango';return;}
+  const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);const a=document.createElement('a');
+  a.href=url;a.download='SubePies_'+tipo+'_'+from+'_'+to+'.csv';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  URL.revokeObjectURL(url);msg.textContent=rows+' registros exportados';}
 async function loadInvites(){if(!U)return;
   const q=await db.collection('users').doc(U.uid).collection('invites').where('status','==','pending').get();
   let h='';q.forEach(d=>{const inv=d.data();const tipos={roca:t('invRoca'),indoor:t('invIndoor'),entreno:t('invEntreno'),nota:t('invNota'),cancelacion:t('invCancel')};
