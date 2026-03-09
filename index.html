@@ -710,8 +710,12 @@ auth.onAuthStateChanged(async u=>{document.getElementById('loadPage').style.disp
         document.getElementById('nickModal').style.display='none';
         document.getElementById('splashScreen').style.display='block';res();};});
     }
-    await db.collection('users').doc(u.uid).set({name:u.displayName,email:u.email,photo:u.photoURL,code:code,nick:nick},{merge:true});
-    document.getElementById('uPic').src=u.photoURL||'';
+    // Check if user has custom photo before overwriting
+    const existingDoc=await db.collection('users').doc(u.uid).get();
+    const existingPhoto=existingDoc.exists?existingDoc.data().photo:null;
+    const photoToUse=(existingPhoto&&existingPhoto.startsWith('data:'))?existingPhoto:(u.photoURL||'');
+    await db.collection('users').doc(u.uid).set({name:u.displayName,email:u.email,photo:photoToUse,code:code,nick:nick},{merge:true});
+    document.getElementById('uPic').src=photoToUse;
     document.getElementById('uName').textContent=nick;
     document.getElementById('uTag').textContent='#'+code;
     await loadData();
