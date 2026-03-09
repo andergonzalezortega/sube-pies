@@ -169,8 +169,18 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <canvas id="cDash" height="200" style="width:100%;background:var(--bg3);border-radius:var(--R);margin-bottom:6px"></canvas>
 <div id="dashInfo" style="font-size:10px;color:var(--text2)"></div>
 </div><div id="tMeso" style="display:none"><button class="btn bp" onclick="openMeso()" style="margin-bottom:12px">+ Crear mesociclo</button><div id="mesoList"></div></div></div>
-<!-- AMIGOS --><div id="pf" class="page"><div class="hdr"><h1>AMIGOS</h1></div><div class="card"><div class="ct">AÑADIR AMIGO</div><div style="display:flex;gap:6px"><input id="frCode" placeholder="Código #1234 o email" style="flex:1;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px;color:var(--text);font-size:12px;font-family:Nunito;outline:none"><button class="bp btn" style="width:auto;padding:8px 14px;font-size:12px;border-radius:10px" onclick="addFriend()">+</button></div><div id="frMsg" style="font-size:10px;margin-top:4px"></div></div><button onclick="shareAppLink()" style="width:100%;padding:10px;margin-top:8px;margin-bottom:12px;background:#25D366;border:none;border-radius:12px;color:#fff;font-family:'Nunito';font-weight:700;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">📲 <span id="shareAppBtn">Compartir app</span></button>
-<div class="ct" style="margin-top:12px" id="ctMyFriends">MIS AMIGOS</div><div id="friendStories" style="margin-bottom:8px;overflow-x:auto;white-space:nowrap;display:none"></div><div id="frRequests" style="margin-bottom:8px"></div><div id="frList"></div></div>
+<!-- AMIGOS --><div id="pf" class="page"><div class="hdr"><h1>AMIGOS</h1></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:0;margin-bottom:10px;background:var(--bg3);border-radius:10px;padding:2px">
+<button class="tb on" id="frTabStories" onclick="setFrTab('stories')">Historias</button>
+<button class="tb" id="frTabFriends" onclick="setFrTab('friends')">Amigos</button>
+</div>
+<div id="frStoriesTab">
+<div id="friendStoriesFeed" style="margin-bottom:8px"></div>
+</div>
+<div id="frFriendsTab" style="display:none">
+<div class="card"><div class="ct">AÑADIR AMIGO</div><div style="display:flex;gap:6px"><input id="frCode" placeholder="Código #1234 o email" style="flex:1;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px;color:var(--text);font-size:12px;font-family:Nunito;outline:none"><button class="bp btn" style="width:auto;padding:8px 14px;font-size:12px;border-radius:10px" onclick="addFriend()">+</button></div><div id="frMsg" style="font-size:10px;margin-top:4px"></div></div><button onclick="shareAppLink()" style="width:100%;padding:10px;margin-top:8px;margin-bottom:12px;background:#25D366;border:none;border-radius:12px;color:#fff;font-family:'Nunito';font-weight:700;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">📲 <span id="shareAppBtn">Compartir app</span></button>
+<div class="ct" style="margin-top:12px" id="ctMyFriends">MIS AMIGOS</div><div id="frRequests" style="margin-bottom:8px"></div><div id="frList"></div>
+</div></div>
 <!-- CHAT MODAL --><div id="mChat" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.85);z-index:250;backdrop-filter:blur(4px)">
 <div style="position:absolute;bottom:0;left:0;right:0;max-width:500px;margin:0 auto;background:var(--bg2);border-radius:20px 20px 0 0;height:75vh;display:flex;flex-direction:column;padding:16px;padding-bottom:env(safe-area-inset-bottom,8px)">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><h2 id="chatTitle" style="font-size:20px;color:var(--rock);margin:0">CHAT</h2><button onclick="closeChat()" style="background:none;border:none;color:var(--text2);font-size:24px;cursor:pointer">✕</button></div>
@@ -244,10 +254,10 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <button id="qsBtnTR" onclick="setQSTipo('Top Rope')" style="padding:12px;background:var(--bg3);border:1px solid rgba(255,255,255,.1);border-radius:12px;color:var(--text);font-family:'Nunito';font-weight:700;font-size:13px;cursor:pointer">Top Rope</button>
 </div>
 <div id="qsLugarDiv" style="display:none;margin-bottom:10px"><div class="fl"><label>Lugar</label><input id="qsLugar" placeholder="Galdames, Atauri..." list="dlZ"></div></div>
-<div id="qsAngleDiv" style="margin-bottom:8px">
+<div id="qsAngleDiv" style="margin-bottom:8px;display:none">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><span style="font-size:11px;color:var(--text3)">Inclinación</span><span id="qsAngleLabel" style="font-size:14px;font-weight:700;color:var(--rock)">0°</span></div>
-<input type="range" id="qsAngleSlider" min="0" max="75" step="5" value="0" oninput="setQSAngle(this.value)" style="width:100%;accent-color:var(--rock)">
-<div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text3)"><span>0°</span><span>15°</span><span>30°</span><span>45°</span><span>60°</span><span>75°</span></div>
+<input type="range" id="qsAngleSlider" min="0" max="90" step="5" value="0" oninput="setQSAngle(this.value)" style="width:100%;accent-color:var(--rock)">
+<div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text3)"><span>0°</span><span>15°</span><span>30°</span><span>45°</span><span>60°</span><span>75°</span><span>90°</span></div>
 </div>
 </div>
 <div id="qsSummary" style="background:var(--bg2);border-radius:12px;padding:10px;margin-bottom:8px;text-align:center;display:none">
@@ -1527,6 +1537,8 @@ function setQSTipo(t){qsTipo=t;
   const sel=document.getElementById(t==='Bloque'?'qsBtnBloque':t==='Cuerda'?'qsBtnCuerda':'qsBtnTR');
   const col=qsMode==='roca'?'var(--rock)':'var(--green)';
   sel.style.background=col;sel.style.color='#000';sel.style.borderColor=col;
+  document.getElementById('qsAngleDiv').style.display=t==='Bloque'?'block':'none';
+  if(t!=='Bloque'){qsAngle='';document.getElementById('qsAngleSlider').value=0;document.getElementById('qsAngleLabel').textContent='0°';}
   buildQSGrades();}
 function setQSAngle(v){qsAngle=v>0?v+'°':'';
   document.getElementById('qsAngleLabel').textContent=v>0?v+'°':'Vertical';}
@@ -1769,7 +1781,7 @@ async function drFr(){
   for(const f of friends){const q=await db.collection('users').where('email','==',f.email).get();let name=f.email,photo='',code='';
     if(!q.empty){const ud=q.docs[0].data();name=ud.nick||ud.name||f.email;photo=ud.photo||'';code=ud.code?'#'+ud.code:'';}
     f.name=name;f.photo=photo;f.code=code;    h+=`<div class="fr-card"><img class="fr-pic" src="${photo||'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22><circle cx=%2212%22 cy=%228%22 r=%224%22 fill=%22%238a9bb0%22/><path d=%22M4 20c0-4 4-7 8-7s8 3 8 7%22 fill=%22%238a9bb0%22/></svg>'}" onclick="viewFr('${f.email}')"><div class="fr-info" onclick="viewFr('${f.email}')"><div class="fr-name">${name} <span style="font-size:9px;color:var(--rock)">${code}</span></div></div><button style="background:none;border:none;color:var(--blue);font-size:16px;cursor:pointer;padding:4px" onclick="event.stopPropagation();openChatByEmail('${f.email}')">💬</button><button class="fr-rm" onclick="event.stopPropagation();rmFr('${f.id}')">✕</button></div>`;}
-  document.getElementById('frList').innerHTML=h;drStories();}
+  document.getElementById('frList').innerHTML=h;if(frTab==='stories')drStoryFeed();}
 async function openChatByEmail(email){const q=await db.collection('users').where('email','==',email).get();if(q.empty)return;const fd=q.docs[0].data();openChat(q.docs[0].id,(fd.name||email).replace(/'/g,''));}
 async function addFriend(){const raw=document.getElementById('frCode').value.trim(),msg=document.getElementById('frMsg');
   if(!raw){msg.textContent=t('putCodeOrEmail');msg.style.color='var(--red)';return;}
@@ -2180,24 +2192,21 @@ async function loadStories(){
   return stories;}
 async function drStories(){
   const stories=await loadStories();
-  // Also load my own story
   let myStory=null;
-  if(U){try{
-    const now=new Date();const cutoff=new Date(now.getTime()-24*60*60*1000);
+  if(U){try{const now=new Date();const cutoff=new Date(now.getTime()-24*60*60*1000);
     const mq=await db.collection('users').doc(U.uid).collection('stories').orderBy('ts','desc').limit(1).get();
     if(!mq.empty){const s=mq.docs[0].data();const sTime=s.ts?s.ts.toDate():new Date(s.date);
-      if(sTime>cutoff)myStory={id:mq.docs[0].id,name:'Tú',photo:U.photoURL||'',image:s.image,time:sTime};}
+      if(sTime>cutoff)myStory={id:mq.docs[0].id,uid:U.uid,name:'Tú',photo:U.photoURL||'',image:s.image,time:sTime,storyData:s};}
   }catch(e){}}
-  const containers=['homeStories','friendStories'];
-  containers.forEach(id=>{
-    const el=document.getElementById(id);if(!el)return;
-    if(!stories.length&&!myStory){el.style.display='none';return;}
-    el.style.display='block';
-    let h='';
-    if(myStory){h+=`<div class="story-bubble" onclick="viewMyStory()"><img src="${myStory.photo||'icon-192.png'}" onerror="this.src='icon-192.png'" style="border-color:var(--green)"><div class="sname">Tu historia</div></div>`;}
-    stories.forEach((s,i)=>{
-      h+=`<div class="story-bubble" onclick="viewStory(${i})"><img src="${s.photo||'icon-192.png'}" onerror="this.src='icon-192.png'"><div class="sname">${s.name}</div></div>`;});
-    el.innerHTML=h;});
+  // Home bubbles only
+  const el=document.getElementById('homeStories');
+  if(el){
+    if(!stories.length&&!myStory){el.style.display='none';}
+    else{el.style.display='block';
+      let h='';
+      if(myStory){h+=`<div class="story-bubble" onclick="viewMyStory()"><img src="${myStory.photo||'icon-192.png'}" onerror="this.src='icon-192.png'" style="border-color:var(--green)"><div class="sname">Tu historia</div></div>`;}
+      stories.forEach((s,i)=>{h+=`<div class="story-bubble" onclick="viewStory(${i})"><img src="${s.photo||'icon-192.png'}" onerror="this.src='icon-192.png'"><div class="sname">${s.name}</div></div>`;});
+      el.innerHTML=h;}}
   window._stories=stories;window._myStory=myStory;}
 function viewMyStory(){
   const s=window._myStory;if(!s)return;
@@ -2223,6 +2232,91 @@ function viewStory(i){
   document.getElementById('storyDel').style.display='none';
   document.getElementById('storyViewer').style.display='block';}
 function closeStory(){document.getElementById('storyViewer').style.display='none';}
+let frTab='stories';
+function setFrTab(t){frTab=t;
+  document.getElementById('frTabStories').classList.toggle('on',t==='stories');
+  document.getElementById('frTabFriends').classList.toggle('on',t==='friends');
+  document.getElementById('frStoriesTab').style.display=t==='stories'?'block':'none';
+  document.getElementById('frFriendsTab').style.display=t==='friends'?'block':'none';
+  if(t==='stories')drStoryFeed();}
+async function drStoryFeed(){
+  const el=document.getElementById('friendStoriesFeed');if(!el)return;
+  const stories=await loadStories();
+  // Also load my story
+  let myStory=null;
+  if(U){try{const now=new Date();const cutoff=new Date(now.getTime()-24*60*60*1000);
+    const mq=await db.collection('users').doc(U.uid).collection('stories').orderBy('ts','desc').limit(1).get();
+    if(!mq.empty){const s=mq.docs[0].data();const sTime=s.ts?s.ts.toDate():new Date(s.date);
+      if(sTime>cutoff)myStory={id:mq.docs[0].id,uid:U.uid,name:'Tú',photo:U.photoURL||'',image:s.image,time:sTime,storyData:s};}
+  }catch(e){}}
+  const all=myStory?[myStory,...stories]:stories;
+  if(!all.length){el.innerHTML='<div style="text-align:center;padding:30px;color:var(--text3);font-size:12px">Sin historias hoy. Comparte tu día desde el calendario.</div>';return;}
+  let h='';
+  all.forEach((s,i)=>{
+    const ago=Math.round((new Date()-s.time)/60000);
+    const timeStr=ago<60?ago+' min':''+Math.round(ago/60)+' h';
+    const isMe=s.uid===U.uid;
+    h+=`<div style="background:var(--bg2);border-radius:14px;margin-bottom:12px;overflow:hidden;border:1px solid rgba(255,255,255,.04)">`;
+    // Header
+    h+=`<div style="display:flex;align-items:center;gap:8px;padding:10px 12px"><img src="${s.photo||'icon-192.png'}" onerror="this.src='icon-192.png'" style="width:36px;height:36px;border-radius:50%;border:2px solid var(--rock)"><div style="flex:1"><div style="font-weight:700;font-size:13px;color:var(--text)">${s.name}</div><div style="font-size:10px;color:var(--text3)">Hace ${timeStr}</div></div>`;
+    if(isMe)h+=`<button onclick="deleteMyStory()" style="background:none;border:none;color:var(--red);font-size:11px;cursor:pointer">Eliminar</button>`;
+    h+=`</div>`;
+    // Image
+    h+=`<img src="${s.image}" style="width:100%;max-height:500px;object-fit:contain;background:#000;cursor:pointer" onclick="viewStoryFromFeed(${i})">`;
+    // Actions bar
+    h+=`<div style="padding:8px 12px;display:flex;gap:12px;align-items:center">`;
+    // Emoji reactions
+    h+=`<div style="display:flex;gap:4px">`;
+    ['🔥','💪','🧗','👏','😍'].forEach(em=>{
+      h+=`<button onclick="reactStory('${s.uid}','${em}')" style="background:none;border:none;font-size:18px;cursor:pointer;padding:2px;transition:.15s" onmousedown="this.style.transform='scale(1.4)'" onmouseup="this.style.transform='scale(1)'">${em}</button>`;});
+    h+=`</div>`;
+    // Chat button
+    if(!isMe){h+=`<button onclick="chatFromStory('${s.uid}','${s.name}')" style="background:none;border:none;color:var(--blue);font-size:13px;cursor:pointer;margin-left:auto">💬 Chat</button>`;}
+    h+=`</div>`;
+    // Copy workout button if story has training data
+    if(s.storyData&&s.storyData.date&&!isMe){
+      h+=`<div style="padding:0 12px 10px"><button onclick="copyWorkoutFromStory('${s.uid}','${s.storyData.date}')" style="width:100%;padding:8px;background:var(--bg3);border:1px solid rgba(255,255,255,.06);border-radius:10px;color:var(--text2);font-family:'Nunito';font-weight:600;font-size:11px;cursor:pointer">📋 Copiar entrenamiento</button></div>`;}
+    h+=`</div>`;});
+  el.innerHTML=h;}
+function viewStoryFromFeed(i){
+  const all=window._myStory?[window._myStory,...(window._stories||[])]:(window._stories||[]);
+  const s=all[i];if(!s)return;
+  document.getElementById('storyPic').src=s.photo||'icon-192.png';
+  document.getElementById('storyName').textContent=s.name;
+  const ago=Math.round((new Date()-s.time)/60000);
+  document.getElementById('storyTime').textContent=ago<60?'Hace '+ago+' min':'Hace '+Math.round(ago/60)+' h';
+  document.getElementById('storyImg').src=s.image;
+  document.getElementById('storyDel').style.display=s.uid===U.uid?'block':'none';
+  document.getElementById('storyViewer').style.display='block';}
+async function reactStory(uid,emoji){
+  if(!U)return;
+  try{
+    // Send as chat message
+    const chatId=[U.uid,uid].sort().join('_');
+    await db.collection('chats').doc(chatId).collection('messages').add({
+      uid:U.uid,text:'Reacción a tu historia: '+emoji,ts:firebase.firestore.FieldValue.serverTimestamp()});
+    // Brief visual feedback
+    showInAppNotif('Enviado',emoji+' enviado','');
+  }catch(e){console.error(e);}}
+async function chatFromStory(uid,name){
+  closeStory();openChat(uid,name);}
+async function copyWorkoutFromStory(uid,date){
+  if(!U)return;
+  try{
+    // Find trains from that user on that date
+    const tq=await db.collection('users').doc(uid).collection('trains').where('date','==',date).get();
+    if(tq.empty){alert('No hay entrenamiento para copiar');return;}
+    const train=tq.docs[0].data();
+    const woName=(train.detail||'Entreno').replace(/\s*\(\d+\s*pasos?\)/i,'').trim();
+    // Find the workout by name
+    const wq=await db.collection('users').doc(uid).collection('workouts').get();
+    let steps=train.woSteps||[];
+    if(!steps.length){wq.forEach(d=>{const w=d.data();if(w.name===woName)steps=w.steps||[];});}
+    if(!steps.length){alert('No se encontraron ejercicios para copiar');return;}
+    // Save as my workout
+    await saveWorkout({name:woName+' (copia)',steps:steps});
+    alert('Entrenamiento "'+woName+'" copiado a tus entrenos');
+  }catch(e){alert('Error: '+e.message);}}
 function downloadBlob(blob,sel){const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='SubePies_'+sel+'.png';a.click();URL.revokeObjectURL(url);}
 function setDashPer(p){const td=new Date();document.getElementById('grTo').value=td.toISOString().split('T')[0];let f=new Date(td);if(p==='1m')f.setMonth(f.getMonth()-1);else if(p==='3m')f.setMonth(f.getMonth()-3);else if(p==='6m')f.setMonth(f.getMonth()-6);else if(p==='1y')f.setFullYear(f.getFullYear()-1);else f=new Date('2020-01-01');document.getElementById('grFrom').value=f.toISOString().split('T')[0];}
 function groupByMonth(arr){const m={};arr.forEach(x=>{const k=(x.date||'').substring(0,7);if(k){if(!m[k])m[k]=[];m[k].push(x);}});return Object.entries(m).sort((a,b)=>a[0].localeCompare(b[0]));}
