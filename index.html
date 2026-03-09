@@ -86,6 +86,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 .meso-card{background:var(--bg2);border-radius:var(--R);padding:12px;margin-bottom:8px;border:1px solid rgba(255,255,255,.04);position:relative;}.meso-del{position:absolute;top:8px;right:8px;background:none;border:none;color:var(--red);font-size:14px;cursor:pointer;}
 .chat-wrap{background:var(--bg);border-radius:var(--R);border:1px solid rgba(255,255,255,.04);height:220px;overflow-y:auto;padding:8px;margin-bottom:8px;}.chat-msg{margin-bottom:5px;}.chat-msg.me{text-align:right;}.chat-bub{display:inline-block;padding:5px 10px;border-radius:12px;font-size:11px;max-width:80%;word-break:break-word;}.chat-msg.me .chat-bub{background:var(--rock);color:#000;border-bottom-right-radius:4px;}.chat-msg.ot .chat-bub{background:var(--bg3);color:var(--text);border-bottom-left-radius:4px;}.chat-time{font-size:7px;color:var(--text3);margin-top:1px;}
 .qg-btn{background:var(--bg2);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:10px 8px;color:var(--text);font-size:11px;font-family:'Nunito';font-weight:600;cursor:pointer;text-align:left;transition:.2s;}.qg-btn:active{background:var(--bg3);transform:scale(.97);}
+.story-bubble{display:inline-flex;flex-direction:column;align-items:center;gap:4px;padding:4px 8px;cursor:pointer;flex-shrink:0}.story-bubble img{width:52px;height:52px;border-radius:50%;border:3px solid var(--rock);object-fit:cover;padding:2px}.story-bubble .sname{font-size:9px;color:var(--text3);max-width:60px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .chat-input{display:flex;gap:4px;}.chat-input input{flex:1;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:8px 12px;color:var(--text);font-size:12px;font-family:'Nunito';outline:none;}.chat-input button{background:var(--rock);border:none;color:#000;width:36px;height:36px;border-radius:50%;font-size:14px;cursor:pointer;font-weight:700;}
 </style>
 </head>
@@ -125,11 +126,12 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><div style="display:flex;align-items:center;gap:10px"><img src="logo.png" style="width:44px;height:44px;border-radius:50%;object-fit:cover"><div><h1 style="font-size:22px;color:var(--rock);margin:0">SUBE PIES</h1><div class="usr-bar"><img class="usr-pic" id="uPic"><span class="usr-name" id="uName"></span><span class="usr-tag" id="uTag"></span><button class="usr-out" onclick="logout()">Salir</button></div></div></div></div>
 <div style="width:100%;height:80px;border-radius:12px;overflow:hidden;margin-bottom:8px;position:relative"><img src="inicio.jpg" style="width:100%;height:100%;object-fit:cover;opacity:.7"><div style="position:absolute;bottom:0;left:0;right:0;height:100%;background:linear-gradient(to top,var(--bg) 0%,transparent 60%)"></div></div>
 <div id="invBanner"></div>
-<div style="margin-bottom:8px"><button onclick="openQuickSession()" style="width:100%;padding:14px;background:linear-gradient(135deg,var(--green),#2d8a4e);border:none;border-radius:14px;color:#fff;font-family:'Nunito';font-weight:700;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;letter-spacing:.5px">⚡ SESIÓN RÁPIDA</button></div>
+<div id="homeStories" style="margin-bottom:8px;overflow-x:auto;white-space:nowrap;display:none"></div>
 <div class="gsw" id="sPer" style="margin-bottom:4px"></div>
 <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:6px"><div class="st a" style="padding:6px 4px"><div class="v" id="sV" style="font-size:24px">0</div><div class="l" id="sVl">Vías</div></div><div class="st b" style="padding:6px 4px"><div class="v" id="sE" style="font-size:24px">0</div><div class="l" id="sEl">Enc</div></div><div class="st c" style="padding:6px 4px"><div class="v" id="sT" style="font-size:24px">0</div><div class="l" id="sTl">Entrenos</div></div></div>
 <div style="background:var(--bg2);border-radius:12px;padding:8px;border:1px solid rgba(255,255,255,.04);margin-bottom:0"><div class="cn" style="margin-bottom:4px"><button onclick="cNav(-1)" style="padding:2px 8px;font-size:16px">◀</button><span class="mo" id="cM" style="font-size:14px"></span><button onclick="cNav(1)" style="padding:2px 8px;font-size:16px">▶</button></div><div class="cg" id="cG"></div></div>
 <div id="calDetail" style="margin-bottom:6px"></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px"><button onclick="openQuickSession('indoor')" style="padding:12px;background:linear-gradient(135deg,#4ecdc4,#2d8a7e);border:none;border-radius:12px;color:#fff;font-family:'Nunito';font-weight:700;font-size:12px;cursor:pointer">SESIÓN RÁPIDA INDOOR</button><button onclick="openQuickSession('roca')" style="padding:12px;background:linear-gradient(135deg,var(--rock),#b8956a);border:none;border-radius:12px;color:#000;font-family:'Nunito';font-weight:700;font-size:12px;cursor:pointer">SESIÓN RÁPIDA ROCA</button></div>
 <div id="homeNextWo" style="background:var(--bg2);border-radius:12px;padding:10px;border:1px solid rgba(255,255,255,.04);margin-bottom:10px"></div>
 </div>
 <!-- VÍAS --><div id="pv" class="page"><div class="hdr"><h1>VÍAS</h1><button class="bp btn" style="width:auto;padding:6px 12px;font-size:11px;border-radius:10px" onclick="addR()" id="btnAddR">+ Añadir</button></div>
@@ -168,7 +170,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <div id="dashInfo" style="font-size:10px;color:var(--text2)"></div>
 </div><div id="tMeso" style="display:none"><button class="btn bp" onclick="openMeso()" style="margin-bottom:12px">+ Crear mesociclo</button><div id="mesoList"></div></div></div>
 <!-- AMIGOS --><div id="pf" class="page"><div class="hdr"><h1>AMIGOS</h1></div><div class="card"><div class="ct">AÑADIR AMIGO</div><div style="display:flex;gap:6px"><input id="frCode" placeholder="Código #1234 o email" style="flex:1;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px;color:var(--text);font-size:12px;font-family:Nunito;outline:none"><button class="bp btn" style="width:auto;padding:8px 14px;font-size:12px;border-radius:10px" onclick="addFriend()">+</button></div><div id="frMsg" style="font-size:10px;margin-top:4px"></div></div><button onclick="shareAppLink()" style="width:100%;padding:10px;margin-top:8px;margin-bottom:12px;background:#25D366;border:none;border-radius:12px;color:#fff;font-family:'Nunito';font-weight:700;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">📲 <span id="shareAppBtn">Compartir app</span></button>
-<div class="ct" style="margin-top:12px" id="ctMyFriends">MIS AMIGOS</div><div id="frRequests" style="margin-bottom:8px"></div><div id="frList"></div><div id="frView" style="display:none;margin-top:12px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><div class="ct" id="frViewTitle" style="margin:0">VÍAS</div><button onclick="document.getElementById('frView').style.display='none'" style="background:none;border:none;color:var(--text3);font-size:18px;cursor:pointer">✕</button></div><div id="frRoutes"></div></div></div>
+<div class="ct" style="margin-top:12px" id="ctMyFriends">MIS AMIGOS</div><div id="friendStories" style="margin-bottom:8px;overflow-x:auto;white-space:nowrap;display:none"></div><div id="frRequests" style="margin-bottom:8px"></div><div id="frList"></div><div id="frView" style="display:none;margin-top:12px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><div class="ct" id="frViewTitle" style="margin:0">VÍAS</div><button onclick="document.getElementById('frView').style.display='none'" style="background:none;border:none;color:var(--text3);font-size:18px;cursor:pointer">✕</button></div><div id="frRoutes"></div></div></div>
 <!-- CHAT MODAL --><div id="mChat" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.85);z-index:250;backdrop-filter:blur(4px)">
 <div style="position:absolute;bottom:0;left:0;right:0;max-width:500px;margin:0 auto;background:var(--bg2);border-radius:20px 20px 0 0;height:75vh;display:flex;flex-direction:column;padding:16px;padding-bottom:env(safe-area-inset-bottom,8px)">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><h2 id="chatTitle" style="font-size:20px;color:var(--rock);margin:0">CHAT</h2><button onclick="closeChat()" style="background:none;border:none;color:var(--text2);font-size:24px;cursor:pointer">✕</button></div>
@@ -222,21 +224,30 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <div style="display:flex;gap:12px;align-items:center"><button class="sbb" onclick="prevExec()" style="background:rgba(255,255,255,.1);color:var(--text2);font-size:13px;padding:12px 20px">⏮</button><button class="sbb" id="exPlayBtn" onclick="toggleExec()" style="font-size:18px;padding:14px 36px;min-width:140px">▶ EMPEZAR</button><button class="sbb" onclick="skipExec()" style="background:rgba(255,255,255,.1);color:var(--text2);font-size:13px;padding:12px 20px">⏭</button></div>
 <label style="display:flex;align-items:center;gap:6px;margin-top:16px;font-size:12px;color:rgba(255,255,255,.4);cursor:pointer"><input type="checkbox" id="exSound" checked style="accent-color:var(--rock)"> Sonido + vibración</label>
 </div></div>
-<!-- MODAL QUICK SESSION --><div class="mbg" id="mQS"><div class="mdl" style="max-height:90vh;overflow-y:auto"><button class="mx" onclick="closeQS()">✕</button>
-<h2 style="text-align:center;color:var(--green)">⚡ SESIÓN RÁPIDA</h2>
+<!-- STORY VIEWER --><div id="storyViewer" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:#000;z-index:350;touch-action:pan-y" onclick="closeStory()">
+<div style="position:absolute;top:12px;left:12px;right:12px;display:flex;align-items:center;gap:8px;z-index:2">
+<img id="storyPic" style="width:36px;height:36px;border-radius:50%;border:2px solid var(--rock)">
+<div><div id="storyName" style="font-size:13px;font-weight:700;color:#fff"></div><div id="storyTime" style="font-size:10px;color:rgba(255,255,255,.5)"></div></div>
+<button onclick="closeStory()" style="margin-left:auto;background:none;border:none;color:#fff;font-size:24px;cursor:pointer">✕</button>
+</div>
+<img id="storyImg" style="width:100%;height:100%;object-fit:contain">
+</div>
+<!-- MODAL QUICK SESSION --><div class="mbg" id="mQS"><div style="position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);z-index:200;overflow-y:auto;padding:12px">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><h2 style="margin:0;color:var(--green);font-size:18px" id="qsTitle">SESIÓN RÁPIDA</h2><button onclick="closeQS()" style="background:none;border:none;color:var(--text3);font-size:22px;cursor:pointer">✕</button></div>
 <div id="qsSetup">
-<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px">
-<button id="qsBtnBloque" onclick="setQSTipo('Bloque')" style="padding:14px;background:var(--green);border:none;border-radius:12px;color:#000;font-family:'Nunito';font-weight:700;font-size:13px;cursor:pointer">Bloque</button>
-<button id="qsBtnCuerda" onclick="setQSTipo('Cuerda')" style="padding:14px;background:var(--bg3);border:1px solid rgba(255,255,255,.1);border-radius:12px;color:var(--text);font-family:'Nunito';font-weight:700;font-size:13px;cursor:pointer">Cuerda</button>
-<button id="qsBtnTR" onclick="setQSTipo('Top Rope')" style="padding:14px;background:var(--bg3);border:1px solid rgba(255,255,255,.1);border-radius:12px;color:var(--text);font-family:'Nunito';font-weight:700;font-size:13px;cursor:pointer">Top Rope</button>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
+<button id="qsBtnBloque" onclick="setQSTipo('Bloque')" style="padding:12px;background:var(--green);border:none;border-radius:12px;color:#000;font-family:'Nunito';font-weight:700;font-size:13px;cursor:pointer">Bloque</button>
+<button id="qsBtnCuerda" onclick="setQSTipo('Cuerda')" style="padding:12px;background:var(--bg3);border:1px solid rgba(255,255,255,.1);border-radius:12px;color:var(--text);font-family:'Nunito';font-weight:700;font-size:13px;cursor:pointer">Cuerda</button>
+<button id="qsBtnTR" onclick="setQSTipo('Top Rope')" style="padding:12px;background:var(--bg3);border:1px solid rgba(255,255,255,.1);border-radius:12px;color:var(--text);font-family:'Nunito';font-weight:700;font-size:13px;cursor:pointer">Top Rope</button>
 </div>
+<div id="qsLugarDiv" style="display:none;margin-bottom:10px"><div class="fl"><label>Lugar</label><input id="qsLugar" placeholder="Galdames, Atauri..." list="dlZ"></div></div>
 </div>
-<div id="qsSummary" style="background:var(--bg3);border-radius:12px;padding:10px;margin-bottom:10px;text-align:center;display:none">
-<div style="display:flex;justify-content:space-around"><div><span id="qsCount" style="font-family:'Bebas Neue';font-size:28px;color:var(--green)">0</span><div style="font-size:10px;color:var(--text3)">Total</div></div><div><span id="qsEnc" style="font-family:'Bebas Neue';font-size:28px;color:var(--green)">0</span><div style="font-size:10px;color:var(--text3)">Enc</div></div><div><span id="qsMax" style="font-family:'Bebas Neue';font-size:28px;color:var(--rock)">—</span><div style="font-size:10px;color:var(--text3)">Máx</div></div></div>
+<div id="qsSummary" style="background:var(--bg2);border-radius:12px;padding:10px;margin-bottom:8px;text-align:center;display:none">
+<div style="display:flex;justify-content:space-around"><div><span id="qsCount" style="font-family:'Bebas Neue';font-size:32px;color:var(--green)">0</span><div style="font-size:10px;color:var(--text3)">Total</div></div><div><span id="qsEnc" style="font-family:'Bebas Neue';font-size:32px;color:var(--green)">0</span><div style="font-size:10px;color:var(--text3)">Enc</div></div><div><span id="qsMax" style="font-family:'Bebas Neue';font-size:32px;color:var(--rock)">—</span><div style="font-size:10px;color:var(--text3)">Máx</div></div></div>
 </div>
-<div id="qsGrades" style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px"></div>
-<div id="qsLog" style="max-height:200px;overflow-y:auto;margin-bottom:8px"></div>
-<button class="btn bp" onclick="closeQS()" style="background:var(--green)">Terminar sesión</button>
+<div id="qsGrades" style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:10px"></div>
+<div id="qsLog" style="max-height:250px;overflow-y:auto;margin-bottom:8px"></div>
+<button onclick="closeQS()" style="width:100%;padding:14px;background:var(--green);border:none;border-radius:12px;color:#000;font-family:'Nunito';font-weight:700;font-size:14px;cursor:pointer">Terminar sesión</button>
 </div></div>
 <!-- MODAL QUICK SESSION CONFIRM --><div class="mbg" id="mQSC"><div class="mdl" style="text-align:center">
 <h2 id="qscGrade" style="font-family:'Bebas Neue';font-size:48px;color:var(--rock);margin-bottom:4px"></h2>
@@ -868,7 +879,7 @@ async function changeNick(){if(!U)return;const nick=(document.getElementById('ni
   setTimeout(()=>{document.getElementById('nickEdit').style.borderColor='rgba(255,255,255,.08)';},1500);}
 
 // HOME
-function rH(){updStats();rCal();updGrToggles();loadInvites();setupSwipe();}
+function rH(){updStats();rCal();updGrToggles();loadInvites();setupSwipe();drStories();}
 function drCalDetail(){
   const el=document.getElementById('calDetail');
   const sel=cSl||new Date().toISOString().split('T')[0];
@@ -1475,39 +1486,39 @@ const TPLS=[{nm:'Suspensiones',ag:'Regleta',mm:20,kg:0,modo:'time',time:7,reps:0
 let editWoId=null;
 function openNewWo(){openWo();}
 // QUICK SESSION
-let qsTipo='Bloque',qsItems=[],qsSelGrade='';
-function openQuickSession(){
-  qsItems=[];qsTipo='Bloque';
+let qsTipo='Bloque',qsItems=[],qsSelGrade='',qsMode='indoor';
+function openQuickSession(mode){
+  qsItems=[];qsTipo='Bloque';qsMode=mode||'indoor';
+  document.getElementById('qsTitle').textContent=mode==='roca'?'SESIÓN RÁPIDA · ROCA':'SESIÓN RÁPIDA · INDOOR';
+  document.getElementById('qsTitle').style.color=mode==='roca'?'var(--rock)':'var(--green)';
+  document.getElementById('qsLugarDiv').style.display=mode==='roca'?'block':'none';
   document.getElementById('mQS').classList.add('sh');
   setQSTipo('Bloque');updQS();}
 function closeQS(){cm('mQS');if(qsItems.length){rH();drR();}}
 function setQSTipo(t){qsTipo=t;
   ['qsBtnBloque','qsBtnCuerda','qsBtnTR'].forEach(id=>{const b=document.getElementById(id);b.style.background='var(--bg3)';b.style.borderColor='rgba(255,255,255,.1)';b.style.color='var(--text)';});
   const sel=document.getElementById(t==='Bloque'?'qsBtnBloque':t==='Cuerda'?'qsBtnCuerda':'qsBtnTR');
-  sel.style.background='var(--green)';sel.style.color='#000';sel.style.borderColor='var(--green)';
+  const col=qsMode==='roca'?'var(--rock)':'var(--green)';
+  sel.style.background=col;sel.style.color='#000';sel.style.borderColor=col;
   buildQSGrades();}
 function buildQSGrades(){
-  // Show most common grades for indoor, highlight user's most used
-  const grades=qsTipo==='Bloque'?
-    G.filter(g=>G.indexOf(g)>=G.indexOf('IV')&&G.indexOf(g)<=G.indexOf('7c+')):
-    G.filter(g=>G.indexOf(g)>=G.indexOf('IV')&&G.indexOf(g)<=G.indexOf('8a'));
-  let h='';grades.forEach(g=>{
-    h+=`<button onclick="qsTapGrade('${g}')" style="padding:12px 4px;background:var(--bg2);border:1px solid rgba(255,255,255,.08);border-radius:10px;color:var(--rock);font-family:'Bebas Neue';font-size:20px;cursor:pointer;transition:.15s">${g}</button>`;});
+  let h='';G.forEach(g=>{
+    h+=`<button onclick="qsTapGrade('${g}')" style="padding:10px 2px;background:var(--bg2);border:1px solid rgba(255,255,255,.08);border-radius:10px;color:var(--rock);font-family:'Bebas Neue';font-size:18px;cursor:pointer;transition:.15s">${g}</button>`;});
   document.getElementById('qsGrades').innerHTML=h;}
 function qsTapGrade(g){
   qsSelGrade=g;
   document.getElementById('qscGrade').textContent=g;
-  document.getElementById('qscTipo').textContent=qsTipo+' · Indoor';
+  document.getElementById('qscTipo').textContent=qsTipo+' · '+(qsMode==='roca'?'Roca':'Indoor');
   document.getElementById('qsInt').value='1';
   document.getElementById('mQSC').classList.add('sh');}
 async function qsSetEnc(enc){
   const int=parseInt(document.getElementById('qsInt').value)||1;
   cm('mQSC');
-  const route={date:new Date().toISOString().split('T')[0],grado:qsSelGrade,tipo:qsTipo,lugar:'indoor',nombre:'',sitio:'',intento:int,enc:enc,flash:false,avista:false,notas:'Sesión rápida',amigos:'',metros:0};
+  const sitio=qsMode==='roca'?(document.getElementById('qsLugar').value||''):'';
+  const route={date:new Date().toISOString().split('T')[0],grado:qsSelGrade,tipo:qsTipo,lugar:qsMode==='roca'?'roca':'indoor',nombre:'',sitio:sitio,intento:int,enc:enc,flash:false,avista:false,notas:'Sesión rápida',amigos:'',metros:0};
   await saveRoute(route);
   qsItems.push({grado:qsSelGrade,enc,int});
   updQS();
-  // Brief flash animation on the grade button
   const btns=document.querySelectorAll('#qsGrades button');
   btns.forEach(b=>{if(b.textContent===qsSelGrade){
     b.style.background=enc?'var(--green)':'var(--red)';b.style.color='#000';
@@ -1520,9 +1531,8 @@ function updQS(){
   document.getElementById('qsEnc').textContent=qsItems.filter(x=>x.enc).length;
   const maxG=qsItems.reduce((a,b)=>G.indexOf(b.grado)>G.indexOf(a.grado)?b:a,qsItems[0]);
   document.getElementById('qsMax').textContent=maxG.grado;
-  // Log
-  let h='';qsItems.slice().reverse().forEach((it,i)=>{
-    h+=`<div style="display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.03)"><span style="font-family:'Bebas Neue';font-size:16px;color:${it.enc?'var(--green)':'var(--rock)'}; width:36px">${it.grado}</span><span style="font-size:11px;color:var(--text2)">${qsTipo}</span><span style="font-size:11px;color:var(--text3)">Int:${it.int}</span>${it.enc?'<span style="color:var(--green);font-size:11px">✓ Enc</span>':''}</div>`;});
+  let h='';qsItems.slice().reverse().forEach(it=>{
+    h+=`<div style="display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.03)"><span style="font-family:'Bebas Neue';font-size:16px;color:${it.enc?'var(--green)':'var(--rock)'};width:36px">${it.grado}</span><span style="font-size:11px;color:var(--text2)">${qsTipo}</span><span style="font-size:11px;color:var(--text3)">Int:${it.int}</span>${it.enc?'<span style="color:var(--green);font-size:11px">✓ Enc</span>':''}</div>`;});
   document.getElementById('qsLog').innerHTML=h;}
 function openWo(woToEdit){
   editWoId=null;wSt=[];document.getElementById('wNm').value='';document.getElementById('mW1Title').textContent=t('createTrain');
@@ -2097,7 +2107,52 @@ function drawBody(ctx,cv,sel,dr,dt,logo){
     var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;
     a.download='SubePies_'+sel+'.png';document.body.appendChild(a);a.click();
     document.body.removeChild(a);URL.revokeObjectURL(url);
+    // Also upload as story
+    uploadStory(cv,sel);
   },'image/png');}
+async function uploadStory(cv,sel){
+  if(!U)return;
+  try{
+    const dataUrl=cv.toDataURL('image/jpeg',0.7);
+    await db.collection('users').doc(U.uid).collection('stories').add({
+      image:dataUrl,date:sel,ts:firebase.firestore.FieldValue.serverTimestamp(),
+      name:U.displayName||'',photo:U.photoURL||''});
+    console.log('Story uploaded');
+  }catch(e){console.error('Story upload error:',e);}}
+async function loadStories(){
+  const now=new Date();const cutoff=new Date(now.getTime()-24*60*60*1000);
+  const stories=[];
+  for(const f of friends){
+    try{
+      const q=await db.collection('users').doc(f.uid).collection('stories')
+        .orderBy('ts','desc').limit(1).get();
+      if(!q.empty){
+        const s=q.docs[0].data();
+        const sTime=s.ts?s.ts.toDate():new Date(s.date);
+        if(sTime>cutoff){stories.push({uid:f.uid,name:f.name||f.email,photo:f.photo||'',image:s.image,time:sTime,storyData:s});}
+      }
+    }catch(e){}}
+  return stories;}
+async function drStories(){
+  const stories=await loadStories();
+  const containers=['homeStories','friendStories'];
+  containers.forEach(id=>{
+    const el=document.getElementById(id);if(!el)return;
+    if(!stories.length){el.style.display='none';return;}
+    el.style.display='block';
+    let h='';stories.forEach((s,i)=>{
+      h+=`<div class="story-bubble" onclick="viewStory(${i})"><img src="${s.photo||''}" onerror="this.src='icon-192.png'"><div class="sname">${s.name}</div></div>`;});
+    el.innerHTML=h;});
+  window._stories=stories;}
+function viewStory(i){
+  const s=window._stories[i];if(!s)return;
+  document.getElementById('storyPic').src=s.photo||'icon-192.png';
+  document.getElementById('storyName').textContent=s.name;
+  const ago=Math.round((new Date()-s.time)/60000);
+  document.getElementById('storyTime').textContent=ago<60?'Hace '+ago+' min':'Hace '+Math.round(ago/60)+' h';
+  document.getElementById('storyImg').src=s.image;
+  document.getElementById('storyViewer').style.display='block';}
+function closeStory(){document.getElementById('storyViewer').style.display='none';}
 function downloadBlob(blob,sel){const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='SubePies_'+sel+'.png';a.click();URL.revokeObjectURL(url);}
 function setDashPer(p){const td=new Date();document.getElementById('grTo').value=td.toISOString().split('T')[0];let f=new Date(td);if(p==='1m')f.setMonth(f.getMonth()-1);else if(p==='3m')f.setMonth(f.getMonth()-3);else if(p==='6m')f.setMonth(f.getMonth()-6);else if(p==='1y')f.setFullYear(f.getFullYear()-1);else f=new Date('2020-01-01');document.getElementById('grFrom').value=f.toISOString().split('T')[0];}
 function groupByMonth(arr){const m={};arr.forEach(x=>{const k=(x.date||'').substring(0,7);if(k){if(!m[k])m[k]=[];m[k].push(x);}});return Object.entries(m).sort((a,b)=>a[0].localeCompare(b[0]));}
