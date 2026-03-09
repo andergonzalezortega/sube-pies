@@ -125,6 +125,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><div style="display:flex;align-items:center;gap:10px"><img src="logo.png" style="width:44px;height:44px;border-radius:50%;object-fit:cover"><div><h1 style="font-size:22px;color:var(--rock);margin:0">SUBE PIES</h1><div class="usr-bar"><img class="usr-pic" id="uPic"><span class="usr-name" id="uName"></span><span class="usr-tag" id="uTag"></span><button class="usr-out" onclick="logout()">Salir</button></div></div></div></div>
 <div style="width:100%;height:80px;border-radius:12px;overflow:hidden;margin-bottom:8px;position:relative"><img src="inicio.jpg" style="width:100%;height:100%;object-fit:cover;opacity:.7"><div style="position:absolute;bottom:0;left:0;right:0;height:100%;background:linear-gradient(to top,var(--bg) 0%,transparent 60%)"></div></div>
 <div id="invBanner"></div>
+<div style="margin-bottom:8px"><button onclick="openQuickSession()" style="width:100%;padding:14px;background:linear-gradient(135deg,var(--green),#2d8a4e);border:none;border-radius:14px;color:#fff;font-family:'Nunito';font-weight:700;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;letter-spacing:.5px">⚡ SESIÓN RÁPIDA</button></div>
 <div class="gsw" id="sPer" style="margin-bottom:4px"></div>
 <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:6px"><div class="st a" style="padding:6px 4px"><div class="v" id="sV" style="font-size:24px">0</div><div class="l" id="sVl">Vías</div></div><div class="st b" style="padding:6px 4px"><div class="v" id="sE" style="font-size:24px">0</div><div class="l" id="sEl">Enc</div></div><div class="st c" style="padding:6px 4px"><div class="v" id="sT" style="font-size:24px">0</div><div class="l" id="sTl">Entrenos</div></div></div>
 <div style="background:var(--bg2);border-radius:12px;padding:8px;border:1px solid rgba(255,255,255,.04);margin-bottom:0"><div class="cn" style="margin-bottom:4px"><button onclick="cNav(-1)" style="padding:2px 8px;font-size:16px">◀</button><span class="mo" id="cM" style="font-size:14px"></span><button onclick="cNav(1)" style="padding:2px 8px;font-size:16px">▶</button></div><div class="cg" id="cG"></div></div>
@@ -220,6 +221,32 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <div id="exViaBtn" style="display:none;gap:12px;margin-bottom:16px"><button class="sbb" onclick="exViaDone(true)" style="font-size:16px;padding:14px 28px;background:var(--green)">✓ Hecha</button><button class="sbb" onclick="exViaDone(false)" style="font-size:16px;padding:14px 28px;background:var(--red)">✕ No</button></div>
 <div style="display:flex;gap:12px;align-items:center"><button class="sbb" onclick="prevExec()" style="background:rgba(255,255,255,.1);color:var(--text2);font-size:13px;padding:12px 20px">⏮</button><button class="sbb" id="exPlayBtn" onclick="toggleExec()" style="font-size:18px;padding:14px 36px;min-width:140px">▶ EMPEZAR</button><button class="sbb" onclick="skipExec()" style="background:rgba(255,255,255,.1);color:var(--text2);font-size:13px;padding:12px 20px">⏭</button></div>
 <label style="display:flex;align-items:center;gap:6px;margin-top:16px;font-size:12px;color:rgba(255,255,255,.4);cursor:pointer"><input type="checkbox" id="exSound" checked style="accent-color:var(--rock)"> Sonido + vibración</label>
+</div></div>
+<!-- MODAL QUICK SESSION --><div class="mbg" id="mQS"><div class="mdl" style="max-height:90vh;overflow-y:auto"><button class="mx" onclick="closeQS()">✕</button>
+<h2 style="text-align:center;color:var(--green)">⚡ SESIÓN RÁPIDA</h2>
+<div id="qsSetup">
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px">
+<button id="qsBtnBloque" onclick="setQSTipo('Bloque')" style="padding:14px;background:var(--green);border:none;border-radius:12px;color:#000;font-family:'Nunito';font-weight:700;font-size:13px;cursor:pointer">Bloque</button>
+<button id="qsBtnCuerda" onclick="setQSTipo('Cuerda')" style="padding:14px;background:var(--bg3);border:1px solid rgba(255,255,255,.1);border-radius:12px;color:var(--text);font-family:'Nunito';font-weight:700;font-size:13px;cursor:pointer">Cuerda</button>
+<button id="qsBtnTR" onclick="setQSTipo('Top Rope')" style="padding:14px;background:var(--bg3);border:1px solid rgba(255,255,255,.1);border-radius:12px;color:var(--text);font-family:'Nunito';font-weight:700;font-size:13px;cursor:pointer">Top Rope</button>
+</div>
+</div>
+<div id="qsSummary" style="background:var(--bg3);border-radius:12px;padding:10px;margin-bottom:10px;text-align:center;display:none">
+<div style="display:flex;justify-content:space-around"><div><span id="qsCount" style="font-family:'Bebas Neue';font-size:28px;color:var(--green)">0</span><div style="font-size:10px;color:var(--text3)">Total</div></div><div><span id="qsEnc" style="font-family:'Bebas Neue';font-size:28px;color:var(--green)">0</span><div style="font-size:10px;color:var(--text3)">Enc</div></div><div><span id="qsMax" style="font-family:'Bebas Neue';font-size:28px;color:var(--rock)">—</span><div style="font-size:10px;color:var(--text3)">Máx</div></div></div>
+</div>
+<div id="qsGrades" style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px"></div>
+<div id="qsLog" style="max-height:200px;overflow-y:auto;margin-bottom:8px"></div>
+<button class="btn bp" onclick="closeQS()" style="background:var(--green)">Terminar sesión</button>
+</div></div>
+<!-- MODAL QUICK SESSION CONFIRM --><div class="mbg" id="mQSC"><div class="mdl" style="text-align:center">
+<h2 id="qscGrade" style="font-family:'Bebas Neue';font-size:48px;color:var(--rock);margin-bottom:4px"></h2>
+<div id="qscTipo" style="font-size:12px;color:var(--text3);margin-bottom:12px"></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+<button onclick="qsSetEnc(true)" style="padding:18px;background:var(--green);border:none;border-radius:14px;color:#000;font-family:'Nunito';font-weight:700;font-size:16px;cursor:pointer">✓ Enc</button>
+<button onclick="qsSetEnc(false)" style="padding:18px;background:var(--red);border:none;border-radius:14px;color:#fff;font-family:'Nunito';font-weight:700;font-size:16px;cursor:pointer">✗ No</button>
+</div>
+<div class="fl"><label>Intentos</label><select id="qsInt" style="width:100%;text-align:center;font-size:16px"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10+</option></select></div>
+<button class="btn bg2" onclick="cm('mQSC')" style="margin-top:4px">Cancelar</button>
 </div></div>
 <!-- MODAL PLAN --><div class="mbg" id="mPl"><div class="mdl"><button class="mx" onclick="cm('mPl')">✕</button><h2>PLANIFICAR DÍA</h2><div class="fl"><label>Fecha inicio</label><input type="date" id="plDt"></div><div class="fl"><label>Fecha fin (opcional, para varios días)</label><input type="date" id="plDtEnd"></div><div class="ct" style="margin-top:6px">¿QUÉ PLAN?</div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px"><button id="plBtnEsc" onclick="setPlTipo('escalar')" style="padding:14px;background:var(--bg3);border:1px solid rgba(255,255,255,.1);border-radius:12px;color:var(--text);font-family:'Nunito';font-weight:700;font-size:13px;cursor:pointer">Escalar</button><button id="plBtnEnt" onclick="setPlTipo('entreno')" style="padding:14px;background:var(--bg3);border:1px solid rgba(255,255,255,.1);border-radius:12px;color:var(--text);font-family:'Nunito';font-weight:700;font-size:13px;cursor:pointer">Entreno</button><button id="plBtnNot" onclick="setPlTipo('nota')" style="padding:14px;background:var(--bg3);border:1px solid rgba(255,255,255,.1);border-radius:12px;color:var(--text);font-family:'Nunito';font-weight:700;font-size:13px;cursor:pointer">Nota</button></div><div id="plEscalar" style="display:none"><div class="fl"><label>Tipo</label><select id="plTp"><option value="roca">🏔️ Roca</option><option value="indoor">🏢 Indoor</option></select></div><div class="fl"><label>Lugar</label><input id="plLg" placeholder="Atauri, Sharma..." list="dlZ"></div></div><div id="plEntreno" style="display:none"><div class="fl"><label>Carpeta</label><select id="plFolderSel" onchange="updPlWoList()"><option value="">— Todas —</option></select></div><div class="fl"><label>Entreno</label><select id="plWoSel" onchange="updPlWoPreview()"><option value="">— Sin entreno —</option></select></div><div id="plWoPreview" style="display:none;background:var(--bg3);border-radius:8px;padding:6px 8px;margin-bottom:8px;font-size:10px;color:var(--text2)"></div><div class="fl"><label><input type="checkbox" id="plShareWo" checked style="accent-color:var(--rock)"> Compartir ejercicios con invitados</label></div></div><div class="fl"><label>Notas</label><input id="plNo" placeholder="Plan del día..."></div><div class="ct" style="margin-top:6px">INVITAR AMIGOS</div><div class="fl"><input id="plFrSearch" placeholder="Buscar amigo..." oninput="filterPlFriends()" style="background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:7px 10px;color:var(--text);font-size:12px;font-family:Nunito;outline:none;width:100%;margin-bottom:4px"></div><div id="plFriends"></div><button class="btn bp" onclick="svPlan()">Guardar plan</button><button class="btn bg2" onclick="cm('mPl')">Cancelar</button></div></div>
 <!-- MODAL NEW CRAG --><div class="mbg" id="mNC"><div class="mdl"><button class="mx" onclick="cm('mNC')">✕</button><h2>NUEVA ZONA</h2><p style="font-size:12px;color:var(--text2);margin-bottom:12px">En Google Maps → busca el sitio → pulsa largo → copia las coordenadas que aparecen abajo (ej: 43.270854, -3.102539).</p><div class="fl"><label>Nombre de la zona</label><input id="ncNm" placeholder="Galdames"></div><div class="fl"><label>Coordenadas</label><input id="ncCoords" placeholder="43.270854, -3.102539"><small>Pega las coordenadas o la URL larga de Google Maps (la que tiene @43.27,-3.10)</small></div><div id="ncMsg" style="font-size:11px;margin-bottom:8px"></div><button class="btn bp" onclick="svNewCrag()">Guardar zona</button><button class="btn bg2" onclick="cm('mNC')">Cancelar</button></div></div>
@@ -1447,6 +1474,56 @@ const TPLS=[{nm:'Suspensiones',ag:'Regleta',mm:20,kg:0,modo:'time',time:7,reps:0
 {nm:'Personalizado',ag:'',mm:0,kg:0,modo:'reps',time:7,reps:10,rep:0,ser:3,desc:3,ds:120,ang:''}];
 let editWoId=null;
 function openNewWo(){openWo();}
+// QUICK SESSION
+let qsTipo='Bloque',qsItems=[],qsSelGrade='';
+function openQuickSession(){
+  qsItems=[];qsTipo='Bloque';
+  document.getElementById('mQS').classList.add('sh');
+  setQSTipo('Bloque');updQS();}
+function closeQS(){cm('mQS');if(qsItems.length){rH();drR();}}
+function setQSTipo(t){qsTipo=t;
+  ['qsBtnBloque','qsBtnCuerda','qsBtnTR'].forEach(id=>{const b=document.getElementById(id);b.style.background='var(--bg3)';b.style.borderColor='rgba(255,255,255,.1)';b.style.color='var(--text)';});
+  const sel=document.getElementById(t==='Bloque'?'qsBtnBloque':t==='Cuerda'?'qsBtnCuerda':'qsBtnTR');
+  sel.style.background='var(--green)';sel.style.color='#000';sel.style.borderColor='var(--green)';
+  buildQSGrades();}
+function buildQSGrades(){
+  // Show most common grades for indoor, highlight user's most used
+  const grades=qsTipo==='Bloque'?
+    G.filter(g=>G.indexOf(g)>=G.indexOf('IV')&&G.indexOf(g)<=G.indexOf('7c+')):
+    G.filter(g=>G.indexOf(g)>=G.indexOf('IV')&&G.indexOf(g)<=G.indexOf('8a'));
+  let h='';grades.forEach(g=>{
+    h+=`<button onclick="qsTapGrade('${g}')" style="padding:12px 4px;background:var(--bg2);border:1px solid rgba(255,255,255,.08);border-radius:10px;color:var(--rock);font-family:'Bebas Neue';font-size:20px;cursor:pointer;transition:.15s">${g}</button>`;});
+  document.getElementById('qsGrades').innerHTML=h;}
+function qsTapGrade(g){
+  qsSelGrade=g;
+  document.getElementById('qscGrade').textContent=g;
+  document.getElementById('qscTipo').textContent=qsTipo+' · Indoor';
+  document.getElementById('qsInt').value='1';
+  document.getElementById('mQSC').classList.add('sh');}
+async function qsSetEnc(enc){
+  const int=parseInt(document.getElementById('qsInt').value)||1;
+  cm('mQSC');
+  const route={date:new Date().toISOString().split('T')[0],grado:qsSelGrade,tipo:qsTipo,lugar:'indoor',nombre:'',sitio:'',intento:int,enc:enc,flash:false,avista:false,notas:'Sesión rápida',amigos:'',metros:0};
+  await saveRoute(route);
+  qsItems.push({grado:qsSelGrade,enc,int});
+  updQS();
+  // Brief flash animation on the grade button
+  const btns=document.querySelectorAll('#qsGrades button');
+  btns.forEach(b=>{if(b.textContent===qsSelGrade){
+    b.style.background=enc?'var(--green)':'var(--red)';b.style.color='#000';
+    setTimeout(()=>{b.style.background='var(--bg2)';b.style.color='var(--rock)';},400);}});}
+function updQS(){
+  const sum=document.getElementById('qsSummary');
+  if(!qsItems.length){sum.style.display='none';document.getElementById('qsLog').innerHTML='';return;}
+  sum.style.display='block';
+  document.getElementById('qsCount').textContent=qsItems.length;
+  document.getElementById('qsEnc').textContent=qsItems.filter(x=>x.enc).length;
+  const maxG=qsItems.reduce((a,b)=>G.indexOf(b.grado)>G.indexOf(a.grado)?b:a,qsItems[0]);
+  document.getElementById('qsMax').textContent=maxG.grado;
+  // Log
+  let h='';qsItems.slice().reverse().forEach((it,i)=>{
+    h+=`<div style="display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.03)"><span style="font-family:'Bebas Neue';font-size:16px;color:${it.enc?'var(--green)':'var(--rock)'}; width:36px">${it.grado}</span><span style="font-size:11px;color:var(--text2)">${qsTipo}</span><span style="font-size:11px;color:var(--text3)">Int:${it.int}</span>${it.enc?'<span style="color:var(--green);font-size:11px">✓ Enc</span>':''}</div>`;});
+  document.getElementById('qsLog').innerHTML=h;}
 function openWo(woToEdit){
   editWoId=null;wSt=[];document.getElementById('wNm').value='';document.getElementById('mW1Title').textContent=t('createTrain');
   document.getElementById('ejForm').style.display='none';document.getElementById('viaForm').style.display='none';
