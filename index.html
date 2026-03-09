@@ -170,7 +170,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <div id="dashInfo" style="font-size:10px;color:var(--text2)"></div>
 </div><div id="tMeso" style="display:none"><button class="btn bp" onclick="openMeso()" style="margin-bottom:12px">+ Crear mesociclo</button><div id="mesoList"></div></div></div>
 <!-- AMIGOS --><div id="pf" class="page"><div class="hdr"><h1>AMIGOS</h1></div><div class="card"><div class="ct">AÑADIR AMIGO</div><div style="display:flex;gap:6px"><input id="frCode" placeholder="Código #1234 o email" style="flex:1;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px;color:var(--text);font-size:12px;font-family:Nunito;outline:none"><button class="bp btn" style="width:auto;padding:8px 14px;font-size:12px;border-radius:10px" onclick="addFriend()">+</button></div><div id="frMsg" style="font-size:10px;margin-top:4px"></div></div><button onclick="shareAppLink()" style="width:100%;padding:10px;margin-top:8px;margin-bottom:12px;background:#25D366;border:none;border-radius:12px;color:#fff;font-family:'Nunito';font-weight:700;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">📲 <span id="shareAppBtn">Compartir app</span></button>
-<div class="ct" style="margin-top:12px" id="ctMyFriends">MIS AMIGOS</div><div id="friendStories" style="margin-bottom:8px;overflow-x:auto;white-space:nowrap;display:none"></div><div id="frRequests" style="margin-bottom:8px"></div><div id="frList"></div><div id="frView" style="display:none;margin-top:12px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><div class="ct" id="frViewTitle" style="margin:0">VÍAS</div><button onclick="document.getElementById('frView').style.display='none'" style="background:none;border:none;color:var(--text3);font-size:18px;cursor:pointer">✕</button></div><div id="frRoutes"></div></div></div>
+<div class="ct" style="margin-top:12px" id="ctMyFriends">MIS AMIGOS</div><div id="friendStories" style="margin-bottom:8px;overflow-x:auto;white-space:nowrap;display:none"></div><div id="frRequests" style="margin-bottom:8px"></div><div id="frList"></div></div>
 <!-- CHAT MODAL --><div id="mChat" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.85);z-index:250;backdrop-filter:blur(4px)">
 <div style="position:absolute;bottom:0;left:0;right:0;max-width:500px;margin:0 auto;background:var(--bg2);border-radius:20px 20px 0 0;height:75vh;display:flex;flex-direction:column;padding:16px;padding-bottom:env(safe-area-inset-bottom,8px)">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><h2 id="chatTitle" style="font-size:20px;color:var(--rock);margin:0">CHAT</h2><button onclick="closeChat()" style="background:none;border:none;color:var(--text2);font-size:24px;cursor:pointer">✕</button></div>
@@ -1740,7 +1740,7 @@ async function drFr(){
   for(const f of friends){const q=await db.collection('users').where('email','==',f.email).get();let name=f.email,photo='',code='';
     if(!q.empty){const ud=q.docs[0].data();name=ud.nick||ud.name||f.email;photo=ud.photo||'';code=ud.code?'#'+ud.code:'';}
     f.name=name;f.photo=photo;f.code=code;    h+=`<div class="fr-card"><img class="fr-pic" src="${photo||'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22><circle cx=%2212%22 cy=%228%22 r=%224%22 fill=%22%238a9bb0%22/><path d=%22M4 20c0-4 4-7 8-7s8 3 8 7%22 fill=%22%238a9bb0%22/></svg>'}" onclick="viewFr('${f.email}')"><div class="fr-info" onclick="viewFr('${f.email}')"><div class="fr-name">${name} <span style="font-size:9px;color:var(--rock)">${code}</span></div></div><button style="background:none;border:none;color:var(--blue);font-size:16px;cursor:pointer;padding:4px" onclick="event.stopPropagation();openChatByEmail('${f.email}')">💬</button><button class="fr-rm" onclick="event.stopPropagation();rmFr('${f.id}')">✕</button></div>`;}
-  document.getElementById('frList').innerHTML=h;document.getElementById('frView').style.display='none';}
+  document.getElementById('frList').innerHTML=h;drStories();}
 async function openChatByEmail(email){const q=await db.collection('users').where('email','==',email).get();if(q.empty)return;const fd=q.docs[0].data();openChat(q.docs[0].id,(fd.name||email).replace(/'/g,''));}
 async function addFriend(){const raw=document.getElementById('frCode').value.trim(),msg=document.getElementById('frMsg');
   if(!raw){msg.textContent=t('putCodeOrEmail');msg.style.color='var(--red)';return;}
@@ -1795,10 +1795,21 @@ async function rmFr(id){if(!confirm(t('confirmDeleteFriend')))return;
       theirFr.forEach(async d=>{await d.ref.delete();});}}catch(e){}}
   friends=friends.filter(f=>f.id!==id);drFr();}
 async function viewFr(email){const q=await db.collection('users').where('email','==',email).get();if(q.empty)return;
-  const fuid=q.docs[0].id,fd=q.docs[0].data();document.getElementById('frViewTitle').textContent=t('friendRoutes')+' '+(fd.name||email).toUpperCase();
-  const rs=await db.collection('users').doc(fuid).collection('routes').orderBy('date','desc').limit(30).get();let h='';
-  rs.forEach(d=>{h+=vc({id:d.id,...d.data()},false);});
-  document.getElementById('frRoutes').innerHTML=h||'<div style="color:var(--text3);font-size:11px;padding:8px">'+t('noFriendRoutes')+'</div>';document.getElementById('frView').style.display='block';}
+  const fuid=q.docs[0].id,fd=q.docs[0].data();
+  // Check for story in last 24h
+  try{const now=new Date();const cutoff=new Date(now.getTime()-24*60*60*1000);
+    const sq=await db.collection('users').doc(fuid).collection('stories').orderBy('ts','desc').limit(1).get();
+    if(!sq.empty){const s=sq.docs[0].data();const sTime=s.ts?s.ts.toDate():new Date(s.date);
+      if(sTime>cutoff){
+        document.getElementById('storyPic').src=fd.photo||'icon-192.png';
+        document.getElementById('storyName').textContent=fd.nick||fd.name||email;
+        const ago=Math.round((now-sTime)/60000);
+        document.getElementById('storyTime').textContent=ago<60?'Hace '+ago+' min':'Hace '+Math.round(ago/60)+' h';
+        document.getElementById('storyImg').src=s.image;
+        document.getElementById('storyViewer').style.display='block';return;}}
+  }catch(e){console.log('Story load error:',e);}
+  // No story — just show name
+  alert((fd.nick||fd.name||email)+' no tiene historia hoy');}
 
 // MESOCICLOS
 const MESO_COLORS=[{name:'Base aeróbica',color:'#ffe66d'},{name:'Fuerza resistencia',color:'#4ecdc4'},{name:'Fuerza máxima',color:'#ff6b6b'},{name:'Potencia',color:'#a78bfa'},{name:'Descarga',color:'#4a9eff'},{name:'Personalizado',color:'#8a9bb0'}];
@@ -2124,12 +2135,15 @@ async function loadStories(){
   const stories=[];
   for(const f of friends){
     try{
-      const q=await db.collection('users').doc(f.uid).collection('stories')
+      const fq=await db.collection('users').where('email','==',f.email).get();
+      if(fq.empty)continue;
+      const fuid=fq.docs[0].id;
+      const q=await db.collection('users').doc(fuid).collection('stories')
         .orderBy('ts','desc').limit(1).get();
       if(!q.empty){
         const s=q.docs[0].data();
         const sTime=s.ts?s.ts.toDate():new Date(s.date);
-        if(sTime>cutoff){stories.push({uid:f.uid,name:f.name||f.email,photo:f.photo||'',image:s.image,time:sTime,storyData:s});}
+        if(sTime>cutoff){stories.push({uid:fuid,name:f.name||f.email,photo:f.photo||'',image:s.image,time:sTime,storyData:s});}
       }
     }catch(e){}}
   return stories;}
