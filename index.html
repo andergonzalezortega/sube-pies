@@ -196,7 +196,10 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <div id="exMsg" style="font-size:10px;margin-top:6px;text-align:center"></div>
 </div>
 <div class="card"><div class="ct" id="ctNick">NOMBRE VISIBLE</div>
-<div style="display:flex;gap:8px;align-items:center"><input id="nickEdit" maxlength="20" style="flex:1;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:9px 11px;color:var(--text);font-size:13px;font-family:Nunito;outline:none">
+<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><img id="settingsPic" style="width:50px;height:50px;border-radius:50%;object-fit:cover;border:2px solid var(--rock);cursor:pointer" onclick="document.getElementById('avatarInput').click()"><div style="flex:1"><input id="nickEdit" maxlength="20" style="width:100%;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:9px 11px;color:var(--text);font-size:13px;font-family:Nunito;outline:none"></div>
+<button class="btn bp" style="width:auto;padding:8px 16px;font-size:12px;margin:0" onclick="changeNick()">✓</button></div>
+<div style="font-size:10px;color:var(--text3);margin-bottom:6px">Pulsa la foto para cambiarla</div>
+<input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="changeAvatar(event)">
 <button class="btn bp" style="width:auto;padding:8px 16px;font-size:12px;margin:0" onclick="changeNick()">✓</button></div>
 <div style="font-size:10px;color:var(--text3);margin-top:4px" id="nickHint">Esto es lo que ven otros escaladores</div></div>
 <div class="card"><div class="ct" id="ctLang">IDIOMA</div>
@@ -230,6 +233,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <div><div id="storyName" style="font-size:13px;font-weight:700;color:#fff"></div><div id="storyTime" style="font-size:10px;color:rgba(255,255,255,.5)"></div></div>
 <button onclick="closeStory()" style="margin-left:auto;background:none;border:none;color:#fff;font-size:24px;cursor:pointer">✕</button>
 </div>
+<button id="storyDel" onclick="event.stopPropagation();deleteMyStory()" style="display:none;position:absolute;bottom:40px;left:50%;transform:translateX(-50%);padding:10px 24px;background:var(--red);border:none;border-radius:12px;color:#fff;font-family:'Nunito';font-weight:700;font-size:13px;cursor:pointer;z-index:2">Eliminar historia</button>
 <img id="storyImg" style="width:100%;height:100%;object-fit:contain">
 </div>
 <!-- MODAL QUICK SESSION --><div class="mbg" id="mQS"><div style="position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);z-index:200;overflow-y:auto;padding:12px">
@@ -241,6 +245,14 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <button id="qsBtnTR" onclick="setQSTipo('Top Rope')" style="padding:12px;background:var(--bg3);border:1px solid rgba(255,255,255,.1);border-radius:12px;color:var(--text);font-family:'Nunito';font-weight:700;font-size:13px;cursor:pointer">Top Rope</button>
 </div>
 <div id="qsLugarDiv" style="display:none;margin-bottom:10px"><div class="fl"><label>Lugar</label><input id="qsLugar" placeholder="Galdames, Atauri..." list="dlZ"></div></div>
+<div id="qsAngleDiv" style="margin-bottom:8px"><div style="display:flex;gap:4px;flex-wrap:wrap"><span style="font-size:11px;color:var(--text3);width:100%;margin-bottom:2px">Inclinación del muro</span>
+<button class="ch on" onclick="setQSAngle('')" id="qsAng0">Todas</button>
+<button class="ch" onclick="setQSAngle('Vertical')" id="qsAngV">Vertical</button>
+<button class="ch" onclick="setQSAngle('15°')" id="qsAng15">15°</button>
+<button class="ch" onclick="setQSAngle('30°')" id="qsAng30">30°</button>
+<button class="ch" onclick="setQSAngle('45°')" id="qsAng45">45°</button>
+<button class="ch" onclick="setQSAngle('60°+')" id="qsAng60">60°+</button>
+</div></div>
 </div>
 <div id="qsSummary" style="background:var(--bg2);border-radius:12px;padding:10px;margin-bottom:8px;text-align:center;display:none">
 <div style="display:flex;justify-content:space-around"><div><span id="qsCount" style="font-family:'Bebas Neue';font-size:32px;color:var(--green)">0</span><div style="font-size:10px;color:var(--text3)">Total</div></div><div><span id="qsEnc" style="font-family:'Bebas Neue';font-size:32px;color:var(--green)">0</span><div style="font-size:10px;color:var(--text3)">Enc</div></div><div><span id="qsMax" style="font-family:'Bebas Neue';font-size:32px;color:var(--rock)">—</span><div style="font-size:10px;color:var(--text3)">Máx</div></div></div>
@@ -870,7 +882,26 @@ function drS(){const el=document.getElementById('sN');if(el)el.textContent=R.len
   const ls=document.getElementById('langSel');if(ls)ls.value=LANG;
   updNotifStatus();
   // Load current nick
-  if(U){db.collection('users').doc(U.uid).get().then(d=>{if(d.exists){const ni=document.getElementById('nickEdit');if(ni)ni.value=d.data().nick||d.data().name||'';}});}}
+  if(U){db.collection('users').doc(U.uid).get().then(d=>{if(d.exists){const ni=document.getElementById('nickEdit');if(ni)ni.value=d.data().nick||d.data().name||'';const sp=document.getElementById('settingsPic');if(sp)sp.src=d.data().photo||U.photoURL||'icon-192.png';}});}}
+async function changeAvatar(e){
+  if(!U)return;const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=async function(ev){
+    // Resize to 200x200
+    const img=new Image();img.onload=async function(){
+      const cv=document.createElement('canvas');cv.width=200;cv.height=200;
+      const ctx=cv.getContext('2d');
+      const s=Math.min(img.width,img.height);
+      const sx=(img.width-s)/2,sy=(img.height-s)/2;
+      ctx.drawImage(img,sx,sy,s,s,0,0,200,200);
+      const dataUrl=cv.toDataURL('image/jpeg',0.8);
+      try{await db.collection('users').doc(U.uid).set({photo:dataUrl},{merge:true});
+        document.getElementById('uPic').src=dataUrl;
+        document.getElementById('settingsPic').src=dataUrl;
+        alert('Foto actualizada');}
+      catch(err){alert('Error: '+err.message);}};
+    img.src=ev.target.result;};
+  reader.readAsDataURL(file);}
 async function changeNick(){if(!U)return;const nick=(document.getElementById('nickEdit').value||'').trim();
   if(!nick){alert(t('putName'));return;}
   await db.collection('users').doc(U.uid).set({nick:nick},{merge:true});
@@ -1486,7 +1517,7 @@ const TPLS=[{nm:'Suspensiones',ag:'Regleta',mm:20,kg:0,modo:'time',time:7,reps:0
 let editWoId=null;
 function openNewWo(){openWo();}
 // QUICK SESSION
-let qsTipo='Bloque',qsItems=[],qsSelGrade='',qsMode='indoor';
+let qsTipo='Bloque',qsItems=[],qsSelGrade='',qsMode='indoor',qsAngle='';
 function openQuickSession(mode){
   qsItems=[];qsTipo='Bloque';qsMode=mode||'indoor';
   document.getElementById('qsTitle').textContent=mode==='roca'?'SESIÓN RÁPIDA · ROCA':'SESIÓN RÁPIDA · INDOOR';
@@ -1501,6 +1532,10 @@ function setQSTipo(t){qsTipo=t;
   const col=qsMode==='roca'?'var(--rock)':'var(--green)';
   sel.style.background=col;sel.style.color='#000';sel.style.borderColor=col;
   buildQSGrades();}
+function setQSAngle(a){qsAngle=a;
+  document.querySelectorAll('#qsAngleDiv .ch').forEach(b=>{b.classList.remove('on');});
+  const id=a===''?'qsAng0':a==='Vertical'?'qsAngV':a==='15°'?'qsAng15':a==='30°'?'qsAng30':a==='45°'?'qsAng45':'qsAng60';
+  document.getElementById(id).classList.add('on');}
 function buildQSGrades(){
   let h='';G.forEach(g=>{
     h+=`<button onclick="qsTapGrade('${g}')" style="padding:10px 2px;background:var(--bg2);border:1px solid rgba(255,255,255,.08);border-radius:10px;color:var(--rock);font-family:'Bebas Neue';font-size:18px;cursor:pointer;transition:.15s">${g}</button>`;});
@@ -1515,7 +1550,7 @@ async function qsSetEnc(enc){
   const int=parseInt(document.getElementById('qsInt').value)||1;
   cm('mQSC');
   const sitio=qsMode==='roca'?(document.getElementById('qsLugar').value||''):'';
-  const route={date:new Date().toISOString().split('T')[0],grado:qsSelGrade,tipo:qsTipo,lugar:qsMode==='roca'?'roca':'indoor',nombre:'',sitio:sitio,intento:int,enc:enc,flash:false,avista:false,notas:'Sesión rápida',amigos:'',metros:0};
+  const route={date:new Date().toISOString().split('T')[0],grado:qsSelGrade,tipo:qsTipo,lugar:qsMode==='roca'?'roca':'indoor',nombre:'',sitio:sitio,intento:int,enc:enc,flash:false,avista:false,notas:qsAngle?'Sesión rápida · '+qsAngle:'Sesión rápida',amigos:'',metros:0,angulo:qsAngle};
   await saveRoute(route);
   qsItems.push({grado:qsSelGrade,enc,int});
   updQS();
@@ -2118,8 +2153,10 @@ function drawBody(ctx,cv,sel,dr,dt,logo){
     var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;
     a.download='SubePies_'+sel+'.png';document.body.appendChild(a);a.click();
     document.body.removeChild(a);URL.revokeObjectURL(url);
-    // Also upload as story
-    uploadStory(cv,sel);
+    // Ask if user wants to upload as story
+    setTimeout(function(){
+      if(confirm('¿Subir como historia? Tus amigos la verán 24h')){uploadStory(cv,sel);}
+    },500);
   },'image/png');}
 async function uploadStory(cv,sel){
   if(!U)return;
@@ -2149,15 +2186,39 @@ async function loadStories(){
   return stories;}
 async function drStories(){
   const stories=await loadStories();
+  // Also load my own story
+  let myStory=null;
+  if(U){try{
+    const now=new Date();const cutoff=new Date(now.getTime()-24*60*60*1000);
+    const mq=await db.collection('users').doc(U.uid).collection('stories').orderBy('ts','desc').limit(1).get();
+    if(!mq.empty){const s=mq.docs[0].data();const sTime=s.ts?s.ts.toDate():new Date(s.date);
+      if(sTime>cutoff)myStory={id:mq.docs[0].id,name:'Tú',photo:U.photoURL||'',image:s.image,time:sTime};}
+  }catch(e){}}
   const containers=['homeStories','friendStories'];
   containers.forEach(id=>{
     const el=document.getElementById(id);if(!el)return;
-    if(!stories.length){el.style.display='none';return;}
+    if(!stories.length&&!myStory){el.style.display='none';return;}
     el.style.display='block';
-    let h='';stories.forEach((s,i)=>{
-      h+=`<div class="story-bubble" onclick="viewStory(${i})"><img src="${s.photo||''}" onerror="this.src='icon-192.png'"><div class="sname">${s.name}</div></div>`;});
+    let h='';
+    if(myStory){h+=`<div class="story-bubble" onclick="viewMyStory()"><img src="${myStory.photo||'icon-192.png'}" onerror="this.src='icon-192.png'" style="border-color:var(--green)"><div class="sname">Tu historia</div></div>`;}
+    stories.forEach((s,i)=>{
+      h+=`<div class="story-bubble" onclick="viewStory(${i})"><img src="${s.photo||'icon-192.png'}" onerror="this.src='icon-192.png'"><div class="sname">${s.name}</div></div>`;});
     el.innerHTML=h;});
-  window._stories=stories;}
+  window._stories=stories;window._myStory=myStory;}
+function viewMyStory(){
+  const s=window._myStory;if(!s)return;
+  document.getElementById('storyPic').src=s.photo||'icon-192.png';
+  document.getElementById('storyName').textContent='Tu historia';
+  const ago=Math.round((new Date()-s.time)/60000);
+  document.getElementById('storyTime').textContent=ago<60?'Hace '+ago+' min':'Hace '+Math.round(ago/60)+' h';
+  document.getElementById('storyImg').src=s.image;
+  document.getElementById('storyDel').style.display='block';
+  document.getElementById('storyViewer').style.display='block';}
+async function deleteMyStory(){
+  if(!U||!window._myStory)return;
+  if(!confirm('¿Eliminar tu historia?'))return;
+  try{await db.collection('users').doc(U.uid).collection('stories').doc(window._myStory.id).delete();
+    window._myStory=null;closeStory();drStories();}catch(e){alert('Error: '+e.message);}}
 function viewStory(i){
   const s=window._stories[i];if(!s)return;
   document.getElementById('storyPic').src=s.photo||'icon-192.png';
@@ -2165,6 +2226,7 @@ function viewStory(i){
   const ago=Math.round((new Date()-s.time)/60000);
   document.getElementById('storyTime').textContent=ago<60?'Hace '+ago+' min':'Hace '+Math.round(ago/60)+' h';
   document.getElementById('storyImg').src=s.image;
+  document.getElementById('storyDel').style.display='none';
   document.getElementById('storyViewer').style.display='block';}
 function closeStory(){document.getElementById('storyViewer').style.display='none';}
 function downloadBlob(blob,sel){const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='SubePies_'+sel+'.png';a.click();URL.revokeObjectURL(url);}
