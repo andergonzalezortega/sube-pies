@@ -672,26 +672,29 @@ function logout(){auth.signOut();}
 // PUSH NOTIFICATIONS
 let messaging=null;
 async function initNotifications(){
-  if(!U)return;
+  if(!U){console.log('FCM: no user');return;}
   try{
-    if(!('Notification' in window)){console.log('Notifications not supported');return;}
+    if(!('Notification' in window)){console.log('FCM: not supported');return;}
+    console.log('FCM: requesting permission...');
     messaging=firebase.messaging();
     const permission=await Notification.requestPermission();
-    if(permission!=='granted'){console.log('Notification permission denied');return;}
-    // Get FCM token - you need to generate a VAPID key in Firebase Console > Cloud Messaging
-    const token=await messaging.getToken({vapidKey:'BI-nNJsYj4BLLI-kw_CgnOQI-gizxB4SEMycTj0v4oq7_MSyU5pZ2Mw9yvP0oqSV6pLZ1doEpb_SjgNqELj2jao'});
+    console.log('FCM: permission =',permission);
+    if(permission!=='granted'){console.log('FCM: denied');return;}
+    console.log('FCM: getting token...');
+    const swReg=await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+    console.log('FCM: sw registered');
+    const token=await messaging.getToken({vapidKey:'BI-nNJsYj4BLLI-kw_CgnOQI-gizxB4SEMycTj0v4oq7_MSyU5pZ2Mw9yvP0oqSV6pLZ1doEpb_SjgNqELj2jao',serviceWorkerRegistration:swReg});
+    console.log('FCM: token =',token?'OK ('+token.substring(0,20)+'...)':'NONE');
     if(token){
-      // Save token to Firestore for this user
       await db.collection('users').doc(U.uid).set({fcmToken:token,fcmUpdated:new Date().toISOString()},{merge:true});
-      console.log('FCM token saved');}
-    // Handle foreground messages
+      console.log('FCM: token saved to Firestore');}
     messaging.onMessage((payload)=>{
+      console.log('FCM: foreground message',payload);
       const n=payload.notification||{};
       const title=n.title||'Sube Pies';
       const body=n.body||'';
-      // Show in-app notification banner
       showInAppNotif(title,body,payload.data);});
-  }catch(e){console.log('FCM setup error:',e);}}
+  }catch(e){console.error('FCM ERROR:',e);}}
 function showInAppNotif(title,body,data){
   const el=document.createElement('div');
   el.style.cssText='position:fixed;top:0;left:0;right:0;z-index:400;padding:12px 16px;background:linear-gradient(135deg,var(--rock),#b8956a);color:#000;font-family:Nunito;animation:fu .3s ease;display:flex;align-items:center;gap:10px;cursor:pointer';
