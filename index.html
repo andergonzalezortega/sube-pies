@@ -123,11 +123,12 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 </div></div>
 <div id="appWrap" style="display:none">
 <!-- HOME --><div id="ph" class="page on" style="overflow-y:auto;height:calc(100vh - 75px);display:none">
-<div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;padding:6px 0">
-<img src="logo.png" style="width:62px;height:62px;border-radius:50%;object-fit:cover;border:3px solid var(--rock)">
-<div style="flex:1"><div style="font-family:'Bebas Neue';font-size:22px;color:var(--rock);line-height:1.1">SUBE PIES</div>
-<div style="font-size:12px;color:var(--text2)"><span id="uName" style="font-weight:600"></span> <span id="uTag" style="color:var(--rock);font-size:10px"></span> <button onclick="logout()" style="background:none;border:none;color:var(--text3);font-size:9px;cursor:pointer">· Salir</button></div></div>
-<img id="uPic" onclick="document.getElementById('headerAvatarInput').click()" style="width:100px;height:52px;border-radius:12px;object-fit:cover;border:3px solid var(--rock);cursor:pointer">
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;padding:4px 0">
+<img src="logo.png" style="width:56px;height:56px;border-radius:50%;object-fit:cover;border:3px solid var(--rock);flex-shrink:0">
+<div style="flex-shrink:0"><div style="font-family:'Bebas Neue';font-size:20px;color:var(--rock);line-height:1.1">SUBE PIES</div>
+<div style="font-size:11px;color:var(--text2)"><span id="uName" style="font-weight:600"></span> <span id="uTag" style="color:var(--rock);font-size:9px"></span></div>
+<button onclick="logout()" style="background:none;border:none;color:var(--text3);font-size:8px;cursor:pointer;padding:0">Salir</button></div>
+<img id="uPic" onclick="document.getElementById('headerAvatarInput').click()" style="flex:1;height:62px;border-radius:12px;object-fit:cover;border:3px solid var(--rock);cursor:pointer;min-width:80px">
 <input type="file" id="headerAvatarInput" accept="image/*" style="display:none" onchange="changeAvatar(event)">
 </div>
 <div style="width:100%;height:80px;border-radius:12px;overflow:hidden;margin-bottom:8px;position:relative"><img src="inicio.jpg" style="width:100%;height:100%;object-fit:cover;opacity:.7"><div style="position:absolute;bottom:0;left:0;right:0;height:100%;background:linear-gradient(to top,var(--bg) 0%,transparent 60%)"></div></div>
@@ -903,22 +904,74 @@ function drS(){const el=document.getElementById('sN');if(el)el.textContent=R.len
 async function changeAvatar(e){
   if(!U)return;const file=e.target.files[0];if(!file)return;
   const reader=new FileReader();
-  reader.onload=async function(ev){
-    // Resize to 200x200
-    const img=new Image();img.onload=async function(){
-      const cv=document.createElement('canvas');cv.width=200;cv.height=200;
-      const ctx=cv.getContext('2d');
-      const s=Math.min(img.width,img.height);
-      const sx=(img.width-s)/2,sy=(img.height-s)/2;
-      ctx.drawImage(img,sx,sy,s,s,0,0,200,200);
-      const dataUrl=cv.toDataURL('image/jpeg',0.8);
-      try{await db.collection('users').doc(U.uid).set({photo:dataUrl},{merge:true});
-        document.getElementById('uPic').src=dataUrl;
-        document.getElementById('settingsPic').src=dataUrl;
-        alert('Foto actualizada');}
-      catch(err){alert('Error: '+err.message);}};
-    img.src=ev.target.result;};
+  reader.onload=function(ev){openCropper(ev.target.result);};
   reader.readAsDataURL(file);}
+function openCropper(src){
+  const modal=document.createElement('div');
+  modal.id='cropModal';
+  modal.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.9);z-index:350;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px';
+  modal.innerHTML=`<div style="color:var(--text);font-family:Nunito;font-weight:700;font-size:16px;margin-bottom:12px">Ajusta tu foto</div>
+    <div id="cropArea" style="position:relative;width:320px;height:120px;overflow:hidden;border:3px solid var(--rock);border-radius:14px;margin-bottom:12px;touch-action:none">
+      <img id="cropImg" src="${src}" style="position:absolute;cursor:grab;user-select:none;-webkit-user-drag:none">
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;width:280px">
+      <span style="font-size:10px;color:var(--text3)">Zoom</span>
+      <input type="range" id="cropZoom" min="100" max="400" value="150" style="flex:1;accent-color:var(--rock)" oninput="updateCropZoom()">
+    </div>
+    <div style="display:flex;gap:8px">
+      <button onclick="saveCrop()" style="padding:12px 30px;background:var(--rock);border:none;border-radius:12px;color:#000;font-family:Nunito;font-weight:700;font-size:14px;cursor:pointer">Guardar</button>
+      <button onclick="document.getElementById('cropModal').remove()" style="padding:12px 30px;background:var(--bg3);border:none;border-radius:12px;color:var(--text);font-family:Nunito;font-weight:600;font-size:14px;cursor:pointer">Cancelar</button>
+    </div>`;
+  document.body.appendChild(modal);
+  const img=document.getElementById('cropImg');
+  img.onload=function(){
+    window._cropData={ox:0,oy:0,dragging:false,startX:0,startY:0,imgW:0,imgH:0};
+    updateCropZoom();};
+  // Drag to move
+  const area=document.getElementById('cropArea');
+  area.addEventListener('pointerdown',function(ev){
+    window._cropData.dragging=true;window._cropData.startX=ev.clientX-window._cropData.ox;window._cropData.startY=ev.clientY-window._cropData.oy;
+    img.style.cursor='grabbing';area.setPointerCapture(ev.pointerId);});
+  area.addEventListener('pointermove',function(ev){
+    if(!window._cropData.dragging)return;
+    const cd=window._cropData;
+    cd.ox=ev.clientX-cd.startX;cd.oy=ev.clientY-cd.startY;
+    // Clamp
+    const maxX=0,maxY=0,minX=320-cd.imgW,minY=120-cd.imgH;
+    cd.ox=Math.min(maxX,Math.max(minX,cd.ox));cd.oy=Math.min(maxY,Math.max(minY,cd.oy));
+    img.style.left=cd.ox+'px';img.style.top=cd.oy+'px';});
+  area.addEventListener('pointerup',function(){window._cropData.dragging=false;img.style.cursor='grab';});}
+function updateCropZoom(){
+  const img=document.getElementById('cropImg');if(!img)return;
+  const zoom=parseInt(document.getElementById('cropZoom').value);
+  const natW=img.naturalWidth,natH=img.naturalHeight;
+  const ratio=natW/natH;
+  // Fit so image covers the 280x120 area at minimum
+  let w,h;
+  if(ratio>320/120){h=120*zoom/100;w=h*ratio;}
+  else{w=280*zoom/100;h=w/ratio;}
+  w=Math.max(320,w);h=Math.max(120,h);
+  img.style.width=w+'px';img.style.height=h+'px';
+  window._cropData.imgW=w;window._cropData.imgH=h;
+  // Reclamp position
+  const cd=window._cropData;
+  cd.ox=Math.min(0,Math.max(320-w,cd.ox));cd.oy=Math.min(0,Math.max(120-h,cd.oy));
+  img.style.left=cd.ox+'px';img.style.top=cd.oy+'px';}
+async function saveCrop(){
+  const img=document.getElementById('cropImg');if(!img)return;
+  const cd=window._cropData;
+  const cv=document.createElement('canvas');cv.width=320;cv.height=120;
+  const ctx=cv.getContext('2d');
+  // Calculate source rect from natural image
+  const scaleX=img.naturalWidth/cd.imgW;const scaleY=img.naturalHeight/cd.imgH;
+  const sx=-cd.ox*scaleX,sy=-cd.oy*scaleY,sw=320*scaleX,sh=120*scaleY;
+  ctx.drawImage(img,sx,sy,sw,sh,0,0,320,120);
+  const dataUrl=cv.toDataURL('image/jpeg',0.85);
+  try{await db.collection('users').doc(U.uid).set({photo:dataUrl},{merge:true});
+    document.getElementById('uPic').src=dataUrl;
+    const sp=document.getElementById('settingsPic');if(sp)sp.src=dataUrl;
+  }catch(err){alert('Error: '+err.message);}
+  document.getElementById('cropModal').remove();}
 async function changeNick(){if(!U)return;const nick=(document.getElementById('nickEdit').value||'').trim();
   if(!nick){alert(t('putName'));return;}
   await db.collection('users').doc(U.uid).set({nick:nick},{merge:true});
