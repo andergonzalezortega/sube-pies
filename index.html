@@ -175,7 +175,11 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <div style="display:flex;gap:4px;margin-bottom:8px"><button class="btn bp" style="flex:1;font-size:11px;padding:8px" onclick="drDash()">📊 Generar</button><button class="btn bg2" style="width:auto;padding:8px 12px;font-size:11px;margin:0" onclick="saveGraph()">💾</button></div>
 <canvas id="cDash" height="200" style="width:100%;background:var(--bg3);border-radius:var(--R);margin-bottom:6px"></canvas>
 <div id="dashInfo" style="font-size:10px;color:var(--text2)"></div>
-</div><div id="tMeso" style="display:none"><button class="btn bp" onclick="openMeso()" style="margin-bottom:12px">+ Crear mesociclo</button><div id="mesoList"></div></div></div>
+</div><div id="tMeso" style="display:none">
+<div style="margin-bottom:12px"><button class="btn bp" onclick="openMeso()" style="margin-bottom:8px">+ Crear mesociclo</button>
+<button class="btn" style="background:var(--purple);color:#fff;margin-bottom:8px" onclick="showProgramTemplates()">📋 Activar programa predefinido</button></div>
+<div id="mesoTemplates" style="display:none;margin-bottom:12px"></div>
+<div id="mesoList"></div></div></div>
 <!-- AMIGOS --><div id="pf" class="page"><div class="hdr"><h1>AMIGOS</h1></div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;margin-bottom:10px;background:var(--bg3);border-radius:10px;padding:2px">
 <button class="tb on" id="frTabFriends" onclick="setFrTab('friends')">Amigos</button>
@@ -2043,6 +2047,116 @@ async function svMeso(){const nm=document.getElementById('msNm').value.trim(),st
   const ref=await db.collection('users').doc(U.uid).collection('mesos').add(data);data.id=ref.id;mesos.push(data);
   cm('mMeso');tTb='meso';drTr();}
 async function delMeso(id){if(!confirm(t('deleteMeso')))return;await db.collection('users').doc(U.uid).collection('mesos').doc(id).delete();mesos=mesos.filter(m=>m.id!==id);drMeso();}
+// PREDEFINED PROGRAMS
+const PROGRAMS=[
+  {name:'Hörst 4-3-2-1 (10 semanas)',desc:'Periodización clásica. Ideal para temporada baja o entre viajes.',
+    fases:[
+      {name:'Base Aeróbica',color:'#ffe66d',weeks:4,desc:'Volumen alto, escalada submáxima, técnica'},
+      {name:'Fuerza Máxima',color:'#ff6b6b',weeks:3,desc:'Fuerza dedos, tracción, boulder límite'},
+      {name:'Fuerza-Resistencia',color:'#4ecdc4',weeks:2,desc:'4x4s, repeaters, vías continuas'},
+      {name:'Taper',color:'#4a9eff',weeks:1,desc:'Descanso activo, recuperar'}],
+    workouts:['fmax','fresist','aero','antag']},
+  {name:'Hörst 3-2-1 (6 semanas)',desc:'Versión corta. Para bloqueadores o ciclos rápidos.',
+    fases:[
+      {name:'Fuerza Máxima',color:'#ff6b6b',weeks:3,desc:'Fuerza máxima dedos y tracción'},
+      {name:'Fuerza-Resistencia',color:'#4ecdc4',weeks:2,desc:'4x4s, bomba, vías'},
+      {name:'Taper',color:'#4a9eff',weeks:1,desc:'Recuperar antes del proyecto'}],
+    workouts:['fmax','fresist','antag']},
+  {name:'DUP Mantenimiento (semanal)',desc:'Para temporada de escalada. Rotar tipos cada semana.',
+    fases:[
+      {name:'Aeróbico + Compensación',color:'#ffe66d',weeks:1,desc:'1-2 días: ARC y estabilizadores'},
+      {name:'Fuerza Máxima',color:'#ff6b6b',weeks:1,desc:'1-2 días: boulder límite'},
+      {name:'Fuerza-Resistencia',color:'#4ecdc4',weeks:1,desc:'1-2 días: 4x4s, sport'}],
+    workouts:['fmax','fresist','aero','antag']}];
+const PROGRAM_WORKOUTS={
+  fmax:{name:'Fuerza Máxima y Potencia',folder:'Programa Hörst',steps:function(ej){return[
+    ej('Jogging/remo calentamiento','',0,0,'time',300,0,1,1,0,0),
+    ej('Boulder fácil calentamiento','Cazo',0,0,'time',600,0,1,1,0,0),
+    ej('Estiramientos cadera/hombro/dedos','',0,0,'time',300,0,1,1,0,0),
+    ej('Scapular Pull-ups','Barra',0,0,'reps',0,10,0,1,0,60),
+    ej('Suspensiones lastradas 7-53','Regleta',18,0,'time',7,0,3,3,53,180),
+    ej('Campus lunging pies en pared','Regleta',22,0,'reps',0,6,0,3,0,180),
+    ej('Dominadas lastradas','Barra',0,0,'reps',0,5,0,4,0,180),
+    ej('Campus escalera (subir)','Regleta',22,0,'reps',0,1,0,4,0,120),
+    ej('Windshield Wipers','',0,0,'reps',0,10,0,2,0,60),
+    ej('Supermans','',0,0,'reps',0,18,0,2,0,60),
+    ej('Hanging Knee Lifts','Barra',0,0,'reps',0,16,0,2,0,60),
+    ej('Plancha dinámica','',0,0,'reps',0,25,0,1,0,60),
+    ej('Crunches elevados','',0,0,'reps',0,40,0,2,0,60),
+    ej('Curl inverso antebrazo','',0,0,'reps',0,18,0,2,0,60),
+    ej('Extensión muñeca inversa','',0,0,'reps',0,18,0,2,0,60)]}},
+  fresist:{name:'Fuerza-Resistencia',folder:'Programa Hörst',steps:function(ej){return[
+    ej('Jogging/remo','',0,0,'time',300,0,1,1,0,0),
+    ej('Dominadas al peso (mitad máx)','Barra',0,0,'reps',0,6,0,1,0,60),
+    ej('Boulder fácil calentamiento','Cazo',0,0,'time',600,0,1,1,0,0),
+    ej('Scapular Pull-ups','Barra',0,0,'reps',0,10,0,1,0,60),
+    ej('Power Pull-ups (pecho)','Barra',0,0,'reps',0,10,0,1,0,60),
+    ej('Repeaters larga duración 20mm','Regleta',20,0,'time',30,0,4,3,30,180),
+    ej('Frenchies','Barra',0,0,'time',60,0,1,3,0,120),
+    ej('Windshield Wipers','',0,0,'reps',0,10,0,2,0,60),
+    ej('Supermans','',0,0,'reps',0,18,0,2,0,60),
+    ej('Hanging Knee Lifts','Barra',0,0,'reps',0,16,0,2,0,60),
+    ej('Crunches elevados','',0,0,'reps',0,40,0,2,0,60),
+    ej('Curl inverso antebrazo','',0,0,'reps',0,18,0,2,0,60)]}},
+  aero:{name:'Resistencia Aeróbica',folder:'Programa Hörst',steps:function(ej){return[
+    ej('Jogging/remo','',0,0,'time',300,0,1,1,0,0),
+    ej('Estiramientos','',0,0,'time',300,0,1,1,0,0),
+    ej('Scapular Pull-ups','Barra',0,0,'reps',0,10,0,1,0,60),
+    ej('ARC: Vías moderadas continuas','Cazo',0,0,'time',1200,0,1,3,0,600),
+    ej('Pull-up intervalos (6s on/50s off)','Barra',0,0,'reps',0,4,0,10,0,50),
+    ej('Repeaters corta duración 20mm','Regleta',20,0,'time',10,0,6,4,30,180),
+    ej('Windshield Wipers','',0,0,'reps',0,10,0,2,0,60),
+    ej('Crunches elevados','',0,0,'reps',0,50,0,2,0,60),
+    ej('Curl inverso antebrazo','',0,0,'reps',0,18,0,2,0,60)]}},
+  antag:{name:'Antagonistas y Estabilizadores',folder:'Programa Hörst',steps:function(ej){return[
+    ej('Jogging/remo','',0,0,'time',600,0,1,1,0,0),
+    ej('Estiramientos completos','',0,0,'time',600,0,1,1,0,0),
+    ej('Press hombro','',0,0,'reps',0,18,0,2,0,90),
+    ej('Press banca / flexiones','',0,0,'reps',0,14,0,2,0,90),
+    ej('Extensión dedos con goma','',0,0,'reps',0,18,0,2,0,60),
+    ej('Extensión muñeca inversa','',0,0,'reps',0,18,0,2,0,60),
+    ej('TRX Ts','',0,0,'reps',0,10,0,2,0,60),
+    ej('TRX Ys','',0,0,'reps',0,10,0,2,0,60),
+    ej('Fondos / Dips','',0,0,'reps',0,12,0,3,0,90),
+    ej('Rotación externa mancuerna','',0,0,'reps',0,22,0,2,0,60),
+    ej('Rotación interna mancuerna','',0,0,'reps',0,22,0,2,0,60)]}}};
+function showProgramTemplates(){
+  const el=document.getElementById('mesoTemplates');
+  if(el.style.display==='block'){el.style.display='none';return;}
+  let h='';PROGRAMS.forEach((p,i)=>{
+    h+=`<div style="background:var(--bg2);border-radius:14px;padding:12px;margin-bottom:8px;border:1px solid rgba(255,255,255,.06)">`;
+    h+=`<div style="font-family:'Bebas Neue';font-size:16px;color:var(--rock)">${p.name}</div>`;
+    h+=`<div style="font-size:11px;color:var(--text3);margin-bottom:8px">${p.desc}</div>`;
+    h+=`<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px">`;
+    p.fases.forEach(f=>{h+=`<div style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text2)"><div style="width:8px;height:8px;border-radius:50%;background:${f.color}"></div>${f.name} (${f.weeks}s)</div>`;});
+    h+=`</div>`;
+    h+=`<div style="font-size:10px;color:var(--text3);margin-bottom:8px">Entrenos incluidos: ${p.workouts.map(k=>PROGRAM_WORKOUTS[k].name).join(', ')}</div>`;
+    h+=`<button onclick="activateProgram(${i})" style="width:100%;padding:10px;background:var(--green);border:none;border-radius:10px;color:#000;font-family:'Nunito';font-weight:700;font-size:12px;cursor:pointer">Activar programa</button>`;
+    h+=`</div>`;});
+  el.innerHTML=h;el.style.display='block';}
+async function activateProgram(idx){
+  if(!U)return;const uid=U.uid;
+  const prog=PROGRAMS[idx];if(!prog)return;
+  if(!confirm('¿Activar "'+prog.name+'"? Se crearán los entrenos y el mesociclo.'))return;
+  const ej=(nm,ag,mm,kg,modo,time,reps,rep,ser,desc,ds,ang)=>({nm,ag:ag||'',mm:mm||0,kg:kg||0,modo:modo||'time',time:time||0,reps:reps||0,rep:rep||0,ser:ser||1,desc:desc||0,ds:ds||180,ang:ang||''});
+  // Create folder if needed
+  let folder=woFolders.find(f=>f.name==='Programa Hörst');
+  if(!folder){const ref=await db.collection('users').doc(uid).collection('woFolders').add({name:'Programa Hörst'});
+    folder={id:ref.id,name:'Programa Hörst'};woFolders.push(folder);}
+  // Create workouts
+  for(const wk of prog.workouts){
+    const def=PROGRAM_WORKOUTS[wk];
+    if(!W.find(w=>w.name===def.name)){
+      const wo={name:def.name,folder:folder.id,steps:def.steps(ej)};
+      const ref=await db.collection('users').doc(uid).collection('workouts').add(wo);
+      W.push({id:ref.id,...wo});}}
+  // Create mesocycle
+  const start=new Date().toISOString().split('T')[0];
+  const data={name:prog.name,start,fases:prog.fases.map(f=>({name:f.name,color:f.color,weeks:f.weeks,desc:f.desc}))};
+  const ref=await db.collection('users').doc(uid).collection('mesos').add(data);data.id=ref.id;mesos.push(data);
+  document.getElementById('mesoTemplates').style.display='none';
+  alert('Programa "'+prog.name+'" activado con '+prog.workouts.length+' entrenos');
+  drMeso();drTr();}
 // Get mesociclo color for a date
 function getMesoColor(dateStr){for(const m of mesos){let d=new Date(m.start);for(const f of(m.fases||[])){for(let w=0;w<f.weeks;w++){const ws=d.toISOString().split('T')[0];const we=new Date(d);we.setDate(we.getDate()+6);const weS=we.toISOString().split('T')[0];if(dateStr>=ws&&dateStr<=weS)return f.color;d.setDate(d.getDate()+7);}}}return null;}
 
