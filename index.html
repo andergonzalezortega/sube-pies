@@ -864,7 +864,105 @@ async function seedDefaults(){if(!U)return;
       ej('Plancha lateral','',0,0,'time',30,0,1,3,0,60)]}];
   for(const wo of defWos){
     const ref=await db.collection('users').doc(uid).collection('workouts').add(wo);
-    W.push({id:ref.id,...wo});}}
+    W.push({id:ref.id,...wo});}
+  // === HÖRST PROGRAM WORKOUTS ===
+  const hF='Programa Hörst';
+  const hRef=await db.collection('users').doc(uid).collection('woFolders').add({name:hF});
+  const hFolder={id:hRef.id,name:hF};woFolders.push(hFolder);
+  const horstWos=[
+    {name:'Fuerza Máxima y Potencia',folder:hFolder.id,steps:[
+      ej('Jogging o remo (calentamiento)','',0,0,'time',300,0,1,1,0,0),
+      ej('Boulder fácil calentamiento','Cazo',0,0,'time',600,0,1,1,0,0),
+      ej('Estiramientos cadera/hombro/dedos','',0,0,'time',300,0,1,1,0,0),
+      ej('Scapular Pull-ups','Barra',0,0,'reps',0,10,0,1,0,60),
+      {stepType:'via',grado:'6b',tipo:'Bloque',nombre:'Boulder submáx calent.'},
+      {stepType:'via',grado:'6c',tipo:'Bloque',nombre:'Boulder cerca del límite'},
+      {stepType:'via',grado:'6c+',tipo:'Bloque',nombre:'Boulder límite'},
+      ej('Suspensiones lastradas 7-53','Regleta',18,0,'time',7,0,3,3,53,180),
+      ej('Campus lunging pies en pared','Regleta',22,0,'reps',0,6,0,3,0,180),
+      ej('Dominadas lastradas','Barra',0,0,'reps',0,5,0,4,0,180),
+      ej('Campus escalera (subir)','Regleta',22,0,'reps',0,1,0,4,0,120),
+      ej('Windshield Wipers','',0,0,'reps',0,10,0,2,0,60),
+      ej('Supermans','',0,0,'reps',0,18,0,2,0,60),
+      ej('Hanging Knee Lifts','Barra',0,0,'reps',0,16,0,2,0,60),
+      ej('Mountain Climber Plank','',0,0,'reps',0,25,0,1,0,60),
+      ej('Crunches elevados','',0,0,'reps',0,40,0,2,0,60),
+      ej('Curl inverso antebrazo','',0,0,'reps',0,18,0,2,0,60),
+      ej('Extensión muñeca inversa','',0,0,'reps',0,18,0,2,0,60)]},
+    {name:'Fuerza-Resistencia y Potencia',folder:hFolder.id,steps:[
+      ej('Jogging o remo','',0,0,'time',300,0,1,1,0,0),
+      ej('Dominadas al peso (mitad del máx)','Barra',0,0,'reps',0,6,0,1,0,60),
+      ej('Boulder fácil calentamiento','Cazo',0,0,'time',600,0,1,1,0,0),
+      ej('Estiramientos','',0,0,'time',300,0,1,1,0,0),
+      ej('Scapular Pull-ups','Barra',0,0,'reps',0,10,0,1,0,60),
+      ej('Power Pull-ups (pecho)','Barra',0,0,'reps',0,10,0,1,0,60),
+      ej('Dominadas submáx lastradas','Barra',0,10,'reps',0,6,0,1,0,120),
+      {stepType:'via',grado:'6a',tipo:'Bloque',nombre:'4x4 Boulder 1'},
+      {stepType:'via',grado:'6a+',tipo:'Bloque',nombre:'4x4 Boulder 2'},
+      {stepType:'via',grado:'6b',tipo:'Bloque',nombre:'4x4 Boulder 3'},
+      {stepType:'via',grado:'6b+',tipo:'Bloque',nombre:'4x4 Boulder 4'},
+      {stepType:'via',grado:'6c',tipo:'Cuerda',nombre:'Vía submáx 1'},
+      {stepType:'via',grado:'6c',tipo:'Cuerda',nombre:'Vía submáx 2'},
+      ej('Repeaters larga duración','Regleta',20,0,'time',30,0,4,3,30,180),
+      ej('Square Dance Pull-ups','Barra',0,0,'reps',0,3,0,2,0,120),
+      ej('Frenchies','Barra',0,0,'time',60,0,1,3,0,120),
+      ej('Windshield Wipers','',0,0,'reps',0,10,0,2,0,60),
+      ej('Supermans','',0,0,'reps',0,18,0,2,0,60),
+      ej('Hanging Knee Lifts','Barra',0,0,'reps',0,16,0,2,0,60),
+      ej('Crunches elevados','',0,0,'reps',0,40,0,2,0,60),
+      ej('Curl inverso antebrazo','',0,0,'reps',0,18,0,2,0,60)]},
+    {name:'Resistencia Aeróbica',folder:hFolder.id,steps:[
+      ej('Jogging o remo','',0,0,'time',300,0,1,1,0,0),
+      ej('Dominadas al peso (mitad del máx)','Barra',0,0,'reps',0,6,0,1,0,60),
+      ej('Estiramientos','',0,0,'time',300,0,1,1,0,0),
+      ej('Scapular Pull-ups','Barra',0,0,'reps',0,10,0,1,0,60),
+      ej('Power Pull-ups','Barra',0,0,'reps',0,10,0,1,0,60),
+      ej('ARC: Vías moderadas continuas','Cazo',0,0,'time',1200,0,1,3,0,600),
+      ej('Pull-up intervalos (6s on/50s off)','Barra',0,0,'reps',0,4,0,10,0,50),
+      ej('Repeaters corta duración','Regleta',20,0,'time',10,0,6,4,30,180),
+      ej('Windshield Wipers','',0,0,'reps',0,10,0,2,0,60),
+      ej('Supermans','',0,0,'reps',0,18,0,2,0,60),
+      ej('Hanging Knee Lifts','Barra',0,0,'reps',0,16,0,2,0,60),
+      ej('Crunches elevados','',0,0,'reps',0,50,0,2,0,60),
+      ej('Curl inverso antebrazo','',0,0,'reps',0,18,0,2,0,60)]},
+    {name:'Antagonistas y Estabilizadores',folder:hFolder.id,steps:[
+      ej('Jogging o remo','',0,0,'time',600,0,1,1,0,0),
+      ej('Estiramientos completos','',0,0,'time',600,0,1,1,0,0),
+      ej('Press hombro','',0,0,'reps',0,18,0,2,0,90),
+      ej('Press banca / flexiones','',0,0,'reps',0,14,0,2,0,90),
+      ej('Extensión dedos con goma','',0,0,'reps',0,18,0,2,0,60),
+      ej('Extensión muñeca inversa','',0,0,'reps',0,18,0,2,0,60),
+      ej('TRX Ts','',0,0,'reps',0,10,0,2,0,60),
+      ej('TRX Ys','',0,0,'reps',0,10,0,2,0,60),
+      ej('Fondos / Dips','',0,0,'reps',0,12,0,3,0,90),
+      ej('Rotación externa mancuerna','',0,0,'reps',0,22,0,2,0,60),
+      ej('Rotación interna mancuerna','',0,0,'reps',0,22,0,2,0,60),
+      ej('Sumo Deadlift','',0,0,'reps',0,12,0,1,0,120),
+      ej('Sentadilla','',0,0,'reps',0,7,0,2,0,120),
+      ej('Peso muerto','',0,0,'reps',0,5,0,3,0,120)]}];
+  for(const wo of horstWos){
+    const ref=await db.collection('users').doc(uid).collection('workouts').add(wo);
+    W.push({id:ref.id,...wo});}
+  // === PREDEFINED MESOCYCLES ===
+  const woByName=(n)=>W.find(w=>w.name===n);
+  const mesoTemplates=[
+    {name:'Hörst 4-3-2-1 (10 semanas)',fases:[
+      {name:'Base Aeróbica',color:'#ffe66d',weeks:4,desc:'Volumen alto, escalada submáxima, técnica y resistencia aeróbica',workouts:['Resistencia Aeróbica','Calentamiento completo','Antagonistas y Estabilizadores']},
+      {name:'Fuerza Máxima',color:'#ff6b6b',weeks:3,desc:'Bajo volumen, fuerza máxima de dedos y tracción, campus, boulder límite',workouts:['Fuerza Máxima y Potencia','Fuerza máxima dedos']},
+      {name:'Fuerza-Resistencia',color:'#4ecdc4',weeks:2,desc:'Volumen moderado, 4x4s, repeaters, vías bombeantes',workouts:['Fuerza-Resistencia y Potencia','Resistencia 4x4 boulder']},
+      {name:'Taper / Descanso',color:'#4a9eff',weeks:1,desc:'Descanso activo, escalar por diversión, recuperar'}]},
+    {name:'Hörst 3-2-1 (6 semanas)',fases:[
+      {name:'Fuerza Máxima',color:'#ff6b6b',weeks:3,desc:'Fuerza máxima de dedos, tracción lastrada, boulder límite',workouts:['Fuerza Máxima y Potencia','Fuerza máxima dedos']},
+      {name:'Fuerza-Resistencia',color:'#4ecdc4',weeks:2,desc:'4x4s, repeaters, vías continuas, bomba',workouts:['Fuerza-Resistencia y Potencia']},
+      {name:'Taper / Descanso',color:'#4a9eff',weeks:1,desc:'Recuperación activa antes del proyecto'}]},
+    {name:'DUP Mantenimiento (semanal)',fases:[
+      {name:'Aeróbico + Compensación',color:'#ffe66d',weeks:1,desc:'1-2 días/semana: ARC, estabilizadores',workouts:['Resistencia Aeróbica','Antagonistas y Estabilizadores']},
+      {name:'Fuerza Máxima',color:'#ff6b6b',weeks:1,desc:'1-2 días/semana: boulder límite o suspensiones',workouts:['Fuerza Máxima y Potencia']},
+      {name:'Fuerza-Resistencia',color:'#4ecdc4',weeks:1,desc:'1-2 días/semana: 4x4s o sport climbing',workouts:['Fuerza-Resistencia y Potencia']}]}];
+  for(const mt of mesoTemplates){
+    const fases=mt.fases.map(f=>({name:f.name,color:f.color,weeks:f.weeks,desc:f.desc,workouts:f.workouts}));
+    const ref=await db.collection('users').doc(uid).collection('mesos').add({name:mt.name,fases,template:true});
+    mesos.push({id:ref.id,name:mt.name,fases,template:true});}}
 function updDL(){const s=new Set();R.forEach(r=>{if(r.sitio)s.add(r.sitio);});let dl='';[...CRAGS.keys(),...userCrags.map(c=>c.name),...s].forEach(n=>{dl+=`<option value="${n}">`;});document.getElementById('dlZ').innerHTML=dl;}
 
 async function saveRoute(data){if(!U)return;const col=db.collection('users').doc(U.uid).collection('routes');
