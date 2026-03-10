@@ -127,7 +127,8 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <img src="logo.png" style="width:62px;height:62px;border-radius:50%;object-fit:cover;border:3px solid var(--rock)">
 <div style="flex:1"><div style="font-family:'Bebas Neue';font-size:22px;color:var(--rock);line-height:1.1">SUBE PIES</div>
 <div style="font-size:12px;color:var(--text2)"><span id="uName" style="font-weight:600"></span> <span id="uTag" style="color:var(--rock);font-size:10px"></span> <button onclick="logout()" style="background:none;border:none;color:var(--text3);font-size:9px;cursor:pointer">· Salir</button></div></div>
-<img id="uPic" style="width:62px;height:62px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,.15)">
+<img id="uPic" onclick="document.getElementById('headerAvatarInput').click()" style="width:62px;height:62px;border-radius:50%;object-fit:cover;border:3px solid var(--rock);cursor:pointer">
+<input type="file" id="headerAvatarInput" accept="image/*" style="display:none" onchange="changeAvatar(event)">
 </div>
 <div style="width:100%;height:80px;border-radius:12px;overflow:hidden;margin-bottom:8px;position:relative"><img src="inicio.jpg" style="width:100%;height:100%;object-fit:cover;opacity:.7"><div style="position:absolute;bottom:0;left:0;right:0;height:100%;background:linear-gradient(to top,var(--bg) 0%,transparent 60%)"></div></div>
 <div id="invBanner"></div>
@@ -136,7 +137,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:6px"><div class="st a" style="padding:6px 4px"><div class="v" id="sV" style="font-size:24px">0</div><div class="l" id="sVl">Vías</div></div><div class="st b" style="padding:6px 4px"><div class="v" id="sE" style="font-size:24px">0</div><div class="l" id="sEl">Enc</div></div><div class="st c" style="padding:6px 4px"><div class="v" id="sT" style="font-size:24px">0</div><div class="l" id="sTl">Entrenos</div></div></div>
 <div style="background:var(--bg2);border-radius:12px;padding:8px;border:1px solid rgba(255,255,255,.04);margin-bottom:0"><div class="cn" style="margin-bottom:4px"><button onclick="cNav(-1)" style="padding:2px 8px;font-size:16px">◀</button><span class="mo" id="cM" style="font-size:14px"></span><button onclick="cNav(1)" style="padding:2px 8px;font-size:16px">▶</button></div><div class="cg" id="cG"></div></div>
 <div id="calDetail" style="margin-bottom:6px"></div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px"><button onclick="openQuickSession('indoor')" style="padding:12px;background:linear-gradient(135deg,#4ecdc4,#2d8a7e);border:none;border-radius:12px;color:#fff;font-family:'Nunito';font-weight:700;font-size:12px;cursor:pointer">SESIÓN RÁPIDA INDOOR</button><button onclick="openQuickSession('roca')" style="padding:12px;background:linear-gradient(135deg,var(--rock),#b8956a);border:none;border-radius:12px;color:#000;font-family:'Nunito';font-weight:700;font-size:12px;cursor:pointer">SESIÓN RÁPIDA ROCA</button></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px"><button onclick="openQuickSession('indoor')" style="padding:12px;background:linear-gradient(135deg,#4ecdc4,#2d8a7e);border:none;border-radius:12px;color:#fff;font-family:'Nunito';font-weight:700;font-size:12px;cursor:pointer">ESCALAR INDOOR</button><button onclick="openQuickSession('roca')" style="padding:12px;background:linear-gradient(135deg,var(--rock),#b8956a);border:none;border-radius:12px;color:#000;font-family:'Nunito';font-weight:700;font-size:12px;cursor:pointer">ESCALAR EN ROCA</button></div>
 <div id="homeNextWo" style="background:var(--bg2);border-radius:12px;padding:10px;border:1px solid rgba(255,255,255,.04);margin-bottom:10px"></div>
 </div>
 <!-- VÍAS --><div id="pv" class="page"><div class="hdr"><h1>VÍAS</h1><button class="bp btn" style="width:auto;padding:6px 12px;font-size:11px;border-radius:10px" onclick="addR()" id="btnAddR">+ Añadir</button></div>
@@ -176,13 +177,13 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 </div><div id="tMeso" style="display:none"><button class="btn bp" onclick="openMeso()" style="margin-bottom:12px">+ Crear mesociclo</button><div id="mesoList"></div></div></div>
 <!-- AMIGOS --><div id="pf" class="page"><div class="hdr"><h1>AMIGOS</h1></div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;margin-bottom:10px;background:var(--bg3);border-radius:10px;padding:2px">
-<button class="tb on" id="frTabStories" onclick="setFrTab('stories')">Historias</button>
-<button class="tb" id="frTabFriends" onclick="setFrTab('friends')">Amigos</button>
+<button class="tb on" id="frTabFriends" onclick="setFrTab('friends')">Amigos</button>
+<button class="tb" id="frTabStories" onclick="setFrTab('stories')">Historias</button>
 </div>
-<div id="frStoriesTab">
+<div id="frStoriesTab" style="display:none">
 <div id="friendStoriesFeed" style="margin-bottom:8px"></div>
 </div>
-<div id="frFriendsTab" style="display:none">
+<div id="frFriendsTab">
 <div class="card"><div class="ct">AÑADIR AMIGO</div><div style="display:flex;gap:6px"><input id="frCode" placeholder="Código #1234 o email" style="flex:1;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px;color:var(--text);font-size:12px;font-family:Nunito;outline:none"><button class="bp btn" style="width:auto;padding:8px 14px;font-size:12px;border-radius:10px" onclick="addFriend()">+</button></div><div id="frMsg" style="font-size:10px;margin-top:4px"></div></div><button onclick="shareAppLink()" style="width:100%;padding:10px;margin-top:8px;margin-bottom:12px;background:#25D366;border:none;border-radius:12px;color:#fff;font-family:'Nunito';font-weight:700;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">📲 <span id="shareAppBtn">Compartir app</span></button>
 <div class="ct" style="margin-top:12px" id="ctMyFriends">MIS AMIGOS</div><div id="frRequests" style="margin-bottom:8px"></div><div id="frList"></div>
 </div></div>
@@ -720,7 +721,8 @@ auth.onAuthStateChanged(async u=>{document.getElementById('loadPage').style.disp
     const existingPhoto=existingDoc.exists?existingDoc.data().photo:null;
     const photoToUse=(existingPhoto&&existingPhoto.startsWith('data:'))?existingPhoto:(u.photoURL||'');
     await db.collection('users').doc(u.uid).set({name:u.displayName,email:u.email,photo:photoToUse,code:code,nick:nick},{merge:true});
-    document.getElementById('uPic').src=photoToUse;
+    document.getElementById('uPic').src=photoToUse||'icon-192.png';
+    if(!photoToUse||photoToUse==='')document.getElementById('uPic').title='Pulsa para añadir foto';
     document.getElementById('uName').textContent=nick;
     document.getElementById('uTag').textContent='#'+code;
     await loadData();
@@ -2241,7 +2243,7 @@ function viewStory(i){
   document.getElementById('storyDel').style.display='none';
   document.getElementById('storyViewer').style.display='block';}
 function closeStory(){document.getElementById('storyViewer').style.display='none';}
-let frTab='stories';
+let frTab='friends';
 function setFrTab(t){frTab=t;
   document.getElementById('frTabStories').classList.toggle('on',t==='stories');
   document.getElementById('frTabFriends').classList.toggle('on',t==='friends');
@@ -2265,26 +2267,24 @@ async function drStoryFeed(){
     const ago=Math.round((new Date()-s.time)/60000);
     const timeStr=ago<60?ago+' min':''+Math.round(ago/60)+' h';
     const isMe=s.uid===U.uid;
-    h+=`<div style="background:var(--bg2);border-radius:14px;margin-bottom:12px;overflow:hidden;border:1px solid rgba(255,255,255,.04)">`;
+    h+=`<div style="background:var(--bg2);border-radius:14px;margin-bottom:14px;overflow:hidden;border:1px solid rgba(255,255,255,.06)">`;
     // Header
-    h+=`<div style="display:flex;align-items:center;gap:8px;padding:10px 12px"><img src="${s.photo||'icon-192.png'}" onerror="this.src='icon-192.png'" style="width:36px;height:36px;border-radius:50%;border:2px solid var(--rock)"><div style="flex:1"><div style="font-weight:700;font-size:13px;color:var(--text)">${s.name}</div><div style="font-size:10px;color:var(--text3)">Hace ${timeStr}</div></div>`;
-    if(isMe)h+=`<button onclick="deleteMyStory()" style="background:none;border:none;color:var(--red);font-size:11px;cursor:pointer">Eliminar</button>`;
+    h+=`<div style="display:flex;align-items:center;gap:10px;padding:12px 14px"><img src="${s.photo||'icon-192.png'}" onerror="this.src='icon-192.png'" style="width:40px;height:40px;border-radius:50%;border:2px solid var(--rock)"><div style="flex:1"><div style="font-weight:700;font-size:14px;color:var(--text)">${s.name}</div><div style="font-size:11px;color:var(--text3)">Hace ${timeStr}</div></div>`;
+    if(isMe)h+=`<button onclick="deleteMyStory()" style="background:var(--bg3);border:none;color:var(--red);font-size:11px;cursor:pointer;padding:6px 10px;border-radius:8px">Eliminar</button>`;
     h+=`</div>`;
     // Image
-    h+=`<img src="${s.image}" style="width:100%;max-height:500px;object-fit:contain;background:#000;cursor:pointer" onclick="viewStoryFromFeed(${i})">`;
+    h+=`<img src="${s.image}" style="width:100%;max-height:450px;object-fit:cover;cursor:pointer" onclick="viewStoryFromFeed(${i})">`;
     // Actions bar
-    h+=`<div style="padding:8px 12px;display:flex;gap:12px;align-items:center">`;
+    h+=`<div style="padding:10px 14px;display:flex;gap:8px;align-items:center">`;
     // Emoji reactions
-    h+=`<div style="display:flex;gap:4px">`;
     ['🔥','💪','🧗','👏','😍'].forEach(em=>{
-      h+=`<button onclick="reactStory('${s.uid}','${em}')" style="background:none;border:none;font-size:18px;cursor:pointer;padding:2px;transition:.15s" onmousedown="this.style.transform='scale(1.4)'" onmouseup="this.style.transform='scale(1)'">${em}</button>`;});
-    h+=`</div>`;
+      h+=`<button onclick="reactStory('${s.uid}','${em}')" style="background:var(--bg3);border:none;font-size:20px;cursor:pointer;padding:6px 8px;border-radius:10px;transition:.15s" onmousedown="this.style.transform='scale(1.2)'" onmouseup="this.style.transform='scale(1)'">${em}</button>`;});
     // Chat button
-    if(!isMe){h+=`<button onclick="chatFromStory('${s.uid}','${s.name}')" style="background:none;border:none;color:var(--blue);font-size:13px;cursor:pointer;margin-left:auto">💬 Chat</button>`;}
+    if(!isMe){h+=`<button onclick="chatFromStory('${s.uid}','${s.name}')" style="background:var(--bg3);border:none;color:var(--blue);font-size:13px;cursor:pointer;margin-left:auto;padding:6px 12px;border-radius:10px;font-family:'Nunito';font-weight:600">💬 Chat</button>`;}
     h+=`</div>`;
-    // Copy workout button if story has training data
+    // Copy workout button
     if(s.storyData&&s.storyData.date&&!isMe){
-      h+=`<div style="padding:0 12px 10px"><button onclick="copyWorkoutFromStory('${s.uid}','${s.storyData.date}')" style="width:100%;padding:8px;background:var(--bg3);border:1px solid rgba(255,255,255,.06);border-radius:10px;color:var(--text2);font-family:'Nunito';font-weight:600;font-size:11px;cursor:pointer">📋 Copiar entrenamiento</button></div>`;}
+      h+=`<div style="padding:0 14px 12px"><button onclick="copyWorkoutFromStory('${s.uid}','${s.storyData.date}')" style="width:100%;padding:10px;background:var(--rock);border:none;border-radius:12px;color:#000;font-family:'Nunito';font-weight:700;font-size:12px;cursor:pointer">📋 Copiar entrenamiento</button></div>`;}
     h+=`</div>`;});
   el.innerHTML=h;}
 function viewStoryFromFeed(i){
