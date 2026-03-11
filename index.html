@@ -216,6 +216,12 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><button class="btn bp" style="font-size:12px;padding:10px" onclick="exportXL('vias')">📥 Vías</button><button class="btn bp" style="font-size:12px;padding:10px;background:var(--yellow);color:#000" onclick="exportXL('entrenos')">📥 Entrenos</button></div>
 <div id="exMsg" style="font-size:10px;margin-top:6px;text-align:center"></div>
 </div>
+<div class="card"><div class="ct">IMPORTAR ENTRENOS DESDE EXCEL</div>
+<div style="font-size:10px;color:var(--text3);margin-bottom:8px">Sube un Excel (.xlsx) con entrenos. Formato: columnas Entreno, Ejercicio, Agarre, mm, Ángulo, kg, Modo, Tiempo, Reps, Series, Reps/serie, Desc(s), DS(s)</div>
+<input type="file" id="importXLFile" accept=".xlsx,.xls,.csv" style="display:none" onchange="importXL(event)">
+<button class="btn" style="background:var(--purple);color:#fff;font-size:12px;padding:10px" onclick="document.getElementById('importXLFile').click()">📤 Importar Excel</button>
+<div id="importMsg" style="font-size:10px;margin-top:6px;text-align:center"></div>
+</div>
 <div class="card"><div class="ct" id="ctNick">NOMBRE VISIBLE</div>
 <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><img id="settingsPic" style="width:50px;height:50px;border-radius:50%;object-fit:cover;border:2px solid var(--rock);cursor:pointer" onclick="document.getElementById('avatarInput').click()"><div style="flex:1"><input id="nickEdit" maxlength="20" style="width:100%;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:9px 11px;color:var(--text);font-size:13px;font-family:Nunito;outline:none"></div>
 <button class="btn bp" style="width:auto;padding:8px 16px;font-size:12px;margin:0" onclick="changeNick()">✓</button></div>
@@ -1205,6 +1211,69 @@ function setupSwipe(){if(_swipeSetup)return;_swipeSetup=true;let sx=0;
 function getSettings(){return JSON.parse(localStorage.getItem('spSettings')||'{}');}
 function saveDaysVista(){const v=document.getElementById('setDaysVista').value;const s=getSettings();s.daysVista=parseInt(v);localStorage.setItem('spSettings',JSON.stringify(s));drNextWo();}
 function loadDaysVista(){const s=getSettings();const v=s.daysVista||5;const sel=document.getElementById('setDaysVista');if(sel)sel.value=v;return v;}
+async function importXL(e){
+  const file=e.target.files[0];if(!file||!U)return;
+  const msg=document.getElementById('importMsg');msg.textContent='Procesando...';
+  try{
+    const data=await file.arrayBuffer();
+    const wb=XLSX.read(data);
+    const ws=wb.Sheets[wb.SheetNames[0]];
+    const rows=XLSX.utils.sheet_to_json(ws,{defval:''});
+    if(!rows.length){msg.textContent='Excel vacío';return;}
+    // Group by workout name
+    const workouts={};
+    rows.forEach(r=>{
+      const woName=(r['Entreno']||r['Workout']||r['entreno']||r['workout']||'Sin nombre').toString().trim();
+      if(!workouts[woName])workouts[woName]=[];
+      const nm=(r['Ejercicio']||r['Exercise']||r['ejercicio']||'').toString().trim();
+      if(!nm)return;
+      const step={
+        nm,
+        ag:(r['Agarre']||r['Grip']||r['agarre']||'').toString().trim(),
+        mm:parseInt(r['mm']||r['Tamaño']||r['tamaño']||0)||0,
+        kg:parseFloat(r['kg']||r['Lastre']||r['lastre']||0)||0,
+        modo:(r['Modo']||r['modo']||'reps').toString().toLowerCase().includes('time')?'time':'reps',
+        time:parseInt(r['Tiempo']||r['Time']||r['tiempo']||0)||0,
+        reps:parseInt(r['Reps']||r['reps']||0)||0,
+        rep:parseInt(r['Reps/serie']||r['rep']||0)||0,
+        ser:parseInt(r['Series']||r['series']||r['Sets']||1)||1,
+        desc:parseInt(r['Desc(s)']||r['desc']||0)||0,
+        ds:parseInt(r['DS(s)']||r['ds']||r['Descanso']||180)||180,
+        ang:(r['Ángulo']||r['Angulo']||r['angulo']||'').toString().trim()};
+      workouts[woName].push(step);});
+    // Check for folder column
+    const folderCol=rows[0]['Carpeta']||rows[0]['Folder']||rows[0]['carpeta']||'';
+    // Check for mesocycle columns
+    const hasMeso=rows[0].hasOwnProperty('Fase')||rows[0].hasOwnProperty('fase');
+    // Save workouts
+    let created=0;
+    const folderName=folderCol||'Importado';
+    let folder=woFolders.find(f=>f.name===folderName);
+    if(!folder){const ref=await db.collection('users').doc(U.uid).collection('woFolders').add({name:folderName});
+      folder={id:ref.id,name:folderName};woFolders.push(folder);}
+    for(const[woName,steps]of Object.entries(workouts)){
+      if(!W.find(w=>w.name===woName)){
+        const wo={name:woName,folder:folder.id,steps};
+        const ref=await db.collection('users').doc(U.uid).collection('workouts').add(wo);
+        W.push({id:ref.id,...wo});created++;}}
+    // If mesocycle data exists
+    if(hasMeso){
+      const fases={};
+      rows.forEach(r=>{
+        const fase=(r['Fase']||r['fase']||'').toString().trim();
+        if(fase&&!fases[fase]){
+          fases[fase]={name:fase,color:r['Color']||'#d4a574',
+            weeks:parseInt(r['Semanas']||r['semanas']||4)||4,
+            desc:r['Descripción']||r['descripcion']||''};}});
+      if(Object.keys(fases).length){
+        const mesoName=(rows[0]['Mesociclo']||rows[0]['mesociclo']||'Importado').toString().trim();
+        const start=new Date().toISOString().split('T')[0];
+        const mesoData={name:mesoName,start,fases:Object.values(fases)};
+        const ref=await db.collection('users').doc(U.uid).collection('mesos').add(mesoData);
+        mesos.push({id:ref.id,...mesoData});}}
+    msg.textContent=created+' entrenos importados en carpeta "'+folderName+'"';msg.style.color='var(--green)';
+    drTr();
+  }catch(err){msg.textContent='Error: '+err.message;msg.style.color='var(--red)';}}
 function exportXL(tipo){
   const from=document.getElementById('exFrom').value,to=document.getElementById('exTo').value;
   const msg=document.getElementById('exMsg');
@@ -1960,18 +2029,11 @@ async function addFriend(){const raw=document.getElementById('frCode').value.tri
   const fDoc=q.docs[0],fd=fDoc.data();
   if(fDoc.id===U.uid){msg.textContent=t('thatsYou');msg.style.color='var(--red)';return;}
   if(friends.some(f=>f.email===fd.email)){msg.textContent=t('alreadyFriend');msg.style.color='var(--yellow)';return;}
-  // Check if already sent
-  try{const existing=await db.collection('users').doc(U.uid).collection('sentRequests').where('toUid','==',fDoc.id).where('status','==','pending').get();
-    if(!existing.empty){msg.textContent='Ya has enviado una solicitud a '+(fd.name||fd.email);msg.style.color='var(--yellow)';return;}}catch(e){}
   // Send friend request to the other user
   try{await db.collection('users').doc(fDoc.id).collection('friendRequests').add({
     fromUid:U.uid,fromEmail:U.email,fromName:U.displayName||U.email,fromPhoto:U.photoURL||'',
     status:'pending',ts:firebase.firestore.FieldValue.serverTimestamp()});
-  // Also save on our side as sent request
-  await db.collection('users').doc(U.uid).collection('sentRequests').add({
-    toUid:fDoc.id,toEmail:fd.email,toName:fd.name||fd.email,
-    status:'pending',ts:firebase.firestore.FieldValue.serverTimestamp()});
-  document.getElementById('frCode').value='';msg.textContent=t('requestSentTo')+' '+(fd.name||fd.email);msg.style.color='var(--green)';
+  document.getElementById('frCode').value='';msg.textContent=t('requestSentTo')+' '+(fd.nick||fd.name||fd.email);msg.style.color='var(--green)';
   }catch(e){msg.textContent='Error: '+e.message;msg.style.color='var(--red)';}
   drFr();}
 async function acceptFr(reqId,fromUid){
