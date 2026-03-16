@@ -235,6 +235,10 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <div class="card"><div class="ct" id="ctCloud">DATOS EN LA NUBE</div><p style="font-size:12px;color:var(--text2)"><span style="font-family:'Bebas Neue';font-size:22px;color:var(--green)" id="sN">0</span> registros guardados</p><p style="font-size:10px;color:var(--text3);margin-top:4px">Tus datos están seguros en Firebase.</p></div>
 <div class="card"><div class="ct" id="ctAbout">ACERCA DE</div><p style="font-size:11px;color:var(--text2)">Sube Pies v1.0 · © 2026 · Todos los derechos reservados</p></div>
 </div>
+<!-- FRIEND PICKER --><div class="mbg" id="mFrPick"><div class="mdl" style="max-width:320px"><button class="mx" onclick="cm('mFrPick')">✕</button>
+<h2 style="font-size:16px;color:var(--rock)" id="frPickTitle">Compartir con</h2>
+<div id="frPickList" style="max-height:300px;overflow-y:auto"></div>
+</div></div>
 <!-- MODAL ROUTE --><div class="mbg" id="mR1"><div class="mdl"><button class="mx" onclick="cm('mR1')">✕</button><h2 id="mRT">VÍA</h2><div class="fl"><label>Nombre</label><input id="iN" placeholder="Diedro mágico"></div><div class="fl"><label>Lugar</label><input id="iL" placeholder="Atauri, Galdames..." list="dlZ"><datalist id="dlZ"></datalist></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="fl"><label>Tipo lugar</label><select id="iLT" onchange="chkRouteFields()"><option value="roca">Roca</option><option value="indoor">Indoor</option></select></div><div class="fl"><label>Tipo vía</label><select id="iTP" onchange="chkRouteFields()"><option>Cuerda</option><option>Bloque</option><option>Top Rope</option><option>Largos</option></select></div></div><div id="fEstilo" style="display:none"><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="fl"><label>Estilo</label><select id="iEstilo"><option value="">—</option><option value="deportiva">Deportiva</option><option value="clasica">Clásica</option></select></div><div class="fl" id="fNLargos" style="display:none"><label>Nº largos</label><input type="number" id="iNLargos" min="2" max="30" value="2" onchange="buildLargosGrades()"></div></div></div><div id="fLargosGrades" style="display:none;background:var(--bg3);border-radius:10px;padding:8px;margin-bottom:8px"><div class="ct" style="margin-bottom:4px">GRADO POR LARGO</div><div id="largosGradeList"></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px"><div class="fl"><label>Grado</label><select id="iG"></select></div><div class="fl"><label>Intento</label><select id="iI" onchange="chkFlashAvista()"></select></div><div class="fl"><label>Metros</label><input type="number" id="iMetros" placeholder="—" min="0" max="500" style="width:100%"></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px"><div class="fl"><label>Encadenado</label><select id="iE" onchange="chkFlashAvista()"><option value="1">Sí</option><option value="0">No</option></select></div><div class="fl" id="fFlash"><label>Flash</label><select id="iFlash"><option value="0">No</option><option value="1">Sí</option></select></div><div class="fl" id="fAvista"><label>A vista</label><select id="iAvista"><option value="0">No</option><option value="1">Sí</option></select></div></div><div class="fl"><label>Sensaciones</label><textarea id="iNo" placeholder="Beta, condiciones..."></textarea></div><div class="fl"><label>Compañeros</label><div id="rFriendChips" style="display:flex;gap:3px;flex-wrap:wrap;margin-bottom:4px"></div><input id="iA" placeholder="Escribe o elige amigos..." oninput="filterRouteFriends()"><div id="rFriendSug" style="display:none"></div></div><div class="fl"><label>Fecha</label><input type="date" id="iFe"></div><button class="btn bp" onclick="svR()">Guardar</button><button class="btn" id="btnShareR" style="display:none;background:var(--blue);color:#fff" onclick="shareRoute()">👥 Compartir vía con amigos</button><button class="btn bdel" id="btnDelR" style="display:none" onclick="delR()">🗑️ Eliminar vía</button><button class="btn bg2" onclick="cm('mR1')">Cancelar</button></div></div>
 <!-- MODAL WORKOUT --><div class="mbg" id="mW1"><div class="mdl"><button class="mx" onclick="cm('mW1')">✕</button><h2 id="mW1Title">CREAR ENTRENO</h2><div class="fl"><label>Nombre</label><input id="wNm" placeholder="Fuerza dedos"></div><div class="fl"><label>Carpeta</label><select id="wFolder"><option value="">— Sin carpeta —</option></select></div><div class="ct">PASOS</div><div id="wS"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;margin-bottom:8px"><button style="padding:14px;background:var(--bg3);border:1px solid rgba(255,255,255,.1);border-radius:12px;color:var(--text);font-family:'Nunito';font-weight:700;font-size:13px;cursor:pointer" onclick="showEjForm()">Ejercicio</button><button style="padding:14px;background:var(--bg3);border:1px solid rgba(255,255,255,.1);border-radius:12px;color:var(--text);font-family:'Nunito';font-weight:700;font-size:13px;cursor:pointer" onclick="showViaForm()">Vía</button></div><div style="display:flex;gap:3px;margin-bottom:8px;flex-wrap:wrap" id="ejTpls"></div><div id="ejForm" style="display:none;background:var(--bg3);border-radius:10px;padding:10px;margin-bottom:8px"><div class="fl"><label>Nombre</label><input id="ejNm" placeholder="Suspensiones, Dominadas..."></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><div class="fl"><label>Agarre</label><select id="ejAg"><option value="">— Ninguno —</option><option>Regleta</option><option>Cazo</option><option>Pinza</option><option>Romo</option><option>Bidedo</option><option>Unidedo</option><option>Barra</option></select></div><div class="fl"><label>Tamaño (mm)</label><input id="ejMm" type="number" placeholder="20"></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><div class="fl"><label>Ángulo</label><select id="ejAng"><option value="">—</option><option>0°</option><option>15°</option><option>30°</option><option>45°</option><option>90°</option><option>120°</option></select></div><div class="fl"><label>Lastre (kg)</label><input id="ejKg" type="number" value="0"></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px"><div class="fl"><label>Modo</label><select id="ejModo" onchange="ejModoChg()"><option value="time">Tiempo</option><option value="reps">Reps</option></select></div><div class="fl" id="ejTimeF"><label>Tiempo (s)</label><input id="ejTime" type="number" value="7"></div><div class="fl" id="ejRepsF" style="display:none"><label>Reps</label><input id="ejReps" type="number" value="10"></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px"><div class="fl"><label>Series</label><input id="ejSer" type="number" value="4"></div><div class="fl"><label>Reps/serie</label><input id="ejRep" type="number" value="6"></div><div class="fl"><label>Descanso (s)</label><input id="ejDesc" type="number" value="3"></div></div><div class="fl"><label>Desc. entre series (s)</label><input id="ejDS" type="number" value="180"></div><div style="display:flex;gap:4px"><button class="btn bp" style="flex:1;font-size:12px;padding:8px" onclick="addEj()">+ Añadir</button><button class="btn bg2" style="width:auto;padding:8px 12px;font-size:10px;margin:0" onclick="saveCustomTpl()">💾 Guardar plantilla</button></div></div><div id="viaForm" style="display:none;background:var(--bg3);border-radius:10px;padding:10px;margin-bottom:8px"><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><div class="fl"><label>Grado</label><select id="vfGrado"></select></div><div class="fl"><label>Tipo</label><select id="vfTipo"><option>Cuerda</option><option>Bloque</option><option>Top Rope</option></select></div></div><div class="fl"><label>Nombre (opcional)</label><input id="vfNombre" placeholder="La rambla..."></div><button class="btn bp" style="font-size:12px;padding:8px" onclick="addViaStep()">+ Añadir vía</button></div><hr style="border:none;border-top:1px solid var(--bg4);margin:10px 0"><button class="btn bp" onclick="svW()">Guardar entreno</button><button class="btn bg2" onclick="cm('mW1')">Cancelar</button></div></div>
 <!-- EJECUTOR --><div id="mExec" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:300;padding:0;transition:background .5s ease">
@@ -296,7 +300,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 </div></div>
 <!-- MODAL PLAN --><div class="mbg" id="mPl"><div class="mdl"><button class="mx" onclick="cm('mPl')">✕</button><h2>PLANIFICAR DÍA</h2><div class="fl"><label>Fecha inicio</label><input type="date" id="plDt"></div><div class="fl"><label>Fecha fin (opcional, para varios días)</label><input type="date" id="plDtEnd"></div><div class="ct" style="margin-top:6px">¿QUÉ PLAN?</div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px"><button id="plBtnEsc" onclick="setPlTipo('escalar')" style="padding:14px;background:var(--bg3);border:1px solid rgba(255,255,255,.1);border-radius:12px;color:var(--text);font-family:'Nunito';font-weight:700;font-size:13px;cursor:pointer">Escalar</button><button id="plBtnEnt" onclick="setPlTipo('entreno')" style="padding:14px;background:var(--bg3);border:1px solid rgba(255,255,255,.1);border-radius:12px;color:var(--text);font-family:'Nunito';font-weight:700;font-size:13px;cursor:pointer">Entreno</button><button id="plBtnNot" onclick="setPlTipo('nota')" style="padding:14px;background:var(--bg3);border:1px solid rgba(255,255,255,.1);border-radius:12px;color:var(--text);font-family:'Nunito';font-weight:700;font-size:13px;cursor:pointer">Nota</button></div><div id="plEscalar" style="display:none"><div class="fl"><label>Tipo</label><select id="plTp"><option value="roca">🏔️ Roca</option><option value="indoor">🏢 Indoor</option></select></div><div class="fl"><label>Lugar</label><input id="plLg" placeholder="Atauri, Sharma..." list="dlZ"></div></div><div id="plEntreno" style="display:none"><div class="fl"><label>Carpeta</label><select id="plFolderSel" onchange="updPlWoList()"><option value="">— Todas —</option></select></div><div class="fl"><label>Entreno</label><select id="plWoSel" onchange="updPlWoPreview()"><option value="">— Sin entreno —</option></select></div><div id="plWoPreview" style="display:none;background:var(--bg3);border-radius:8px;padding:6px 8px;margin-bottom:8px;font-size:10px;color:var(--text2)"></div><div class="fl"><label><input type="checkbox" id="plShareWo" checked style="accent-color:var(--rock)"> Compartir ejercicios con invitados</label></div></div><div class="fl"><label>Notas</label><input id="plNo" placeholder="Plan del día..."></div><div class="ct" style="margin-top:6px">INVITAR AMIGOS</div><div class="fl"><input id="plFrSearch" placeholder="Buscar amigo..." oninput="filterPlFriends()" style="background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:7px 10px;color:var(--text);font-size:12px;font-family:Nunito;outline:none;width:100%;margin-bottom:4px"></div><div id="plFriends"></div><button class="btn bp" onclick="svPlan()">Guardar plan</button><button class="btn bg2" onclick="cm('mPl')">Cancelar</button></div></div>
 <!-- MODAL NEW CRAG --><div class="mbg" id="mNC"><div class="mdl"><button class="mx" onclick="cm('mNC')">✕</button><h2>NUEVA ZONA</h2><p style="font-size:12px;color:var(--text2);margin-bottom:12px">En Google Maps → busca el sitio → pulsa largo → copia las coordenadas que aparecen abajo (ej: 43.270854, -3.102539).</p><div class="fl"><label>Nombre de la zona</label><input id="ncNm" placeholder="Galdames"></div><div class="fl"><label>Coordenadas</label><input id="ncCoords" placeholder="43.270854, -3.102539"><small>Pega las coordenadas o la URL larga de Google Maps (la que tiene @43.27,-3.10)</small></div><div id="ncMsg" style="font-size:11px;margin-bottom:8px"></div><button class="btn bp" onclick="svNewCrag()">Guardar zona</button><button class="btn bg2" onclick="cm('mNC')">Cancelar</button></div></div>
-<!-- MESOCICLO --><div class="mbg" id="mMeso"><div class="mdl"><button class="mx" onclick="cm('mMeso')">✕</button><h2>CREAR MESOCICLO</h2><div class="fl"><label>Nombre</label><input id="msNm" placeholder="Pre-temporada, Fuerza..."></div><div class="fl"><label>Fecha inicio</label><input type="date" id="msStart"></div><div class="ct">FASES</div><div id="msFases"></div><button class="btn bg2" style="font-size:11px;margin-bottom:10px" onclick="addFase()">+ Añadir fase</button><div id="msPrev" style="display:none;margin-bottom:10px"></div><hr style="border:none;border-top:1px solid var(--bg4);margin:10px 0"><button class="btn bp" onclick="svMeso()">Guardar mesociclo</button><button class="btn bg2" onclick="cm('mMeso')">Cancelar</button></div></div>
+<!-- MESOCICLO --><div class="mbg" id="mMeso"><div class="mdl" style="max-height:90vh;overflow-y:auto"><button class="mx" onclick="msStep=0;cm('mMeso')">✕</button><h2>CREAR MESOCICLO</h2><div class="fl"><label>Nombre</label><input id="msNm" placeholder="Pre-temporada, Fuerza..."></div><div class="fl"><label>Fecha inicio</label><input type="date" id="msStart"></div><div class="ct">FASES</div><div id="msFases"></div><div id="msOuterBtns"><button class="btn bg2" style="font-size:11px;margin-bottom:10px" onclick="addFase()">+ Añadir fase</button><div id="msPrev" style="display:none;margin-bottom:10px"></div></div></div></div>
 <!-- NAV --><nav class="nav">
 <button class="nb on" onclick="go('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h3m10-11v10a1 1 0 01-1 1h-3m-4 0v-6"/></svg>Inicio</button>
 <button class="nb" onclick="go('routes')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>Vías</button>
@@ -1395,7 +1399,17 @@ async function answerInv(id,status){if(!U)return;
       const addWo=confirm('Entreno "'+inv.workoutName+'" de '+inv.fromName+'. ¿Añadirlo a tus entrenos?');
       if(addWo){
         const woName=prompt('Nombre:',inv.workoutName);
-        if(woName){await saveWorkout({name:woName,steps:inv.workoutSteps,plannedDate:inv.date});}}
+        if(woName){
+          let folderId='';
+          const folderOpts=['Sin carpeta',...woFolders.map(f=>f.name)];
+          const folderChoice=prompt('Carpeta:\n'+folderOpts.map((f,i)=>i+'. '+f).join('\n')+'\n\n(escribe el número o nombre)',0);
+          if(folderChoice&&folderChoice!=='0'&&folderChoice!=='Sin carpeta'){
+            const idx=parseInt(folderChoice);
+            const fn=idx>0&&idx<folderOpts.length?folderOpts[idx]:folderChoice;
+            let f=woFolders.find(x=>x.name===fn);
+            if(!f){const ref=await db.collection('users').doc(U.uid).collection('woFolders').add({name:fn});f={id:ref.id,name:fn};woFolders.push(f);}
+            folderId=f.id;}
+          await saveWorkout({name:woName,steps:inv.workoutSteps,folder:folderId,plannedDate:inv.date});}}
       await savePlan({date:inv.date,tipo:'entreno',notas:'Con '+inv.fromName,workoutName:inv.workoutName});
     }else if(inv.type==='sharedRoute'&&inv.routeData){
       const rd={...inv.routeData};delete rd.id;
@@ -2238,7 +2252,10 @@ function openMeso(){msFases=[];msStep=0;
 function copyLastMeso(){const last=mesos[mesos.length-1];if(!last)return;msFases=(last.fases||[]).map(f=>({...f,weekPlans:JSON.parse(JSON.stringify(f.weekPlans||[]))}));rMsFases();}
 function addFase(){msFases.push({name:MESO_COLORS[0].name,color:MESO_COLORS[0].color,weeks:4,weekPlans:[]});rMsFases();}
 let msStep=0;
-function rMsFases(){if(msStep===0)rMsPhaseSetup();else rMsWeekAssign();}
+function rMsFases(){
+  const ob=document.getElementById('msOuterBtns');
+  if(ob)ob.style.display=msStep===0?'block':'none';
+  if(msStep===0)rMsPhaseSetup();else rMsWeekAssign();}
 function rMsPhaseSetup(){
   let h=`<div style="background:var(--bg2);border-radius:10px;padding:10px;margin-bottom:10px;border:1px solid rgba(255,255,255,.06)">
   <div style="font-size:14px;color:var(--green);font-weight:700;margin-bottom:4px">PASO 1 · Define las fases</div>
@@ -2321,47 +2338,51 @@ async function delMeso(id){if(!confirm(t('deleteMeso')))return;
     for(const p of mesoPlans){try{await db.collection('users').doc(U.uid).collection('plans').doc(p.id).delete();}catch(e){}}
     plans=plans.filter(p=>!mesoPlans.some(mp=>mp.id===p.id));}
   await db.collection('users').doc(U.uid).collection('mesos').doc(id).delete();mesos=mesos.filter(m=>m.id!==id);drMeso();rCal();}
+let _shareCallback=null;
+function pickFriend(title,callback){
+  _shareCallback=callback;
+  document.getElementById('frPickTitle').textContent=title;
+  let h='';
+  if(!friends.length){h='<div style="color:var(--text3);font-size:12px;padding:16px;text-align:center">No tienes amigos añadidos</div>';}
+  friends.forEach(f=>{
+    h+=`<div onclick="selectFriend('${f.email}')" style="display:flex;align-items:center;gap:10px;padding:10px;cursor:pointer;border-radius:10px;border-bottom:1px solid rgba(255,255,255,.03)" onmousedown="this.style.background='var(--bg3)'" onmouseup="this.style.background=''">`;
+    h+=`<img src="${f.photo||'icon-192.png'}" onerror="this.src='icon-192.png'" style="width:38px;height:38px;border-radius:50%;border:2px solid var(--rock)">`;
+    h+=`<div><div style="font-weight:700;font-size:13px;color:var(--text)">${f.name||f.email}</div><div style="font-size:10px;color:var(--text3)">${f.email}</div></div></div>`;});
+  document.getElementById('frPickList').innerHTML=h;
+  document.getElementById('mFrPick').classList.add('sh');}
+async function selectFriend(email){
+  cm('mFrPick');
+  const fq=await db.collection('users').where('email','==',email).get();
+  if(fq.empty)return;
+  const fuid=fq.docs[0].id;
+  const fr=friends.find(f=>f.email===email);
+  if(_shareCallback)_shareCallback(fuid,fr);}
 async function shareMeso(mesoId){
   if(!U||!friends.length){alert('No tienes amigos añadidos');return;}
   const m=mesos.find(x=>x.id===mesoId);if(!m)return;
-  const friendName=prompt('Compartir "'+m.name+'" con:\n'+friends.map(f=>f.name||f.email).join(', '));
-  if(!friendName)return;
-  const fr=friends.find(f=>(f.name||'').toLowerCase()===friendName.toLowerCase()||f.email.toLowerCase()===friendName.toLowerCase());
-  if(!fr){alert('Amigo no encontrado');return;}
-  const fq=await db.collection('users').where('email','==',fr.email).get();
-  if(fq.empty)return;
-  const fuid=fq.docs[0].id;
-  // Collect all workout names from the meso
-  const woNames=new Set();
-  (m.fases||[]).forEach(f=>{(f.weekPlans||[]).forEach(wk=>{(wk||[]).forEach(dy=>{(dy||[]).forEach(w=>{if(w)woNames.add(w);});});});});
-  // Collect workout data
-  const wos={};
-  for(const wn of woNames){const w=W.find(x=>x.name===wn);if(w)wos[wn]=w.steps||[];}
-  // Send invite with meso data
-  await db.collection('users').doc(fuid).collection('invites').add({
-    from:U.uid,fromName:U.displayName||U.email,date:m.start,
-    tipo:'mesociclo',type:'sharedMeso',
-    mesoData:{name:m.name,start:m.start,fases:m.fases},
-    workoutsData:wos,
-    status:'pending',ts:firebase.firestore.FieldValue.serverTimestamp()});
-  alert('Mesociclo compartido con '+(fr.name||fr.email));}
+  pickFriend('Compartir "'+m.name+'"',async(fuid,fr)=>{
+    const woNames=new Set();
+    (m.fases||[]).forEach(f=>{(f.weekPlans||[]).forEach(wk=>{(wk||[]).forEach(dy=>{(dy||[]).forEach(w=>{if(w)woNames.add(w);});});});});
+    const wos={};
+    for(const wn of woNames){const w=W.find(x=>x.name===wn);if(w)wos[wn]=w.steps||[];}
+    await db.collection('users').doc(fuid).collection('invites').add({
+      from:U.uid,fromName:U.displayName||U.email,date:m.start,
+      tipo:'mesociclo',type:'sharedMeso',
+      mesoData:{name:m.name,start:m.start,fases:m.fases},
+      workoutsData:wos,
+      status:'pending',ts:firebase.firestore.FieldValue.serverTimestamp()});
+    alert('Mesociclo compartido con '+(fr.name||fr.email));});}
 async function shareWoFromHome(woName,date){
   if(!U||!friends.length){alert('No tienes amigos añadidos');return;}
   const w=W.find(x=>x.name===woName);if(!w)return;
-  const friendName=prompt('Compartir entreno "'+woName+'" con:\n'+friends.map(f=>f.name||f.email).join(', '));
-  if(!friendName)return;
-  const fr=friends.find(f=>(f.name||'').toLowerCase()===friendName.toLowerCase()||f.email.toLowerCase()===friendName.toLowerCase());
-  if(!fr){alert('Amigo no encontrado');return;}
-  const fq=await db.collection('users').where('email','==',fr.email).get();
-  if(fq.empty)return;
-  const fuid=fq.docs[0].id;
-  await db.collection('users').doc(fuid).collection('invites').add({
-    from:U.uid,fromName:U.displayName||U.email,date:date,
-    tipo:'entreno',type:'sharedWorkout',
-    workoutName:woName,workoutSteps:w.steps||[],
-    notas:'Entreno de '+(U.displayName||U.email),
-    status:'pending',ts:firebase.firestore.FieldValue.serverTimestamp()});
-  alert('Entreno compartido con '+(fr.name||fr.email));}
+  pickFriend('Compartir "'+woName+'"',async(fuid,fr)=>{
+    await db.collection('users').doc(fuid).collection('invites').add({
+      from:U.uid,fromName:U.displayName||U.email,date:date,
+      tipo:'entreno',type:'sharedWorkout',
+      workoutName:woName,workoutSteps:w.steps||[],
+      notas:'Entreno de '+(U.displayName||U.email),
+      status:'pending',ts:firebase.firestore.FieldValue.serverTimestamp()});
+    alert('Entreno compartido con '+(fr.name||fr.email));});}
 // PREDEFINED PROGRAMS
 const PROGRAMS=[
   {name:'Hörst 4-3-2-1 (10 semanas)',desc:'Periodización clásica. Ideal para temporada baja o entre viajes.',
