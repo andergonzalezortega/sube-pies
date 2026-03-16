@@ -219,7 +219,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <div class="card"><div class="ct">IMPORTAR ENTRENOS DESDE EXCEL</div>
 <div style="font-size:10px;color:var(--text3);margin-bottom:8px">Sube un Excel (.xlsx) con entrenos. Formato: columnas Entreno, Ejercicio, Agarre, mm, Ángulo, kg, Modo, Tiempo, Reps, Series, Reps/serie, Desc(s), DS(s)</div>
 <input type="file" id="importXLFile" accept=".xlsx,.xls,.csv" style="display:none" onchange="importXL(event)">
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><button class="btn" style="background:var(--purple);color:#fff;font-size:12px;padding:10px;margin:0" onclick="document.getElementById('importXLFile').click()">📤 Importar</button><button class="btn" style="background:var(--bg3);color:var(--text);font-size:12px;padding:10px;margin:0" onclick="window.open('SubePies_Plantilla_Entrenos.xlsx')">📥 Plantilla</button></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><button class="btn" style="background:var(--purple);color:#fff;font-size:12px;padding:10px;margin:0" onclick="document.getElementById('importXLFile').click()">📤 Importar</button><button class="btn" style="background:var(--bg3);color:var(--text);font-size:12px;padding:10px;margin:0" onclick="window.open('https://andergonzalezortega.github.io/sube-pies/SubePies_Plantilla_Entrenos.xlsx')">📥 Plantilla</button></div>
 <div id="importMsg" style="font-size:10px;margin-top:6px;text-align:center"></div>
 </div>
 <div class="card"><div class="ct" id="ctNick">NOMBRE VISIBLE</div>
@@ -2148,30 +2148,103 @@ async function viewFr(email){const q=await db.collection('users').where('email',
 const MESO_COLORS=[{name:'Base aeróbica',color:'#ffe66d'},{name:'Fuerza resistencia',color:'#4ecdc4'},{name:'Fuerza máxima',color:'#ff6b6b'},{name:'Potencia',color:'#a78bfa'},{name:'Descarga',color:'#4a9eff'},{name:'Personalizado',color:'#8a9bb0'}];
 let msFases=[];
 function drMeso(){let h='';if(!mesos.length)h='<div style="color:var(--text3);font-size:11px;text-align:center;padding:16px">'+t('noMesos')+'</div>';
-  mesos.forEach(m=>{h+=`<div class="meso-card"><button class="meso-del" onclick="delMeso('${m.id}')">✕</button><div style="font-family:'Bebas Neue';font-size:16px;color:var(--rock)">${m.name}</div><div style="font-size:10px;color:var(--text3);margin-bottom:6px">Inicio: ${new Date(m.start).toLocaleDateString(LANG==='en'?'en-US':LANG==='eu'?'eu-ES':LANG==='ca'?'ca-ES':'es-ES',{day:'numeric',month:'short'})}</div>`;
-    (m.fases||[]).forEach(f=>{h+=`<div class="meso-fase"><div class="meso-dot" style="background:${f.color}"></div><div class="meso-info"><b>${f.name}</b> · ${f.weeks} sem</div></div>`;});
+  mesos.forEach(m=>{
+    const totalWeeks=(m.fases||[]).reduce((a,f)=>a+(f.weeks||0),0);
+    h+=`<div class="meso-card"><div style="display:flex;justify-content:space-between;align-items:center"><div style="font-family:'Bebas Neue';font-size:16px;color:var(--rock)">${m.name}</div><div style="display:flex;gap:4px"><button onclick="editMesoDates('${m.id}')" style="background:none;border:none;color:var(--blue);font-size:10px;cursor:pointer">📅 Editar</button><button onclick="delMeso('${m.id}')" style="background:none;border:none;color:var(--red);font-size:10px;cursor:pointer">✕</button></div></div>`;
+    h+=`<div style="font-size:10px;color:var(--text3);margin-bottom:6px">Inicio: ${new Date(m.start).toLocaleDateString(LANG==='en'?'en-US':LANG==='eu'?'eu-ES':LANG==='ca'?'ca-ES':'es-ES',{day:'numeric',month:'short'})} · ${totalWeeks} semanas</div>`;
+    (m.fases||[]).forEach(f=>{
+      h+=`<div class="meso-fase"><div class="meso-dot" style="background:${f.color}"></div><div class="meso-info"><b>${f.name}</b> · ${f.weeks} sem · ${f.sessionsPerWeek||'?'} ent/sem</div></div>`;
+      if(f.sessions&&f.sessions.length){
+        h+=`<div style="margin-left:20px;margin-bottom:4px">`;
+        f.sessions.forEach((s,si)=>{if(s)h+=`<div style="font-size:9px;color:var(--text3);padding:1px 0">${si+1}. ${s}</div>`;});
+        h+=`</div>`;}});
     h+=`</div>`;});
   document.getElementById('mesoList').innerHTML=h;}
+async function editMesoDates(mesoId){
+  const m=mesos.find(x=>x.id===mesoId);if(!m)return;
+  // Show all planned sessions from this meso and allow date changes
+  const startDate=new Date(m.start);
+  const mesoPlans=plans.filter(p=>p.notas&&(m.fases||[]).some(f=>p.notas===f.name));
+  if(!mesoPlans.length){alert('No hay sesiones programadas. Crea el mesociclo de nuevo.');return;}
+  let msg='Sesiones programadas:\n\n';
+  mesoPlans.sort((a,b)=>a.date.localeCompare(b.date)).forEach(p=>{
+    msg+=p.date+' · '+p.workoutName+' ('+p.notas+')\n';});
+  msg+='\n¿Quieres borrar todas las sesiones y recrearlas?';
+  if(!confirm(msg))return;
+  // Delete old plans
+  for(const p of mesoPlans){
+    await db.collection('users').doc(U.uid).collection('plans').doc(p.id).delete();
+    plans=plans.filter(x=>x.id!==p.id);}
+  // Reopen meso editor with existing data
+  msFases=(m.fases||[]).map(f=>({...f}));
+  document.getElementById('msNm').value=m.name;
+  document.getElementById('msStart').value=m.start;
+  // Delete old meso
+  await db.collection('users').doc(U.uid).collection('mesos').doc(m.id).delete();
+  mesos=mesos.filter(x=>x.id!==m.id);
+  rMsFases();document.getElementById('mMeso').classList.add('sh');}
 function openMeso(){msFases=[];
-  // If there's a previous meso, offer to copy
   if(mesos.length){const last=mesos[mesos.length-1];
     document.getElementById('msPrev').style.display='block';
     document.getElementById('msPrev').innerHTML=`<button class="btn bg2" style="font-size:11px" onclick="copyLastMeso()">📋 Copiar de "${last.name}"</button>`;}
   else{document.getElementById('msPrev').style.display='none';}
   document.getElementById('msNm').value='';document.getElementById('msStart').value=new Date().toISOString().split('T')[0];
   rMsFases();document.getElementById('mMeso').classList.add('sh');}
-function copyLastMeso(){const last=mesos[mesos.length-1];if(!last)return;msFases=(last.fases||[]).map(f=>({...f}));rMsFases();}
-function addFase(){msFases.push({name:MESO_COLORS[0].name,color:MESO_COLORS[0].color,weeks:4});rMsFases();}
+function copyLastMeso(){const last=mesos[mesos.length-1];if(!last)return;msFases=(last.fases||[]).map(f=>({...f,sessions:f.sessions||[]}));rMsFases();}
+function addFase(){msFases.push({name:MESO_COLORS[0].name,color:MESO_COLORS[0].color,weeks:4,sessionsPerWeek:3,sessions:[]});rMsFases();}
 function rMsFases(){let h='';msFases.forEach((f,i)=>{
     let opts='';MESO_COLORS.forEach(c=>{opts+=`<option value="${c.name}" ${f.name===c.name?'selected':''}>${c.name}</option>`;});
-    h+=`<div class="meso-fase"><div class="meso-dot" style="background:${f.color}"></div><select style="flex:1;background:var(--bg);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:4px;color:var(--text);font-size:11px;font-family:Nunito" onchange="msFases[${i}].name=this.value;const c=MESO_COLORS.find(x=>x.name===this.value);if(c)msFases[${i}].color=c.color;rMsFases()">${opts}</select><input type="number" value="${f.weeks}" min="1" max="8" style="width:40px;background:var(--bg);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:4px;color:var(--text);font-size:11px;text-align:center;font-family:Nunito" onchange="msFases[${i}].weeks=parseInt(this.value)||1;rMsFases()"><span style="font-size:9px;color:var(--text3)">sem</span><button class="meso-rm" onclick="msFases.splice(${i},1);rMsFases()">✕</button></div>`;});
+    // Workout options
+    let woOpts='<option value="">— Elegir entreno —</option>';
+    W.forEach(w=>{woOpts+=`<option value="${w.name}">${w.name}</option>`;});
+    h+=`<div style="background:var(--bg2);border-radius:12px;padding:10px;margin-bottom:8px;border-left:4px solid ${f.color}">`;
+    h+=`<div style="display:flex;align-items:center;gap:4px;margin-bottom:6px">`;
+    h+=`<select style="flex:1;background:var(--bg);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:5px;color:var(--text);font-size:12px;font-family:Nunito" onchange="msFases[${i}].name=this.value;const c=MESO_COLORS.find(x=>x.name===this.value);if(c)msFases[${i}].color=c.color;rMsFases()">${opts}</select>`;
+    h+=`<input type="number" value="${f.weeks}" min="1" max="12" style="width:36px;background:var(--bg);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:5px;color:var(--text);font-size:11px;text-align:center;font-family:Nunito" onchange="msFases[${i}].weeks=parseInt(this.value)||1;rMsFases()"><span style="font-size:9px;color:var(--text3)">sem</span>`;
+    h+=`<button style="background:none;border:none;color:var(--red);font-size:14px;cursor:pointer" onclick="msFases.splice(${i},1);rMsFases()">✕</button></div>`;
+    // Sessions per week
+    h+=`<div style="display:flex;align-items:center;gap:6px;margin-bottom:6px"><span style="font-size:10px;color:var(--text3)">Entrenos/semana:</span>`;
+    h+=`<select style="background:var(--bg);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:3px 6px;color:var(--text);font-size:11px;font-family:Nunito" onchange="msFases[${i}].sessionsPerWeek=parseInt(this.value);msFases[${i}].sessions=[];rMsFases()">`;
+    for(let n=1;n<=6;n++){h+=`<option value="${n}" ${(f.sessionsPerWeek||3)===n?'selected':''}>${n}</option>`;}
+    h+=`</select></div>`;
+    // Workout selectors for each session
+    const nSes=f.sessionsPerWeek||3;
+    if(!f.sessions)f.sessions=[];
+    while(f.sessions.length<nSes)f.sessions.push('');
+    const days=['Lu','Ma','Mi','Ju','Vi','Sa','Do'];
+    h+=`<div style="display:flex;flex-direction:column;gap:3px">`;
+    for(let s=0;s<nSes;s++){
+      h+=`<div style="display:flex;align-items:center;gap:4px"><span style="font-size:10px;color:var(--text3);width:16px">${s+1}.</span>`;
+      h+=`<select style="flex:1;background:var(--bg);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:3px;color:var(--text);font-size:10px;font-family:Nunito" onchange="msFases[${i}].sessions[${s}]=this.value">${woOpts.replace('value="'+f.sessions[s]+'"','value="'+f.sessions[s]+'" selected')}</select>`;
+      h+=`</div>`;}
+    h+=`</div></div>`;});
   if(!msFases.length)h='<div style="font-size:10px;color:var(--text3);padding:4px">'+t('addPhasesMsg')+'</div>';
   document.getElementById('msFases').innerHTML=h;}
 async function svMeso(){const nm=document.getElementById('msNm').value.trim(),start=document.getElementById('msStart').value;
   if(!nm||!start||!msFases.length){alert(t('mesoNeedAll'));return;}
-  const data={name:nm,start,fases:msFases.map(f=>({name:f.name,color:f.color,weeks:f.weeks}))};
+  const fases=msFases.map(f=>({name:f.name,color:f.color,weeks:f.weeks,sessionsPerWeek:f.sessionsPerWeek||3,sessions:f.sessions||[]}));
+  const data={name:nm,start,fases};
   const ref=await db.collection('users').doc(U.uid).collection('mesos').add(data);data.id=ref.id;mesos.push(data);
-  cm('mMeso');tTb='meso';drTr();}
+  // Create plans in calendar for each session
+  const startDate=new Date(start);
+  for(const fase of fases){
+    const nSes=fase.sessionsPerWeek||3;
+    for(let w=0;w<fase.weeks;w++){
+      // Distribute sessions evenly across the week
+      const spacing=Math.floor(7/nSes);
+      for(let s=0;s<nSes;s++){
+        const woName=fase.sessions[s]||'';
+        if(!woName)continue;
+        const dayOffset=w*7+s*spacing;
+        const planDate=new Date(startDate);planDate.setDate(planDate.getDate()+dayOffset);
+        const dateStr=planDate.toISOString().split('T')[0];
+        const plan={date:dateStr,tipo:'entreno',lugar:'',notas:fase.name,workoutName:woName};
+        await savePlan(plan);
+        // Also set plannedDate on the workout
+        const wo=W.find(x=>x.name===woName);
+        if(wo&&wo.id){try{await db.collection('users').doc(U.uid).collection('workouts').doc(wo.id).update({plannedDate:dateStr});wo.plannedDate=dateStr;}catch(e){}}}}}
+  cm('mMeso');tTb='meso';drTr();rCal();
+  alert('Mesociclo "'+nm+'" creado con '+plans.length+' sesiones en el calendario');}
 async function delMeso(id){if(!confirm(t('deleteMeso')))return;await db.collection('users').doc(U.uid).collection('mesos').doc(id).delete();mesos=mesos.filter(m=>m.id!==id);drMeso();}
 // PREDEFINED PROGRAMS
 const PROGRAMS=[
