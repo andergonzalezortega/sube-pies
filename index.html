@@ -237,7 +237,8 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 </div>
 <!-- FRIEND PICKER --><div class="mbg" id="mFrPick"><div class="mdl" style="max-width:320px"><button class="mx" onclick="cm('mFrPick')">✕</button>
 <h2 style="font-size:16px;color:var(--rock)" id="frPickTitle">Compartir con</h2>
-<div id="frPickList" style="max-height:300px;overflow-y:auto"></div>
+<input id="frPickSearch" placeholder="Buscar amigo..." oninput="filterFrPick()" style="width:100%;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px;color:var(--text);font-size:12px;font-family:Nunito;outline:none;margin-bottom:8px">
+<div id="frPickList" style="max-height:280px;overflow-y:auto"></div>
 </div></div>
 <!-- MODAL ROUTE --><div class="mbg" id="mR1"><div class="mdl"><button class="mx" onclick="cm('mR1')">✕</button><h2 id="mRT">VÍA</h2><div class="fl"><label>Nombre</label><input id="iN" placeholder="Diedro mágico"></div><div class="fl"><label>Lugar</label><input id="iL" placeholder="Atauri, Galdames..." list="dlZ"><datalist id="dlZ"></datalist></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="fl"><label>Tipo lugar</label><select id="iLT" onchange="chkRouteFields()"><option value="roca">Roca</option><option value="indoor">Indoor</option></select></div><div class="fl"><label>Tipo vía</label><select id="iTP" onchange="chkRouteFields()"><option>Cuerda</option><option>Bloque</option><option>Top Rope</option><option>Largos</option></select></div></div><div id="fEstilo" style="display:none"><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="fl"><label>Estilo</label><select id="iEstilo"><option value="">—</option><option value="deportiva">Deportiva</option><option value="clasica">Clásica</option></select></div><div class="fl" id="fNLargos" style="display:none"><label>Nº largos</label><input type="number" id="iNLargos" min="2" max="30" value="2" onchange="buildLargosGrades()"></div></div></div><div id="fLargosGrades" style="display:none;background:var(--bg3);border-radius:10px;padding:8px;margin-bottom:8px"><div class="ct" style="margin-bottom:4px">GRADO POR LARGO</div><div id="largosGradeList"></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px"><div class="fl"><label>Grado</label><select id="iG"></select></div><div class="fl"><label>Intento</label><select id="iI" onchange="chkFlashAvista()"></select></div><div class="fl"><label>Metros</label><input type="number" id="iMetros" placeholder="—" min="0" max="500" style="width:100%"></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px"><div class="fl"><label>Encadenado</label><select id="iE" onchange="chkFlashAvista()"><option value="1">Sí</option><option value="0">No</option></select></div><div class="fl" id="fFlash"><label>Flash</label><select id="iFlash"><option value="0">No</option><option value="1">Sí</option></select></div><div class="fl" id="fAvista"><label>A vista</label><select id="iAvista"><option value="0">No</option><option value="1">Sí</option></select></div></div><div class="fl"><label>Sensaciones</label><textarea id="iNo" placeholder="Beta, condiciones..."></textarea></div><div class="fl"><label>Compañeros</label><div id="rFriendChips" style="display:flex;gap:3px;flex-wrap:wrap;margin-bottom:4px"></div><input id="iA" placeholder="Escribe o elige amigos..." oninput="filterRouteFriends()"><div id="rFriendSug" style="display:none"></div></div><div class="fl"><label>Fecha</label><input type="date" id="iFe"></div><button class="btn bp" onclick="svR()">Guardar</button><button class="btn" id="btnShareR" style="display:none;background:var(--blue);color:#fff" onclick="shareRoute()">👥 Compartir vía con amigos</button><button class="btn bdel" id="btnDelR" style="display:none" onclick="delR()">🗑️ Eliminar vía</button><button class="btn bg2" onclick="cm('mR1')">Cancelar</button></div></div>
 <!-- MODAL WORKOUT --><div class="mbg" id="mW1"><div class="mdl"><button class="mx" onclick="cm('mW1')">✕</button><h2 id="mW1Title">CREAR ENTRENO</h2><div class="fl"><label>Nombre</label><input id="wNm" placeholder="Fuerza dedos"></div><div class="fl"><label>Carpeta</label><select id="wFolder"><option value="">— Sin carpeta —</option></select></div><div class="ct">PASOS</div><div id="wS"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;margin-bottom:8px"><button style="padding:14px;background:var(--bg3);border:1px solid rgba(255,255,255,.1);border-radius:12px;color:var(--text);font-family:'Nunito';font-weight:700;font-size:13px;cursor:pointer" onclick="showEjForm()">Ejercicio</button><button style="padding:14px;background:var(--bg3);border:1px solid rgba(255,255,255,.1);border-radius:12px;color:var(--text);font-family:'Nunito';font-weight:700;font-size:13px;cursor:pointer" onclick="showViaForm()">Vía</button></div><div style="display:flex;gap:3px;margin-bottom:8px;flex-wrap:wrap" id="ejTpls"></div><div id="ejForm" style="display:none;background:var(--bg3);border-radius:10px;padding:10px;margin-bottom:8px"><div class="fl"><label>Nombre</label><input id="ejNm" placeholder="Suspensiones, Dominadas..."></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><div class="fl"><label>Agarre</label><select id="ejAg"><option value="">— Ninguno —</option><option>Regleta</option><option>Cazo</option><option>Pinza</option><option>Romo</option><option>Bidedo</option><option>Unidedo</option><option>Barra</option></select></div><div class="fl"><label>Tamaño (mm)</label><input id="ejMm" type="number" placeholder="20"></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><div class="fl"><label>Ángulo</label><select id="ejAng"><option value="">—</option><option>0°</option><option>15°</option><option>30°</option><option>45°</option><option>90°</option><option>120°</option></select></div><div class="fl"><label>Lastre (kg)</label><input id="ejKg" type="number" value="0"></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px"><div class="fl"><label>Modo</label><select id="ejModo" onchange="ejModoChg()"><option value="time">Tiempo</option><option value="reps">Reps</option></select></div><div class="fl" id="ejTimeF"><label>Tiempo (s)</label><input id="ejTime" type="number" value="7"></div><div class="fl" id="ejRepsF" style="display:none"><label>Reps</label><input id="ejReps" type="number" value="10"></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px"><div class="fl"><label>Series</label><input id="ejSer" type="number" value="4"></div><div class="fl"><label>Reps/serie</label><input id="ejRep" type="number" value="6"></div><div class="fl"><label>Descanso (s)</label><input id="ejDesc" type="number" value="3"></div></div><div class="fl"><label>Desc. entre series (s)</label><input id="ejDS" type="number" value="180"></div><div style="display:flex;gap:4px"><button class="btn bp" style="flex:1;font-size:12px;padding:8px" onclick="addEj()">+ Añadir</button><button class="btn bg2" style="width:auto;padding:8px 12px;font-size:10px;margin:0" onclick="saveCustomTpl()">💾 Guardar plantilla</button></div></div><div id="viaForm" style="display:none;background:var(--bg3);border-radius:10px;padding:10px;margin-bottom:8px"><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><div class="fl"><label>Grado</label><select id="vfGrado"></select></div><div class="fl"><label>Tipo</label><select id="vfTipo"><option>Cuerda</option><option>Bloque</option><option>Top Rope</option></select></div></div><div class="fl"><label>Nombre (opcional)</label><input id="vfNombre" placeholder="La rambla..."></div><button class="btn bp" style="font-size:12px;padding:8px" onclick="addViaStep()">+ Añadir vía</button></div><hr style="border:none;border-top:1px solid var(--bg4);margin:10px 0"><button class="btn bp" onclick="svW()">Guardar entreno</button><button class="btn bg2" onclick="cm('mW1')">Cancelar</button></div></div>
@@ -2212,7 +2213,9 @@ function drMeso(){let h='';if(!mesos.length)h='<div style="color:var(--text3);fo
   mesos.forEach(m=>{
     const totalWeeks=(m.fases||[]).reduce((a,f)=>a+(f.weeks||0),0);
     let totalSessions=0;
-    (m.fases||[]).forEach(f=>{(f.weekPlans||[]).forEach(wp=>{(wp||[]).forEach(d=>{if(d)totalSessions++;});});});
+    (m.fases||[]).forEach(f=>{
+      if(f.schedule){Object.values(f.schedule).forEach(v=>{totalSessions+=v.split('|').filter(x=>x).length;});}
+      else if(f.weekPlans){(f.weekPlans||[]).forEach(wp=>{(wp||[]).forEach(d=>{if(Array.isArray(d))totalSessions+=d.filter(x=>x).length;else if(d)totalSessions++;});});}});
     h+=`<div class="meso-card"><div style="display:flex;justify-content:space-between;align-items:center"><div style="font-family:'Bebas Neue';font-size:16px;color:var(--rock)">${m.name}</div><div style="display:flex;gap:4px"><button onclick="shareMeso('${m.id}')" style="background:none;border:none;color:var(--green);font-size:10px;cursor:pointer">📤 Compartir</button><button onclick="editMesoDates('${m.id}')" style="background:none;border:none;color:var(--blue);font-size:10px;cursor:pointer">📅 Editar</button><button onclick="delMeso('${m.id}')" style="background:none;border:none;color:var(--red);font-size:10px;cursor:pointer">✕</button></div></div>`;
     h+=`<div style="font-size:10px;color:var(--text3);margin-bottom:6px">Inicio: ${new Date(m.start).toLocaleDateString('es-ES',{day:'numeric',month:'short'})} · ${totalWeeks} sem · ${totalSessions} sesiones</div>`;
     (m.fases||[]).forEach(f=>{
@@ -2234,8 +2237,14 @@ async function editMesoDates(mesoId){
   for(const p of mesoPlans){
     await db.collection('users').doc(U.uid).collection('plans').doc(p.id).delete();
     plans=plans.filter(x=>x.id!==p.id);}
-  // Reopen meso editor with existing data
-  msFases=(m.fases||[]).map(f=>({...f}));
+  // Reopen meso editor with existing data - convert schedule back to weekPlans
+  msFases=(m.fases||[]).map(f=>{
+    const wp=[];
+    for(let w=0;w<(f.weeks||0);w++){
+      const week=[[],[],[],[],[],[],[]];
+      if(f.schedule){for(let d=0;d<7;d++){const key=w+'-'+d;if(f.schedule[key])week[d]=f.schedule[key].split('|');}}
+      wp.push(week);}
+    return{name:f.name,color:f.color,weeks:f.weeks,weekPlans:wp};});
   document.getElementById('msNm').value=m.name;
   document.getElementById('msStart').value=m.start;
   // Delete old meso
@@ -2313,20 +2322,28 @@ function rMsWeekAssign(){
 async function svMeso(){
   const nm=document.getElementById('msNm').value.trim(),start=document.getElementById('msStart').value;
   if(!nm||!start||!msFases.length){alert(t('mesoNeedAll'));return;}
-  const fases=msFases.map(f=>({name:f.name,color:f.color,weeks:f.weeks,
-    weekPlans:(f.weekPlans||[]).map(wk=>(wk||[]).map(dy=>(dy||[]).filter(w=>w&&w.trim())))}));
+  // Flatten weekPlans for Firestore (no nested arrays allowed)
+  // Convert to: schedule = {"0-0":"wo1|wo2", "0-3":"wo3"} keyed by "week-day"
+  const fases=msFases.map(f=>{
+    const schedule={};
+    (f.weekPlans||[]).forEach((wk,wi)=>{
+      (wk||[]).forEach((dy,di)=>{
+        const wos=(dy||[]).filter(w=>w&&w.trim());
+        if(wos.length)schedule[wi+'-'+di]=wos.join('|');});});
+    return{name:f.name,color:f.color,weeks:f.weeks,schedule};});
   const data={name:nm,start,fases};
   try{const ref=await db.collection('users').doc(U.uid).collection('mesos').add(data);
     data.id=ref.id;mesos.push(data);
     const startDate=new Date(start+'T12:00:00');
     let weekOffset=0,planCount=0;
     for(const fase of fases){for(let w=0;w<fase.weeks;w++){
-      const wp=fase.weekPlans[w]||[];
-      for(let d=0;d<7;d++){for(const woName of(wp[d]||[])){
-        if(!woName)continue;
-        const pd=new Date(startDate);pd.setDate(pd.getDate()+weekOffset*7+d);
-        const ds=pd.toISOString().split('T')[0];
-        await savePlan({date:ds,tipo:'entreno',lugar:'',notas:fase.name,workoutName:woName});planCount++;}}
+      for(let d=0;d<7;d++){
+        const key=w+'-'+d;
+        const wos=(fase.schedule[key]||'').split('|').filter(x=>x);
+        for(const woName of wos){
+          const pd=new Date(startDate);pd.setDate(pd.getDate()+weekOffset*7+d);
+          const ds=pd.toISOString().split('T')[0];
+          await savePlan({date:ds,tipo:'entreno',lugar:'',notas:fase.name,workoutName:woName});planCount++;}}
       weekOffset++;}}
     msStep=0;cm('mMeso');tTb='meso';drTr();rCal();rH();
     alert('Mesociclo "'+nm+'" creado con '+planCount+' sesiones');
@@ -2342,14 +2359,22 @@ let _shareCallback=null;
 function pickFriend(title,callback){
   _shareCallback=callback;
   document.getElementById('frPickTitle').textContent=title;
+  document.getElementById('frPickSearch').value='';
+  renderFrPick('');
+  document.getElementById('mFrPick').classList.add('sh');
+  setTimeout(()=>document.getElementById('frPickSearch').focus(),100);}
+function filterFrPick(){renderFrPick(document.getElementById('frPickSearch').value.toLowerCase());}
+function renderFrPick(q){
   let h='';
-  if(!friends.length){h='<div style="color:var(--text3);font-size:12px;padding:16px;text-align:center">No tienes amigos añadidos</div>';}
-  friends.forEach(f=>{
-    h+=`<div onclick="selectFriend('${f.email}')" style="display:flex;align-items:center;gap:10px;padding:10px;cursor:pointer;border-radius:10px;border-bottom:1px solid rgba(255,255,255,.03)" onmousedown="this.style.background='var(--bg3)'" onmouseup="this.style.background=''">`;
+  const filtered=friends.filter(f=>{
+    if(!q)return true;
+    return(f.name||'').toLowerCase().includes(q)||(f.email||'').toLowerCase().includes(q);});
+  if(!filtered.length){h='<div style="color:var(--text3);font-size:12px;padding:16px;text-align:center">'+(friends.length?'Sin resultados':'No tienes amigos añadidos')+'</div>';}
+  filtered.forEach(f=>{
+    h+=`<div onclick="selectFriend('${f.email}')" style="display:flex;align-items:center;gap:10px;padding:10px;cursor:pointer;border-radius:10px;border-bottom:1px solid rgba(255,255,255,.03);transition:.15s" onmousedown="this.style.background='var(--bg3)'" onmouseup="this.style.background=''">`;
     h+=`<img src="${f.photo||'icon-192.png'}" onerror="this.src='icon-192.png'" style="width:38px;height:38px;border-radius:50%;border:2px solid var(--rock)">`;
     h+=`<div><div style="font-weight:700;font-size:13px;color:var(--text)">${f.name||f.email}</div><div style="font-size:10px;color:var(--text3)">${f.email}</div></div></div>`;});
-  document.getElementById('frPickList').innerHTML=h;
-  document.getElementById('mFrPick').classList.add('sh');}
+  document.getElementById('frPickList').innerHTML=h;}
 async function selectFriend(email){
   cm('mFrPick');
   const fq=await db.collection('users').where('email','==',email).get();
