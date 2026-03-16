@@ -2498,9 +2498,9 @@ function showProgramTemplates(){
 async function activateProgram(idx){
   if(!U)return;const uid=U.uid;
   const prog=PROGRAMS[idx];if(!prog)return;
-  if(!confirm('¿Activar "'+prog.name+'"? Se crearán los entrenos y el mesociclo.'))return;
+  if(!confirm('¿Activar "'+prog.name+'"?\nSe crearán los entrenos y podrás asignarlos a días.'))return;
   const ej=(nm,ag,mm,kg,modo,time,reps,rep,ser,desc,ds,ang)=>({nm,ag:ag||'',mm:mm||0,kg:kg||0,modo:modo||'time',time:time||0,reps:reps||0,rep:rep||0,ser:ser||1,desc:desc||0,ds:ds||180,ang:ang||''});
-  // Create folder if needed
+  // Create folder
   let folder=woFolders.find(f=>f.name==='Programa Hörst');
   if(!folder){const ref=await db.collection('users').doc(uid).collection('woFolders').add({name:'Programa Hörst'});
     folder={id:ref.id,name:'Programa Hörst'};woFolders.push(folder);}
@@ -2511,13 +2511,15 @@ async function activateProgram(idx){
       const wo={name:def.name,folder:folder.id,steps:def.steps(ej)};
       const ref=await db.collection('users').doc(uid).collection('workouts').add(wo);
       W.push({id:ref.id,...wo});}}
-  // Create mesocycle
-  const start=new Date().toISOString().split('T')[0];
-  const data={name:prog.name,start,fases:prog.fases.map(f=>({name:f.name,color:f.color,weeks:f.weeks,desc:f.desc}))};
-  const ref=await db.collection('users').doc(uid).collection('mesos').add(data);data.id=ref.id;mesos.push(data);
+  // Open meso editor pre-populated with phases
   document.getElementById('mesoTemplates').style.display='none';
-  alert('Programa "'+prog.name+'" activado con '+prog.workouts.length+' entrenos');
-  drMeso();drTr();}
+  msStep=0;
+  msFases=prog.fases.map(f=>({name:f.name,color:f.color,weeks:f.weeks,weekPlans:[]}));
+  document.getElementById('msNm').value=prog.name;
+  document.getElementById('msStart').value=new Date().toISOString().split('T')[0];
+  rMsFases();
+  document.getElementById('mMeso').classList.add('sh');
+  alert('Entrenos creados en carpeta "Programa Hörst". Ahora asigna los entrenos a los días de cada semana.');}
 // Get mesociclo color for a date
 function getMesoColor(dateStr){for(const m of mesos){let d=new Date(m.start);for(const f of(m.fases||[])){for(let w=0;w<f.weeks;w++){const ws=d.toISOString().split('T')[0];const we=new Date(d);we.setDate(we.getDate()+6);const weS=we.toISOString().split('T')[0];if(dateStr>=ws&&dateStr<=weS)return f.color;d.setDate(d.getDate()+7);}}}return null;}
 
