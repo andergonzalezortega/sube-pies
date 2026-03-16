@@ -219,7 +219,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <div class="card"><div class="ct">IMPORTAR ENTRENOS DESDE EXCEL</div>
 <div style="font-size:10px;color:var(--text3);margin-bottom:8px">Sube un Excel (.xlsx) con entrenos. Formato: columnas Entreno, Ejercicio, Agarre, mm, Ángulo, kg, Modo, Tiempo, Reps, Series, Reps/serie, Desc(s), DS(s)</div>
 <input type="file" id="importXLFile" accept=".xlsx,.xls,.csv" style="display:none" onchange="importXL(event)">
-<button class="btn" style="background:var(--purple);color:#fff;font-size:12px;padding:10px" onclick="document.getElementById('importXLFile').click()">📤 Importar Excel</button>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><button class="btn" style="background:var(--purple);color:#fff;font-size:12px;padding:10px;margin:0" onclick="document.getElementById('importXLFile').click()">📤 Importar</button><button class="btn" style="background:var(--bg3);color:var(--text);font-size:12px;padding:10px;margin:0" onclick="window.open('SubePies_Plantilla_Entrenos.xlsx')">📥 Plantilla</button></div>
 <div id="importMsg" style="font-size:10px;margin-top:6px;text-align:center"></div>
 </div>
 <div class="card"><div class="ct" id="ctNick">NOMBRE VISIBLE</div>
@@ -1148,7 +1148,7 @@ function drCalDetail(){
     h+=`<div style="font-size:11px;color:var(--yellow);padding:3px 0;font-weight:700;display:flex;align-items:center;gap:4px">🏋 ${tr.detail||tr.tipo}<button onclick="delTrain('${tr.id}')" style="background:none;border:none;color:var(--red);font-size:10px;cursor:pointer;margin-left:auto">✕</button></div>`;
     if(steps.length){steps.forEach(s=>{
       const isVia=s.stepType==='via';
-      if(isVia){h+=`<div style="font-size:10px;color:var(--rock);padding:1px 0 1px 12px">🧗 ${s.grado||'?'} ${s.nombre||''} <span style="color:var(--text3)">${s.tipo||''}</span></div>`;}
+      if(isVia){h+=`<div style="font-size:10px;color:var(--rock);padding:1px 0 1px 12px">🧗 ${s.grado||''} ${s.nombre||''} <span style="color:var(--text3)">${s.tipo||''}</span></div>`;}
       else{const nm=s.nm||s.name||s.txt||'';if(!nm)return;
         let d2=[];if(s.ser)d2.push(s.ser+'s');if(s.rep)d2.push(s.rep+'r');
         if(s.modo==='time'&&s.time)d2.push(s.time+'s');
@@ -1184,7 +1184,9 @@ function drNextWo(){
   let allDates=[...new Set([...woDates,...plWoDates])].sort();
   // Filter by days vista setting
   const daysVista=loadDaysVista();
-  if(daysVista>0){const maxDate=new Date();maxDate.setDate(maxDate.getDate()+daysVista);const maxStr=maxDate.toISOString().split('T')[0];allDates=allDates.filter(d=>d<=maxStr);}
+  if(daysVista>0){const maxDate=new Date();maxDate.setDate(maxDate.getDate()+daysVista);const maxStr=maxDate.toISOString().split('T')[0];
+    const minDate=new Date();minDate.setDate(minDate.getDate()-daysVista);const minStr=minDate.toISOString().split('T')[0];
+    allDates=allDates.filter(d=>d>=minStr&&d<=maxStr);}
   // Filter dates by content type
 
   if(!allDates.length){el.innerHTML=`<div style="text-align:center;padding:12px"><span style="color:var(--text3);font-size:12px">${t('noTrainPlan')}</span></div>`;return;}
@@ -1232,7 +1234,7 @@ function setupSwipe(){if(_swipeSetup)return;_swipeSetup=true;let sx=0;
 // Settings (Bolt disabled)
 function getSettings(){return JSON.parse(localStorage.getItem('spSettings')||'{}');}
 function saveDaysVista(){const v=document.getElementById('setDaysVista').value;const s=getSettings();s.daysVista=parseInt(v);localStorage.setItem('spSettings',JSON.stringify(s));drNextWo();}
-function loadDaysVista(){const s=getSettings();const v=s.daysVista||5;const sel=document.getElementById('setDaysVista');if(sel)sel.value=v;return v;}
+function loadDaysVista(){const s=getSettings();const v=s.daysVista||7;const sel=document.getElementById('setDaysVista');if(sel)sel.value=v;return v;}
 async function importXL(e){
   const file=e.target.files[0];if(!file||!U)return;
   const msg=document.getElementById('importMsg');msg.textContent='Procesando...';
@@ -1355,8 +1357,18 @@ async function answerInv(id,status){if(!U)return;
     }else{
       const plan={date:inv.date,tipo:inv.tipo,lugar:inv.lugar||'',notas:'Con '+inv.fromName};
       if(inv.workoutName)plan.workoutName=inv.workoutName;
-      if(inv.workoutSteps){plan.workoutSteps=inv.workoutSteps;
-        await saveWorkout({name:inv.workoutName+' (de '+inv.fromName+')',steps:inv.workoutSteps,plannedDate:inv.date});}
+      if(inv.workoutSteps){
+        const addWo=confirm('La invitación incluye el entrenamiento "'+inv.workoutName+'". ¿Quieres añadirlo a tus entrenos?');
+        if(addWo){
+          const woName=prompt('Nombre para el entreno:',inv.workoutName+' (de '+inv.fromName+')');
+          if(woName){
+            const folder=prompt('Carpeta (vacío = sin carpeta):','');
+            let folderId='';
+            if(folder){let f=woFolders.find(x=>x.name===folder);
+              if(!f){const ref=await db.collection('users').doc(U.uid).collection('woFolders').add({name:folder});f={id:ref.id,name:folder};woFolders.push(f);}
+              folderId=f.id;}
+            await saveWorkout({name:woName,steps:inv.workoutSteps,folder:folderId,plannedDate:inv.date});}}
+        plan.workoutSteps=inv.workoutSteps;}
       await savePlan(plan);}}
   else if(status==='rejected'&&inv.from){
     // Notify sender that invite was rejected
@@ -1478,7 +1490,7 @@ function updPlWoPreview(){
   if(!woId){prev.style.display='none';return;}
   const w=W.find(x=>x.id===woId);
   if(!w){prev.style.display='none';return;}
-  let h='';(w.steps||[]).forEach((s,i)=>{let d=s.nm||s.txt||'?';const pts=[];
+  let h='';(w.steps||[]).forEach((s,i)=>{let d=s.nm||s.txt||'';const pts=[];
     if(s.ag)pts.push(s.ag);if(s.mm)pts.push(s.mm+'mm');if(s.kg>0)pts.push('+'+s.kg+'kg');
     if(s.modo==='time')pts.push(s.time+'s×'+(s.rep||1)+'r×'+(s.ser||1)+'ser');
     else if(s.reps)pts.push(s.reps+'r×'+(s.ser||1)+'ser');
@@ -1684,7 +1696,7 @@ function drPlan(){
   document.getElementById('wL').innerHTML=h;}
 function renderWoCard(w){
   let h=`<div class="wi"><button class="wi-del" onclick="delWo('${w.id}')">✕</button><div class="wit">${w.name}</div>${w.plannedDate?`<div class="wi-date">📅 ${new Date(w.plannedDate).toLocaleDateString(LANG==='en'?'en-US':LANG==='eu'?'eu-ES':LANG==='ca'?'ca-ES':'es-ES',{weekday:'short',day:'numeric',month:'short'})}</div>`:''}<div class="wis">`;
-  (w.steps||[]).forEach((s,i)=>{const p=s;let d=p.nm||s.txt||'?';const pts=[];if(p.ag)pts.push(p.ag);if(p.mm)pts.push(p.mm+'mm');if(p.ang)pts.push(p.ang);if(p.kg>0)pts.push('+'+p.kg+'kg');
+  (w.steps||[]).forEach((s,i)=>{const p=s;let d=p.nm||s.txt||'';const pts=[];if(p.ag)pts.push(p.ag);if(p.mm)pts.push(p.mm+'mm');if(p.ang)pts.push(p.ang);if(p.kg>0)pts.push('+'+p.kg+'kg');
     if(p.modo==='time')pts.push(p.time+'s×'+((p.rep||1))+'×'+(p.ser||1));else if(p.reps)pts.push((p.reps)+'r×'+(p.ser||1));
     if(pts.length)d+=' · '+pts.join(' · ');
     h+=`<div class="wiss">${i+1}. ${d}</div>`;});
@@ -1729,7 +1741,7 @@ async function shareWo(woId){const w=W.find(x=>x.id===woId);if(!w)return;
   if(q.empty)return;
   const fuid=q.docs[0].id;
   const cid=getChatId(U.uid,fuid);
-  const msg='🏋️ '+w.name+': '+w.steps.map(s=>s.stepType==='via'?'🧗 '+(s.grado||'?'):(s.nm||s.txt||'')).filter(Boolean).join(', ');
+  const msg='🏋️ '+w.name+': '+w.steps.map(s=>s.stepType==='via'?'🧗 '+(s.grado||''):(s.nm||s.txt||'')).filter(Boolean).join(', ');
   await db.collection('chats').doc(cid).collection('messages').add({from:U.uid,text:msg,ts:firebase.firestore.FieldValue.serverTimestamp()});
   alert('✓ '+t('sentTo')+' '+(fr.name||fr.email));}
 function chkRouteFields(){
@@ -1871,8 +1883,30 @@ function rWS(){let h='';if(!wSt.length)h='<div style="color:var(--text3);font-si
     const icon=isVia?'🧗':'🏋';
     h+=`<div class="ws" style="display:flex;align-items:center;gap:4px;${isVia?'border-left:3px solid var(--rock);':''}">`;
     h+=`<div style="display:flex;flex-direction:column;gap:2px"><button style="background:none;border:none;color:var(--text3);font-size:10px;cursor:pointer;padding:0" onclick="moveStep(${i},-1)">▲</button><button style="background:none;border:none;color:var(--text3);font-size:10px;cursor:pointer;padding:0" onclick="moveStep(${i},1)">▼</button></div>`;
-    h+=`<div class="wn">${icon}${i+1}</div><div class="wd" style="flex:1">${s.txt||s.nm||'?'}</div><button class="wr" onclick="wSt.splice(${i},1);rWS()">✕</button></div>`;});
+    h+=`<div class="wn">${icon}${i+1}</div><div class="wd" style="flex:1;cursor:pointer" onclick="editStep(${i})">${s.txt||s.nm||''}</div><button style="background:none;border:none;color:var(--blue);font-size:10px;cursor:pointer;padding:2px 4px" onclick="editStep(${i})">✏️</button><button class="wr" onclick="wSt.splice(${i},1);rWS()">✕</button></div>`;});
   document.getElementById('wS').innerHTML=h;}
+function editStep(i){const s=wSt[i];if(!s)return;
+  if(s.stepType==='via'){
+    document.getElementById('vfGrado').value=s.grado||'6a';
+    document.getElementById('vfTipo').value=s.tipo||'Cuerda';
+    document.getElementById('vfNombre').value=s.nombre||'';
+    showViaForm();
+  }else{
+    document.getElementById('ejNm').value=s.nm||s.txt||'';
+    document.getElementById('ejAg').value=s.ag||'';
+    document.getElementById('ejMm').value=s.mm||'';
+    document.getElementById('ejAng').value=s.ang||'';
+    document.getElementById('ejKg').value=s.kg||0;
+    document.getElementById('ejModo').value=s.modo||'time';
+    document.getElementById('ejTime').value=s.time||0;
+    document.getElementById('ejReps').value=s.reps||0;
+    document.getElementById('ejRep').value=s.rep||0;
+    document.getElementById('ejSer').value=s.ser||1;
+    document.getElementById('ejDesc').value=s.desc||0;
+    document.getElementById('ejDS').value=s.ds||180;
+    ejModoChg();showEjForm();}
+  // Remove old step, new one will be added when user clicks "Añadir"
+  wSt.splice(i,1);rWS();}
 function moveStep(i,dir){const ni=i+dir;if(ni<0||ni>=wSt.length)return;const tmp=wSt[i];wSt[i]=wSt[ni];wSt[ni]=tmp;rWS();}
 function gv(id){const e=document.getElementById(id);return e?parseFloat(e.value)||0:0;}
 function addEj(){const nm=document.getElementById('ejNm').value.trim();if(!nm){alert(t('putName'));return;}
@@ -2292,12 +2326,12 @@ function drDash(){const from=document.getElementById('grFrom').value,to=document
     if(xAxis==='mes')return date.substring(0,7);
     if(xAxis==='semana'){const d=new Date(date);const wk=Math.ceil(d.getDate()/7);return date.substring(0,7)+'-S'+wk;}
     if(xAxis==='dia')return date;
-    if(xAxis==='lugar')return isTrain?'Entreno':(item.sitio||'?');
+    if(xAxis==='lugar')return isTrain?'Entreno':(item.sitio||'');
     if(xAxis==='compa'){if(isTrain)return 'Entreno';const ams=(item.amigos||'').split(/[,;]+/).map(a=>a.trim()).filter(Boolean);return ams.length?ams[0]:'Solo';}
-    if(xAxis==='grado')return isTrain?'Entreno':(item.grado||'?');
-    if(xAxis==='tipo')return isTrain?(item.nm||item.txt||'?'):(item.tipo||'?');
-    if(xAxis==='agarre')return isTrain?(item.ag||'?'):'Vía';
-    if(xAxis==='ejercicio')return isTrain?(item.nm||item.txt||'?'):'Vía';
+    if(xAxis==='grado')return isTrain?'Entreno':(item.grado||'');
+    if(xAxis==='tipo')return isTrain?(item.nm||item.txt||''):(item.tipo||'');
+    if(xAxis==='agarre')return isTrain?(item.ag||''):'Vía';
+    if(xAxis==='ejercicio')return isTrain?(item.nm||item.txt||''):'Vía';
     return '?';};
   vias.forEach(r=>addToGroup(getXKey(r.date,r,false),r,false));
   steps.forEach(s=>addToGroup(getXKey(s.date,s,true),s,true));
@@ -2493,7 +2527,7 @@ function drawBody(ctx,cv,sel,dr,dt,logo){
           ctx.fillStyle='rgba(212,165,116,.06)';ctx.beginPath();ctx.roundRect(60,y,960,42,8);ctx.fill();
           ctx.fillStyle='#d4a574';ctx.beginPath();ctx.roundRect(60,y+6,4,30,2);ctx.fill();
           ctx.font='bold 22px Nunito';ctx.fillStyle='#d4a574';
-          var vTxt=num+'. '+(s.grado||'?')+' '+(s.nombre||'');
+          var vTxt=num+'. '+(s.grado||'')+' '+(s.nombre||'');
           ctx.fillText(vTxt,82,y+28);
           if(s.tipo){ctx.font='16px Nunito';ctx.fillStyle='rgba(255,255,255,.3)';ctx.textAlign='right';ctx.fillText(s.tipo,1000,y+28);ctx.textAlign='left';}
           num++;y+=48;}
