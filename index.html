@@ -177,8 +177,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <div id="dashInfo" style="font-size:10px;color:var(--text2)"></div>
 </div><div id="tMeso" style="display:none">
 <div style="margin-bottom:12px"><button class="btn bp" onclick="openMeso()" style="margin-bottom:8px">+ Crear mesociclo</button>
-<button class="btn" style="background:var(--purple);color:#fff;margin-bottom:8px" onclick="showProgramTemplates()">📋 Activar programa predefinido</button></div>
-<div id="mesoTemplates" style="display:none;margin-bottom:12px"></div>
+</div>
 <div id="mesoList"></div></div></div>
 <!-- AMIGOS --><div id="pf" class="page"><div class="hdr"><h1>AMIGOS</h1></div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;margin-bottom:10px;background:var(--bg3);border-radius:10px;padding:2px">
@@ -866,11 +865,16 @@ async function seedDefaults(){if(!U)return;
       ej('Dominadas explosivas','Barra',0,0,'reps',0,5,0,4,0,120),
       ej('Lanzamientos a presa','Cazo',0,0,'reps',0,6,0,3,0,120)]},
     {name:'Resistencia 4x4 boulder',folder:folders['Resistencia'].id,steps:[
-      {stepType:'via',grado:'6a',tipo:'Bloque',nombre:'Boulder fácil 1'},
-      {stepType:'via',grado:'6a+',tipo:'Bloque',nombre:'Boulder fácil 2'},
-      {stepType:'via',grado:'6b',tipo:'Bloque',nombre:'Boulder medio 1'},
-      {stepType:'via',grado:'6b+',tipo:'Bloque',nombre:'Boulder medio 2'}]},
+      ej('Calentamiento boulder fácil','Cazo',0,0,'time',600,0,1,1,0,0),
+      ej('Estiramientos','',0,0,'time',300,0,1,1,0,0),
+      {stepType:'via',grado:'6a',tipo:'Bloque',nombre:'Boulder 1 (4 rondas sin descanso)'},
+      {stepType:'via',grado:'6a+',tipo:'Bloque',nombre:'Boulder 2'},
+      {stepType:'via',grado:'6b',tipo:'Bloque',nombre:'Boulder 3'},
+      {stepType:'via',grado:'6b+',tipo:'Bloque',nombre:'Boulder 4'},
+      ej('Descanso entre sets','',0,0,'time',240,0,1,4,0,0),
+      ej('Curl inverso antebrazo','',0,0,'reps',0,18,0,2,0,60)]},
     {name:'Continuidad en muro',folder:folders['Resistencia'].id,steps:[
+      ej('Calentamiento boulder fácil','Cazo',0,0,'time',600,0,1,1,0,0),
       ej('Travesía continua vertical','Cazo',0,0,'time',300,0,1,4,0,300),
       ej('Travesía en desplome','Cazo',0,0,'time',180,0,1,3,0,300)]},
     {name:'Calentamiento completo',folder:folders['Calentamiento y Compensación'].id,steps:[
@@ -890,105 +894,7 @@ async function seedDefaults(){if(!U)return;
       ej('Plancha lateral','',0,0,'time',30,0,1,3,0,60)]}];
   for(const wo of defWos){
     const ref=await db.collection('users').doc(uid).collection('workouts').add(wo);
-    W.push({id:ref.id,...wo});}
-  // === HÖRST PROGRAM WORKOUTS ===
-  const hF='Programa Hörst';
-  const hRef=await db.collection('users').doc(uid).collection('woFolders').add({name:hF});
-  const hFolder={id:hRef.id,name:hF};woFolders.push(hFolder);
-  const horstWos=[
-    {name:'Fuerza Máxima y Potencia',folder:hFolder.id,steps:[
-      ej('Jogging o remo (calentamiento)','',0,0,'time',300,0,1,1,0,0),
-      ej('Boulder fácil calentamiento','Cazo',0,0,'time',600,0,1,1,0,0),
-      ej('Estiramientos cadera/hombro/dedos','',0,0,'time',300,0,1,1,0,0),
-      ej('Scapular Pull-ups','Barra',0,0,'reps',0,10,0,1,0,60),
-      {stepType:'via',grado:'6b',tipo:'Bloque',nombre:'Boulder submáx calent.'},
-      {stepType:'via',grado:'6c',tipo:'Bloque',nombre:'Boulder cerca del límite'},
-      {stepType:'via',grado:'6c+',tipo:'Bloque',nombre:'Boulder límite'},
-      ej('Suspensiones lastradas 7-53','Regleta',18,0,'time',7,0,3,3,53,180),
-      ej('Campus lunging pies en pared','Regleta',22,0,'reps',0,6,0,3,0,180),
-      ej('Dominadas lastradas','Barra',0,0,'reps',0,5,0,4,0,180),
-      ej('Campus escalera (subir)','Regleta',22,0,'reps',0,1,0,4,0,120),
-      ej('Windshield Wipers','',0,0,'reps',0,10,0,2,0,60),
-      ej('Supermans','',0,0,'reps',0,18,0,2,0,60),
-      ej('Hanging Knee Lifts','Barra',0,0,'reps',0,16,0,2,0,60),
-      ej('Mountain Climber Plank','',0,0,'reps',0,25,0,1,0,60),
-      ej('Crunches elevados','',0,0,'reps',0,40,0,2,0,60),
-      ej('Curl inverso antebrazo','',0,0,'reps',0,18,0,2,0,60),
-      ej('Extensión muñeca inversa','',0,0,'reps',0,18,0,2,0,60)]},
-    {name:'Fuerza-Resistencia y Potencia',folder:hFolder.id,steps:[
-      ej('Jogging o remo','',0,0,'time',300,0,1,1,0,0),
-      ej('Dominadas al peso (mitad del máx)','Barra',0,0,'reps',0,6,0,1,0,60),
-      ej('Boulder fácil calentamiento','Cazo',0,0,'time',600,0,1,1,0,0),
-      ej('Estiramientos','',0,0,'time',300,0,1,1,0,0),
-      ej('Scapular Pull-ups','Barra',0,0,'reps',0,10,0,1,0,60),
-      ej('Power Pull-ups (pecho)','Barra',0,0,'reps',0,10,0,1,0,60),
-      ej('Dominadas submáx lastradas','Barra',0,10,'reps',0,6,0,1,0,120),
-      {stepType:'via',grado:'6a',tipo:'Bloque',nombre:'4x4 Boulder 1'},
-      {stepType:'via',grado:'6a+',tipo:'Bloque',nombre:'4x4 Boulder 2'},
-      {stepType:'via',grado:'6b',tipo:'Bloque',nombre:'4x4 Boulder 3'},
-      {stepType:'via',grado:'6b+',tipo:'Bloque',nombre:'4x4 Boulder 4'},
-      {stepType:'via',grado:'6c',tipo:'Cuerda',nombre:'Vía submáx 1'},
-      {stepType:'via',grado:'6c',tipo:'Cuerda',nombre:'Vía submáx 2'},
-      ej('Repeaters larga duración','Regleta',20,0,'time',30,0,4,3,30,180),
-      ej('Square Dance Pull-ups','Barra',0,0,'reps',0,3,0,2,0,120),
-      ej('Frenchies','Barra',0,0,'time',60,0,1,3,0,120),
-      ej('Windshield Wipers','',0,0,'reps',0,10,0,2,0,60),
-      ej('Supermans','',0,0,'reps',0,18,0,2,0,60),
-      ej('Hanging Knee Lifts','Barra',0,0,'reps',0,16,0,2,0,60),
-      ej('Crunches elevados','',0,0,'reps',0,40,0,2,0,60),
-      ej('Curl inverso antebrazo','',0,0,'reps',0,18,0,2,0,60)]},
-    {name:'Resistencia Aeróbica',folder:hFolder.id,steps:[
-      ej('Jogging o remo','',0,0,'time',300,0,1,1,0,0),
-      ej('Dominadas al peso (mitad del máx)','Barra',0,0,'reps',0,6,0,1,0,60),
-      ej('Estiramientos','',0,0,'time',300,0,1,1,0,0),
-      ej('Scapular Pull-ups','Barra',0,0,'reps',0,10,0,1,0,60),
-      ej('Power Pull-ups','Barra',0,0,'reps',0,10,0,1,0,60),
-      ej('ARC: Vías moderadas continuas','Cazo',0,0,'time',1200,0,1,3,0,600),
-      ej('Pull-up intervalos (6s on/50s off)','Barra',0,0,'reps',0,4,0,10,0,50),
-      ej('Repeaters corta duración','Regleta',20,0,'time',10,0,6,4,30,180),
-      ej('Windshield Wipers','',0,0,'reps',0,10,0,2,0,60),
-      ej('Supermans','',0,0,'reps',0,18,0,2,0,60),
-      ej('Hanging Knee Lifts','Barra',0,0,'reps',0,16,0,2,0,60),
-      ej('Crunches elevados','',0,0,'reps',0,50,0,2,0,60),
-      ej('Curl inverso antebrazo','',0,0,'reps',0,18,0,2,0,60)]},
-    {name:'Antagonistas y Estabilizadores',folder:hFolder.id,steps:[
-      ej('Jogging o remo','',0,0,'time',600,0,1,1,0,0),
-      ej('Estiramientos completos','',0,0,'time',600,0,1,1,0,0),
-      ej('Press hombro','',0,0,'reps',0,18,0,2,0,90),
-      ej('Press banca / flexiones','',0,0,'reps',0,14,0,2,0,90),
-      ej('Extensión dedos con goma','',0,0,'reps',0,18,0,2,0,60),
-      ej('Extensión muñeca inversa','',0,0,'reps',0,18,0,2,0,60),
-      ej('TRX Ts','',0,0,'reps',0,10,0,2,0,60),
-      ej('TRX Ys','',0,0,'reps',0,10,0,2,0,60),
-      ej('Fondos / Dips','',0,0,'reps',0,12,0,3,0,90),
-      ej('Rotación externa mancuerna','',0,0,'reps',0,22,0,2,0,60),
-      ej('Rotación interna mancuerna','',0,0,'reps',0,22,0,2,0,60),
-      ej('Sumo Deadlift','',0,0,'reps',0,12,0,1,0,120),
-      ej('Sentadilla','',0,0,'reps',0,7,0,2,0,120),
-      ej('Peso muerto','',0,0,'reps',0,5,0,3,0,120)]}];
-  for(const wo of horstWos){
-    const ref=await db.collection('users').doc(uid).collection('workouts').add(wo);
-    W.push({id:ref.id,...wo});}
-  // === PREDEFINED MESOCYCLES ===
-  const woByName=(n)=>W.find(w=>w.name===n);
-  const mesoTemplates=[
-    {name:'Hörst 4-3-2-1 (10 semanas)',fases:[
-      {name:'Base Aeróbica',color:'#ffe66d',weeks:4,desc:'Volumen alto, escalada submáxima, técnica y resistencia aeróbica',workouts:['Resistencia Aeróbica','Calentamiento completo','Antagonistas y Estabilizadores']},
-      {name:'Fuerza Máxima',color:'#ff6b6b',weeks:3,desc:'Bajo volumen, fuerza máxima de dedos y tracción, campus, boulder límite',workouts:['Fuerza Máxima y Potencia','Fuerza máxima dedos']},
-      {name:'Fuerza-Resistencia',color:'#4ecdc4',weeks:2,desc:'Volumen moderado, 4x4s, repeaters, vías bombeantes',workouts:['Fuerza-Resistencia y Potencia','Resistencia 4x4 boulder']},
-      {name:'Taper / Descanso',color:'#4a9eff',weeks:1,desc:'Descanso activo, escalar por diversión, recuperar'}]},
-    {name:'Hörst 3-2-1 (6 semanas)',fases:[
-      {name:'Fuerza Máxima',color:'#ff6b6b',weeks:3,desc:'Fuerza máxima de dedos, tracción lastrada, boulder límite',workouts:['Fuerza Máxima y Potencia','Fuerza máxima dedos']},
-      {name:'Fuerza-Resistencia',color:'#4ecdc4',weeks:2,desc:'4x4s, repeaters, vías continuas, bomba',workouts:['Fuerza-Resistencia y Potencia']},
-      {name:'Taper / Descanso',color:'#4a9eff',weeks:1,desc:'Recuperación activa antes del proyecto'}]},
-    {name:'DUP Mantenimiento (semanal)',fases:[
-      {name:'Aeróbico + Compensación',color:'#ffe66d',weeks:1,desc:'1-2 días/semana: ARC, estabilizadores',workouts:['Resistencia Aeróbica','Antagonistas y Estabilizadores']},
-      {name:'Fuerza Máxima',color:'#ff6b6b',weeks:1,desc:'1-2 días/semana: boulder límite o suspensiones',workouts:['Fuerza Máxima y Potencia']},
-      {name:'Fuerza-Resistencia',color:'#4ecdc4',weeks:1,desc:'1-2 días/semana: 4x4s o sport climbing',workouts:['Fuerza-Resistencia y Potencia']}]}];
-  for(const mt of mesoTemplates){
-    const fases=mt.fases.map(f=>({name:f.name,color:f.color,weeks:f.weeks,desc:f.desc,workouts:f.workouts}));
-    const ref=await db.collection('users').doc(uid).collection('mesos').add({name:mt.name,fases,template:true});
-    mesos.push({id:ref.id,name:mt.name,fases,template:true});}}
+    W.push({id:ref.id,...wo});}}
 function updDL(){const s=new Set();R.forEach(r=>{if(r.sitio)s.add(r.sitio);});let dl='';[...CRAGS.keys(),...userCrags.map(c=>c.name),...s].forEach(n=>{dl+=`<option value="${n}">`;});document.getElementById('dlZ').innerHTML=dl;}
 
 async function saveRoute(data){if(!U)return;const col=db.collection('users').doc(U.uid).collection('routes');
@@ -2216,7 +2122,7 @@ function drMeso(){let h='';if(!mesos.length)h='<div style="color:var(--text3);fo
     (m.fases||[]).forEach(f=>{
       if(f.schedule){Object.values(f.schedule).forEach(v=>{totalSessions+=v.split('|').filter(x=>x).length;});}
       else if(f.weekPlans){(f.weekPlans||[]).forEach(wp=>{(wp||[]).forEach(d=>{if(Array.isArray(d))totalSessions+=d.filter(x=>x).length;else if(d)totalSessions++;});});}});
-    h+=`<div class="meso-card"><div style="display:flex;justify-content:space-between;align-items:center"><div style="font-family:'Bebas Neue';font-size:16px;color:var(--rock)">${m.name}</div><div style="display:flex;gap:4px"><button onclick="shareMeso('${m.id}')" style="background:none;border:none;color:var(--green);font-size:10px;cursor:pointer">📤 Compartir</button><button onclick="editMesoDates('${m.id}')" style="background:none;border:none;color:var(--blue);font-size:10px;cursor:pointer">📅 Editar</button><button onclick="delMeso('${m.id}')" style="background:none;border:none;color:var(--red);font-size:10px;cursor:pointer">✕</button></div></div>`;
+    h+=`<div class="meso-card"><div style="display:flex;justify-content:space-between;align-items:center"><div style="font-family:'Bebas Neue';font-size:16px;color:var(--rock)">${m.name}</div><div style="display:flex;gap:4px"><button onclick="exportMesoXL('${m.id}')" style="background:none;border:none;color:var(--text2);font-size:10px;cursor:pointer">📥 Excel</button><button onclick="shareMeso('${m.id}')" style="background:none;border:none;color:var(--green);font-size:10px;cursor:pointer">📤 Compartir</button><button onclick="editMesoDates('${m.id}')" style="background:none;border:none;color:var(--blue);font-size:10px;cursor:pointer">📅 Editar</button><button onclick="delMeso('${m.id}')" style="background:none;border:none;color:var(--red);font-size:10px;cursor:pointer">✕</button></div></div>`;
     h+=`<div style="font-size:10px;color:var(--text3);margin-bottom:6px">Inicio: ${new Date(m.start).toLocaleDateString('es-ES',{day:'numeric',month:'short'})} · ${totalWeeks} sem · ${totalSessions} sesiones</div>`;
     (m.fases||[]).forEach(f=>{
       h+=`<div class="meso-fase"><div class="meso-dot" style="background:${f.color}"></div><div class="meso-info"><b>${f.name}</b> · ${f.weeks} sem</div></div>`;});
@@ -2355,6 +2261,34 @@ async function delMeso(id){if(!confirm(t('deleteMeso')))return;
     for(const p of mesoPlans){try{await db.collection('users').doc(U.uid).collection('plans').doc(p.id).delete();}catch(e){}}
     plans=plans.filter(p=>!mesoPlans.some(mp=>mp.id===p.id));}
   await db.collection('users').doc(U.uid).collection('mesos').doc(id).delete();mesos=mesos.filter(m=>m.id!==id);drMeso();rCal();}
+function exportMesoXL(mesoId){
+  const m=mesos.find(x=>x.id===mesoId);if(!m)return;
+  const wb=XLSX.utils.book_new();
+  // Sheet 1: Entrenos - all workouts referenced
+  const woNames=new Set();
+  (m.fases||[]).forEach(f=>{if(f.schedule){Object.values(f.schedule).forEach(v=>{v.split('|').forEach(w=>{if(w)woNames.add(w);});});}});
+  // Also from plans
+  const mesoPlans=plans.filter(p=>p.notas&&(m.fases||[]).some(f=>p.notas===f.name));
+  mesoPlans.forEach(p=>{if(p.workoutName)woNames.add(p.workoutName);});
+  const eRows=[['Entreno','Carpeta','Ejercicio','Agarre','mm','Ángulo','kg','Modo','Tiempo(s)','Reps','Series','Reps/serie','Desc(s)','DS(s)']];
+  woNames.forEach(wn=>{
+    const w=W.find(x=>x.name===wn);if(!w)return;
+    const folder=woFolders.find(f=>f.id===w.folder);
+    (w.steps||[]).forEach(s=>{
+      if(s.stepType==='via')return;
+      const nm=s.nm||s.txt||'';if(!nm)return;
+      eRows.push([wn,folder?folder.name:'',nm,s.ag||'',s.mm||'',s.ang||'',s.kg||'',s.modo||'reps',s.time||'',s.reps||'',s.ser||'',s.rep||'',s.desc||'',s.ds||'']);});
+    eRows.push(['','','','','','','','','','','','','','']);});
+  const ws1=XLSX.utils.aoa_to_sheet(eRows);
+  XLSX.utils.book_append_sheet(wb,ws1,'Entrenos');
+  // Sheet 2: Mesociclo with dates
+  const mRows=[['Mesociclo','Fase','Color','Fecha','Entreno']];
+  mesoPlans.sort((a,b)=>a.date.localeCompare(b.date)).forEach(p=>{
+    const fase=(m.fases||[]).find(f=>f.name===p.notas);
+    mRows.push([m.name,p.notas||'',fase?fase.color:'',p.date,p.workoutName||'']);});
+  const ws2=XLSX.utils.aoa_to_sheet(mRows);
+  XLSX.utils.book_append_sheet(wb,ws2,'Mesociclo');
+  XLSX.writeFile(wb,'SubePies_'+m.name.replace(/[^a-zA-Z0-9]/g,'_')+'.xlsx');}
 let _shareCallback=null;
 function pickFriend(title,callback){
   _shareCallback=callback;
@@ -2408,118 +2342,6 @@ async function shareWoFromHome(woName,date){
       notas:'Entreno de '+(U.displayName||U.email),
       status:'pending',ts:firebase.firestore.FieldValue.serverTimestamp()});
     alert('Entreno compartido con '+(fr.name||fr.email));});}
-// PREDEFINED PROGRAMS
-const PROGRAMS=[
-  {name:'Hörst 4-3-2-1 (10 semanas)',desc:'Periodización clásica. Ideal para temporada baja o entre viajes.',
-    fases:[
-      {name:'Base Aeróbica',color:'#ffe66d',weeks:4,desc:'Volumen alto, escalada submáxima, técnica'},
-      {name:'Fuerza Máxima',color:'#ff6b6b',weeks:3,desc:'Fuerza dedos, tracción, boulder límite'},
-      {name:'Fuerza-Resistencia',color:'#4ecdc4',weeks:2,desc:'4x4s, repeaters, vías continuas'},
-      {name:'Taper',color:'#4a9eff',weeks:1,desc:'Descanso activo, recuperar'}],
-    workouts:['fmax','fresist','aero','antag']},
-  {name:'Hörst 3-2-1 (6 semanas)',desc:'Versión corta. Para bloqueadores o ciclos rápidos.',
-    fases:[
-      {name:'Fuerza Máxima',color:'#ff6b6b',weeks:3,desc:'Fuerza máxima dedos y tracción'},
-      {name:'Fuerza-Resistencia',color:'#4ecdc4',weeks:2,desc:'4x4s, bomba, vías'},
-      {name:'Taper',color:'#4a9eff',weeks:1,desc:'Recuperar antes del proyecto'}],
-    workouts:['fmax','fresist','antag']},
-  {name:'DUP Mantenimiento (semanal)',desc:'Para temporada de escalada. Rotar tipos cada semana.',
-    fases:[
-      {name:'Aeróbico + Compensación',color:'#ffe66d',weeks:1,desc:'1-2 días: ARC y estabilizadores'},
-      {name:'Fuerza Máxima',color:'#ff6b6b',weeks:1,desc:'1-2 días: boulder límite'},
-      {name:'Fuerza-Resistencia',color:'#4ecdc4',weeks:1,desc:'1-2 días: 4x4s, sport'}],
-    workouts:['fmax','fresist','aero','antag']}];
-const PROGRAM_WORKOUTS={
-  fmax:{name:'Fuerza Máxima y Potencia',folder:'Programa Hörst',steps:function(ej){return[
-    ej('Jogging/remo calentamiento','',0,0,'time',300,0,1,1,0,0),
-    ej('Boulder fácil calentamiento','Cazo',0,0,'time',600,0,1,1,0,0),
-    ej('Estiramientos cadera/hombro/dedos','',0,0,'time',300,0,1,1,0,0),
-    ej('Scapular Pull-ups','Barra',0,0,'reps',0,10,0,1,0,60),
-    ej('Suspensiones lastradas 7-53','Regleta',18,0,'time',7,0,3,3,53,180),
-    ej('Campus lunging pies en pared','Regleta',22,0,'reps',0,6,0,3,0,180),
-    ej('Dominadas lastradas','Barra',0,0,'reps',0,5,0,4,0,180),
-    ej('Campus escalera (subir)','Regleta',22,0,'reps',0,1,0,4,0,120),
-    ej('Windshield Wipers','',0,0,'reps',0,10,0,2,0,60),
-    ej('Supermans','',0,0,'reps',0,18,0,2,0,60),
-    ej('Hanging Knee Lifts','Barra',0,0,'reps',0,16,0,2,0,60),
-    ej('Plancha dinámica','',0,0,'reps',0,25,0,1,0,60),
-    ej('Crunches elevados','',0,0,'reps',0,40,0,2,0,60),
-    ej('Curl inverso antebrazo','',0,0,'reps',0,18,0,2,0,60),
-    ej('Extensión muñeca inversa','',0,0,'reps',0,18,0,2,0,60)]}},
-  fresist:{name:'Fuerza-Resistencia',folder:'Programa Hörst',steps:function(ej){return[
-    ej('Jogging/remo','',0,0,'time',300,0,1,1,0,0),
-    ej('Dominadas al peso (mitad máx)','Barra',0,0,'reps',0,6,0,1,0,60),
-    ej('Boulder fácil calentamiento','Cazo',0,0,'time',600,0,1,1,0,0),
-    ej('Scapular Pull-ups','Barra',0,0,'reps',0,10,0,1,0,60),
-    ej('Power Pull-ups (pecho)','Barra',0,0,'reps',0,10,0,1,0,60),
-    ej('Repeaters larga duración 20mm','Regleta',20,0,'time',30,0,4,3,30,180),
-    ej('Frenchies','Barra',0,0,'time',60,0,1,3,0,120),
-    ej('Windshield Wipers','',0,0,'reps',0,10,0,2,0,60),
-    ej('Supermans','',0,0,'reps',0,18,0,2,0,60),
-    ej('Hanging Knee Lifts','Barra',0,0,'reps',0,16,0,2,0,60),
-    ej('Crunches elevados','',0,0,'reps',0,40,0,2,0,60),
-    ej('Curl inverso antebrazo','',0,0,'reps',0,18,0,2,0,60)]}},
-  aero:{name:'Resistencia Aeróbica',folder:'Programa Hörst',steps:function(ej){return[
-    ej('Jogging/remo','',0,0,'time',300,0,1,1,0,0),
-    ej('Estiramientos','',0,0,'time',300,0,1,1,0,0),
-    ej('Scapular Pull-ups','Barra',0,0,'reps',0,10,0,1,0,60),
-    ej('ARC: Vías moderadas continuas','Cazo',0,0,'time',1200,0,1,3,0,600),
-    ej('Pull-up intervalos (6s on/50s off)','Barra',0,0,'reps',0,4,0,10,0,50),
-    ej('Repeaters corta duración 20mm','Regleta',20,0,'time',10,0,6,4,30,180),
-    ej('Windshield Wipers','',0,0,'reps',0,10,0,2,0,60),
-    ej('Crunches elevados','',0,0,'reps',0,50,0,2,0,60),
-    ej('Curl inverso antebrazo','',0,0,'reps',0,18,0,2,0,60)]}},
-  antag:{name:'Antagonistas y Estabilizadores',folder:'Programa Hörst',steps:function(ej){return[
-    ej('Jogging/remo','',0,0,'time',600,0,1,1,0,0),
-    ej('Estiramientos completos','',0,0,'time',600,0,1,1,0,0),
-    ej('Press hombro','',0,0,'reps',0,18,0,2,0,90),
-    ej('Press banca / flexiones','',0,0,'reps',0,14,0,2,0,90),
-    ej('Extensión dedos con goma','',0,0,'reps',0,18,0,2,0,60),
-    ej('Extensión muñeca inversa','',0,0,'reps',0,18,0,2,0,60),
-    ej('TRX Ts','',0,0,'reps',0,10,0,2,0,60),
-    ej('TRX Ys','',0,0,'reps',0,10,0,2,0,60),
-    ej('Fondos / Dips','',0,0,'reps',0,12,0,3,0,90),
-    ej('Rotación externa mancuerna','',0,0,'reps',0,22,0,2,0,60),
-    ej('Rotación interna mancuerna','',0,0,'reps',0,22,0,2,0,60)]}}};
-function showProgramTemplates(){
-  const el=document.getElementById('mesoTemplates');
-  if(el.style.display==='block'){el.style.display='none';return;}
-  let h='';PROGRAMS.forEach((p,i)=>{
-    h+=`<div style="background:var(--bg2);border-radius:14px;padding:12px;margin-bottom:8px;border:1px solid rgba(255,255,255,.06)">`;
-    h+=`<div style="font-family:'Bebas Neue';font-size:16px;color:var(--rock)">${p.name}</div>`;
-    h+=`<div style="font-size:11px;color:var(--text3);margin-bottom:8px">${p.desc}</div>`;
-    h+=`<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px">`;
-    p.fases.forEach(f=>{h+=`<div style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text2)"><div style="width:8px;height:8px;border-radius:50%;background:${f.color}"></div>${f.name} (${f.weeks}s)</div>`;});
-    h+=`</div>`;
-    h+=`<div style="font-size:10px;color:var(--text3);margin-bottom:8px">Entrenos incluidos: ${p.workouts.map(k=>PROGRAM_WORKOUTS[k].name).join(', ')}</div>`;
-    h+=`<button onclick="activateProgram(${i})" style="width:100%;padding:10px;background:var(--green);border:none;border-radius:10px;color:#000;font-family:'Nunito';font-weight:700;font-size:12px;cursor:pointer">Activar programa</button>`;
-    h+=`</div>`;});
-  el.innerHTML=h;el.style.display='block';}
-async function activateProgram(idx){
-  if(!U)return;const uid=U.uid;
-  const prog=PROGRAMS[idx];if(!prog)return;
-  if(!confirm('¿Activar "'+prog.name+'"?\nSe crearán los entrenos y podrás asignarlos a días.'))return;
-  const ej=(nm,ag,mm,kg,modo,time,reps,rep,ser,desc,ds,ang)=>({nm,ag:ag||'',mm:mm||0,kg:kg||0,modo:modo||'time',time:time||0,reps:reps||0,rep:rep||0,ser:ser||1,desc:desc||0,ds:ds||180,ang:ang||''});
-  // Create folder
-  let folder=woFolders.find(f=>f.name==='Programa Hörst');
-  if(!folder){const ref=await db.collection('users').doc(uid).collection('woFolders').add({name:'Programa Hörst'});
-    folder={id:ref.id,name:'Programa Hörst'};woFolders.push(folder);}
-  // Create workouts
-  for(const wk of prog.workouts){
-    const def=PROGRAM_WORKOUTS[wk];
-    if(!W.find(w=>w.name===def.name)){
-      const wo={name:def.name,folder:folder.id,steps:def.steps(ej)};
-      const ref=await db.collection('users').doc(uid).collection('workouts').add(wo);
-      W.push({id:ref.id,...wo});}}
-  // Open meso editor pre-populated with phases
-  document.getElementById('mesoTemplates').style.display='none';
-  msStep=0;
-  msFases=prog.fases.map(f=>({name:f.name,color:f.color,weeks:f.weeks,weekPlans:[]}));
-  document.getElementById('msNm').value=prog.name;
-  document.getElementById('msStart').value=new Date().toISOString().split('T')[0];
-  rMsFases();
-  document.getElementById('mMeso').classList.add('sh');
-  alert('Entrenos creados en carpeta "Programa Hörst". Ahora asigna los entrenos a los días de cada semana.');}
 // Get mesociclo color for a date
 function getMesoColor(dateStr){for(const m of mesos){let d=new Date(m.start);for(const f of(m.fases||[])){for(let w=0;w<f.weeks;w++){const ws=d.toISOString().split('T')[0];const we=new Date(d);we.setDate(we.getDate()+6);const weS=we.toISOString().split('T')[0];if(dateStr>=ws&&dateStr<=weS)return f.color;d.setDate(d.getDate()+7);}}}return null;}
 
