@@ -754,13 +754,24 @@ async function initNotifications(){
   try{
     if(!('Notification' in window)){console.log('FCM: not supported');return;}
     console.log('FCM: requesting permission...');
-    messaging=firebase.messaging();
     const permission=await Notification.requestPermission();
     console.log('FCM: permission =',permission);
     if(permission!=='granted'){console.log('FCM: denied');return;}
+    console.log('FCM: initializing messaging...');
+    messaging=firebase.messaging();
+    console.log('FCM: registering sw...');
+    let swReg;
+    try{swReg=await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+      console.log('FCM: sw registered');}
+    catch(swErr){
+      // Try relative path
+      try{swReg=await navigator.serviceWorker.register('firebase-messaging-sw.js');
+        console.log('FCM: sw registered (relative)');}
+      catch(swErr2){console.error('FCM: sw register failed',swErr2);
+        // Use existing sw
+        swReg=await navigator.serviceWorker.ready;
+        console.log('FCM: using existing sw');}}
     console.log('FCM: getting token...');
-    const swReg=await navigator.serviceWorker.register('/firebase-messaging-sw.js');
-    console.log('FCM: sw registered');
     const token=await messaging.getToken({vapidKey:'BI-nNJsYj4BLLI-kw_CgnOQI-gizxB4SEMycTj0v4oq7_MSyU5pZ2Mw9yvP0oqSV6pLZ1doEpb_SjgNqELj2jao',serviceWorkerRegistration:swReg});
     console.log('FCM: token =',token?'OK ('+token.substring(0,20)+'...)':'NONE');
     if(token){
@@ -790,7 +801,7 @@ async function toggleNotifications(){
     // Already active
     alert('Las notificaciones ya están activadas');return;}
   if(perm==='denied'){
-    alert('Las notificaciones están bloqueadas. Ve a ajustes del navegador para activarlas.');return;}
+    alert('Las notificaciones están bloqueadas.\n\nPara activarlas:\n1. Pulsa el icono del candado/tune junto a la URL\n2. Cambia Notificaciones a Permitir\n3. Recarga la página');return;}
   await initNotifications();
   updNotifStatus();}
 function updNotifStatus(){
@@ -980,6 +991,9 @@ async function saveRoute(data){if(!U)return;const col=db.collection('users').doc
   else{const ref=await col.add(data);data.id=ref.id;R.unshift(data);}}
 async function deleteRoute(id){if(!U)return;await db.collection('users').doc(U.uid).collection('routes').doc(id).delete();R=R.filter(r=>r.id!==id);}
 async function saveTrain(data){if(!U)return;const ref=await db.collection('users').doc(U.uid).collection('trains').add(data);data.id=ref.id;Tr.unshift(data);}
+async function delTrain(id){if(!U||!confirm('¿Eliminar este entrenamiento?'))return;
+  try{await db.collection('users').doc(U.uid).collection('trains').doc(id).delete();
+    Tr=Tr.filter(t=>t.id!==id);rH();updStats();}catch(e){alert('Error: '+e.message);}}
 async function saveWorkout(data){if(!U)return;const ref=await db.collection('users').doc(U.uid).collection('workouts').add(data);data.id=ref.id;W.push(data);}
 async function delWorkout(id){if(!U)return;await db.collection('users').doc(U.uid).collection('workouts').doc(id).delete();W=W.filter(w=>w.id!==id);}
 async function savePlan(data){if(!U)return;const ref=await db.collection('users').doc(U.uid).collection('plans').add(data);data.id=ref.id;plans.push(data);}
@@ -1127,11 +1141,11 @@ function drCalDetail(){
       const loc=r.lugar==='roca'?'🏔':'🏢';
       h+=`<tr style="border-bottom:1px solid rgba(255,255,255,.03)"><td style="padding:2px 0;width:36px"><span style="color:${gc};font-family:'Bebas Neue';font-size:13px">${r.grado}</span></td><td style="padding:2px 4px;color:var(--text2)">${r.tipo}${r.estilo?' <span style="font-size:8px;opacity:.6">'+(r.estilo==='clasica'?'Clás':'Dep')+'</span>':''}</td><td style="padding:2px 4px">${loc}</td><td style="padding:2px 0;color:var(--text3)">${r.enc?'✓':''}${r.flash?' ⚡':''}${r.avista?' 👁':''}${r.metros?r.metros+'m':''}${r.nombre?' '+r.nombre:''}${r.largos?' <span style="font-size:8px">'+r.largos.map((g,i)=>'L'+(i+1)+':'+g).join(' ')+'</span>':''}</td></tr>`;});
     h+=`</table>`;}
-  // Trainings done - with exercise breakdown
+  // Trainings done - with exercise breakdown and delete button
   dt.forEach(tr=>{
     let steps=tr.woSteps||[];
     if(!steps.length){const tname=(tr.detail||'').replace(/\s*\(\d+\s*pasos?\)/i,'').trim();const match=W.find(w=>w.name===tname||(tr.detail||'').startsWith(w.name));if(match)steps=match.steps||[];}
-    h+=`<div style="font-size:11px;color:var(--yellow);padding:3px 0;font-weight:700">🏋 ${tr.detail||tr.tipo}</div>`;
+    h+=`<div style="font-size:11px;color:var(--yellow);padding:3px 0;font-weight:700;display:flex;align-items:center;gap:4px">🏋 ${tr.detail||tr.tipo}<button onclick="delTrain('${tr.id}')" style="background:none;border:none;color:var(--red);font-size:10px;cursor:pointer;margin-left:auto">✕</button></div>`;
     if(steps.length){steps.forEach(s=>{
       const isVia=s.stepType==='via';
       if(isVia){h+=`<div style="font-size:10px;color:var(--rock);padding:1px 0 1px 12px">🧗 ${s.grado||'?'} ${s.nombre||''} <span style="color:var(--text3)">${s.tipo||''}</span></div>`;}
@@ -1166,8 +1180,8 @@ function drNextWo(){
   const el=document.getElementById('homeNextWo');
   // Collect all upcoming dates from workouts AND plans
   const woDates=[...new Set(W.filter(w=>w.plannedDate).map(w=>w.plannedDate))];
-  const plDates=[];
-  let allDates=[...new Set([...woDates,...plDates])].sort();
+  const plWoDates=[...new Set(plans.filter(p=>p.workoutName).map(p=>p.date))];
+  let allDates=[...new Set([...woDates,...plWoDates])].sort();
   // Filter by days vista setting
   const daysVista=loadDaysVista();
   if(daysVista>0){const maxDate=new Date();maxDate.setDate(maxDate.getDate()+daysVista);const maxStr=maxDate.toISOString().split('T')[0];allDates=allDates.filter(d=>d<=maxStr);}
@@ -1177,7 +1191,15 @@ function drNextWo(){
   if(nwoIdx<0||nwoIdx>=allDates.length){nwoIdx=allDates.findIndex(d=>d>=td);if(nwoIdx<0)nwoIdx=allDates.length-1;}
   if(nwoIdx>=allDates.length)nwoIdx=allDates.length-1;if(nwoIdx<0)nwoIdx=0;
   const nxtDate=allDates[nwoIdx];
-  const dw=W.filter(w=>w.plannedDate===nxtDate);
+  // Get workouts: from plannedDate AND from plans with workoutName
+  // Combine workouts from plannedDate and from plans
+  const dayPlans=plans.filter(p=>p.date===nxtDate&&p.workoutName);
+  let dw=[];
+  dayPlans.forEach(p=>{
+    const w=W.find(x=>x.name===p.workoutName);
+    if(w&&!dw.some(d=>d.name===w.name))dw.push(w);});
+  W.filter(w=>w.plannedDate===nxtDate).forEach(w=>{
+    if(!dw.some(d=>d.name===w.name))dw.push(w);});
   const dp=plans.filter(p=>p.date===nxtDate&&(p.tipo==='roca'||p.tipo==='indoor'));
   const dd=new Date(nxtDate);
   const isToday=nxtDate===td;
@@ -1314,6 +1336,8 @@ async function loadInvites(){if(!U)return;
     if(inv.workoutName)detail+=' · 🏋 '+inv.workoutName;
     if(inv.type==='cancel'){
       h+=`<div class="inv-card" style="border-color:var(--red);background:linear-gradient(135deg,rgba(255,107,107,.15),rgba(255,107,107,.05))"><div class="inv-who" style="color:var(--red)">❌ ${inv.fromName} ha cancelado</div><div class="inv-det">${inv.notas||detail} · ${dd}</div><div class="inv-btns"><button class="inv-yes" onclick="answerInv('${d.id}','accepted')">OK, mantener mi plan</button><button class="inv-no" onclick="answerInv('${d.id}','rejected')">Eliminar mi plan</button></div></div>`;
+    }else if(inv.type==='rejection'){
+      h+=`<div class="inv-card" style="border-color:var(--yellow);background:linear-gradient(135deg,rgba(255,230,109,.1),rgba(255,230,109,.03))"><div class="inv-who" style="color:var(--yellow)">😔 ${inv.fromName} ha rechazado</div><div class="inv-det">${inv.notas||''} · ${dd}</div><div class="inv-btns"><button class="inv-yes" onclick="answerInv('${d.id}','accepted')">OK</button></div></div>`;
     }else if(inv.type==='sharedRoute'){
       h+=`<div class="inv-card" style="border-color:var(--blue);background:linear-gradient(135deg,rgba(78,205,196,.1),rgba(78,205,196,.03))"><div class="inv-who" style="color:var(--blue)">🧗 ${inv.fromName} ha compartido una vía</div><div class="inv-det">${inv.notas||''} · ${dd}</div><div class="inv-btns"><button class="inv-yes" onclick="answerInv('${d.id}','accepted')">✓ Añadir a mis vías</button><button class="inv-no" onclick="answerInv('${d.id}','rejected')">✕ No, gracias</button></div></div>`;
     }else{
@@ -1325,7 +1349,6 @@ async function answerInv(id,status){if(!U)return;
   await ref.update({status});
   if(status==='accepted'){
     if(inv.type==='sharedRoute'&&inv.routeData){
-      // Save as a new route for this user
       const rd={...inv.routeData};delete rd.id;
       rd.notas=(rd.notas?rd.notas+' · ':'')+'Compartida por '+inv.fromName;
       await saveRoute(rd);drR();rH();
@@ -1335,6 +1358,13 @@ async function answerInv(id,status){if(!U)return;
       if(inv.workoutSteps){plan.workoutSteps=inv.workoutSteps;
         await saveWorkout({name:inv.workoutName+' (de '+inv.fromName+')',steps:inv.workoutSteps,plannedDate:inv.date});}
       await savePlan(plan);}}
+  else if(status==='rejected'&&inv.from){
+    // Notify sender that invite was rejected
+    const myName=(U.displayName||U.email);
+    try{await db.collection('users').doc(inv.from).collection('invites').add({
+      from:U.uid,fromName:myName,date:inv.date,tipo:'rechazo',type:'rejection',
+      notas:myName+' ha rechazado: '+(inv.lugar||inv.workoutName||inv.notas||'tu invitación'),
+      status:'pending',ts:firebase.firestore.FieldValue.serverTimestamp()});}catch(e){}}
   loadInvites();rCal();}
 async function shareRoute(){
   if(!U||!eRt)return;
@@ -1626,7 +1656,7 @@ function drHist(){
   h+='</select></div>';
   const fl=Tr.filter(t=>t.date&&t.date.startsWith(histMo)).sort((a,b)=>b.date.localeCompare(a.date));
   h+=`<div style="font-size:11px;color:var(--text3);margin-bottom:6px">${fl.length} entrenos</div>`;
-  fl.forEach(t=>{h+=`<div class="trn"><div style="display:flex;justify-content:space-between"><div class="tt2">${t.tipo}</div><div style="font-size:10px;color:var(--text3)">${new Date(t.date).toLocaleDateString(LANG==='en'?'en-US':LANG==='eu'?'eu-ES':LANG==='ca'?'ca-ES':'es-ES',{weekday:'short',day:'numeric',month:'short'})}</div></div><div class="td">${t.detail}</div></div>`;});
+  fl.forEach(t=>{h+=`<div class="trn" style="position:relative"><button onclick="delTrain('${t.id}')" style="position:absolute;top:4px;right:4px;background:none;border:none;color:var(--red);font-size:12px;cursor:pointer;padding:2px 6px">✕</button><div style="display:flex;justify-content:space-between;padding-right:20px"><div class="tt2">${t.tipo}</div><div style="font-size:10px;color:var(--text3)">${new Date(t.date).toLocaleDateString(LANG==='en'?'en-US':LANG==='eu'?'eu-ES':LANG==='ca'?'ca-ES':'es-ES',{weekday:'short',day:'numeric',month:'short'})}</div></div><div class="td">${t.detail||''}</div></div>`;});
   if(!fl.length)h+='<div style="color:var(--text3);text-align:center;padding:20px">'+t('noTrainsMonth')+'</div>';
   document.getElementById('tH').innerHTML=h;}
 // woFolders declared above
@@ -1870,11 +1900,11 @@ async function svW(){const n=(document.getElementById('wNm').value||'').trim();
   cm('mW1');tTb='plan';drTr();}
 
 // EXECUTOR
-let exSteps=[],exIdx=0,exTimerId=null,exSec=0,exTotalSec=0,exPaused=true,exWoName='',exWoSteps=[],exLandLock=null,exStartTs=0;
+let exSteps=[],exIdx=0,exTimerId=null,exSec=0,exTotalSec=0,exPaused=true,exWoName='',exWoSteps=[],exLandLock=null,exStartTs=0,exSaved=false;
 const EX_BG={work:'linear-gradient(135deg,#0a1a0a,#1a2e1a)',rest:'linear-gradient(135deg,#0a0a1e,#1a1a3a)',
   via:'linear-gradient(135deg,#1e1208,#2e1a08)',preview:'linear-gradient(135deg,#1a1a08,#2a2a10)',
   prep:'linear-gradient(135deg,#1a0a1a,#2a1a2a)',done:'linear-gradient(135deg,#0a1e0a,#1a3a1a)'};
-function execWo(w){exSteps=[];exWoName=w.name||'Entreno';exWoSteps=w.steps||[];
+function execWo(w){exSteps=[];exWoName=w.name||'Entreno';exWoSteps=w.steps||[];exSaved=false;
   try{if(screen.orientation&&screen.orientation.lock)screen.orientation.lock('landscape').then(()=>{exLandLock=true;}).catch(()=>{});}catch(e){}
   let lastExLabel='';
   (w.steps||[]).forEach((s,si)=>{const p=s.p||s;
@@ -1912,10 +1942,10 @@ function setExBg(type){document.getElementById('mExec').style.background=EX_BG[t
 function showExStep(){
   const ni=document.getElementById('exNextInfo');
   const ri=document.getElementById('exRestInfo');
-  if(exIdx>=exSteps.length){document.getElementById('exTitle').textContent=t('completed');document.getElementById('exStep').textContent='';document.getElementById('exTimer').textContent='✓';document.getElementById('exTimer').style.color='var(--green)';document.getElementById('exInfo').textContent=t('goodTraining');document.getElementById('exDetail').textContent='';ni.style.display='none';ri.style.display='none';document.getElementById('exBar').style.width='100%';
+  if(exIdx>=exSteps.length){if(exSaved)return;document.getElementById('exTitle').textContent=t('completed');document.getElementById('exStep').textContent='';document.getElementById('exTimer').textContent='✓';document.getElementById('exTimer').style.color='var(--green)';document.getElementById('exInfo').textContent=t('goodTraining');document.getElementById('exDetail').textContent='';ni.style.display='none';ri.style.display='none';document.getElementById('exBar').style.width='100%';
   document.getElementById('exViaBtn').style.display='none';setExBg('done');
   try{if(exLandLock&&screen.orientation&&screen.orientation.unlock)screen.orientation.unlock();}catch(e){}
-  if(exWoName){saveTrain({date:new Date().toISOString().split('T')[0],tipo:'Entreno',detail:exWoName,woSteps:exWoSteps||[]}).then(()=>{updStats();});}
+  if(exWoName&&!exSaved){exSaved=true;saveTrain({date:new Date().toISOString().split('T')[0],tipo:'Entreno',detail:exWoName,woSteps:exWoSteps||[]}).then(()=>{updStats();});}
   return;}
   const s=exSteps[exIdx];
   document.getElementById('exTitle').textContent=s.label;
