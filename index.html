@@ -1221,7 +1221,7 @@ function drNextWo(){
       if(s.modo==='time')pts.push(s.time+'s×'+(s.rep||1)+'r×'+(s.ser||1)+'ser');
       else if(s.reps)pts.push(s.reps+'r×'+(s.ser||1)+'ser');
       h+=`<div style="font-size:11px;color:var(--text2);padding:1px 0">${i+1}. ${nm}${pts.length?' · '+pts.join(' · '):''}</div>`;});
-    h+=`<div style="margin-top:6px"><button class="sbb" style="font-size:11px;padding:5px 12px" onclick='execWo(${JSON.stringify(w).replace(/'/g,"&#39;")})'>▶ Ejecutar</button></div></div>`;});
+    h+=`<div style="margin-top:6px;display:flex;gap:4px"><button class="sbb" style="font-size:11px;padding:5px 12px" onclick='execWo(${JSON.stringify(w).replace(/'/g,"&#39;")})'>▶ Ejecutar</button><button class="sbb" style="font-size:11px;padding:5px 12px;background:var(--bg3);color:var(--green)" onclick="shareWoFromHome('${w.name.replace(/'/g,"\\'")}','${nxtDate}')">📤 Compartir</button></div></div>`;});
   if(!dw.length)h+=`<div style="text-align:center;padding:16px"><div style="color:var(--text3);font-size:12px;margin-bottom:8px">${t('noTrainPlan')}</div><button onclick="go('train');tTb='plan';drTr();openNewWo()" style="padding:10px 20px;background:var(--rock);border:none;border-radius:12px;color:#000;font-family:'Nunito';font-weight:700;font-size:13px;cursor:pointer">+ Crea tu entrenamiento</button></div>`;
   el.innerHTML=h;}
 let _swipeSetup=false;
@@ -1369,7 +1369,35 @@ async function answerInv(id,status){if(!U)return;
   const doc=await ref.get();if(!doc.exists)return;const inv=doc.data();
   await ref.update({status});
   if(status==='accepted'){
-    if(inv.type==='sharedRoute'&&inv.routeData){
+    if(inv.type==='sharedMeso'&&inv.mesoData){
+      // Import all workouts and create mesocycle
+      const md=inv.mesoData;const wos=inv.workoutsData||{};
+      let folder=woFolders.find(f=>f.name==='De '+inv.fromName);
+      if(!folder){const fr2=await db.collection('users').doc(U.uid).collection('woFolders').add({name:'De '+inv.fromName});
+        folder={id:fr2.id,name:'De '+inv.fromName};woFolders.push(folder);}
+      for(const[wn,steps]of Object.entries(wos)){
+        if(!W.find(x=>x.name===wn)){
+          const wo={name:wn,folder:folder.id,steps};
+          const wr=await db.collection('users').doc(U.uid).collection('workouts').add(wo);
+          W.push({id:wr.id,...wo});}}
+      const mr=await db.collection('users').doc(U.uid).collection('mesos').add(md);
+      mesos.push({id:mr.id,...md});
+      // Create plans
+      const startDate=new Date(md.start+'T12:00:00');let wo2=0;
+      for(const fase of(md.fases||[])){for(let w=0;w<(fase.weeks||0);w++){
+        const wp=fase.weekPlans?fase.weekPlans[w]:[];
+        for(let d=0;d<7;d++){for(const wn of((wp||[])[d]||[])){
+          if(!wn)continue;const pd=new Date(startDate);pd.setDate(pd.getDate()+wo2*7+d);
+          await savePlan({date:pd.toISOString().split('T')[0],tipo:'entreno',notas:fase.name,workoutName:wn});}}
+        wo2++;}}
+      alert('Mesociclo "'+md.name+'" importado con todos los entrenos');drTr();rCal();rH();
+    }else if(inv.type==='sharedWorkout'&&inv.workoutSteps){
+      const addWo=confirm('Entreno "'+inv.workoutName+'" de '+inv.fromName+'. ¿Añadirlo a tus entrenos?');
+      if(addWo){
+        const woName=prompt('Nombre:',inv.workoutName);
+        if(woName){await saveWorkout({name:woName,steps:inv.workoutSteps,plannedDate:inv.date});}}
+      await savePlan({date:inv.date,tipo:'entreno',notas:'Con '+inv.fromName,workoutName:inv.workoutName});
+    }else if(inv.type==='sharedRoute'&&inv.routeData){
       const rd={...inv.routeData};delete rd.id;
       rd.notas=(rd.notas?rd.notas+' · ':'')+'Compartida por '+inv.fromName;
       await saveRoute(rd);drR();rH();
@@ -2171,7 +2199,7 @@ function drMeso(){let h='';if(!mesos.length)h='<div style="color:var(--text3);fo
     const totalWeeks=(m.fases||[]).reduce((a,f)=>a+(f.weeks||0),0);
     let totalSessions=0;
     (m.fases||[]).forEach(f=>{(f.weekPlans||[]).forEach(wp=>{(wp||[]).forEach(d=>{if(d)totalSessions++;});});});
-    h+=`<div class="meso-card"><div style="display:flex;justify-content:space-between;align-items:center"><div style="font-family:'Bebas Neue';font-size:16px;color:var(--rock)">${m.name}</div><div style="display:flex;gap:4px"><button onclick="editMesoDates('${m.id}')" style="background:none;border:none;color:var(--blue);font-size:10px;cursor:pointer">📅 Editar</button><button onclick="delMeso('${m.id}')" style="background:none;border:none;color:var(--red);font-size:10px;cursor:pointer">✕</button></div></div>`;
+    h+=`<div class="meso-card"><div style="display:flex;justify-content:space-between;align-items:center"><div style="font-family:'Bebas Neue';font-size:16px;color:var(--rock)">${m.name}</div><div style="display:flex;gap:4px"><button onclick="shareMeso('${m.id}')" style="background:none;border:none;color:var(--green);font-size:10px;cursor:pointer">📤 Compartir</button><button onclick="editMesoDates('${m.id}')" style="background:none;border:none;color:var(--blue);font-size:10px;cursor:pointer">📅 Editar</button><button onclick="delMeso('${m.id}')" style="background:none;border:none;color:var(--red);font-size:10px;cursor:pointer">✕</button></div></div>`;
     h+=`<div style="font-size:10px;color:var(--text3);margin-bottom:6px">Inicio: ${new Date(m.start).toLocaleDateString('es-ES',{day:'numeric',month:'short'})} · ${totalWeeks} sem · ${totalSessions} sesiones</div>`;
     (m.fases||[]).forEach(f=>{
       h+=`<div class="meso-fase"><div class="meso-dot" style="background:${f.color}"></div><div class="meso-info"><b>${f.name}</b> · ${f.weeks} sem</div></div>`;});
@@ -2207,14 +2235,14 @@ function openMeso(){msFases=[];msStep=0;
   else{document.getElementById('msPrev').style.display='none';}
   document.getElementById('msNm').value='';document.getElementById('msStart').value=new Date().toISOString().split('T')[0];
   rMsFases();document.getElementById('mMeso').classList.add('sh');}
-function copyLastMeso(){const last=mesos[mesos.length-1];if(!last)return;msFases=(last.fases||[]).map(f=>({...f,weeks:f.weeks||4,weekPlans:f.weekPlans||[]}));rMsFases();}
+function copyLastMeso(){const last=mesos[mesos.length-1];if(!last)return;msFases=(last.fases||[]).map(f=>({...f,weekPlans:JSON.parse(JSON.stringify(f.weekPlans||[]))}));rMsFases();}
 function addFase(){msFases.push({name:MESO_COLORS[0].name,color:MESO_COLORS[0].color,weeks:4,weekPlans:[]});rMsFases();}
-let msStep=0; // 0=define phases, 1+=assign workouts per week
-function rMsFases(){
-  if(msStep===0){rMsPhaseSetup();}
-  else{rMsWeekAssign();}}
+let msStep=0;
+function rMsFases(){if(msStep===0)rMsPhaseSetup();else rMsWeekAssign();}
 function rMsPhaseSetup(){
-  let h='<div style="font-size:12px;color:var(--text);margin-bottom:8px;font-weight:700">Paso 1: Define las fases</div>';
+  let h=`<div style="background:var(--bg2);border-radius:10px;padding:10px;margin-bottom:10px;border:1px solid rgba(255,255,255,.06)">
+  <div style="font-size:14px;color:var(--green);font-weight:700;margin-bottom:4px">PASO 1 · Define las fases</div>
+  <div style="font-size:10px;color:var(--text3)">Añade fases con + Fase. Después asignarás entrenos a cada día.</div></div>`;
   msFases.forEach((f,i)=>{
     let opts='';MESO_COLORS.forEach(c=>{opts+=`<option value="${c.name}" ${f.name===c.name?'selected':''}>${c.name}</option>`;});
     h+=`<div style="display:flex;align-items:center;gap:4px;margin-bottom:6px;background:var(--bg2);padding:8px;border-radius:10px;border-left:4px solid ${f.color}">`;
@@ -2222,60 +2250,118 @@ function rMsPhaseSetup(){
     h+=`<input type="number" value="${f.weeks}" min="1" max="12" style="width:36px;background:var(--bg);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:5px;color:var(--text);font-size:11px;text-align:center" onchange="msFases[${i}].weeks=parseInt(this.value)||1">`;
     h+=`<span style="font-size:9px;color:var(--text3)">sem</span>`;
     h+=`<button style="background:none;border:none;color:var(--red);font-size:14px;cursor:pointer" onclick="msFases.splice(${i},1);rMsFases()">✕</button></div>`;});
-  if(!msFases.length)h+='<div style="font-size:10px;color:var(--text3);padding:4px">Añade fases con el botón +</div>';
-  if(msFases.length)h+=`<button onclick="msStep=1;rMsFases()" style="width:100%;padding:10px;background:var(--green);border:none;border-radius:10px;color:#000;font-family:'Nunito';font-weight:700;font-size:13px;cursor:pointer;margin-top:6px">Siguiente → Asignar entrenos</button>`;
+  if(!msFases.length)h+='<div style="font-size:11px;color:var(--text3);padding:12px;text-align:center">Pulsa + Fase para empezar</div>';
+  const tw=msFases.reduce((a,f)=>a+(f.weeks||0),0);
+  if(msFases.length)h+=`<div style="font-size:10px;color:var(--text3);text-align:center;margin:6px 0">${msFases.length} fases · ${tw} semanas</div>`;
+  if(msFases.length)h+=`<button onclick="msStep=1;rMsFases()" style="width:100%;padding:12px;background:var(--green);border:none;border-radius:12px;color:#000;font-family:'Nunito';font-weight:700;font-size:14px;cursor:pointer;margin-top:4px">Siguiente → Asignar entrenos a días</button>`;
   document.getElementById('msFases').innerHTML=h;}
 function rMsWeekAssign(){
   const start=document.getElementById('msStart').value;
   if(!start){alert('Pon fecha de inicio');msStep=0;rMsFases();return;}
-  const startDate=new Date(start);
+  const startDate=new Date(start+'T12:00:00');
   const dayNames=['Lu','Ma','Mi','Ju','Vi','Sa','Do'];
-  let woOpts='<option value="">—</option>';
-  W.forEach(w=>{woOpts+=`<option value="${w.name}">${w.name}</option>`;});
-  let h='<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><button onclick="msStep=0;rMsFases()" style="background:none;border:none;color:var(--blue);font-size:12px;cursor:pointer">← Volver a fases</button><span style="font-size:12px;color:var(--text);font-weight:700">Paso 2: Asignar entrenos</span></div>';
+  let h=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><button onclick="msStep=0;rMsFases()" style="background:none;border:none;color:var(--blue);font-size:12px;cursor:pointer">← Volver</button><div style="font-size:13px;color:var(--green);font-weight:700">PASO 2 · Asignar entrenos</div></div>`;
+  h+=`<div style="font-size:10px;color:var(--text3);margin-bottom:8px">Elige entrenos para cada día. + para más de uno.</div>`;
   let weekOffset=0;
   msFases.forEach((f,fi)=>{
     if(!f.weekPlans)f.weekPlans=[];
-    while(f.weekPlans.length<f.weeks)f.weekPlans.push([null,null,null,null,null,null,null]);
-    h+=`<div style="font-size:13px;font-weight:700;color:${f.color};margin:8px 0 4px;border-left:4px solid ${f.color};padding-left:8px">${f.name} · ${f.weeks} semanas</div>`;
+    while(f.weekPlans.length<f.weeks)f.weekPlans.push([[],[],[],[],[],[],[]]);
     for(let w=0;w<f.weeks;w++){
-      const weekStart=new Date(startDate);weekStart.setDate(weekStart.getDate()+weekOffset*7);
-      const weekEnd=new Date(weekStart);weekEnd.setDate(weekEnd.getDate()+6);
-      const wkLabel=weekStart.toLocaleDateString('es-ES',{day:'numeric',month:'short'})+' - '+weekEnd.toLocaleDateString('es-ES',{day:'numeric',month:'short'});
-      h+=`<div style="background:var(--bg2);border-radius:10px;padding:8px;margin-bottom:6px;border:1px solid ${f.color}22">`;
-      h+=`<div style="font-size:11px;font-weight:600;color:var(--text);margin-bottom:4px">Semana ${w+1} <span style="color:var(--text3);font-weight:400">(${wkLabel})</span></div>`;
-      h+=`<div style="display:grid;grid-template-columns:28px 1fr;gap:2px;align-items:center">`;
+      if(!Array.isArray(f.weekPlans[w]))f.weekPlans[w]=[[],[],[],[],[],[],[]];
+      for(let d=0;d<7;d++){if(!Array.isArray(f.weekPlans[w][d]))f.weekPlans[w][d]=f.weekPlans[w][d]?[f.weekPlans[w][d]]:[];}}
+    h+=`<div style="font-size:13px;font-weight:700;color:${f.color};margin:10px 0 4px;border-left:4px solid ${f.color};padding-left:8px">${f.name} · ${f.weeks} sem</div>`;
+    for(let w=0;w<f.weeks;w++){
+      const ws2=new Date(startDate);ws2.setDate(ws2.getDate()+weekOffset*7);
+      const we2=new Date(ws2);we2.setDate(we2.getDate()+6);
+      const wl=ws2.toLocaleDateString('es-ES',{day:'numeric',month:'short'})+' – '+we2.toLocaleDateString('es-ES',{day:'numeric',month:'short'});
+      h+=`<div style="background:var(--bg2);border-radius:10px;padding:8px;margin-bottom:6px;border:1px solid ${f.color}33">`;
+      h+=`<div style="font-size:11px;font-weight:600;color:var(--text);margin-bottom:4px">Semana ${w+1} <span style="color:var(--text3);font-weight:400">(${wl})</span></div>`;
       for(let d=0;d<7;d++){
-        const dayDate=new Date(weekStart);dayDate.setDate(dayDate.getDate()+d);
-        const dateStr=dayDate.toLocaleDateString('es-ES',{day:'numeric'});
-        const selected=f.weekPlans[w][d]||'';
-        h+=`<span style="font-size:9px;color:var(--text3);text-align:center">${dayNames[d]}<br>${dateStr}</span>`;
-        h+=`<select style="background:var(--bg);border:1px solid rgba(255,255,255,.06);border-radius:6px;padding:3px;color:var(--text);font-size:9px;font-family:Nunito" onchange="msFases[${fi}].weekPlans[${w}][${d}]=this.value||null">${woOpts.replace('value="'+selected+'"','value="'+selected+'" selected')}</select>`;}
-      h+=`</div></div>`;
-      weekOffset++;}});
-  h+=`<button onclick="svMeso()" style="width:100%;padding:12px;background:var(--green);border:none;border-radius:12px;color:#000;font-family:'Nunito';font-weight:700;font-size:14px;cursor:pointer;margin-top:8px">✓ Guardar mesociclo</button>`;
+        const dd2=new Date(ws2);dd2.setDate(dd2.getDate()+d);
+        const dn=dd2.toLocaleDateString('es-ES',{day:'numeric'});
+        const dw=f.weekPlans[w][d]||[];
+        h+=`<div style="display:flex;align-items:flex-start;gap:4px;padding:2px 0;border-bottom:1px solid rgba(255,255,255,.02)">`;
+        h+=`<span style="font-size:9px;color:var(--text3);width:26px;text-align:center;padding-top:3px;flex-shrink:0">${dayNames[d]}<br>${dn}</span><div style="flex:1">`;
+        if(dw.length){dw.forEach((wo,wi)=>{
+          h+=`<div style="display:flex;gap:2px;margin-bottom:2px"><select style="flex:1;background:var(--bg);border:1px solid rgba(255,255,255,.06);border-radius:6px;padding:3px;color:var(--text);font-size:9px;font-family:Nunito" onchange="msFases[${fi}].weekPlans[${w}][${d}][${wi}]=this.value"><option value="">—</option>`;
+          W.forEach(ww=>{h+=`<option value="${ww.name}"${ww.name===wo?' selected':''}>${ww.name}</option>`;});
+          h+=`</select><button onclick="msFases[${fi}].weekPlans[${w}][${d}].splice(${wi},1);rMsFases()" style="background:none;border:none;color:var(--red);font-size:9px;cursor:pointer">✕</button></div>`;});
+          h+=`<button onclick="msFases[${fi}].weekPlans[${w}][${d}].push('');rMsFases()" style="background:none;border:1px dashed rgba(255,255,255,.1);border-radius:4px;color:var(--green);font-size:8px;cursor:pointer;padding:1px 4px;width:100%">+ entreno</button>`;}
+        else{h+=`<select style="width:100%;background:var(--bg);border:1px solid rgba(255,255,255,.06);border-radius:6px;padding:3px;color:var(--text);font-size:9px;font-family:Nunito" onchange="if(this.value){msFases[${fi}].weekPlans[${w}][${d}]=[this.value];rMsFases();}"><option value="">—</option>`;
+          W.forEach(ww=>{h+=`<option value="${ww.name}">${ww.name}</option>`;});h+=`</select>`;}
+        h+=`</div></div>`;}
+      h+=`</div>`;weekOffset++;}});
+  h+=`<button onclick="svMeso()" style="width:100%;padding:14px;background:var(--green);border:none;border-radius:12px;color:#000;font-family:'Nunito';font-weight:700;font-size:15px;cursor:pointer;margin-top:8px">✓ Guardar mesociclo</button>`;
   document.getElementById('msFases').innerHTML=h;}
-async function svMeso(){const nm=document.getElementById('msNm').value.trim(),start=document.getElementById('msStart').value;
+async function svMeso(){
+  const nm=document.getElementById('msNm').value.trim(),start=document.getElementById('msStart').value;
   if(!nm||!start||!msFases.length){alert(t('mesoNeedAll'));return;}
-  const fases=msFases.map(f=>({name:f.name,color:f.color,weeks:f.weeks,weekPlans:f.weekPlans||[]}));
+  const fases=msFases.map(f=>({name:f.name,color:f.color,weeks:f.weeks,
+    weekPlans:(f.weekPlans||[]).map(wk=>(wk||[]).map(dy=>(dy||[]).filter(w=>w&&w.trim())))}));
   const data={name:nm,start,fases};
-  const ref=await db.collection('users').doc(U.uid).collection('mesos').add(data);data.id=ref.id;mesos.push(data);
-  // Create plans in calendar
-  const startDate=new Date(start);
-  let weekOffset=0,planCount=0;
-  for(const fase of fases){
-    for(let w=0;w<fase.weeks;w++){
+  try{const ref=await db.collection('users').doc(U.uid).collection('mesos').add(data);
+    data.id=ref.id;mesos.push(data);
+    const startDate=new Date(start+'T12:00:00');
+    let weekOffset=0,planCount=0;
+    for(const fase of fases){for(let w=0;w<fase.weeks;w++){
       const wp=fase.weekPlans[w]||[];
-      for(let d=0;d<7;d++){
-        if(!wp[d])continue;
-        const planDate=new Date(startDate);planDate.setDate(planDate.getDate()+weekOffset*7+d);
-        const dateStr=planDate.toISOString().split('T')[0];
-        await savePlan({date:dateStr,tipo:'entreno',lugar:'',notas:fase.name,workoutName:wp[d]});
-        planCount++;}
+      for(let d=0;d<7;d++){for(const woName of(wp[d]||[])){
+        if(!woName)continue;
+        const pd=new Date(startDate);pd.setDate(pd.getDate()+weekOffset*7+d);
+        const ds=pd.toISOString().split('T')[0];
+        await savePlan({date:ds,tipo:'entreno',lugar:'',notas:fase.name,workoutName:woName});planCount++;}}
       weekOffset++;}}
-  msStep=0;cm('mMeso');tTb='meso';drTr();rCal();rH();
-  alert('Mesociclo "'+nm+'" creado con '+planCount+' sesiones');}
-async function delMeso(id){if(!confirm(t('deleteMeso')))return;await db.collection('users').doc(U.uid).collection('mesos').doc(id).delete();mesos=mesos.filter(m=>m.id!==id);drMeso();}
+    msStep=0;cm('mMeso');tTb='meso';drTr();rCal();rH();
+    alert('Mesociclo "'+nm+'" creado con '+planCount+' sesiones');
+  }catch(e){alert('Error: '+e.message);}}
+async function delMeso(id){if(!confirm(t('deleteMeso')))return;
+  // Also delete associated plans
+  const m=mesos.find(x=>x.id===id);
+  if(m){const mesoPlans=plans.filter(p=>p.notas&&(m.fases||[]).some(f=>p.notas===f.name));
+    for(const p of mesoPlans){try{await db.collection('users').doc(U.uid).collection('plans').doc(p.id).delete();}catch(e){}}
+    plans=plans.filter(p=>!mesoPlans.some(mp=>mp.id===p.id));}
+  await db.collection('users').doc(U.uid).collection('mesos').doc(id).delete();mesos=mesos.filter(m=>m.id!==id);drMeso();rCal();}
+async function shareMeso(mesoId){
+  if(!U||!friends.length){alert('No tienes amigos añadidos');return;}
+  const m=mesos.find(x=>x.id===mesoId);if(!m)return;
+  const friendName=prompt('Compartir "'+m.name+'" con:\n'+friends.map(f=>f.name||f.email).join(', '));
+  if(!friendName)return;
+  const fr=friends.find(f=>(f.name||'').toLowerCase()===friendName.toLowerCase()||f.email.toLowerCase()===friendName.toLowerCase());
+  if(!fr){alert('Amigo no encontrado');return;}
+  const fq=await db.collection('users').where('email','==',fr.email).get();
+  if(fq.empty)return;
+  const fuid=fq.docs[0].id;
+  // Collect all workout names from the meso
+  const woNames=new Set();
+  (m.fases||[]).forEach(f=>{(f.weekPlans||[]).forEach(wk=>{(wk||[]).forEach(dy=>{(dy||[]).forEach(w=>{if(w)woNames.add(w);});});});});
+  // Collect workout data
+  const wos={};
+  for(const wn of woNames){const w=W.find(x=>x.name===wn);if(w)wos[wn]=w.steps||[];}
+  // Send invite with meso data
+  await db.collection('users').doc(fuid).collection('invites').add({
+    from:U.uid,fromName:U.displayName||U.email,date:m.start,
+    tipo:'mesociclo',type:'sharedMeso',
+    mesoData:{name:m.name,start:m.start,fases:m.fases},
+    workoutsData:wos,
+    status:'pending',ts:firebase.firestore.FieldValue.serverTimestamp()});
+  alert('Mesociclo compartido con '+(fr.name||fr.email));}
+async function shareWoFromHome(woName,date){
+  if(!U||!friends.length){alert('No tienes amigos añadidos');return;}
+  const w=W.find(x=>x.name===woName);if(!w)return;
+  const friendName=prompt('Compartir entreno "'+woName+'" con:\n'+friends.map(f=>f.name||f.email).join(', '));
+  if(!friendName)return;
+  const fr=friends.find(f=>(f.name||'').toLowerCase()===friendName.toLowerCase()||f.email.toLowerCase()===friendName.toLowerCase());
+  if(!fr){alert('Amigo no encontrado');return;}
+  const fq=await db.collection('users').where('email','==',fr.email).get();
+  if(fq.empty)return;
+  const fuid=fq.docs[0].id;
+  await db.collection('users').doc(fuid).collection('invites').add({
+    from:U.uid,fromName:U.displayName||U.email,date:date,
+    tipo:'entreno',type:'sharedWorkout',
+    workoutName:woName,workoutSteps:w.steps||[],
+    notas:'Entreno de '+(U.displayName||U.email),
+    status:'pending',ts:firebase.firestore.FieldValue.serverTimestamp()});
+  alert('Entreno compartido con '+(fr.name||fr.email));}
 // PREDEFINED PROGRAMS
 const PROGRAMS=[
   {name:'Hörst 4-3-2-1 (10 semanas)',desc:'Periodización clásica. Ideal para temporada baja o entre viajes.',
