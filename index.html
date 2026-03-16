@@ -1267,8 +1267,6 @@ async function importXL(e){
       workouts[woName].push(step);});
     // Check for folder column
     const folderCol=rows[0]['Carpeta']||rows[0]['Folder']||rows[0]['carpeta']||'';
-    // Check for mesocycle columns
-    const hasMeso=rows[0].hasOwnProperty('Fase')||rows[0].hasOwnProperty('fase');
     // Save workouts
     let created=0;
     const folderName=folderCol||'Importado';
@@ -1280,23 +1278,44 @@ async function importXL(e){
         const wo={name:woName,folder:folder.id,steps};
         const ref=await db.collection('users').doc(U.uid).collection('workouts').add(wo);
         W.push({id:ref.id,...wo});created++;}}
-    // If mesocycle data exists
-    if(hasMeso){
-      const fases={};
-      rows.forEach(r=>{
-        const fase=(r['Fase']||r['fase']||'').toString().trim();
-        if(fase&&!fases[fase]){
-          fases[fase]={name:fase,color:r['Color']||'#d4a574',
-            weeks:parseInt(r['Semanas']||r['semanas']||4)||4,
-            desc:r['Descripción']||r['descripcion']||''};}});
-      if(Object.keys(fases).length){
-        const mesoName=(rows[0]['Mesociclo']||rows[0]['mesociclo']||'Importado').toString().trim();
-        const start=new Date().toISOString().split('T')[0];
-        const mesoData={name:mesoName,start,fases:Object.values(fases)};
-        const ref=await db.collection('users').doc(U.uid).collection('mesos').add(mesoData);
-        mesos.push({id:ref.id,...mesoData});}}
-    msg.textContent=created+' entrenos importados en carpeta "'+folderName+'"';msg.style.color='var(--green)';
-    drTr();
+    // Import mesocycle from second sheet if exists
+    let mesoCreated=false;
+    if(wb.SheetNames.length>1){
+      const ms2=wb.Sheets[wb.SheetNames[1]];
+      const mRows=XLSX.utils.sheet_to_json(ms2,{defval:''});
+      if(mRows.length&&(mRows[0]['Fecha']||mRows[0]['fecha'])){
+        const mesoName=(mRows[0]['Mesociclo']||mRows[0]['mesociclo']||'Importado').toString().trim();
+        // Group by fase to build fases array
+        const faseMap={};const planDates=[];
+        let firstDate=null;
+        mRows.forEach(r=>{
+          const fase=(r['Fase']||r['fase']||'').toString().trim();
+          const color=(r['Color']||r['color']||'#d4a574').toString().trim();
+          let dateStr=(r['Fecha']||r['fecha']||'').toString().trim();
+          if(dateStr&&dateStr.includes('T'))dateStr=dateStr.split('T')[0];
+          if(dateStr&&dateStr.includes('/'))dateStr=dateStr.split('/').reverse().join('-');
+          const woName=(r['Entreno']||r['entreno']||r['Workout']||'').toString().trim();
+          if(!fase)return;
+          if(!faseMap[fase])faseMap[fase]={name:fase,color,dates:[]};
+          if(dateStr){faseMap[fase].dates.push(dateStr);
+            if(!firstDate||dateStr<firstDate)firstDate=dateStr;
+            if(woName)planDates.push({date:dateStr,fase,woName});}});
+        // Build fases with weeks
+        const fases=Object.values(faseMap).map(f=>{
+          const sorted=f.dates.sort();
+          const weeks=sorted.length>0?Math.ceil((new Date(sorted[sorted.length-1])-new Date(sorted[0]))/(7*86400000))+1:1;
+          return{name:f.name,color:f.color,weeks};});
+        const mesoData={name:mesoName,start:firstDate||new Date().toISOString().split('T')[0],fases};
+        const mref=await db.collection('users').doc(U.uid).collection('mesos').add(mesoData);
+        mesos.push({id:mref.id,...mesoData});
+        // Create plans for each date
+        for(const pd of planDates){
+          if(pd.woName){await savePlan({date:pd.date,tipo:'entreno',lugar:'',notas:pd.fase,workoutName:pd.woName});}}
+        mesoCreated=true;}}
+    let result=created+' entrenos importados';
+    if(mesoCreated)result+=' + mesociclo con sesiones en el calendario';
+    msg.textContent=result;msg.style.color='var(--green)';
+    drTr();rCal();rH();
   }catch(err){msg.textContent='Error: '+err.message;msg.style.color='var(--red)';}}
 function exportXL(tipo){
   const from=document.getElementById('exFrom').value,to=document.getElementById('exTo').value;
@@ -2150,14 +2169,12 @@ let msFases=[];
 function drMeso(){let h='';if(!mesos.length)h='<div style="color:var(--text3);font-size:11px;text-align:center;padding:16px">'+t('noMesos')+'</div>';
   mesos.forEach(m=>{
     const totalWeeks=(m.fases||[]).reduce((a,f)=>a+(f.weeks||0),0);
+    let totalSessions=0;
+    (m.fases||[]).forEach(f=>{(f.weekPlans||[]).forEach(wp=>{(wp||[]).forEach(d=>{if(d)totalSessions++;});});});
     h+=`<div class="meso-card"><div style="display:flex;justify-content:space-between;align-items:center"><div style="font-family:'Bebas Neue';font-size:16px;color:var(--rock)">${m.name}</div><div style="display:flex;gap:4px"><button onclick="editMesoDates('${m.id}')" style="background:none;border:none;color:var(--blue);font-size:10px;cursor:pointer">📅 Editar</button><button onclick="delMeso('${m.id}')" style="background:none;border:none;color:var(--red);font-size:10px;cursor:pointer">✕</button></div></div>`;
-    h+=`<div style="font-size:10px;color:var(--text3);margin-bottom:6px">Inicio: ${new Date(m.start).toLocaleDateString(LANG==='en'?'en-US':LANG==='eu'?'eu-ES':LANG==='ca'?'ca-ES':'es-ES',{day:'numeric',month:'short'})} · ${totalWeeks} semanas</div>`;
+    h+=`<div style="font-size:10px;color:var(--text3);margin-bottom:6px">Inicio: ${new Date(m.start).toLocaleDateString('es-ES',{day:'numeric',month:'short'})} · ${totalWeeks} sem · ${totalSessions} sesiones</div>`;
     (m.fases||[]).forEach(f=>{
-      h+=`<div class="meso-fase"><div class="meso-dot" style="background:${f.color}"></div><div class="meso-info"><b>${f.name}</b> · ${f.weeks} sem · ${f.sessionsPerWeek||'?'} ent/sem</div></div>`;
-      if(f.sessions&&f.sessions.length){
-        h+=`<div style="margin-left:20px;margin-bottom:4px">`;
-        f.sessions.forEach((s,si)=>{if(s)h+=`<div style="font-size:9px;color:var(--text3);padding:1px 0">${si+1}. ${s}</div>`;});
-        h+=`</div>`;}});
+      h+=`<div class="meso-fase"><div class="meso-dot" style="background:${f.color}"></div><div class="meso-info"><b>${f.name}</b> · ${f.weeks} sem</div></div>`;});
     h+=`</div>`;});
   document.getElementById('mesoList').innerHTML=h;}
 async function editMesoDates(mesoId){
@@ -2183,68 +2200,81 @@ async function editMesoDates(mesoId){
   await db.collection('users').doc(U.uid).collection('mesos').doc(m.id).delete();
   mesos=mesos.filter(x=>x.id!==m.id);
   rMsFases();document.getElementById('mMeso').classList.add('sh');}
-function openMeso(){msFases=[];
+function openMeso(){msFases=[];msStep=0;
   if(mesos.length){const last=mesos[mesos.length-1];
     document.getElementById('msPrev').style.display='block';
     document.getElementById('msPrev').innerHTML=`<button class="btn bg2" style="font-size:11px" onclick="copyLastMeso()">📋 Copiar de "${last.name}"</button>`;}
   else{document.getElementById('msPrev').style.display='none';}
   document.getElementById('msNm').value='';document.getElementById('msStart').value=new Date().toISOString().split('T')[0];
   rMsFases();document.getElementById('mMeso').classList.add('sh');}
-function copyLastMeso(){const last=mesos[mesos.length-1];if(!last)return;msFases=(last.fases||[]).map(f=>({...f,sessions:f.sessions||[]}));rMsFases();}
-function addFase(){msFases.push({name:MESO_COLORS[0].name,color:MESO_COLORS[0].color,weeks:4,sessionsPerWeek:3,sessions:[]});rMsFases();}
-function rMsFases(){let h='';msFases.forEach((f,i)=>{
+function copyLastMeso(){const last=mesos[mesos.length-1];if(!last)return;msFases=(last.fases||[]).map(f=>({...f,weeks:f.weeks||4,weekPlans:f.weekPlans||[]}));rMsFases();}
+function addFase(){msFases.push({name:MESO_COLORS[0].name,color:MESO_COLORS[0].color,weeks:4,weekPlans:[]});rMsFases();}
+let msStep=0; // 0=define phases, 1+=assign workouts per week
+function rMsFases(){
+  if(msStep===0){rMsPhaseSetup();}
+  else{rMsWeekAssign();}}
+function rMsPhaseSetup(){
+  let h='<div style="font-size:12px;color:var(--text);margin-bottom:8px;font-weight:700">Paso 1: Define las fases</div>';
+  msFases.forEach((f,i)=>{
     let opts='';MESO_COLORS.forEach(c=>{opts+=`<option value="${c.name}" ${f.name===c.name?'selected':''}>${c.name}</option>`;});
-    // Workout options
-    let woOpts='<option value="">— Elegir entreno —</option>';
-    W.forEach(w=>{woOpts+=`<option value="${w.name}">${w.name}</option>`;});
-    h+=`<div style="background:var(--bg2);border-radius:12px;padding:10px;margin-bottom:8px;border-left:4px solid ${f.color}">`;
-    h+=`<div style="display:flex;align-items:center;gap:4px;margin-bottom:6px">`;
+    h+=`<div style="display:flex;align-items:center;gap:4px;margin-bottom:6px;background:var(--bg2);padding:8px;border-radius:10px;border-left:4px solid ${f.color}">`;
     h+=`<select style="flex:1;background:var(--bg);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:5px;color:var(--text);font-size:12px;font-family:Nunito" onchange="msFases[${i}].name=this.value;const c=MESO_COLORS.find(x=>x.name===this.value);if(c)msFases[${i}].color=c.color;rMsFases()">${opts}</select>`;
-    h+=`<input type="number" value="${f.weeks}" min="1" max="12" style="width:36px;background:var(--bg);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:5px;color:var(--text);font-size:11px;text-align:center;font-family:Nunito" onchange="msFases[${i}].weeks=parseInt(this.value)||1;rMsFases()"><span style="font-size:9px;color:var(--text3)">sem</span>`;
-    h+=`<button style="background:none;border:none;color:var(--red);font-size:14px;cursor:pointer" onclick="msFases.splice(${i},1);rMsFases()">✕</button></div>`;
-    // Sessions per week
-    h+=`<div style="display:flex;align-items:center;gap:6px;margin-bottom:6px"><span style="font-size:10px;color:var(--text3)">Entrenos/semana:</span>`;
-    h+=`<select style="background:var(--bg);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:3px 6px;color:var(--text);font-size:11px;font-family:Nunito" onchange="msFases[${i}].sessionsPerWeek=parseInt(this.value);msFases[${i}].sessions=[];rMsFases()">`;
-    for(let n=1;n<=6;n++){h+=`<option value="${n}" ${(f.sessionsPerWeek||3)===n?'selected':''}>${n}</option>`;}
-    h+=`</select></div>`;
-    // Workout selectors for each session
-    const nSes=f.sessionsPerWeek||3;
-    if(!f.sessions)f.sessions=[];
-    while(f.sessions.length<nSes)f.sessions.push('');
-    const days=['Lu','Ma','Mi','Ju','Vi','Sa','Do'];
-    h+=`<div style="display:flex;flex-direction:column;gap:3px">`;
-    for(let s=0;s<nSes;s++){
-      h+=`<div style="display:flex;align-items:center;gap:4px"><span style="font-size:10px;color:var(--text3);width:16px">${s+1}.</span>`;
-      h+=`<select style="flex:1;background:var(--bg);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:3px;color:var(--text);font-size:10px;font-family:Nunito" onchange="msFases[${i}].sessions[${s}]=this.value">${woOpts.replace('value="'+f.sessions[s]+'"','value="'+f.sessions[s]+'" selected')}</select>`;
-      h+=`</div>`;}
-    h+=`</div></div>`;});
-  if(!msFases.length)h='<div style="font-size:10px;color:var(--text3);padding:4px">'+t('addPhasesMsg')+'</div>';
+    h+=`<input type="number" value="${f.weeks}" min="1" max="12" style="width:36px;background:var(--bg);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:5px;color:var(--text);font-size:11px;text-align:center" onchange="msFases[${i}].weeks=parseInt(this.value)||1">`;
+    h+=`<span style="font-size:9px;color:var(--text3)">sem</span>`;
+    h+=`<button style="background:none;border:none;color:var(--red);font-size:14px;cursor:pointer" onclick="msFases.splice(${i},1);rMsFases()">✕</button></div>`;});
+  if(!msFases.length)h+='<div style="font-size:10px;color:var(--text3);padding:4px">Añade fases con el botón +</div>';
+  if(msFases.length)h+=`<button onclick="msStep=1;rMsFases()" style="width:100%;padding:10px;background:var(--green);border:none;border-radius:10px;color:#000;font-family:'Nunito';font-weight:700;font-size:13px;cursor:pointer;margin-top:6px">Siguiente → Asignar entrenos</button>`;
+  document.getElementById('msFases').innerHTML=h;}
+function rMsWeekAssign(){
+  const start=document.getElementById('msStart').value;
+  if(!start){alert('Pon fecha de inicio');msStep=0;rMsFases();return;}
+  const startDate=new Date(start);
+  const dayNames=['Lu','Ma','Mi','Ju','Vi','Sa','Do'];
+  let woOpts='<option value="">—</option>';
+  W.forEach(w=>{woOpts+=`<option value="${w.name}">${w.name}</option>`;});
+  let h='<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><button onclick="msStep=0;rMsFases()" style="background:none;border:none;color:var(--blue);font-size:12px;cursor:pointer">← Volver a fases</button><span style="font-size:12px;color:var(--text);font-weight:700">Paso 2: Asignar entrenos</span></div>';
+  let weekOffset=0;
+  msFases.forEach((f,fi)=>{
+    if(!f.weekPlans)f.weekPlans=[];
+    while(f.weekPlans.length<f.weeks)f.weekPlans.push([null,null,null,null,null,null,null]);
+    h+=`<div style="font-size:13px;font-weight:700;color:${f.color};margin:8px 0 4px;border-left:4px solid ${f.color};padding-left:8px">${f.name} · ${f.weeks} semanas</div>`;
+    for(let w=0;w<f.weeks;w++){
+      const weekStart=new Date(startDate);weekStart.setDate(weekStart.getDate()+weekOffset*7);
+      const weekEnd=new Date(weekStart);weekEnd.setDate(weekEnd.getDate()+6);
+      const wkLabel=weekStart.toLocaleDateString('es-ES',{day:'numeric',month:'short'})+' - '+weekEnd.toLocaleDateString('es-ES',{day:'numeric',month:'short'});
+      h+=`<div style="background:var(--bg2);border-radius:10px;padding:8px;margin-bottom:6px;border:1px solid ${f.color}22">`;
+      h+=`<div style="font-size:11px;font-weight:600;color:var(--text);margin-bottom:4px">Semana ${w+1} <span style="color:var(--text3);font-weight:400">(${wkLabel})</span></div>`;
+      h+=`<div style="display:grid;grid-template-columns:28px 1fr;gap:2px;align-items:center">`;
+      for(let d=0;d<7;d++){
+        const dayDate=new Date(weekStart);dayDate.setDate(dayDate.getDate()+d);
+        const dateStr=dayDate.toLocaleDateString('es-ES',{day:'numeric'});
+        const selected=f.weekPlans[w][d]||'';
+        h+=`<span style="font-size:9px;color:var(--text3);text-align:center">${dayNames[d]}<br>${dateStr}</span>`;
+        h+=`<select style="background:var(--bg);border:1px solid rgba(255,255,255,.06);border-radius:6px;padding:3px;color:var(--text);font-size:9px;font-family:Nunito" onchange="msFases[${fi}].weekPlans[${w}][${d}]=this.value||null">${woOpts.replace('value="'+selected+'"','value="'+selected+'" selected')}</select>`;}
+      h+=`</div></div>`;
+      weekOffset++;}});
+  h+=`<button onclick="svMeso()" style="width:100%;padding:12px;background:var(--green);border:none;border-radius:12px;color:#000;font-family:'Nunito';font-weight:700;font-size:14px;cursor:pointer;margin-top:8px">✓ Guardar mesociclo</button>`;
   document.getElementById('msFases').innerHTML=h;}
 async function svMeso(){const nm=document.getElementById('msNm').value.trim(),start=document.getElementById('msStart').value;
   if(!nm||!start||!msFases.length){alert(t('mesoNeedAll'));return;}
-  const fases=msFases.map(f=>({name:f.name,color:f.color,weeks:f.weeks,sessionsPerWeek:f.sessionsPerWeek||3,sessions:f.sessions||[]}));
+  const fases=msFases.map(f=>({name:f.name,color:f.color,weeks:f.weeks,weekPlans:f.weekPlans||[]}));
   const data={name:nm,start,fases};
   const ref=await db.collection('users').doc(U.uid).collection('mesos').add(data);data.id=ref.id;mesos.push(data);
-  // Create plans in calendar for each session
+  // Create plans in calendar
   const startDate=new Date(start);
+  let weekOffset=0,planCount=0;
   for(const fase of fases){
-    const nSes=fase.sessionsPerWeek||3;
     for(let w=0;w<fase.weeks;w++){
-      // Distribute sessions evenly across the week
-      const spacing=Math.floor(7/nSes);
-      for(let s=0;s<nSes;s++){
-        const woName=fase.sessions[s]||'';
-        if(!woName)continue;
-        const dayOffset=w*7+s*spacing;
-        const planDate=new Date(startDate);planDate.setDate(planDate.getDate()+dayOffset);
+      const wp=fase.weekPlans[w]||[];
+      for(let d=0;d<7;d++){
+        if(!wp[d])continue;
+        const planDate=new Date(startDate);planDate.setDate(planDate.getDate()+weekOffset*7+d);
         const dateStr=planDate.toISOString().split('T')[0];
-        const plan={date:dateStr,tipo:'entreno',lugar:'',notas:fase.name,workoutName:woName};
-        await savePlan(plan);
-        // Also set plannedDate on the workout
-        const wo=W.find(x=>x.name===woName);
-        if(wo&&wo.id){try{await db.collection('users').doc(U.uid).collection('workouts').doc(wo.id).update({plannedDate:dateStr});wo.plannedDate=dateStr;}catch(e){}}}}}
-  cm('mMeso');tTb='meso';drTr();rCal();
-  alert('Mesociclo "'+nm+'" creado con '+plans.length+' sesiones en el calendario');}
+        await savePlan({date:dateStr,tipo:'entreno',lugar:'',notas:fase.name,workoutName:wp[d]});
+        planCount++;}
+      weekOffset++;}}
+  msStep=0;cm('mMeso');tTb='meso';drTr();rCal();rH();
+  alert('Mesociclo "'+nm+'" creado con '+planCount+' sesiones');}
 async function delMeso(id){if(!confirm(t('deleteMeso')))return;await db.collection('users').doc(U.uid).collection('mesos').doc(id).delete();mesos=mesos.filter(m=>m.id!==id);drMeso();}
 // PREDEFINED PROGRAMS
 const PROGRAMS=[
