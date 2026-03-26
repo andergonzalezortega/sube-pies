@@ -252,14 +252,13 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <div style="font-size:10px;color:var(--rock);margin-bottom:6px;font-weight:700">CADA SERIE</div>
 <div class="fl" id="ejTimeF"><label>Segundos</label><input id="ejTime" type="number" value="7" style="text-align:center;font-size:18px;font-weight:700"></div>
 <div class="fl" id="ejRepsF" style="display:none"><label>Repeticiones</label><input id="ejReps" type="number" value="10" style="text-align:center;font-size:18px;font-weight:700"></div>
-<div class="fl"><label>Reps/serie</label><input id="ejRep" type="number" value="6" style="text-align:center;font-size:16px;font-weight:700"></div>
+<div class="fl"><label>Repeticiones</label><input id="ejRep" type="number" value="6" style="text-align:center;font-size:16px;font-weight:700"></div>
 <div class="fl"><label>Descanso entre reps (s)</label><input id="ejDesc" type="number" value="3" style="text-align:center"></div>
 </div>
 <div>
 <div style="font-size:10px;color:var(--rock);margin-bottom:6px;font-weight:700">ESTRUCTURA</div>
 <div class="fl"><label>Series</label><input id="ejSer" type="number" value="4" style="text-align:center;font-size:18px;font-weight:700"></div>
 <div class="fl"><label>Descanso entre series (s)</label><input id="ejDS" type="number" value="180" style="text-align:center"></div>
-<div class="fl"><label>Intensidad</label><input id="ejInt" type="text" placeholder="RPE, %, sensación..." style="text-align:center;font-size:12px"></div>
 </div>
 </div></div>
 <div style="background:var(--bg2);border-radius:10px;padding:10px;margin-bottom:8px">
@@ -269,8 +268,9 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <div class="fl"><label>Tamaño mm</label><input id="ejMm" type="number" placeholder="20" style="text-align:center"></div>
 <div class="fl"><label>Lastre kg</label><input id="ejKg" type="number" value="0" style="text-align:center"></div>
 </div>
-<div style="display:grid;grid-template-columns:1fr;gap:6px;margin-top:6px">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px">
 <div class="fl"><label>Ángulo muro</label><select id="ejAng"><option value="">—</option><option>0°</option><option>15°</option><option>30°</option><option>45°</option><option>60°</option><option>75°</option><option>90°</option></select></div>
+<div class="fl"><label>Intensidad</label><input id="ejInt" type="text" placeholder="RPE, %, sensación..." style="text-align:center;font-size:12px"></div>
 </div></div>
 <div style="display:flex;gap:6px"><button class="btn bp" style="flex:1;font-size:13px;padding:10px" onclick="addEj()">+ Añadir ejercicio</button><button class="btn bg2" style="width:auto;padding:10px 14px;font-size:11px;margin:0" onclick="saveCustomTpl()">💾 Plantilla</button></div></div><div id="viaForm" style="display:none;background:var(--bg3);border-radius:10px;padding:10px;margin-bottom:8px"><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><div class="fl"><label>Grado</label><select id="vfGrado"></select></div><div class="fl"><label>Tipo</label><select id="vfTipo"><option>Cuerda</option><option>Bloque</option><option>Top Rope</option></select></div></div><div class="fl"><label>Nombre (opcional)</label><input id="vfNombre" placeholder="La rambla..."></div><button class="btn bp" style="font-size:12px;padding:8px" onclick="addViaStep()">+ Añadir vía</button></div><hr style="border:none;border-top:1px solid var(--bg4);margin:10px 0"><button class="btn bp" onclick="svW()">Guardar entreno</button><button class="btn bg2" onclick="cm('mW1')">Cancelar</button></div></div>
 <!-- EJECUTOR --><div id="mExec" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:300;padding:0;transition:background .5s ease">
