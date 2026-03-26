@@ -247,16 +247,20 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <button id="ejModoRepsBtn" onclick="document.getElementById('ejModo').value='reps';ejModoChg();document.getElementById('ejModoRepsBtn').style.background='var(--rock)';document.getElementById('ejModoRepsBtn').style.color='#000';document.getElementById('ejModoTimeBtn').style.background='var(--bg2)';document.getElementById('ejModoTimeBtn').style.color='var(--text)'" style="padding:10px;background:var(--bg2);border:none;border-radius:10px;color:var(--text);font-family:'Nunito';font-weight:700;font-size:13px;cursor:pointer">🔄 Por reps</button>
 </div><select id="ejModo" style="display:none" onchange="ejModoChg()"><option value="time">Tiempo</option><option value="reps">Reps</option></select>
 <div style="background:var(--bg2);border-radius:10px;padding:10px;margin-bottom:8px">
-<div style="font-size:11px;color:var(--text3);margin-bottom:6px;font-weight:600">ESTRUCTURA</div>
-<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
-<div class="fl" id="ejTimeF"><label>Segundos</label><input id="ejTime" type="number" value="7" style="text-align:center;font-size:16px;font-weight:700"></div>
-<div class="fl" id="ejRepsF" style="display:none"><label>Repeticiones</label><input id="ejReps" type="number" value="10" style="text-align:center;font-size:16px;font-weight:700"></div>
-<div class="fl"><label>Series</label><input id="ejSer" type="number" value="4" style="text-align:center;font-size:16px;font-weight:700"></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+<div style="border-right:1px solid rgba(255,255,255,.06);padding-right:8px">
+<div style="font-size:10px;color:var(--rock);margin-bottom:6px;font-weight:700">CADA SERIE</div>
+<div class="fl" id="ejTimeF"><label>Segundos</label><input id="ejTime" type="number" value="7" style="text-align:center;font-size:18px;font-weight:700"></div>
+<div class="fl" id="ejRepsF" style="display:none"><label>Repeticiones</label><input id="ejReps" type="number" value="10" style="text-align:center;font-size:18px;font-weight:700"></div>
 <div class="fl"><label>Reps/serie</label><input id="ejRep" type="number" value="6" style="text-align:center;font-size:16px;font-weight:700"></div>
-</div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px">
 <div class="fl"><label>Descanso entre reps (s)</label><input id="ejDesc" type="number" value="3" style="text-align:center"></div>
+</div>
+<div>
+<div style="font-size:10px;color:var(--rock);margin-bottom:6px;font-weight:700">ESTRUCTURA</div>
+<div class="fl"><label>Series</label><input id="ejSer" type="number" value="4" style="text-align:center;font-size:18px;font-weight:700"></div>
 <div class="fl"><label>Descanso entre series (s)</label><input id="ejDS" type="number" value="180" style="text-align:center"></div>
+<div class="fl"><label>Intensidad</label><input id="ejInt" type="text" placeholder="RPE, %, sensación..." style="text-align:center;font-size:12px"></div>
+</div>
 </div></div>
 <div style="background:var(--bg2);border-radius:10px;padding:10px;margin-bottom:8px">
 <div style="font-size:11px;color:var(--text3);margin-bottom:6px;font-weight:600">AGARRE Y CARGA</div>
@@ -1900,15 +1904,25 @@ function editStep(i){const s=wSt[i];if(!s)return;
     document.getElementById('ejSer').value=s.ser||1;
     document.getElementById('ejDesc').value=s.desc||0;
     document.getElementById('ejDS').value=s.ds||180;
-    ejModoChg();showEjForm();}
+    document.getElementById('ejInt').value=s.intensity||'';
+    ejModoChg();
+    // Update mode buttons visually
+    const isTime=(s.modo||'time')==='time';
+    document.getElementById('ejModoTimeBtn').style.background=isTime?'var(--rock)':'var(--bg2)';
+    document.getElementById('ejModoTimeBtn').style.color=isTime?'#000':'var(--text)';
+    document.getElementById('ejModoRepsBtn').style.background=isTime?'var(--bg2)':'var(--rock)';
+    document.getElementById('ejModoRepsBtn').style.color=isTime?'var(--text)':'#000';
+    showEjForm();}
   // Remove old step, new one will be added when user clicks "Añadir"
   wSt.splice(i,1);rWS();}
 function moveStep(i,dir){const ni=i+dir;if(ni<0||ni>=wSt.length)return;const tmp=wSt[i];wSt[i]=wSt[ni];wSt[ni]=tmp;rWS();}
 function gv(id){const e=document.getElementById(id);return e?parseFloat(e.value)||0:0;}
 function addEj(){const nm=document.getElementById('ejNm').value.trim();if(!nm){alert(t('putName'));return;}
-  const p={nm,ag:document.getElementById('ejAg').value,mm:gv('ejMm'),ang:document.getElementById('ejAng').value,kg:gv('ejKg'),modo:document.getElementById('ejModo').value,time:gv('ejTime'),reps:gv('ejReps'),rep:gv('ejRep'),ser:gv('ejSer'),desc:gv('ejDesc'),ds:gv('ejDS'),stepType:'exercise'};
+  const intensity=(document.getElementById('ejInt').value||'').trim();
+  const p={nm,ag:document.getElementById('ejAg').value,mm:gv('ejMm'),ang:document.getElementById('ejAng').value,kg:gv('ejKg'),modo:document.getElementById('ejModo').value,time:gv('ejTime'),reps:gv('ejReps'),rep:gv('ejRep'),ser:gv('ejSer'),desc:gv('ejDesc'),ds:gv('ejDS'),intensity,stepType:'exercise'};
   let txt=nm;const parts=[];if(p.ag)parts.push(p.ag);if(p.mm)parts.push(p.mm+'mm');if(p.ang)parts.push(p.ang);if(p.kg>0)parts.push('+'+p.kg+'kg');
   if(p.modo==='time'){if(p.ser>0&&p.rep>0)parts.push(p.ser+'x'+p.rep+' '+p.time+'s/'+p.desc+'s');else if(p.ser>0)parts.push(p.ser+'ser '+p.time+'s');else parts.push(p.time+'s');}else{if(p.ser>0&&p.reps>0)parts.push(p.ser+'x'+p.reps);else if(p.reps>0)parts.push(p.reps+'reps');}
+  if(intensity)parts.push(intensity);
   if(parts.length)txt+=' · '+parts.join(' · ');
   wSt.push({...p,txt});rWS();document.getElementById('ejForm').style.display='none';}
 function addViaStep(){const grado=document.getElementById('vfGrado').value;const tipo=document.getElementById('vfTipo').value;
