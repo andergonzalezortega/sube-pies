@@ -73,21 +73,10 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 .spinner{display:inline-block;width:20px;height:20px;border:2px solid var(--text3);border-top-color:var(--rock);border-radius:50%;animation:spin .6s linear infinite;}@keyframes spin{to{transform:rotate(360deg)}}@keyframes boltSpin{from{transform:rotateY(0deg)}to{transform:rotateY(360deg)}}
 #mExec{transform-origin:center center;}
 @media (orientation: portrait){#mExec .landscape-hint{display:block}#mExec #exTimer{font-size:80px;}}
-@media (orientation: landscape){
-#mExec #exInner{padding:4px 40px;gap:0;overflow-y:auto;justify-content:flex-start}
-#mExec img[src="logo.png"]{width:36px;height:36px;margin-bottom:0}
-#mExec #exStep{font-size:10px;margin-bottom:0}
-#mExec #exTitle{font-size:20px;margin-bottom:0}
-#mExec #exDetail{margin-bottom:0;font-size:10px}
-#mExec #exCardInfo{padding:6px 12px;margin:4px 0;min-width:220px}
-#mExec #exInfo{font-size:10px;margin-bottom:0}
-#mExec #exRestInfo{margin-bottom:0;font-size:9px}
-#mExec #exNextInfo{margin-bottom:2px;font-size:9px;padding:2px 8px}
-#mExec #exTimer{font-size:60px;margin:2px 0 4px}
-#mExec #exProg{margin-bottom:4px}
-#mExec .sbb{padding:8px 16px !important;font-size:13px !important}
-#mExec #exPlayBtn{padding:8px 28px !important;font-size:15px !important;min-width:120px}
-}
+#mExec.rotated #exInner{transform:rotate(90deg);transform-origin:center center;width:100vh;height:100vw;position:absolute;top:50%;left:50%;margin-top:-50vw;margin-left:-50vh;}
+#mExec.rotated #exTimer{font-size:70px;}
+#mExec.rotated #exTitle{font-size:24px;}
+#mExec.rotated img[src="logo.png"]{width:50px;height:50px;}
 .load-full{display:flex;align-items:center;justify-content:center;min-height:100vh;}
 @keyframes fogD1{0%{transform:translateX(0)}100%{transform:translateX(33.3%)}}
 @keyframes fogD2{0%{transform:translateX(0)}100%{transform:translateX(-33.3%)}}
@@ -290,6 +279,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <!-- EJECUTOR --><div id="mExec" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:300;padding:0;transition:background .5s ease">
 <div style="display:flex;flex-direction:column;height:100%;justify-content:center;align-items:center;padding:16px;text-align:center" id="exInner">
 <button style="position:absolute;top:12px;right:12px;background:rgba(255,255,255,.1);border:none;color:var(--text3);font-size:16px;cursor:pointer;padding:6px 12px;border-radius:8px;z-index:2" onclick="stopExec()">✕</button>
+<button style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,.1);border:none;color:var(--text3);font-size:16px;cursor:pointer;padding:6px 12px;border-radius:8px;z-index:2" onclick="toggleExRotate()">🔄</button>
 <div id="exStep" style="font-family:'Bebas Neue';font-size:13px;color:rgba(255,255,255,.35);letter-spacing:3px;margin-bottom:4px"></div>
 <img src="logo.png" style="width:70px;height:70px;border-radius:50%;margin-bottom:4px;border:3px solid var(--rock)">
 <div id="exTitle" style="font-family:'Bebas Neue';font-size:30px;color:var(--rock);margin-bottom:2px;transition:all .3s ease"></div>
@@ -2119,6 +2109,7 @@ function runEx(){if(exPaused||exIdx>=exSteps.length)return;const s=exSteps[exIdx
 function nextEx(){clearTimeout(exTimerId);exIdx++;showExStep();if(!exPaused&&exIdx<exSteps.length&&exSteps[exIdx].dur>0)runEx();}
 function skipExec(){clearTimeout(exTimerId);doAlert();nextEx();if(!exPaused&&exIdx<exSteps.length&&exSteps[exIdx].dur>0)runEx();}
 function prevExec(){clearTimeout(exTimerId);if(exIdx>0)exIdx--;showExStep();exPaused=true;document.getElementById('exPlayBtn').textContent=t('resume');}
+function toggleExRotate(){document.getElementById('mExec').classList.toggle('rotated');}
 function stopExec(){clearTimeout(exTimerId);exPaused=true;document.getElementById('mExec').style.display='none';
   try{if(exLandLock&&screen.orientation&&screen.orientation.unlock)screen.orientation.unlock();}catch(e){}}
 function doAlert(){if(!document.getElementById('exSound').checked)return;try{navigator.vibrate&&navigator.vibrate([200,100,200]);}catch(e){}try{const ac=new(window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator();o.type='sine';o.frequency.value=880;o.connect(ac.destination);o.start();setTimeout(()=>o.stop(),200);}catch(e){}}
