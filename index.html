@@ -2044,17 +2044,32 @@ function showExStep(){
         cardH+=`<div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:10px">`;
         grip.forEach(g=>{cardH+=`<span style="background:rgba(212,165,116,.15);color:var(--rock);padding:4px 10px;border-radius:8px;font-size:11px;font-weight:600">${g}</span>`;});
         cardH+=`</div>`;}
-      // Number boxes
-      cardH+=`<div style="display:flex;justify-content:center;gap:8px">`;
+      // Two clear blocks
+      cardH+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">`;
+      // Block 1: What you do
+      cardH+=`<div style="background:rgba(78,205,196,.08);border:1px solid rgba(78,205,196,.2);border-radius:12px;padding:10px;text-align:center">`;
+      cardH+=`<div style="font-size:9px;color:var(--green);font-weight:700;margin-bottom:6px;letter-spacing:1px">CADA REPETICIÓN</div>`;
       if(origStep.modo==='time'){
-        cardH+=`<div style="background:rgba(255,255,255,.05);border-radius:8px;padding:6px 12px;text-align:center"><div style="font-family:'Bebas Neue';font-size:20px;color:var(--green)">${origStep.time}s</div><div style="font-size:8px;color:var(--text3)">TIEMPO</div></div>`;
+        cardH+=`<div style="font-family:'Bebas Neue';font-size:32px;color:var(--green);line-height:1">${origStep.time}s</div>`;
+        cardH+=`<div style="font-size:10px;color:var(--text3)">trabajo</div>`;
+        if(origStep.desc>0){cardH+=`<div style="font-family:'Bebas Neue';font-size:20px;color:var(--text2);line-height:1;margin-top:4px">${origStep.desc}s</div>`;
+          cardH+=`<div style="font-size:10px;color:var(--text3)">descanso</div>`;}
+        if(origStep.rep>1){cardH+=`<div style="font-family:'Bebas Neue';font-size:18px;color:var(--yellow);margin-top:4px">×${origStep.rep}</div>`;
+          cardH+=`<div style="font-size:10px;color:var(--text3)">repeticiones</div>`;}
       }else{
-        cardH+=`<div style="background:rgba(255,255,255,.05);border-radius:8px;padding:6px 12px;text-align:center"><div style="font-family:'Bebas Neue';font-size:20px;color:var(--green)">${origStep.reps||origStep.rep||0}</div><div style="font-size:8px;color:var(--text3)">REPS</div></div>`;}
-      cardH+=`<div style="background:rgba(255,255,255,.05);border-radius:8px;padding:6px 12px;text-align:center"><div style="font-family:'Bebas Neue';font-size:20px;color:var(--rock)">${origStep.ser||1}</div><div style="font-size:8px;color:var(--text3)">SERIES</div></div>`;
-      if(origStep.rep>1){cardH+=`<div style="background:rgba(255,255,255,.05);border-radius:8px;padding:6px 12px;text-align:center"><div style="font-family:'Bebas Neue';font-size:20px;color:var(--yellow)">${origStep.rep}</div><div style="font-size:8px;color:var(--text3)">REPS/SER</div></div>`;}
-      const ds3=origStep.ds||0;
-      if(ds3>0){cardH+=`<div style="background:rgba(255,255,255,.05);border-radius:8px;padding:6px 12px;text-align:center"><div style="font-family:'Bebas Neue';font-size:20px;color:var(--blue)">${ds3>=60?Math.floor(ds3/60)+'m':ds3+'s'}</div><div style="font-size:8px;color:var(--text3)">DESC</div></div>`;}
+        cardH+=`<div style="font-family:'Bebas Neue';font-size:32px;color:var(--green);line-height:1">${origStep.reps||0}</div>`;
+        cardH+=`<div style="font-size:10px;color:var(--text3)">repeticiones</div>`;
+      }
       cardH+=`</div>`;
+      // Block 2: Structure
+      cardH+=`<div style="background:rgba(212,165,116,.08);border:1px solid rgba(212,165,116,.2);border-radius:12px;padding:10px;text-align:center">`;
+      cardH+=`<div style="font-size:9px;color:var(--rock);font-weight:700;margin-bottom:6px;letter-spacing:1px">ESTRUCTURA</div>`;
+      cardH+=`<div style="font-family:'Bebas Neue';font-size:32px;color:var(--rock);line-height:1">${origStep.ser||1}</div>`;
+      cardH+=`<div style="font-size:10px;color:var(--text3)">series</div>`;
+      const ds3=origStep.ds||0;
+      if(ds3>0){cardH+=`<div style="font-family:'Bebas Neue';font-size:20px;color:var(--blue);margin-top:4px">${ds3>=60?Math.floor(ds3/60)+'min':ds3+'s'}</div>`;
+        cardH+=`<div style="font-size:10px;color:var(--text3)">entre series</div>`;}
+      cardH+=`</div></div>`;
       document.getElementById('exCardExtra').innerHTML=cardH;
       // Hide the small number divs (we're using exCardExtra for everything)
       document.getElementById('exCardVal1').textContent='';document.getElementById('exCardLbl1').textContent='';
