@@ -73,7 +73,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 .spinner{display:inline-block;width:20px;height:20px;border:2px solid var(--text3);border-top-color:var(--rock);border-radius:50%;animation:spin .6s linear infinite;}@keyframes spin{to{transform:rotate(360deg)}}@keyframes boltSpin{from{transform:rotateY(0deg)}to{transform:rotateY(360deg)}}
 #mExec{transform-origin:center center;}
 @media (orientation: portrait){#mExec .landscape-hint{display:block}#mExec #exTimer{font-size:80px;}}
-@media (orientation: landscape){#mExec #exInner{flex-direction:row;flex-wrap:wrap;justify-content:center;gap:12px;padding:10px 30px}#mExec #exTimer{font-size:90px;margin:0 20px}#mExec #exTitle{font-size:26px}}
+@media (orientation: landscape){#mExec #exInner{flex-direction:row;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px;padding:8px 20px}#mExec #exTimer{font-size:70px;margin:0 16px}#mExec #exTitle{font-size:22px}#mExec #exStep{width:100%;order:-2}#mExec #exCardInfo{max-width:320px;margin:0}#mExec img[src="logo.png"]{width:50px;height:50px}}
 .load-full{display:flex;align-items:center;justify-content:center;min-height:100vh;}
 @keyframes fogD1{0%{transform:translateX(0)}100%{transform:translateX(33.3%)}}
 @keyframes fogD2{0%{transform:translateX(0)}100%{transform:translateX(-33.3%)}}
@@ -1957,7 +1957,6 @@ const EX_BG={work:'linear-gradient(135deg,#0a1a0a,#1a2e1a)',rest:'linear-gradien
   via:'linear-gradient(135deg,#1e1208,#2e1a08)',preview:'linear-gradient(135deg,#1a1a08,#2a2a10)',
   prep:'linear-gradient(135deg,#1a0a1a,#2a1a2a)',done:'linear-gradient(135deg,#0a1e0a,#1a3a1a)'};
 function execWo(w){exSteps=[];exWoName=w.name||'Entreno';exWoSteps=w.steps||[];exSaved=false;
-  try{if(screen.orientation&&screen.orientation.lock)screen.orientation.lock('landscape').then(()=>{exLandLock=true;}).catch(()=>{});}catch(e){}
   let lastExLabel='';
   (w.steps||[]).forEach((s,si)=>{const p=s.p||s;
     if(s.stepType==='via'){
