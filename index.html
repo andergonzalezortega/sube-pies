@@ -74,26 +74,19 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 #mExec{transform-origin:center center;}
 @media (orientation: portrait){#mExec .landscape-hint{display:block}#mExec #exTimer{font-size:80px;}}
 @media (orientation: landscape){
-#mExec #exInner{flex-direction:row;flex-wrap:nowrap;padding:6px 16px;gap:8px;align-items:center;justify-content:center}
-#mExec #exStep{position:absolute;top:6px;left:16px;margin:0}
-#mExec img[src="logo.png"]{width:40px;height:40px;display:none}
-#mExec #exTitle{font-size:18px;margin:0;writing-mode:horizontal-tb}
-#mExec #exCardInfo{max-width:280px;margin:0;padding:8px 12px;order:1}
-#mExec #exCardInfo div[style*="font-size:13px"]{font-size:11px !important}
-#mExec #exCardInfo div[style*="font-size:32px"]{font-size:22px !important}
-#mExec #exCardInfo div[style*="font-size:20px"]{font-size:16px !important}
-#mExec #exCardInfo div[style*="font-size:18px"]{font-size:14px !important}
-#mExec #exDetail{font-size:10px;margin:0}
-#mExec #exInfo{font-size:10px;margin:0}
-#mExec #exRestInfo{font-size:9px;margin:0}
-#mExec #exNextInfo{font-size:9px;margin:0;padding:2px 8px}
-#mExec #exTimer{font-size:80px;margin:0;order:2}
-#mExec #exProg{display:none}
-#mExec #exViaBtn{order:3}
-#mExec div:has(>#exPlayBtn){order:3;flex-direction:column;gap:4px}
-#mExec .sbb{padding:8px 14px !important;font-size:12px !important}
-#mExec #exPlayBtn{padding:10px 24px !important;font-size:14px !important}
-#mExec label:has(#exSound){position:absolute;bottom:4px;right:16px;margin:0;font-size:9px}
+#mExec #exInner{padding:4px 40px;gap:0;overflow-y:auto;justify-content:flex-start}
+#mExec img[src="logo.png"]{width:36px;height:36px;margin-bottom:0}
+#mExec #exStep{font-size:10px;margin-bottom:0}
+#mExec #exTitle{font-size:20px;margin-bottom:0}
+#mExec #exDetail{margin-bottom:0;font-size:10px}
+#mExec #exCardInfo{padding:6px 12px;margin:4px 0;min-width:220px}
+#mExec #exInfo{font-size:10px;margin-bottom:0}
+#mExec #exRestInfo{margin-bottom:0;font-size:9px}
+#mExec #exNextInfo{margin-bottom:2px;font-size:9px;padding:2px 8px}
+#mExec #exTimer{font-size:60px;margin:2px 0 4px}
+#mExec #exProg{margin-bottom:4px}
+#mExec .sbb{padding:8px 16px !important;font-size:13px !important}
+#mExec #exPlayBtn{padding:8px 28px !important;font-size:15px !important;min-width:120px}
 }
 .load-full{display:flex;align-items:center;justify-content:center;min-height:100vh;}
 @keyframes fogD1{0%{transform:translateX(0)}100%{transform:translateX(33.3%)}}
