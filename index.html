@@ -274,20 +274,28 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 </div></div>
 <div style="display:flex;gap:6px"><button class="btn bp" style="flex:1;font-size:13px;padding:10px" onclick="addEj()">+ Añadir ejercicio</button><button class="btn bg2" style="width:auto;padding:10px 14px;font-size:11px;margin:0" onclick="saveCustomTpl()">💾 Plantilla</button></div></div><div id="viaForm" style="display:none;background:var(--bg3);border-radius:10px;padding:10px;margin-bottom:8px"><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><div class="fl"><label>Grado</label><select id="vfGrado"></select></div><div class="fl"><label>Tipo</label><select id="vfTipo"><option>Cuerda</option><option>Bloque</option><option>Top Rope</option></select></div></div><div class="fl"><label>Nombre (opcional)</label><input id="vfNombre" placeholder="La rambla..."></div><button class="btn bp" style="font-size:12px;padding:8px" onclick="addViaStep()">+ Añadir vía</button></div><hr style="border:none;border-top:1px solid var(--bg4);margin:10px 0"><button class="btn bp" onclick="svW()">Guardar entreno</button><button class="btn bg2" onclick="cm('mW1')">Cancelar</button></div></div>
 <!-- EJECUTOR --><div id="mExec" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:300;padding:0;transition:background .5s ease">
-<div style="display:flex;flex-direction:column;height:100%;justify-content:center;align-items:center;padding:20px;text-align:center" id="exInner">
-<button style="position:absolute;top:12px;right:16px;background:none;border:none;color:rgba(255,255,255,.5);font-size:28px;cursor:pointer;z-index:2" onclick="stopExec()">✕</button>
-<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;opacity:.5"><img src="logo.png" style="width:28px;height:28px;border-radius:50%"><span style="font-family:'Bebas Neue';font-size:14px;color:var(--rock);letter-spacing:2px">SUBE PIES</span></div>
-<div id="exStep" style="font-family:'Bebas Neue';font-size:14px;color:rgba(255,255,255,.4);letter-spacing:3px;margin-bottom:4px"></div>
-<div id="exTitle" style="font-family:'Bebas Neue';font-size:32px;color:var(--rock);margin-bottom:4px"></div>
-<div id="exDetail" style="font-size:12px;color:var(--rock);opacity:.7;margin-bottom:4px"></div>
+<div style="display:flex;flex-direction:column;height:100%;justify-content:center;align-items:center;padding:16px;text-align:center" id="exInner">
+<button style="position:absolute;top:12px;right:12px;background:rgba(255,255,255,.1);border:none;color:var(--text3);font-size:16px;cursor:pointer;padding:6px 12px;border-radius:8px;z-index:2" onclick="stopExec()">✕</button>
+<div id="exStep" style="font-family:'Bebas Neue';font-size:13px;color:rgba(255,255,255,.35);letter-spacing:3px;margin-bottom:4px"></div>
+<img src="logo.png" style="width:70px;height:70px;border-radius:50%;margin-bottom:4px;border:3px solid var(--rock)">
+<div id="exTitle" style="font-family:'Bebas Neue';font-size:30px;color:var(--rock);margin-bottom:2px;transition:all .3s ease"></div>
+<div id="exCardInfo" style="display:none;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:14px 20px;margin:6px 0;min-width:260px;transition:all .3s ease">
+<div style="display:flex;justify-content:center;gap:16px;margin-bottom:4px">
+<div><div id="exCardVal1" style="font-family:'Bebas Neue';font-size:26px;color:var(--green)"></div><div id="exCardLbl1" style="font-size:9px;color:var(--text3)"></div></div>
+<div><div id="exCardVal2" style="font-family:'Bebas Neue';font-size:26px;color:var(--rock)"></div><div id="exCardLbl2" style="font-size:9px;color:var(--text3)"></div></div>
+<div><div id="exCardVal3" style="font-family:'Bebas Neue';font-size:26px;color:var(--blue)"></div><div id="exCardLbl3" style="font-size:9px;color:var(--text3)"></div></div>
+</div>
+<div id="exCardExtra" style="font-size:11px;color:var(--text3)"></div>
+</div>
+<div id="exDetail" style="font-size:12px;color:var(--rock);opacity:.7;margin-bottom:2px"></div>
 <div id="exInfo" style="font-size:13px;color:var(--text2);margin-bottom:4px"></div>
 <div id="exRestInfo" style="font-size:11px;color:var(--blue);margin-bottom:4px;display:none"></div>
-<div id="exNextInfo" style="font-size:11px;color:var(--text3);margin-bottom:8px;display:none"></div>
-<div id="exTimer" style="font-family:'Bebas Neue';font-size:120px;color:var(--green);line-height:1;margin:10px 0 20px"></div>
-<div style="width:80%;max-width:300px;margin-bottom:24px"><div id="exProg" style="height:8px;background:rgba(255,255,255,.1);border-radius:4px;overflow:hidden"><div id="exBar" style="height:100%;background:var(--green);border-radius:4px;width:0%;transition:width .5s"></div></div></div>
-<div id="exViaBtn" style="display:none;gap:12px;margin-bottom:16px"><button class="sbb" onclick="exViaDone(true)" style="font-size:16px;padding:14px 28px;background:var(--green)">✓ Hecha</button><button class="sbb" onclick="exViaDone(false)" style="font-size:16px;padding:14px 28px;background:var(--red)">✕ No</button></div>
-<div style="display:flex;gap:12px;align-items:center"><button class="sbb" onclick="prevExec()" style="background:rgba(255,255,255,.1);color:var(--text2);font-size:13px;padding:12px 20px">⏮</button><button class="sbb" id="exPlayBtn" onclick="toggleExec()" style="font-size:18px;padding:14px 36px;min-width:140px">▶ EMPEZAR</button><button class="sbb" onclick="skipExec()" style="background:rgba(255,255,255,.1);color:var(--text2);font-size:13px;padding:12px 20px">⏭</button></div>
-<label style="display:flex;align-items:center;gap:6px;margin-top:16px;font-size:12px;color:rgba(255,255,255,.4);cursor:pointer"><input type="checkbox" id="exSound" checked style="accent-color:var(--rock)"> Sonido + vibración</label>
+<div id="exNextInfo" style="font-size:11px;color:var(--text3);margin-bottom:6px;display:none;background:rgba(255,255,255,.04);padding:4px 12px;border-radius:8px"></div>
+<div id="exTimer" style="font-family:'Bebas Neue';font-size:110px;color:var(--green);line-height:1;margin:8px 0 16px;transition:color .3s"></div>
+<div style="width:85%;max-width:320px;margin-bottom:20px"><div id="exProg" style="height:6px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden"><div id="exBar" style="height:100%;background:var(--green);border-radius:3px;width:0%;transition:width .5s"></div></div></div>
+<div id="exViaBtn" style="display:none;gap:12px;margin-bottom:12px"><button class="sbb" onclick="exViaDone(true)" style="font-size:16px;padding:14px 28px;background:var(--green)">✓ Hecha</button><button class="sbb" onclick="exViaDone(false)" style="font-size:16px;padding:14px 28px;background:var(--red)">✕ No</button></div>
+<div style="display:flex;gap:12px;align-items:center"><button class="sbb" onclick="prevExec()" style="background:rgba(255,255,255,.08);color:var(--text2);font-size:13px;padding:12px 20px;border-radius:14px">⏮</button><button class="sbb" id="exPlayBtn" onclick="toggleExec()" style="font-size:18px;padding:14px 36px;min-width:140px;border-radius:16px">▶ EMPEZAR</button><button class="sbb" onclick="skipExec()" style="background:rgba(255,255,255,.08);color:var(--text2);font-size:13px;padding:12px 20px;border-radius:14px">⏭</button></div>
+<label style="display:flex;align-items:center;gap:6px;margin-top:12px;font-size:11px;color:rgba(255,255,255,.3);cursor:pointer"><input type="checkbox" id="exSound" checked style="accent-color:var(--rock)"> Sonido</label>
 </div></div>
 <!-- STORY VIEWER --><div id="storyViewer" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:#000;z-index:350;touch-action:pan-y" onclick="closeStory()">
 <div style="position:absolute;top:12px;left:12px;right:12px;display:flex;align-items:center;gap:8px;z-index:2">
@@ -1986,28 +1994,49 @@ function setExBg(type){document.getElementById('mExec').style.background=EX_BG[t
 function showExStep(){
   const ni=document.getElementById('exNextInfo');
   const ri=document.getElementById('exRestInfo');
-  if(exIdx>=exSteps.length){if(exSaved)return;document.getElementById('exTitle').textContent=t('completed');document.getElementById('exStep').textContent='';document.getElementById('exTimer').textContent='✓';document.getElementById('exTimer').style.color='var(--green)';document.getElementById('exInfo').textContent=t('goodTraining');document.getElementById('exDetail').textContent='';ni.style.display='none';ri.style.display='none';document.getElementById('exBar').style.width='100%';
+  
+  const card=document.getElementById('exCardInfo');
+  if(exIdx>=exSteps.length){if(exSaved)return;card.style.display='none';document.getElementById('exTitle').textContent=t('completed');document.getElementById('exStep').textContent='';document.getElementById('exTimer').textContent='✓';document.getElementById('exTimer').style.color='var(--green)';document.getElementById('exInfo').textContent=t('goodTraining');document.getElementById('exDetail').textContent='';ni.style.display='none';ri.style.display='none';document.getElementById('exBar').style.width='100%';
   document.getElementById('exViaBtn').style.display='none';setExBg('done');
   try{if(exLandLock&&screen.orientation&&screen.orientation.unlock)screen.orientation.unlock();}catch(e){}
   if(exWoName&&!exSaved){exSaved=true;saveTrain({date:new Date().toISOString().split('T')[0],tipo:'Entreno',detail:exWoName,woSteps:exWoSteps||[]}).then(()=>{updStats();});}
   return;}
   const s=exSteps[exIdx];
-  document.getElementById('exTitle').textContent=s.label;
+
+  if(isRest){document.getElementById('exTitle').textContent='DESCANSO';document.getElementById('exTitle').style.fontSize='42px';document.getElementById('exTitle').style.color='var(--blue)';}
+  else{document.getElementById('exTitle').textContent=s.label;document.getElementById('exTitle').style.fontSize='30px';document.getElementById('exTitle').style.color='var(--rock)';}
   document.getElementById('exStep').textContent=`${t('step')} ${exIdx+1} / ${exSteps.length}`;
   document.getElementById('exInfo').textContent=s.info||'';
   document.getElementById('exDetail').textContent=s.detail||'';
   const isRest=s.type==='rest';const isVia=s.type==='via';const isPrep=s.type==='prep';const isSumm=s.type==='viaSummary';
-  // Background change
   setExBg(s.type);
-  // Timer color
   document.getElementById('exTimer').style.color=isRest?'var(--blue)':isVia?'var(--rock)':isPrep?'var(--purple)':isSumm?'var(--yellow)':'var(--green)';
   document.getElementById('exBar').style.background=isRest?'var(--blue)':isVia?'var(--rock)':isPrep?'var(--purple)':isSumm?'var(--yellow)':'var(--green)';
   document.getElementById('exViaBtn').style.display=isVia?'flex':'none';
-  // Rest hint (what comes after this step)
+  // Show card info on prep steps
+  if(isPrep){
+    card.style.display='block';
+    // Find the original step data
+    const origStep=exWoSteps.find(x=>(x.nm||x.txt||'')===(s.info||'').split(' · ')[0]);
+    if(origStep){
+      if(origStep.modo==='time'){
+        document.getElementById('exCardVal1').textContent=origStep.time+'s';
+        document.getElementById('exCardLbl1').textContent='TIEMPO';
+      }else{
+        document.getElementById('exCardVal1').textContent=origStep.reps||origStep.rep||'—';
+        document.getElementById('exCardLbl1').textContent='REPS';}
+      document.getElementById('exCardVal2').textContent=origStep.ser||1;
+      document.getElementById('exCardLbl2').textContent='SERIES';
+      const desc=origStep.ds||0;
+      document.getElementById('exCardVal3').textContent=desc>=60?Math.floor(desc/60)+'m':desc+'s';
+      document.getElementById('exCardLbl3').textContent='DESCANSO';
+      const extra=[];if(origStep.ag)extra.push(origStep.ag);if(origStep.mm)extra.push(origStep.mm+'mm');if(origStep.kg>0)extra.push('+'+origStep.kg+'kg');if(origStep.ang)extra.push(origStep.ang);
+      document.getElementById('exCardExtra').textContent=extra.join(' · ');
+    }else{card.style.display='none';}
+  }else{card.style.display='none';}
   if(s.restHint){ri.textContent=s.restHint;ri.style.display='block';}else{ri.style.display='none';}
-  // Next exercise info
   const nxt=exSteps.slice(exIdx+1).find(x=>x.type==='work'||x.type==='via');
-  if(nxt&&!isSumm){ni.textContent=t('next')+' '+nxt.label;ni.style.display='block';}else{ni.style.display='none';}
+  if(nxt&&!isSumm){ni.textContent='Siguiente → '+nxt.label;ni.style.display='block';}else{ni.style.display='none';}
   if(isSumm){exSec=0;document.getElementById('exTimer').textContent='📋';document.getElementById('exBar').style.width=((exIdx+1)/exSteps.length*100)+'%';}
   else if(s.dur>0){exSec=s.dur;exTotalSec=s.dur;updExTimer();}
   else{exSec=0;document.getElementById('exTimer').textContent=isVia?'🧗':'→ TAP';document.getElementById('exBar').style.width=((exIdx+1)/exSteps.length*100)+'%';}}
