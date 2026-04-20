@@ -2004,6 +2004,9 @@ function showExStep(){
   const s=exSteps[exIdx];
   const isRest=s.type==='rest';const isVia=s.type==='via';const isPrep=s.type==='prep';const isSumm=s.type==='viaSummary';
   if(isRest){document.getElementById('exTitle').textContent='DESCANSO';document.getElementById('exTitle').style.fontSize='42px';document.getElementById('exTitle').style.color='var(--blue)';}
+  else if(isPrep){
+    const exName=(s.info||'').split(' · ')[0];
+    document.getElementById('exTitle').textContent=exName||s.label;document.getElementById('exTitle').style.fontSize='28px';document.getElementById('exTitle').style.color='var(--rock)';}
   else{document.getElementById('exTitle').textContent=s.label;document.getElementById('exTitle').style.fontSize='30px';document.getElementById('exTitle').style.color='var(--rock)';}
   document.getElementById('exStep').textContent=`${t('step')} ${exIdx+1} / ${exSteps.length}`;
   document.getElementById('exInfo').textContent=s.info||'';
@@ -2015,9 +2018,25 @@ function showExStep(){
   // Show card info on prep steps
   if(isPrep){
     card.style.display='block';
-    // Find the original step data
     const origStep=exWoSteps.find(x=>(x.nm||x.txt||'')===(s.info||'').split(' · ')[0]);
     if(origStep){
+      // Build clear instruction phrase
+      let phrase='';
+      if(origStep.modo==='time'){
+        const t2=origStep.time||0;const rep2=origStep.rep||1;const ser2=origStep.ser||1;const desc2=origStep.desc||0;const ds2=origStep.ds||0;
+        if(rep2>1&&desc2>0)phrase=`Aguanta ${t2}s, descansa ${desc2}s, repite ${rep2} veces.`;
+        else if(rep2>1)phrase=`Aguanta ${t2}s × ${rep2} repeticiones.`;
+        else phrase=`Mantén ${t2} segundos.`;
+        if(ser2>1)phrase+=` Haz ${ser2} series.`;
+        if(ds2>0)phrase+=` Descansa ${ds2>=60?Math.floor(ds2/60)+'min':ds2+'s'} entre series.`;
+      }else{
+        const reps2=origStep.reps||0;const ser2=origStep.ser||1;const ds2=origStep.ds||0;
+        if(reps2>0)phrase=`Haz ${reps2} repeticiones.`;
+        if(ser2>1)phrase+=` ${ser2} series.`;
+        if(ds2>0)phrase+=` Descansa ${ds2>=60?Math.floor(ds2/60)+'min':ds2+'s'} entre series.`;
+      }
+      document.getElementById('exCardExtra').innerHTML=`<div style="font-size:13px;color:var(--text);line-height:1.5;margin-bottom:8px">${phrase}</div>`;
+      // Small numbers below
       if(origStep.modo==='time'){
         document.getElementById('exCardVal1').textContent=origStep.time+'s';
         document.getElementById('exCardLbl1').textContent='TIEMPO';
@@ -2028,9 +2047,10 @@ function showExStep(){
       document.getElementById('exCardLbl2').textContent='SERIES';
       const desc=origStep.ds||0;
       document.getElementById('exCardVal3').textContent=desc>=60?Math.floor(desc/60)+'m':desc+'s';
-      document.getElementById('exCardLbl3').textContent='DESCANSO';
+      document.getElementById('exCardLbl3').textContent='DESC';
+      // Add grip info to title detail
       const extra=[];if(origStep.ag)extra.push(origStep.ag);if(origStep.mm)extra.push(origStep.mm+'mm');if(origStep.kg>0)extra.push('+'+origStep.kg+'kg');if(origStep.ang)extra.push(origStep.ang);
-      document.getElementById('exCardExtra').textContent=extra.join(' · ');
+      document.getElementById('exDetail').textContent=extra.join(' · ');
     }else{card.style.display='none';}
   }else{card.style.display='none';}
   if(s.restHint){ri.textContent=s.restHint;ri.style.display='block';}else{ri.style.display='none';}
