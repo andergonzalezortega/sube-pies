@@ -2002,13 +2002,12 @@ function showExStep(){
   if(exWoName&&!exSaved){exSaved=true;saveTrain({date:new Date().toISOString().split('T')[0],tipo:'Entreno',detail:exWoName,woSteps:exWoSteps||[]}).then(()=>{updStats();});}
   return;}
   const s=exSteps[exIdx];
-
+  const isRest=s.type==='rest';const isVia=s.type==='via';const isPrep=s.type==='prep';const isSumm=s.type==='viaSummary';
   if(isRest){document.getElementById('exTitle').textContent='DESCANSO';document.getElementById('exTitle').style.fontSize='42px';document.getElementById('exTitle').style.color='var(--blue)';}
   else{document.getElementById('exTitle').textContent=s.label;document.getElementById('exTitle').style.fontSize='30px';document.getElementById('exTitle').style.color='var(--rock)';}
   document.getElementById('exStep').textContent=`${t('step')} ${exIdx+1} / ${exSteps.length}`;
   document.getElementById('exInfo').textContent=s.info||'';
   document.getElementById('exDetail').textContent=s.detail||'';
-  const isRest=s.type==='rest';const isVia=s.type==='via';const isPrep=s.type==='prep';const isSumm=s.type==='viaSummary';
   setExBg(s.type);
   document.getElementById('exTimer').style.color=isRest?'var(--blue)':isVia?'var(--rock)':isPrep?'var(--purple)':isSumm?'var(--yellow)':'var(--green)';
   document.getElementById('exBar').style.background=isRest?'var(--blue)':isVia?'var(--rock)':isPrep?'var(--purple)':isSumm?'var(--yellow)':'var(--green)';
