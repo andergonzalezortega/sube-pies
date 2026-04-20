@@ -73,7 +73,28 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 .spinner{display:inline-block;width:20px;height:20px;border:2px solid var(--text3);border-top-color:var(--rock);border-radius:50%;animation:spin .6s linear infinite;}@keyframes spin{to{transform:rotate(360deg)}}@keyframes boltSpin{from{transform:rotateY(0deg)}to{transform:rotateY(360deg)}}
 #mExec{transform-origin:center center;}
 @media (orientation: portrait){#mExec .landscape-hint{display:block}#mExec #exTimer{font-size:80px;}}
-@media (orientation: landscape){#mExec #exInner{padding:8px 24px;gap:2px}#mExec #exTimer{font-size:80px;margin:4px 0}#mExec #exTitle{font-size:24px}#mExec #exStep{font-size:11px}#mExec #exCardInfo{display:none !important}#mExec img[src="logo.png"]{display:none}#mExec #exProg{margin-bottom:8px}}
+@media (orientation: landscape){
+#mExec #exInner{flex-direction:row;flex-wrap:nowrap;padding:6px 16px;gap:8px;align-items:center;justify-content:center}
+#mExec #exStep{position:absolute;top:6px;left:16px;margin:0}
+#mExec img[src="logo.png"]{width:40px;height:40px;display:none}
+#mExec #exTitle{font-size:18px;margin:0;writing-mode:horizontal-tb}
+#mExec #exCardInfo{max-width:280px;margin:0;padding:8px 12px;order:1}
+#mExec #exCardInfo div[style*="font-size:13px"]{font-size:11px !important}
+#mExec #exCardInfo div[style*="font-size:32px"]{font-size:22px !important}
+#mExec #exCardInfo div[style*="font-size:20px"]{font-size:16px !important}
+#mExec #exCardInfo div[style*="font-size:18px"]{font-size:14px !important}
+#mExec #exDetail{font-size:10px;margin:0}
+#mExec #exInfo{font-size:10px;margin:0}
+#mExec #exRestInfo{font-size:9px;margin:0}
+#mExec #exNextInfo{font-size:9px;margin:0;padding:2px 8px}
+#mExec #exTimer{font-size:80px;margin:0;order:2}
+#mExec #exProg{display:none}
+#mExec #exViaBtn{order:3}
+#mExec div:has(>#exPlayBtn){order:3;flex-direction:column;gap:4px}
+#mExec .sbb{padding:8px 14px !important;font-size:12px !important}
+#mExec #exPlayBtn{padding:10px 24px !important;font-size:14px !important}
+#mExec label:has(#exSound){position:absolute;bottom:4px;right:16px;margin:0;font-size:9px}
+}
 .load-full{display:flex;align-items:center;justify-content:center;min-height:100vh;}
 @keyframes fogD1{0%{transform:translateX(0)}100%{transform:translateX(33.3%)}}
 @keyframes fogD2{0%{transform:translateX(0)}100%{transform:translateX(-33.3%)}}
