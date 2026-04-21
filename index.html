@@ -73,7 +73,24 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 .spinner{display:inline-block;width:20px;height:20px;border:2px solid var(--text3);border-top-color:var(--rock);border-radius:50%;animation:spin .6s linear infinite;}@keyframes spin{to{transform:rotate(360deg)}}@keyframes boltSpin{from{transform:rotateY(0deg)}to{transform:rotateY(360deg)}}
 #mExec{transform-origin:center center;}
 @media (orientation: portrait){#mExec .landscape-hint{display:block}#mExec #exTimer{font-size:80px;}}
-@media (orientation: landscape){#mExec #exInner{padding:8px 60px;gap:0;justify-content:flex-start;padding-top:10px}#mExec img[src="logo.png"]{width:32px;height:32px;margin-bottom:0}#mExec #exStep{font-size:9px;margin-bottom:0}#mExec #exTitle{font-size:18px;margin-bottom:0}#mExec #exCardInfo{padding:5px 8px;margin:2px 0}#mExec #exDetail{font-size:9px;margin:0}#mExec #exInfo{font-size:9px;margin:0}#mExec #exRestInfo{font-size:8px;margin:0}#mExec #exNextInfo{font-size:8px;margin:1px 0;padding:1px 6px}#mExec #exTimer{font-size:52px;margin:2px 0 4px}#mExec #exProg{margin-bottom:4px}#mExec .sbb{padding:6px 12px !important;font-size:11px !important}#mExec #exPlayBtn{padding:6px 20px !important;font-size:13px !important;min-width:90px}#mExec label{margin-top:2px;font-size:9px !important}}
+@media (orientation: landscape){
+#mExec #exInner{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto 1fr auto;gap:0;padding:6px 16px;height:100%;overflow:hidden;align-items:center;justify-items:center}
+#mExec #exStep{grid-column:1/-1;font-size:9px;margin:0;padding:0}
+#mExec img[src="logo.png"]{display:none}
+#mExec #exTitle{grid-column:1/-1;font-size:20px;margin:0}
+#mExec #exCardInfo{grid-column:1;grid-row:3;padding:8px;margin:0;min-width:auto;max-width:100%;align-self:center}
+#mExec #exDetail{grid-column:1/-1;font-size:9px;margin:0}
+#mExec #exInfo{grid-column:1;font-size:9px;margin:0;grid-row:4}
+#mExec #exRestInfo{grid-column:1/-1;font-size:8px;margin:0}
+#mExec #exNextInfo{grid-column:1/-1;font-size:9px;margin:0;padding:2px 8px}
+#mExec #exTimer{grid-column:2;grid-row:3;font-size:72px;margin:0;align-self:center}
+#mExec #exProg{grid-column:2;margin:0;width:80%}
+#mExec #exViaBtn{grid-column:2}
+#mExec div:last-of-type:has(.sbb){grid-column:2}
+#mExec .sbb{padding:6px 14px !important;font-size:11px !important}
+#mExec #exPlayBtn{padding:8px 22px !important;font-size:13px !important;min-width:90px}
+#mExec label{grid-column:1/-1;margin:0;font-size:8px !important}
+}
 
 .load-full{display:flex;align-items:center;justify-content:center;min-height:100vh;}
 @keyframes fogD1{0%{transform:translateX(0)}100%{transform:translateX(33.3%)}}
@@ -2104,7 +2121,10 @@ function runEx(){if(exPaused||exIdx>=exSteps.length)return;const s=exSteps[exIdx
       if(!exPaused&&exSec>0)exTimerId=setTimeout(tick,Math.max(50,1000-(Date.now()-exStartTs)));
     },1000);}
   else if(s.dur===0){/* manual */}}
-function nextEx(){clearTimeout(exTimerId);exIdx++;showExStep();if(!exPaused&&exIdx<exSteps.length&&exSteps[exIdx].dur>0)runEx();}
+function nextEx(){clearTimeout(exTimerId);exIdx++;
+  if(exIdx<exSteps.length&&exSteps[exIdx].type==='prep'){
+    exPaused=true;document.getElementById('exPlayBtn').textContent=t('start');showExStep();return;}
+  showExStep();if(!exPaused&&exIdx<exSteps.length&&exSteps[exIdx].dur>0)runEx();}
 function skipExec(){clearTimeout(exTimerId);doAlert();nextEx();if(!exPaused&&exIdx<exSteps.length&&exSteps[exIdx].dur>0)runEx();}
 function prevExec(){clearTimeout(exTimerId);if(exIdx>0)exIdx--;showExStep();exPaused=true;document.getElementById('exPlayBtn').textContent=t('resume');}
 function stopExec(){clearTimeout(exTimerId);exPaused=true;document.getElementById('mExec').style.display='none';
