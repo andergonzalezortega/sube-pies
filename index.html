@@ -196,11 +196,10 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <img id="uPic" onclick="document.getElementById('headerAvatarInput').click()" style="flex:1;height:78px;max-width:130px;border-radius:12px;object-fit:cover;border:3px solid var(--rock);cursor:pointer;min-width:80px;margin-left:auto">
 <input type="file" id="headerAvatarInput" accept="image/*" style="display:none" onchange="changeAvatar(event)">
 </div>
-<div style="width:100%;height:80px;border-radius:12px;overflow:hidden;margin-bottom:8px;position:relative"><img src="inicio.jpg" style="width:100%;height:100%;object-fit:cover;opacity:.7"><div style="position:absolute;bottom:0;left:0;right:0;height:100%;background:linear-gradient(to top,var(--bg) 0%,transparent 60%)"></div></div>
 <div id="invBanner"></div>
-<div id="homeWeather" style="display:none;background:var(--bg2);border-radius:12px;padding:8px 12px;margin-bottom:8px">
-<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span id="hwIcon" style="font-size:18px"></span><span id="hwLocation" style="font-size:11px;color:var(--rock);font-weight:700"></span><span id="hwTemp" style="font-family:'Bebas Neue';font-size:22px;color:var(--green);margin-left:auto"></span></div>
-<div style="display:flex;gap:12px;font-size:10px;color:var(--text3)"><span id="hwHum"></span><span id="hwRain"></span><span id="hwWind"></span></div>
+<div id="homeWeather" style="display:none;background:var(--bg2);border-radius:12px;padding:10px;margin-bottom:8px">
+<div style="display:flex;align-items:center;gap:6px;margin-bottom:6px"><span id="hwIcon" style="font-size:18px"></span><span id="hwLocation" style="font-size:11px;color:var(--rock);font-weight:700;flex:1"></span><span id="hwTemp" style="font-family:'Bebas Neue';font-size:22px;color:var(--green)"></span><span style="font-size:10px;color:var(--text3);margin-left:4px" id="hwExtra"></span></div>
+<div id="hwHourly" style="display:flex;gap:4px;overflow-x:auto;padding-bottom:4px"></div>
 </div>
 <div id="homeStories" style="margin-bottom:8px;overflow-x:auto;white-space:nowrap;display:none"></div>
 <div class="gsw" id="sPer" style="margin-bottom:4px"></div>
@@ -1803,17 +1802,35 @@ function drSavedSpots(){
     h+=`<button onclick="event.stopPropagation();removeSavedSpot(${i})" style="background:none;border:none;color:var(--red);font-size:9px;cursor:pointer;padding:0">✕</button></div>`;});
   document.getElementById('mwSavedList').innerHTML=h;}
 async function loadHomeWeather(){
-  const fav=getFavSpot();if(!fav)return;
-  try{const r=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${fav.lat}&longitude=${fav.lng}&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,weathercode&timezone=auto`);
+  const fav=getFavSpot()||{lat:40.4168,lng:-3.7038,name:'Madrid'};
+  try{const r=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${fav.lat}&longitude=${fav.lng}&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,weathercode&hourly=temperature_2m,precipitation_probability,weathercode&timezone=auto&forecast_days=1`);
     const d=await r.json();if(!d.current)return;
     const icon=getWIcon(d.current.weathercode);
     document.getElementById('hwIcon').textContent=icon;
     document.getElementById('hwLocation').textContent=fav.name;
     document.getElementById('hwTemp').textContent=Math.round(d.current.temperature_2m)+'°';
-    document.getElementById('hwHum').textContent='💧'+d.current.relative_humidity_2m+'%';
-    document.getElementById('hwRain').textContent='🌧️'+d.current.precipitation+'mm';
-    document.getElementById('hwWind').textContent='💨'+Math.round(d.current.wind_speed_10m)+'km/h';
+    document.getElementById('hwExtra').textContent='💧'+d.current.relative_humidity_2m+'% 💨'+Math.round(d.current.wind_speed_10m)+'km/h';
+    // Hourly for today
+    let hh='';
+    if(d.hourly&&d.hourly.time){
+      const nowHr=new Date().getHours();
+      d.hourly.time.forEach((t,i)=>{
+        const hr=new Date(t).getHours();
+        if(i>=24)return;
+        const temp=Math.round(d.hourly.temperature_2m[i]);
+        const rain=d.hourly.precipitation_probability[i]||0;
+        const wc=d.hourly.weathercode[i];const ic=getWIcon(wc);
+        const isNow=hr===nowHr;
+        hh+=`<div style="flex-shrink:0;text-align:center;background:${isNow?'rgba(212,165,116,.15)':'var(--bg3)'};border-radius:6px;padding:4px 5px;min-width:36px;${isNow?'border:1px solid var(--rock)':''}">`;
+        hh+=`<div style="font-size:8px;color:${isNow?'var(--rock)':'var(--text3)'};font-weight:${isNow?'700':'400'}">${hr}h</div>`;
+        hh+=`<div style="font-size:13px">${ic}</div>`;
+        hh+=`<div style="font-size:10px;color:var(--green);font-weight:600">${temp}°</div>`;
+        hh+=`<div style="font-size:7px;color:${rain>50?'var(--blue)':'var(--text3)'}">${rain}%</div>`;
+        hh+=`</div>`;});}
+    document.getElementById('hwHourly').innerHTML=hh;
     document.getElementById('homeWeather').style.display='block';
+    // Auto scroll to current hour
+    setTimeout(()=>{const hw=document.getElementById('hwHourly');const nowEl=hw.querySelector('[style*="border:1px"]');if(nowEl)nowEl.scrollIntoView({inline:'center',behavior:'smooth'});},100);
   }catch(e){}}
 function setupMapClick(){
   if(leafMap){leafMap.on('click',async function(e){
