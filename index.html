@@ -198,6 +198,10 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 </div>
 <div style="width:100%;height:80px;border-radius:12px;overflow:hidden;margin-bottom:8px;position:relative"><img src="inicio.jpg" style="width:100%;height:100%;object-fit:cover;opacity:.7"><div style="position:absolute;bottom:0;left:0;right:0;height:100%;background:linear-gradient(to top,var(--bg) 0%,transparent 60%)"></div></div>
 <div id="invBanner"></div>
+<div id="homeWeather" style="display:none;background:var(--bg2);border-radius:12px;padding:8px 12px;margin-bottom:8px">
+<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span id="hwIcon" style="font-size:18px"></span><span id="hwLocation" style="font-size:11px;color:var(--rock);font-weight:700"></span><span id="hwTemp" style="font-family:'Bebas Neue';font-size:22px;color:var(--green);margin-left:auto"></span></div>
+<div style="display:flex;gap:12px;font-size:10px;color:var(--text3)"><span id="hwHum"></span><span id="hwRain"></span><span id="hwWind"></span></div>
+</div>
 <div id="homeStories" style="margin-bottom:8px;overflow-x:auto;white-space:nowrap;display:none"></div>
 <div class="gsw" id="sPer" style="margin-bottom:4px"></div>
 <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:6px"><div class="st a" style="padding:6px 4px"><div class="v" id="sV" style="font-size:24px">0</div><div class="l" id="sVl">Vías</div></div><div class="st b" style="padding:6px 4px"><div class="v" id="sE" style="font-size:24px">0</div><div class="l" id="sEl">Enc</div></div><div class="st c" style="padding:6px 4px"><div class="v" id="sT" style="font-size:24px">0</div><div class="l" id="sTl">Entrenos</div></div></div>
@@ -209,7 +213,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <!-- VÍAS --><div id="pv" class="page"><div class="hdr"><h1>VÍAS</h1><button class="bp btn" style="width:auto;padding:6px 12px;font-size:11px;border-radius:10px" onclick="addR()" id="btnAddR">+ Añadir</button></div>
 <div style="background:var(--bg2);border-radius:12px;padding:8px;border:1px solid rgba(255,255,255,.04);margin-bottom:8px"><div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span class="ct" style="margin:0;font-size:12px">GRADOS</span></div><div class="gsw" id="gPer" style="margin-bottom:4px"></div><div class="gsw" id="gS" style="margin-bottom:4px"></div><div class="gb" id="gB"></div></div>
 <div style="margin-bottom:10px"><input id="vQ" placeholder="🔍 Buscar vía, lugar, amigo, grado..." id="vQInput" oninput="drR()" style="width:100%;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:8px 14px;color:var(--text);font-size:12px;font-family:Nunito;outline:none"></div><div class="chs" id="rF"></div><div class="sb"><label>Ordenar:</label><select id="rS" onchange="drR()"><option value="date">Fecha ↓</option><option value="dateA">Fecha ↑</option><option value="grD">Grado ↓</option><option value="grA">Grado ↑</option><option value="lugar">Lugar</option><option value="amigo">Compañero</option></select></select></div><div id="rL"></div></div>
-<!-- MAPA --><div id="pm" class="page"><div class="hdr"><h1>MAPA</h1></div><div id="mapWeather" style="background:var(--bg2);border-radius:12px;padding:10px;margin-bottom:8px;display:none"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="font-size:11px;font-weight:700;color:var(--text)">TIEMPO EN</span><span id="mwLocation" style="font-size:11px;color:var(--rock);font-weight:700"></span></div><div style="display:flex;gap:10px;justify-content:space-around;margin-bottom:8px"><div style="text-align:center"><div id="mwTemp" style="font-family:'Bebas Neue';font-size:28px;color:var(--green)"></div><div style="font-size:8px;color:var(--text3)">TEMP</div></div><div style="text-align:center"><div id="mwHum" style="font-family:'Bebas Neue';font-size:28px;color:var(--blue)"></div><div style="font-size:8px;color:var(--text3)">HUMEDAD</div></div><div style="text-align:center"><div id="mwRain" style="font-family:'Bebas Neue';font-size:28px;color:var(--purple)"></div><div style="font-size:8px;color:var(--text3)">LLUVIA</div></div><div style="text-align:center"><div id="mwWind" style="font-family:'Bebas Neue';font-size:28px;color:var(--yellow)"></div><div style="font-size:8px;color:var(--text3)">VIENTO</div></div></div><div id="mwForecast" style="display:flex;gap:4px;overflow-x:auto;padding-bottom:4px"></div><div style="font-size:8px;color:var(--text3);text-align:center;margin-top:4px">Pulsa en el mapa para ver el tiempo de cualquier sitio</div></div><div style="display:flex;gap:0;margin-bottom:10px;background:var(--bg3);border-radius:10px;padding:2px" id="mapTbs"></div><div class="map-stats"><div class="st a"><div class="v" id="mTotal">0</div><div class="l">Vías</div></div><div class="st b"><div class="v" id="mEnc">0</div><div class="l">Enc</div></div><div class="st"><div class="v" style="color:var(--blue)" id="mZonas">0</div><div class="l">Zonas</div></div></div><div class="map-search"><input id="mapQ" placeholder="🔍 Buscar zona..." oninput="filterMap()"><button class="bp btn" style="width:auto;padding:8px 12px;font-size:11px;border-radius:10px" onclick="openNewCrag()">+ Zona</button></div><div id="mapDiv"></div><div id="mapResults" style="display:none"></div><div id="mRt"></div></div>
+<!-- MAPA --><div id="pm" class="page"><div class="hdr"><h1>MAPA</h1></div><div id="mapWeather" style="background:var(--bg2);border-radius:12px;padding:10px;margin-bottom:8px;display:none"><div style="display:flex;align-items:center;gap:6px;margin-bottom:6px"><span style="font-size:11px;font-weight:700;color:var(--text)">TIEMPO EN</span><span id="mwLocation" style="font-size:11px;color:var(--rock);font-weight:700;flex:1"></span><button onclick="saveWeatherSpot()" id="mwSaveBtn" style="background:none;border:none;color:var(--text3);font-size:14px;cursor:pointer" title="Guardar">📌</button><button onclick="setFavWeatherSpot()" id="mwFavBtn" style="background:none;border:none;color:var(--text3);font-size:14px;cursor:pointer" title="Favorito">⭐</button></div><div style="display:flex;gap:10px;justify-content:space-around;margin-bottom:8px"><div style="text-align:center"><div id="mwTemp" style="font-family:'Bebas Neue';font-size:28px;color:var(--green)"></div><div style="font-size:8px;color:var(--text3)">TEMP</div></div><div style="text-align:center"><div id="mwHum" style="font-family:'Bebas Neue';font-size:28px;color:var(--blue)"></div><div style="font-size:8px;color:var(--text3)">HUMEDAD</div></div><div style="text-align:center"><div id="mwRain" style="font-family:'Bebas Neue';font-size:28px;color:var(--purple)"></div><div style="font-size:8px;color:var(--text3)">LLUVIA</div></div><div style="text-align:center"><div id="mwWind" style="font-family:'Bebas Neue';font-size:28px;color:var(--yellow)"></div><div style="font-size:8px;color:var(--text3)">VIENTO</div></div></div><div id="mwForecast" style="display:flex;gap:4px;overflow-x:auto;padding-bottom:4px"></div><div id="mwHourly" style="display:none;margin-top:6px;overflow-x:auto"><div id="mwHourlyContent" style="display:flex;gap:4px"></div></div><div id="mwSaved" style="margin-top:6px;display:none"><div style="font-size:9px;color:var(--text3);margin-bottom:3px">SITIOS GUARDADOS</div><div id="mwSavedList" style="display:flex;gap:4px;overflow-x:auto"></div></div><div style="font-size:8px;color:var(--text3);text-align:center;margin-top:4px">Pulsa en el mapa para ver el tiempo de cualquier sitio</div></div><div style="display:flex;gap:0;margin-bottom:10px;background:var(--bg3);border-radius:10px;padding:2px" id="mapTbs"></div><div class="map-stats"><div class="st a"><div class="v" id="mTotal">0</div><div class="l">Vías</div></div><div class="st b"><div class="v" id="mEnc">0</div><div class="l">Enc</div></div><div class="st"><div class="v" style="color:var(--blue)" id="mZonas">0</div><div class="l">Zonas</div></div></div><div class="map-search"><input id="mapQ" placeholder="🔍 Buscar zona..." oninput="filterMap()"><button class="bp btn" style="width:auto;padding:8px 12px;font-size:11px;border-radius:10px" onclick="openNewCrag()">+ Zona</button></div><div id="mapDiv"></div><div id="mapResults" style="display:none"></div><div id="mRt"></div></div>
 <!-- ENTRENOS --><div id="pt" class="page"><div class="hdr"><h1>ENTRENOS</h1></div><div class="tbs" id="tT"></div><div id="tH"></div><div id="tP" style="display:none"><div id="wL"></div></div><div id="tProg" style="display:none">
 <div class="ct">GRÁFICOS RÁPIDOS</div>
 <div id="quickGraphs" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px">
@@ -1137,7 +1141,7 @@ async function changeNick(){if(!U)return;const nick=(document.getElementById('ni
   setTimeout(()=>{document.getElementById('nickEdit').style.borderColor='rgba(255,255,255,.08)';},1500);}
 
 // HOME
-function rH(){updStats();rCal();updGrToggles();loadInvites();setupSwipe();drStories();}
+function rH(){updStats();rCal();updGrToggles();loadInvites();setupSwipe();drStories();loadHomeWeather();}
 function drCalDetail(){
   const el=document.getElementById('calDetail');
   const sel=cSl||new Date().toISOString().split('T')[0];
@@ -1719,9 +1723,13 @@ function drM(){document.getElementById('mapTbs').innerHTML='';
   setTimeout(()=>leafMap.invalidateSize(),100);document.getElementById('mRt').innerHTML='';document.getElementById('mapResults').style.display='none';document.getElementById('mapQ').value='';}
 function buildLocs(rr){const locs={};rr.forEach(r=>{if(!r.sitio)return;const c=getCragCoords(r.sitio);if(c){if(!locs[c.name])locs[c.name]={...c,rs:[],enc:0};locs[c.name].rs.push(r);if(r.enc)locs[c.name].enc++;}});return locs;}
 function showZone(l){let h=`<div style="font-family:'Bebas Neue';font-size:16px;color:var(--rock);margin:8px 0">${l.name} — ${l.rs.length} vías (${l.enc} enc.)</div>`;l.rs.forEach(r=>{h+=vc(r,true);});document.getElementById('mRt').innerHTML=h;}
+let mwMarker=null,mwLat=0,mwLng=0,mwName='',mwHourlyData=null;
+function getWIcon(wc){return wc<=1?'☀️':wc<=3?'⛅':wc<=48?'🌫️':wc<=67?'🌧️':wc<=77?'❄️':wc<=82?'🌧️':'⛈️';}
 async function fetchWeather(lat,lng,name){
-  try{const r=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,weathercode&timezone=auto`);
+  mwLat=lat;mwLng=lng;mwName=name;
+  try{const r=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,weathercode&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,weathercode&hourly=temperature_2m,precipitation_probability,weathercode&timezone=auto`);
     const d=await r.json();if(!d.current)return;
+    mwHourlyData=d.hourly;
     document.getElementById('mwLocation').textContent=name||lat.toFixed(2)+', '+lng.toFixed(2);
     document.getElementById('mwTemp').textContent=Math.round(d.current.temperature_2m)+'°';
     document.getElementById('mwHum').textContent=d.current.relative_humidity_2m+'%';
@@ -1733,25 +1741,82 @@ async function fetchWeather(lat,lng,name){
     if(d.daily&&d.daily.time){
       d.daily.time.forEach((t,i)=>{
         if(i>6)return;
-        const dt=new Date(t+'T12:00:00');
-        const dn=days[dt.getDay()];
-        const wc=d.daily.weathercode[i];
-        const icon=wc<=1?'☀️':wc<=3?'⛅':wc<=48?'🌫️':wc<=67?'🌧️':wc<=77?'❄️':wc<=82?'🌧️':'⛈️';
+        const dt=new Date(t+'T12:00:00');const dn=days[dt.getDay()];
+        const wc=d.daily.weathercode[i];const icon=getWIcon(wc);
         const rain=d.daily.precipitation_probability_max[i]||0;
         const tmax=Math.round(d.daily.temperature_2m_max[i]);
         const tmin=Math.round(d.daily.temperature_2m_min[i]);
-        fh+=`<div style="flex-shrink:0;text-align:center;background:var(--bg3);border-radius:8px;padding:6px 8px;min-width:52px">`;
+        fh+=`<div onclick="showHourly(${i})" style="flex-shrink:0;text-align:center;background:var(--bg3);border-radius:8px;padding:6px 8px;min-width:52px;cursor:pointer;border:1px solid transparent;transition:.2s" onmousedown="this.style.borderColor='var(--rock)'" onmouseup="this.style.borderColor='transparent'">`;
         fh+=`<div style="font-size:9px;color:var(--text3);font-weight:600">${dn}</div>`;
         fh+=`<div style="font-size:18px;margin:2px 0">${icon}</div>`;
         fh+=`<div style="font-size:11px;color:var(--text)"><span style="color:var(--rock)">${tmax}°</span> <span style="color:var(--blue)">${tmin}°</span></div>`;
         fh+=`<div style="font-size:8px;color:${rain>50?'var(--blue)':'var(--text3)'}">${rain}%💧</div>`;
         fh+=`</div>`;});}
     document.getElementById('mwForecast').innerHTML=fh;
+    document.getElementById('mwHourly').style.display='none';
     document.getElementById('mapWeather').style.display='block';
+    drSavedSpots();
+    // Place marker on map
+    if(leafMap){
+      if(mwMarker)leafMap.removeLayer(mwMarker);
+      const icon=L.divIcon({className:'',html:`<div style="width:14px;height:14px;background:var(--rock);border-radius:50%;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.4)"></div>`,iconSize:[14,14],iconAnchor:[7,7]});
+      mwMarker=L.marker([lat,lng],{icon}).addTo(leafMap);}
   }catch(e){console.log('Weather error:',e);}}
+function showHourly(dayIdx){
+  if(!mwHourlyData)return;
+  const start=dayIdx*24;const end=start+24;
+  let h='';
+  for(let i=start;i<end&&i<mwHourlyData.time.length;i+=2){
+    const hr=new Date(mwHourlyData.time[i]).getHours();
+    const temp=Math.round(mwHourlyData.temperature_2m[i]);
+    const rain=mwHourlyData.precipitation_probability[i]||0;
+    const wc=mwHourlyData.weathercode[i];const icon=getWIcon(wc);
+    h+=`<div style="flex-shrink:0;text-align:center;background:var(--bg3);border-radius:6px;padding:4px 6px;min-width:40px">`;
+    h+=`<div style="font-size:8px;color:var(--text3)">${hr}h</div>`;
+    h+=`<div style="font-size:14px">${icon}</div>`;
+    h+=`<div style="font-size:10px;color:var(--green)">${temp}°</div>`;
+    h+=`<div style="font-size:7px;color:${rain>50?'var(--blue)':'var(--text3)'}">${rain}%</div>`;
+    h+=`</div>`;}
+  document.getElementById('mwHourlyContent').innerHTML=h;
+  document.getElementById('mwHourly').style.display='block';}
+function getSavedSpots(){try{return JSON.parse(localStorage.getItem('sp_weather_spots')||'[]');}catch(e){return[];}}
+function getFavSpot(){try{return JSON.parse(localStorage.getItem('sp_weather_fav')||'null');}catch(e){return null;}}
+function saveWeatherSpot(){
+  const spots=getSavedSpots();
+  if(spots.some(s=>s.name===mwName)){alert('Ya guardado');return;}
+  spots.push({lat:mwLat,lng:mwLng,name:mwName});
+  localStorage.setItem('sp_weather_spots',JSON.stringify(spots));
+  drSavedSpots();document.getElementById('mwSaveBtn').textContent='✅';}
+function setFavWeatherSpot(){
+  localStorage.setItem('sp_weather_fav',JSON.stringify({lat:mwLat,lng:mwLng,name:mwName}));
+  document.getElementById('mwFavBtn').textContent='⭐';
+  alert(mwName+' como favorito. Aparecerá en Inicio.');}
+function removeSavedSpot(i){const spots=getSavedSpots();spots.splice(i,1);localStorage.setItem('sp_weather_spots',JSON.stringify(spots));drSavedSpots();}
+function drSavedSpots(){
+  const spots=getSavedSpots();
+  const el=document.getElementById('mwSaved');
+  if(!spots.length){el.style.display='none';return;}
+  el.style.display='block';
+  let h='';spots.forEach((s,i)=>{
+    h+=`<div style="flex-shrink:0;background:var(--bg3);border-radius:8px;padding:4px 8px;display:flex;align-items:center;gap:4px;cursor:pointer" onclick="fetchWeather(${s.lat},${s.lng},'${s.name.replace(/'/g,"\\'")}')">`;
+    h+=`<span style="font-size:10px;color:var(--rock)">${s.name}</span>`;
+    h+=`<button onclick="event.stopPropagation();removeSavedSpot(${i})" style="background:none;border:none;color:var(--red);font-size:9px;cursor:pointer;padding:0">✕</button></div>`;});
+  document.getElementById('mwSavedList').innerHTML=h;}
+async function loadHomeWeather(){
+  const fav=getFavSpot();if(!fav)return;
+  try{const r=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${fav.lat}&longitude=${fav.lng}&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,weathercode&timezone=auto`);
+    const d=await r.json();if(!d.current)return;
+    const icon=getWIcon(d.current.weathercode);
+    document.getElementById('hwIcon').textContent=icon;
+    document.getElementById('hwLocation').textContent=fav.name;
+    document.getElementById('hwTemp').textContent=Math.round(d.current.temperature_2m)+'°';
+    document.getElementById('hwHum').textContent='💧'+d.current.relative_humidity_2m+'%';
+    document.getElementById('hwRain').textContent='🌧️'+d.current.precipitation+'mm';
+    document.getElementById('hwWind').textContent='💨'+Math.round(d.current.wind_speed_10m)+'km/h';
+    document.getElementById('homeWeather').style.display='block';
+  }catch(e){}}
 function setupMapClick(){
   if(leafMap){leafMap.on('click',async function(e){
-    // Reverse geocode to get place name
     let name=e.latlng.lat.toFixed(2)+', '+e.latlng.lng.toFixed(2);
     try{const r=await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${e.latlng.lat}&lon=${e.latlng.lng}&format=json&zoom=10`);
       const d=await r.json();if(d.address){name=d.address.city||d.address.town||d.address.village||d.address.county||name;}}catch(e2){}
