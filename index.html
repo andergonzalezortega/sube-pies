@@ -128,6 +128,53 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <div style="color:var(--text3);font-size:10px;margin-bottom:20px">Máximo 20 caracteres · Podrás cambiarlo en Ajustes</div>
 <button id="nickSaveBtn" class="btn bp" style="max-width:300px;font-size:16px;padding:14px">Empezar a escalar 🧗</button>
 </div>
+<!-- ONBOARDING TUTORIAL -->
+<div id="onboarding" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:1000;background:var(--bg)">
+<div style="height:100%;display:flex;flex-direction:column">
+<div id="obSlides" style="flex:1;overflow:hidden;position:relative">
+<div id="obTrack" style="display:flex;height:100%;transition:transform .4s ease">
+<!-- Slide 1: Welcome -->
+<div class="ob-slide" style="min-width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;text-align:center">
+<img src="logo.png" style="width:100px;height:100px;border-radius:50%;border:4px solid var(--rock);margin-bottom:16px">
+<div style="font-family:'Bebas Neue';font-size:36px;color:var(--rock);line-height:1">SUBE PIES</div>
+<div style="font-size:14px;color:var(--text2);margin:8px 0 20px">Tu diario de escalada completo</div>
+<div style="font-size:13px;color:var(--text3);line-height:1.6;max-width:300px">Registra vías, planifica entrenos, crea mesociclos y comparte con amigos. Todo en un solo sitio.</div>
+</div>
+<!-- Slide 2: Routes -->
+<div class="ob-slide" style="min-width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;text-align:center">
+<div style="font-size:60px;margin-bottom:12px">🧗</div>
+<div style="font-family:'Bebas Neue';font-size:28px;color:var(--rock)">REGISTRA TUS VÍAS</div>
+<div style="font-size:13px;color:var(--text3);line-height:1.6;max-width:300px;margin-top:12px">Boulder, cuerda, top rope o largos. Registra cada intento con grado, lugar y estilo. Usa <b style="color:var(--green)">Sesión Rápida</b> para apuntar vías al instante en el rocódromo.</div>
+</div>
+<!-- Slide 3: Workouts -->
+<div class="ob-slide" style="min-width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;text-align:center">
+<div style="font-size:60px;margin-bottom:12px">💪</div>
+<div style="font-family:'Bebas Neue';font-size:28px;color:var(--rock)">ENTRENA CON GUÍA</div>
+<div style="font-size:13px;color:var(--text3);line-height:1.6;max-width:300px;margin-top:12px">Crea entrenos con suspensiones, campus, core y más. El <b style="color:var(--green)">ejecutor</b> te guía paso a paso con temporizadores y descansos automáticos.</div>
+</div>
+<!-- Slide 4: Mesocycles -->
+<div class="ob-slide" style="min-width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;text-align:center">
+<div style="font-size:60px;margin-bottom:12px">📅</div>
+<div style="font-family:'Bebas Neue';font-size:28px;color:var(--rock)">PLANIFICA TU TEMPORADA</div>
+<div style="font-size:13px;color:var(--text3);line-height:1.6;max-width:300px;margin-top:12px">Crea mesociclos con fases (base, fuerza, resistencia, taper). Asigna entrenos a cada día y todo aparece en tu calendario.</div>
+</div>
+<!-- Slide 5: Social -->
+<div class="ob-slide" style="min-width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;text-align:center">
+<div style="font-size:60px;margin-bottom:12px">👥</div>
+<div style="font-family:'Bebas Neue';font-size:28px;color:var(--rock)">ESCALA CON AMIGOS</div>
+<div style="font-size:13px;color:var(--text3);line-height:1.6;max-width:300px;margin-top:12px">Comparte historias, entrenos y mesociclos. Reacciona con emojis, chatea y copia los entrenos de tus amigos.</div>
+<button onclick="finishOnboarding()" style="margin-top:24px;padding:14px 40px;background:var(--green);border:none;border-radius:14px;color:#000;font-family:'Nunito';font-weight:700;font-size:16px;cursor:pointer">¡A ESCALAR!</button>
+</div>
+</div>
+</div>
+<!-- Dots + Skip -->
+<div style="padding:16px;display:flex;justify-content:space-between;align-items:center">
+<button onclick="finishOnboarding()" style="background:none;border:none;color:var(--text3);font-size:12px;cursor:pointer">Saltar</button>
+<div id="obDots" style="display:flex;gap:6px"></div>
+<button id="obNext" onclick="nextObSlide()" style="background:var(--rock);border:none;color:#000;padding:8px 20px;border-radius:10px;font-family:'Nunito';font-weight:700;font-size:13px;cursor:pointer">Siguiente</button>
+</div>
+</div>
+</div>
 <div id="splashScreen" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:999;overflow:hidden;transition:opacity .5s ease">
 <img src="inicio.jpg" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover">
 <div style="position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(to bottom,rgba(26,29,35,.15) 0%,rgba(26,29,35,.05) 30%,rgba(26,29,35,.6) 70%,rgba(26,29,35,1) 100%)"></div>
@@ -162,7 +209,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <!-- VÍAS --><div id="pv" class="page"><div class="hdr"><h1>VÍAS</h1><button class="bp btn" style="width:auto;padding:6px 12px;font-size:11px;border-radius:10px" onclick="addR()" id="btnAddR">+ Añadir</button></div>
 <div style="background:var(--bg2);border-radius:12px;padding:8px;border:1px solid rgba(255,255,255,.04);margin-bottom:8px"><div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span class="ct" style="margin:0;font-size:12px">GRADOS</span></div><div class="gsw" id="gPer" style="margin-bottom:4px"></div><div class="gsw" id="gS" style="margin-bottom:4px"></div><div class="gb" id="gB"></div></div>
 <div style="margin-bottom:10px"><input id="vQ" placeholder="🔍 Buscar vía, lugar, amigo, grado..." id="vQInput" oninput="drR()" style="width:100%;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:8px 14px;color:var(--text);font-size:12px;font-family:Nunito;outline:none"></div><div class="chs" id="rF"></div><div class="sb"><label>Ordenar:</label><select id="rS" onchange="drR()"><option value="date">Fecha ↓</option><option value="dateA">Fecha ↑</option><option value="grD">Grado ↓</option><option value="grA">Grado ↑</option><option value="lugar">Lugar</option><option value="amigo">Compañero</option></select></select></div><div id="rL"></div></div>
-<!-- MAPA --><div id="pm" class="page"><div class="hdr"><h1>MAPA</h1></div><div style="display:flex;gap:0;margin-bottom:10px;background:var(--bg3);border-radius:10px;padding:2px" id="mapTbs"></div><div class="map-stats"><div class="st a"><div class="v" id="mTotal">0</div><div class="l">Vías</div></div><div class="st b"><div class="v" id="mEnc">0</div><div class="l">Enc</div></div><div class="st"><div class="v" style="color:var(--blue)" id="mZonas">0</div><div class="l">Zonas</div></div></div><div class="map-search"><input id="mapQ" placeholder="🔍 Buscar zona..." oninput="filterMap()"><button class="bp btn" style="width:auto;padding:8px 12px;font-size:11px;border-radius:10px" onclick="openNewCrag()">+ Zona</button></div><div id="mapDiv"></div><div id="mapResults" style="display:none"></div><div id="mRt"></div></div>
+<!-- MAPA --><div id="pm" class="page"><div class="hdr"><h1>MAPA</h1></div><div id="mapWeather" style="background:var(--bg2);border-radius:12px;padding:10px;margin-bottom:8px;display:none"><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><span style="font-size:11px;font-weight:700;color:var(--text)">TIEMPO EN</span><span id="mwLocation" style="font-size:11px;color:var(--rock);font-weight:700"></span></div><div style="display:flex;gap:10px;justify-content:space-around"><div style="text-align:center"><div id="mwTemp" style="font-family:'Bebas Neue';font-size:28px;color:var(--green)"></div><div style="font-size:8px;color:var(--text3)">TEMP</div></div><div style="text-align:center"><div id="mwHum" style="font-family:'Bebas Neue';font-size:28px;color:var(--blue)"></div><div style="font-size:8px;color:var(--text3)">HUMEDAD</div></div><div style="text-align:center"><div id="mwRain" style="font-family:'Bebas Neue';font-size:28px;color:var(--purple)"></div><div style="font-size:8px;color:var(--text3)">LLUVIA</div></div><div style="text-align:center"><div id="mwWind" style="font-family:'Bebas Neue';font-size:28px;color:var(--yellow)"></div><div style="font-size:8px;color:var(--text3)">VIENTO</div></div></div></div><div style="display:flex;gap:0;margin-bottom:10px;background:var(--bg3);border-radius:10px;padding:2px" id="mapTbs"></div><div class="map-stats"><div class="st a"><div class="v" id="mTotal">0</div><div class="l">Vías</div></div><div class="st b"><div class="v" id="mEnc">0</div><div class="l">Enc</div></div><div class="st"><div class="v" style="color:var(--blue)" id="mZonas">0</div><div class="l">Zonas</div></div></div><div class="map-search"><input id="mapQ" placeholder="🔍 Buscar zona..." oninput="filterMap()"><button class="bp btn" style="width:auto;padding:8px 12px;font-size:11px;border-radius:10px" onclick="openNewCrag()">+ Zona</button></div><div id="mapDiv"></div><div id="mapResults" style="display:none"></div><div id="mRt"></div></div>
 <!-- ENTRENOS --><div id="pt" class="page"><div class="hdr"><h1>ENTRENOS</h1></div><div class="tbs" id="tT"></div><div id="tH"></div><div id="tP" style="display:none"><div id="wL"></div></div><div id="tProg" style="display:none">
 <div class="ct">GRÁFICOS RÁPIDOS</div>
 <div id="quickGraphs" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px">
@@ -804,10 +851,28 @@ auth.onAuthStateChanged(async u=>{document.getElementById('loadPage').style.disp
     applyLang();
     document.getElementById('langSel').value=LANG;
     setTimeout(()=>{document.getElementById('splashScreen').style.opacity='0';
-      setTimeout(()=>{document.getElementById('splashScreen').style.display='none';document.getElementById('appWrap').style.display='block';rH();},500);
+      setTimeout(()=>{document.getElementById('splashScreen').style.display='none';
+        if(!localStorage.getItem('sp_onboarded')){document.getElementById('onboarding').style.display='block';initOB();}
+        else{document.getElementById('appWrap').style.display='block';rH();}
+      },500);
     },2000);}
   else{U=null;document.getElementById('loginPage').style.display='';document.getElementById('appWrap').style.display='none';document.getElementById('splashScreen').style.display='none';applyLang();}});
 function loginGoogle(){auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());}
+// ONBOARDING
+let obSlide=0;const obTotal=5;
+function initOB(){obSlide=0;updOB();}
+function updOB(){
+  document.getElementById('obTrack').style.transform=`translateX(-${obSlide*100}%)`;
+  let dots='';for(let i=0;i<obTotal;i++){dots+=`<div style="width:${i===obSlide?'20px':'8px'};height:8px;border-radius:4px;background:${i===obSlide?'var(--rock)':'rgba(255,255,255,.2)'};transition:.3s"></div>`;}
+  document.getElementById('obDots').innerHTML=dots;
+  document.getElementById('obNext').style.display=obSlide>=obTotal-1?'none':'block';}
+function nextObSlide(){if(obSlide<obTotal-1){obSlide++;updOB();}}
+function finishOnboarding(){document.getElementById('onboarding').style.display='none';localStorage.setItem('sp_onboarded','1');document.getElementById('appWrap').style.display='block';rH();}
+(function(){let sx=0;const el=document.getElementById('obSlides');
+  el.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;},{passive:true});
+  el.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-sx;
+    if(dx<-50&&obSlide<obTotal-1){obSlide++;updOB();}
+    if(dx>50&&obSlide>0){obSlide--;updOB();}},{passive:true});})();
 function logout(){auth.signOut();}
 
 // PUSH NOTIFICATIONS
@@ -1645,13 +1710,24 @@ function drM(){document.getElementById('mapTbs').innerHTML='';
   const rr=R.filter(r=>r.lugar==='roca');
   document.getElementById('mTotal').textContent=rr.length;document.getElementById('mEnc').textContent=rr.filter(r=>r.enc).length;
   const locs=buildLocs(rr);document.getElementById('mZonas').textContent=Object.keys(locs).length;
-  if(!leafMap){leafMap=L.map('mapDiv',{zoomControl:false}).setView([40.4,-2.5],5);L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'©OSM',maxZoom:18}).addTo(leafMap);L.control.zoom({position:'topright'}).addTo(leafMap);}
+  if(!leafMap){leafMap=L.map('mapDiv',{zoomControl:false}).setView([40.4,-2.5],5);L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'©OSM',maxZoom:18}).addTo(leafMap);L.control.zoom({position:'topright'}).addTo(leafMap);
+    if(navigator.geolocation){navigator.geolocation.getCurrentPosition(p=>{fetchWeather(p.coords.latitude,p.coords.longitude,'Tu ubicación');},()=>{});}}
   markers.forEach(m=>leafMap.removeLayer(m));markers=[];const bounds=[],col='#d4a574';
-  Object.values(locs).forEach(l=>{const sz=Math.min(8+l.rs.length*3,28);const icon=L.divIcon({className:'',html:`<div style="width:${sz}px;height:${sz}px;background:${col};border-radius:50%;border:2px solid #fff;opacity:.9;display:flex;align-items:center;justify-content:center;font-size:${Math.max(9,sz/2.5)}px;font-weight:700;color:#000;font-family:Nunito">${l.rs.length}</div>`,iconSize:[sz,sz],iconAnchor:[sz/2,sz/2]});const m=L.marker([l.lat,l.lng],{icon}).addTo(leafMap);m.bindPopup(`<b style="font-family:'Bebas Neue';font-size:14px;color:${col}">${l.name}</b><br>${l.rs.length} vías · ${l.enc} enc.`);m.on('click',()=>showZone(l));markers.push(m);bounds.push([l.lat,l.lng]);});
+  Object.values(locs).forEach(l=>{const sz=Math.min(8+l.rs.length*3,28);const icon=L.divIcon({className:'',html:`<div style="width:${sz}px;height:${sz}px;background:${col};border-radius:50%;border:2px solid #fff;opacity:.9;display:flex;align-items:center;justify-content:center;font-size:${Math.max(9,sz/2.5)}px;font-weight:700;color:#000;font-family:Nunito">${l.rs.length}</div>`,iconSize:[sz,sz],iconAnchor:[sz/2,sz/2]});const m=L.marker([l.lat,l.lng],{icon}).addTo(leafMap);m.bindPopup(`<b style="font-family:'Bebas Neue';font-size:14px;color:${col}">${l.name}</b><br>${l.rs.length} vías · ${l.enc} enc.`);m.on('click',()=>{showZone(l);fetchWeather(l.lat,l.lng,l.name);});markers.push(m);bounds.push([l.lat,l.lng]);});
   if(bounds.length>1)leafMap.fitBounds(bounds,{padding:[20,20]});else if(bounds.length===1)leafMap.setView(bounds[0],10);
   setTimeout(()=>leafMap.invalidateSize(),100);document.getElementById('mRt').innerHTML='';document.getElementById('mapResults').style.display='none';document.getElementById('mapQ').value='';}
 function buildLocs(rr){const locs={};rr.forEach(r=>{if(!r.sitio)return;const c=getCragCoords(r.sitio);if(c){if(!locs[c.name])locs[c.name]={...c,rs:[],enc:0};locs[c.name].rs.push(r);if(r.enc)locs[c.name].enc++;}});return locs;}
 function showZone(l){let h=`<div style="font-family:'Bebas Neue';font-size:16px;color:var(--rock);margin:8px 0">${l.name} — ${l.rs.length} vías (${l.enc} enc.)</div>`;l.rs.forEach(r=>{h+=vc(r,true);});document.getElementById('mRt').innerHTML=h;}
+async function fetchWeather(lat,lng,name){
+  try{const r=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m&timezone=auto`);
+    const d=await r.json();if(!d.current)return;
+    document.getElementById('mwLocation').textContent=name||'';
+    document.getElementById('mwTemp').textContent=Math.round(d.current.temperature_2m)+'°';
+    document.getElementById('mwHum').textContent=d.current.relative_humidity_2m+'%';
+    document.getElementById('mwRain').textContent=d.current.precipitation+'mm';
+    document.getElementById('mwWind').textContent=Math.round(d.current.wind_speed_10m)+'km/h';
+    document.getElementById('mapWeather').style.display='block';
+  }catch(e){console.log('Weather error:',e);}}
 function filterMap(){const q=document.getElementById('mapQ').value.trim().toLowerCase();if(!q){document.getElementById('mapResults').style.display='none';return;}
   const rr=R.filter(r=>r.lugar==='roca');const locs=buildLocs(rr);const match=Object.values(locs).filter(l=>l.name.toLowerCase().includes(q));
   if(match.length===1){leafMap.setView([match[0].lat,match[0].lng],10);showZone(match[0]);document.getElementById('mapResults').style.display='none';}
