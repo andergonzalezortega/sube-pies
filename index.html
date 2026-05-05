@@ -1745,7 +1745,13 @@ function drM(){document.getElementById('mapTbs').innerHTML='';
       setTimeout(()=>{document.getElementById('mapHint').style.display='none';},4000);}
     drSavedMarkers();}
   markers.forEach(m=>leafMap.removeLayer(m));markers=[];const bounds=[],col='#d4a574';
-  Object.values(locs).forEach(l=>{const sz=Math.min(8+l.rs.length*3,28);const icon=L.divIcon({className:'',html:`<div style="width:${sz}px;height:${sz}px;background:${col};border-radius:50%;border:2px solid #fff;opacity:.9;display:flex;align-items:center;justify-content:center;font-size:${Math.max(9,sz/2.5)}px;font-weight:700;color:#000;font-family:Nunito">${l.rs.length}</div>`,iconSize:[sz,sz],iconAnchor:[sz/2,sz/2]});const m=L.marker([l.lat,l.lng],{icon}).addTo(leafMap);m.bindPopup(`<b style="font-family:'Bebas Neue';font-size:14px;color:${col}">${l.name}</b><br>${l.rs.length} vías · ${l.enc} enc.`);m.on('click',()=>{showZone(l);fetchWeather(l.lat,l.lng,l.name);});markers.push(m);bounds.push([l.lat,l.lng]);});
+  Object.values(locs).forEach(l=>{const sz=Math.min(8+l.rs.length*3,28);const icon=L.divIcon({className:'',html:`<div style="width:${sz}px;height:${sz}px;background:${col};border-radius:50%;border:2px solid #fff;opacity:.9;display:flex;align-items:center;justify-content:center;font-size:${Math.max(9,sz/2.5)}px;font-weight:700;color:#000;font-family:Nunito">${l.rs.length}</div>`,iconSize:[sz,sz],iconAnchor:[sz/2,sz/2]});const m=L.marker([l.lat,l.lng],{icon}).addTo(leafMap);
+    const grades=l.rs.map(r=>G.indexOf(r.grado)).filter(g=>g>=0);
+    const minG=grades.length?G[Math.min(...grades)]:'';
+    const maxG=grades.length?G[Math.max(...grades)]:'';
+    const gradeRange=minG&&maxG&&minG!==maxG?minG+' — '+maxG:(minG||'');
+    m.bindPopup(`<b style="font-family:'Bebas Neue';font-size:14px;color:${col}">${l.name}</b><br>${l.rs.length} vías · ${l.enc} enc.${gradeRange?' · '+gradeRange:''}`);
+    m.on('click',()=>{showZone(l);fetchWeather(l.lat,l.lng,l.name);});markers.push(m);bounds.push([l.lat,l.lng]);});
   if(bounds.length>1)leafMap.fitBounds(bounds,{padding:[20,20]});else if(bounds.length===1)leafMap.setView(bounds[0],10);
   setTimeout(()=>leafMap.invalidateSize(),100);document.getElementById('mRt').innerHTML='';document.getElementById('mapResults').style.display='none';document.getElementById('mapQ').value='';}
 function buildLocs(rr){const locs={};rr.forEach(r=>{if(!r.sitio)return;const c=getCragCoords(r.sitio);if(c){if(!locs[c.name])locs[c.name]={...c,rs:[],enc:0};locs[c.name].rs.push(r);if(r.enc)locs[c.name].enc++;}});return locs;}
@@ -1916,10 +1922,15 @@ function searchMapPlace(){
 function selectMapSuggestion(name,lat,lng,type){
   document.getElementById('mapQ').value=name;
   document.getElementById('mapSuggestions').style.display='none';
-  if(lat&&lng&&leafMap){
-    leafMap.setView([lat,lng],type==='local'?14:10);
-    fetchWeather(lat,lng,name);}
-  else{filterMapLocal(name);}}
+  if(type==='local'){
+    // Find the zone and show routes
+    const rr=R.filter(r=>r.lugar==='roca');const locs=buildLocs(rr);
+    const zone=Object.values(locs).find(l=>l.name===name);
+    if(zone){leafMap.setView([zone.lat,zone.lng],14);showZone(zone);fetchWeather(zone.lat,zone.lng,name);}
+    else if(lat&&lng){leafMap.setView([lat,lng],14);fetchWeather(lat,lng,name);}
+  }else if(lat&&lng&&leafMap){
+    leafMap.setView([lat,lng],10);
+    fetchWeather(lat,lng,name);}}
 function filterMapLocal(q){const ql=(q||'').toLowerCase();if(!ql){document.getElementById('mapResults').style.display='none';return;}
   const rr=R.filter(r=>r.lugar==='roca');const locs=buildLocs(rr);const match=Object.values(locs).filter(l=>l.name.toLowerCase().includes(q));
   if(match.length===1){leafMap.setView([match[0].lat,match[0].lng],10);showZone(match[0]);document.getElementById('mapResults').style.display='none';}
