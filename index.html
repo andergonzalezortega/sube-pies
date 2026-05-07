@@ -1752,22 +1752,30 @@ async function svR(){const int=parseInt(document.getElementById('iI').value)||1;
     const nL=parseInt(document.getElementById('iNLargos').value)||2;d.nLargos=nL;
     const largos=[];for(let i=1;i<=nL;i++){const sel=document.getElementById('iLG'+i);largos.push(sel?sel.value:'6a');}
     d.largos=largos;d.grado=largos.reduce((a,b)=>G.indexOf(b)>G.indexOf(a)?b:a,largos[0]);}
-  if(eRt)d.id=eRt;await saveRoute(d);
-  // If roca and no coordinates, try to geocode
-  if(d.lugar==='roca'&&d.sitio&&(!d.lat||d.lat===0)&&(!d.lng||d.lng===0)){
-    try{const gr=await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(d.sitio)}&format=json&limit=1`);
-      const gd=await gr.json();
-      if(gd.length){
-        const lat2=parseFloat(gd[0].lat);const lng2=parseFloat(gd[0].lon);
-        // Update all routes with this sitio that don't have coords
-        R.filter(r=>r.sitio===d.sitio&&(!r.lat||r.lat===0)).forEach(async r=>{
-          if(r.id){try{await db.collection('users').doc(U.uid).collection('routes').doc(r.id).update({lat:lat2,lng:lng2});r.lat=lat2;r.lng=lng2;}catch(e){}}});
-      }else{
-        // Open map in pin placement mode
-        pendingPinSitio=d.sitio;
-        cm('mR1');go('map');
-        showPinBanner();return;}
-    }catch(e){}}
+  if(eRt)d.id=eRt;
+  // Ensure coordinates for roca routes
+  if(d.lugar==='roca'&&d.sitio){
+    // 1. Already has coords from autocomplete
+    if(d.lat&&d.lat!==0&&d.lng&&d.lng!==0){/* good */}
+    // 2. Check other routes with same sitio
+    else{const existing=R.find(r=>r.sitio===d.sitio&&r.lat&&r.lat!==0);
+      if(existing){d.lat=existing.lat;d.lng=existing.lng;}
+    // 3. Check CRAGS
+    else{const crag=getCragCoords(d.sitio);
+      if(crag){d.lat=crag.lat;d.lng=crag.lng;}
+    // 4. Geocode with Nominatim
+    else{try{const gr=await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(d.sitio)}&format=json&limit=1`);
+        const gd=await gr.json();
+        if(gd.length){d.lat=parseFloat(gd[0].lat);d.lng=parseFloat(gd[0].lon);}
+      }catch(e){}}}}}
+  await saveRoute(d);
+  // 5. If still no coords, open map to place pin
+  if(d.lugar==='roca'&&d.sitio&&(!d.lat||d.lat===0)){
+    pendingPinSitio=d.sitio;cm('mR1');go('map');showPinBanner();return;}
+  // Update other routes with same sitio that have no coords
+  if(d.lugar==='roca'&&d.sitio&&d.lat&&d.lat!==0){
+    R.filter(r=>r.sitio===d.sitio&&r.id&&(!r.lat||r.lat===0)).forEach(async r=>{
+      try{await db.collection('users').doc(U.uid).collection('routes').doc(r.id).update({lat:d.lat,lng:d.lng});r.lat=d.lat;r.lng=d.lng;}catch(e){}});}
   cm('mR1');drR();rH();}
 async function delR(){if(!eRt||!confirm(t('confirmDeleteRoute')))return;await deleteRoute(eRt);cm('mR1');drR();}
 function cm(id){document.getElementById(id).classList.remove('sh');if(id==='mNC')document.getElementById('mapDiv').style.display='block';}
@@ -2213,7 +2221,8 @@ async function qsSetEnc(enc){
   const int=parseInt(document.getElementById('qsInt').value)||1;
   cm('mQSC');
   const sitio=qsMode==='roca'?(document.getElementById('qsLugar').value||''):'';
-  const route={date:new Date().toISOString().split('T')[0],grado:qsSelGrade,tipo:qsTipo,lugar:qsMode==='roca'?'roca':'indoor',nombre:'',sitio:sitio,intento:int,enc:enc,flash:false,avista:false,notas:qsAngle?'Sesión rápida · '+qsAngle:'Sesión rápida',amigos:'',metros:0,angulo:qsAngle};
+  const qsLat=window._qsLat||0;const qsLng=window._qsLng||0;
+  const route={date:new Date().toISOString().split('T')[0],grado:qsSelGrade,tipo:qsTipo,lugar:qsMode==='roca'?'roca':'indoor',nombre:'',sitio:sitio,lat:qsLat,lng:qsLng,intento:int,enc:enc,flash:false,avista:false,notas:qsAngle?'Sesión rápida · '+qsAngle:'Sesión rápida',amigos:'',metros:0,angulo:qsAngle};
   await saveRoute(route);
   qsItems.push({grado:qsSelGrade,enc,int});
   updQS();
