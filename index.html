@@ -1795,7 +1795,11 @@ function drM(){document.getElementById('mapTbs').innerHTML='';
     m.on('click',()=>{showZone(l);fetchWeather(l.lat,l.lng,l.name);});markers.push(m);bounds.push([l.lat,l.lng]);});
   if(bounds.length>1)leafMap.fitBounds(bounds,{padding:[20,20]});else if(bounds.length===1)leafMap.setView(bounds[0],10);
   setTimeout(()=>leafMap.invalidateSize(),100);document.getElementById('mRt').innerHTML='';document.getElementById('mapResults').style.display='none';document.getElementById('mapQ').value='';}
-function buildLocs(rr){const locs={};rr.forEach(r=>{if(!r.sitio)return;const c=getCragCoords(r.sitio);if(c){if(!locs[c.name])locs[c.name]={...c,rs:[],enc:0};locs[c.name].rs.push(r);if(r.enc)locs[c.name].enc++;}});return locs;}
+function buildLocs(rr){const locs={};rr.forEach(r=>{if(!r.sitio)return;
+  let c=getCragCoords(r.sitio);
+  // If not in CRAGS/userCrags, use route's own coordinates
+  if(!c&&r.lat&&r.lng&&r.lat!==0&&r.lng!==0){c={name:r.sitio,lat:r.lat,lng:r.lng};}
+  if(c){if(!locs[c.name])locs[c.name]={...c,rs:[],enc:0};locs[c.name].rs.push(r);if(r.enc)locs[c.name].enc++;}});return locs;}
 function showZone(l){let h=`<div style="font-family:'Bebas Neue';font-size:16px;color:var(--rock);margin:8px 0">${l.name} — ${l.rs.length} vías (${l.enc} enc.)</div>`;l.rs.forEach(r=>{h+=vc(r,true);});document.getElementById('mRt').innerHTML=h;}
 let mwMarker=null,mwLat=0,mwLng=0,mwName='',mwHourlyData=null;
 function getWIcon(wc){return wc<=1?'☀️':wc<=3?'⛅':wc<=48?'🌫️':wc<=67?'🌧️':wc<=77?'❄️':wc<=82?'🌧️':'⛈️';}
