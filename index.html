@@ -304,10 +304,11 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <div class="card"><div class="ct" id="ctCloud">DATOS EN LA NUBE</div><p style="font-size:12px;color:var(--text2)"><span style="font-family:'Bebas Neue';font-size:22px;color:var(--green)" id="sN">0</span> registros guardados</p><p style="font-size:10px;color:var(--text3);margin-top:4px">Tus datos están seguros en Firebase.</p></div>
 <div class="card"><div class="ct" id="ctAbout">ACERCA DE</div><p style="font-size:11px;color:var(--text2)">Sube Pies v1.0 · © 2026 · Todos los derechos reservados</p></div>
 </div>
-<!-- FRIEND PICKER --><div class="mbg" id="mFrPick"><div class="mdl" style="max-width:320px"><button class="mx" onclick="cm('mFrPick')">✕</button>
-<h2 style="font-size:16px;color:var(--rock)" id="frPickTitle">Compartir con</h2>
-<input id="frPickSearch" placeholder="Buscar amigo..." oninput="filterFrPick()" style="width:100%;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px;color:var(--text);font-size:12px;font-family:Nunito;outline:none;margin-bottom:8px">
-<div id="frPickList" style="max-height:280px;overflow-y:auto"></div>
+<!-- FRIEND PICKER --><div class="mbg" id="mFrPick"><div style="position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);z-index:200;display:flex;flex-direction:column;padding:16px">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px"><button onclick="cm('mFrPick')" style="background:rgba(255,255,255,.1);border:none;color:var(--text);font-size:16px;cursor:pointer;padding:8px 12px;border-radius:10px">←</button>
+<h2 style="font-size:18px;color:var(--rock);margin:0;flex:1" id="frPickTitle">Compartir con</h2></div>
+<input id="frPickSearch" placeholder="🔍 Buscar amigo..." oninput="filterFrPick()" style="width:100%;background:var(--bg3);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:12px 14px;color:var(--text);font-size:14px;font-family:Nunito;outline:none;margin-bottom:12px">
+<div id="frPickList" style="flex:1;overflow-y:auto"></div>
 </div></div>
 <!-- MODAL ROUTE --><div class="mbg" id="mR1"><div class="mdl"><button class="mx" onclick="cm('mR1')">✕</button><h2 id="mRT">VÍA</h2><div class="fl"><label>Nombre</label><input id="iN" placeholder="Diedro mágico"></div><div class="fl"><label>Lugar</label><input id="iL" placeholder="Escribe para buscar..." oninput="searchSitio(this,'sitioSug')"><input type="hidden" id="iLat" value="0"><input type="hidden" id="iLng" value="0"><div id="sitioSug" style="display:none;background:var(--bg2);border:1px solid rgba(255,255,255,.1);border-radius:0 0 10px 10px;max-height:150px;overflow-y:auto;position:relative;z-index:10"></div><datalist id="dlZ"></datalist></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="fl"><label>Tipo lugar</label><select id="iLT" onchange="chkRouteFields()"><option value="roca">Roca</option><option value="indoor">Indoor</option></select></div><div class="fl"><label>Tipo vía</label><select id="iTP" onchange="chkRouteFields()"><option>Cuerda</option><option>Bloque</option><option>Top Rope</option><option>Largos</option></select></div></div><div id="fEstilo" style="display:none"><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="fl"><label>Estilo</label><select id="iEstilo"><option value="">—</option><option value="deportiva">Deportiva</option><option value="clasica">Clásica</option></select></div><div class="fl" id="fNLargos" style="display:none"><label>Nº largos</label><input type="number" id="iNLargos" min="2" max="30" value="2" onchange="buildLargosGrades()"></div></div></div><div id="fLargosGrades" style="display:none;background:var(--bg3);border-radius:10px;padding:8px;margin-bottom:8px"><div class="ct" style="margin-bottom:4px">GRADO POR LARGO</div><div id="largosGradeList"></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px"><div class="fl"><label>Grado</label><select id="iG"></select></div><div class="fl"><label>Intento</label><select id="iI" onchange="chkFlashAvista()"></select></div><div class="fl"><label>Metros</label><input type="number" id="iMetros" placeholder="—" min="0" max="500" style="width:100%"></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px"><div class="fl"><label>Encadenado</label><select id="iE" onchange="chkFlashAvista()"><option value="1">Sí</option><option value="0">No</option></select></div><div class="fl" id="fFlash"><label>Flash</label><select id="iFlash"><option value="0">No</option><option value="1">Sí</option></select></div><div class="fl" id="fAvista"><label>A vista</label><select id="iAvista"><option value="0">No</option><option value="1">Sí</option></select></div></div><div class="fl"><label>Sensaciones</label><textarea id="iNo" placeholder="Beta, condiciones..."></textarea></div><div class="fl"><label>Compañeros</label><div id="rFriendChips" style="display:flex;gap:3px;flex-wrap:wrap;margin-bottom:4px"></div><input id="iA" placeholder="Escribe o elige amigos..." oninput="filterRouteFriends()"><div id="rFriendSug" style="display:none"></div></div><div class="fl"><label>Fecha</label><input type="date" id="iFe"></div><button class="btn bp" onclick="svR()">Guardar</button><button class="btn" id="btnShareR" style="display:none;background:var(--blue);color:#fff" onclick="shareRoute()">👥 Compartir vía con amigos</button><button class="btn bdel" id="btnDelR" style="display:none" onclick="delR()">🗑️ Eliminar vía</button><button class="btn bg2" onclick="cm('mR1')">Cancelar</button></div></div>
 <!-- MODAL WORKOUT --><div class="mbg" id="mW1"><div class="mdl"><button class="mx" onclick="cm('mW1')">✕</button><h2 id="mW1Title">CREAR ENTRENO</h2><div class="fl"><label>Nombre</label><input id="wNm" placeholder="Fuerza dedos"></div><div class="fl"><label>Carpeta</label><select id="wFolder"><option value="">— Sin carpeta —</option></select></div><div class="ct">PASOS</div><div id="wS"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;margin-bottom:8px"><button style="padding:14px;background:var(--bg3);border:1px solid rgba(255,255,255,.1);border-radius:12px;color:var(--text);font-family:'Nunito';font-weight:700;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px" onclick="showEjForm()">🏋️ Ejercicio</button><button style="padding:14px;background:var(--bg3);border:1px solid rgba(255,255,255,.1);border-radius:12px;color:var(--text);font-family:'Nunito';font-weight:700;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px" onclick="showViaForm()">🧗 Vía / Boulder</button></div><div style="display:flex;gap:3px;margin-bottom:8px;flex-wrap:wrap" id="ejTpls"></div><div id="ejForm" style="display:none;background:var(--bg3);border-radius:12px;padding:12px;margin-bottom:8px">
@@ -2077,7 +2078,7 @@ function renderWoCard(w){
     if(p.modo==='time')pts.push(p.time+'s×'+((p.rep||1))+'×'+(p.ser||1));else if(p.reps)pts.push((p.reps)+'r×'+(p.ser||1));
     if(pts.length)d+=' · '+pts.join(' · ');
     h+=`<div class="wiss">${i+1}. ${d}</div>`;});
-  h+=`</div><div style="display:flex;gap:4px;margin-top:6px;flex-wrap:wrap"><button class="sbb" style="font-size:11px;padding:6px 12px" onclick='execWo(${JSON.stringify(w).replace(/'/g,"&#39;")})'>▶ Ejecutar</button><button class="sbb" style="font-size:11px;padding:6px 12px;background:var(--bg3);color:var(--text2)" onclick='editWo("${w.id}")'>✏️ Editar</button><button class="sbb" style="font-size:11px;padding:6px 12px;background:var(--blue)" onclick='shareWo("${w.id}")'>👥</button><button class="sbb" style="font-size:11px;padding:6px 12px;background:var(--bg3);color:var(--text2)" onclick='moveWo("${w.id}")'>📁</button></div></div>`;
+  h+=`</div><div style="display:flex;gap:4px;margin-top:6px;flex-wrap:wrap"><button class="sbb" style="font-size:11px;padding:6px 12px" onclick='execWo(${JSON.stringify(w).replace(/'/g,"&#39;")})'>▶ Ejecutar</button><button class="sbb" style="font-size:11px;padding:6px 12px;background:var(--green);color:#000" onclick='shareWo("${w.id}")'>📤 Compartir</button><button class="sbb" style="font-size:11px;padding:6px 12px;background:var(--bg3);color:var(--text2)" onclick='editWo("${w.id}")'>✏️ Editar</button><button class="sbb" style="font-size:11px;padding:6px 12px;background:var(--bg3);color:var(--text2)" onclick='moveWo("${w.id}")'>📁</button></div></div>`;
   return h;}
 let newFolderMode=false;
 function newFolder(){newFolderMode=!newFolderMode;drTr();}
@@ -2106,21 +2107,18 @@ async function delWo(id){if(confirm(t('confirmDeleteWo'))){await delWorkout(id);
 function editWo(id){const w=W.find(x=>x.id===id);if(!w)return;openWo(w);}
 async function shareWo(woId){const w=W.find(x=>x.id===woId);if(!w)return;
   if(!friends.length){alert(t('noFriends'));return;}
-  let opts='';friends.forEach(f=>{opts+=`<option value="${f.email}">${f.name||f.email}</option>`;});
-  const el=document.createElement('div');el.innerHTML=`<select id="_swSel" style="width:100%;padding:8px;background:var(--bg3);color:var(--text);border:1px solid rgba(255,255,255,.1);border-radius:8px;font-family:Nunito">${opts}</select>`;
-  document.body.appendChild(el);
-  const email=prompt(t('shareWithFriend')+'\n'+friends.map(f=>f.name||f.email).join(', '));
-  el.remove();
-  if(!email)return;
-  const fr=friends.find(f=>(f.name||'').toLowerCase()===email.toLowerCase()||f.email.toLowerCase()===email.toLowerCase());
-  if(!fr){alert(t('notFoundFr'));return;}
-  const q=await db.collection('users').where('email','==',fr.email).get();
-  if(q.empty)return;
-  const fuid=q.docs[0].id;
-  const cid=getChatId(U.uid,fuid);
-  const msg='🏋️ '+w.name+': '+w.steps.map(s=>s.stepType==='via'?'🧗 '+(s.grado||''):(s.nm||s.txt||'')).filter(Boolean).join(', ');
-  await db.collection('chats').doc(cid).collection('messages').add({from:U.uid,text:msg,ts:firebase.firestore.FieldValue.serverTimestamp()});
-  alert('✓ '+t('sentTo')+' '+(fr.name||fr.email));}
+  pickFriend('Compartir "'+w.name+'"',async(fuid,fr)=>{
+    // Send as chat message
+    const cid=getChatId(U.uid,fuid);
+    const msg='🏋️ '+w.name+': '+w.steps.map(s=>s.stepType==='via'?'🧗 '+(s.grado||''):(s.nm||s.txt||'')).filter(Boolean).join(', ');
+    await db.collection('chats').doc(cid).collection('messages').add({from:U.uid,text:msg,ts:firebase.firestore.FieldValue.serverTimestamp()});
+    // Also send as invite so they can save it
+    await db.collection('users').doc(fuid).collection('invites').add({
+      from:U.uid,fromName:U.displayName||U.email,date:new Date().toISOString().split('T')[0],
+      tipo:'entreno',type:'sharedWorkout',
+      workoutName:w.name,workoutSteps:w.steps||[],
+      status:'pending',ts:firebase.firestore.FieldValue.serverTimestamp()});
+    alert('✓ Entreno compartido con '+(fr.name||fr.email));});}
 function chkRouteFields(){
   const tipo=document.getElementById('iTP').value;
   const lugar=document.getElementById('iLT').value;
@@ -2803,11 +2801,12 @@ function renderFrPick(q){
   const filtered=friends.filter(f=>{
     if(!q)return true;
     return(f.name||'').toLowerCase().includes(q)||(f.email||'').toLowerCase().includes(q);});
-  if(!filtered.length){h='<div style="color:var(--text3);font-size:12px;padding:16px;text-align:center">'+(friends.length?'Sin resultados':'No tienes amigos añadidos')+'</div>';}
+  if(!filtered.length){h='<div style="color:var(--text3);font-size:13px;padding:24px;text-align:center">'+(friends.length?'Sin resultados':'No tienes amigos añadidos')+'</div>';}
   filtered.forEach(f=>{
-    h+=`<div onclick="selectFriend('${f.email}')" style="display:flex;align-items:center;gap:10px;padding:10px;cursor:pointer;border-radius:10px;border-bottom:1px solid rgba(255,255,255,.03);transition:.15s" onmousedown="this.style.background='var(--bg3)'" onmouseup="this.style.background=''">`;
-    h+=`<img src="${f.photo||'icon-192.png'}" onerror="this.src='icon-192.png'" style="width:38px;height:38px;border-radius:50%;border:2px solid var(--rock)">`;
-    h+=`<div><div style="font-weight:700;font-size:13px;color:var(--text)">${f.name||f.email}</div><div style="font-size:10px;color:var(--text3)">${f.email}</div></div></div>`;});
+    h+=`<div onclick="selectFriend('${f.email}')" style="display:flex;align-items:center;gap:12px;padding:14px 12px;cursor:pointer;border-radius:14px;border-bottom:1px solid rgba(255,255,255,.04);transition:.15s" onmousedown="this.style.background='var(--bg3)'" onmouseup="this.style.background=''">`;
+    h+=`<img src="${f.photo||'icon-192.png'}" onerror="this.src='icon-192.png'" style="width:48px;height:48px;border-radius:50%;border:2px solid var(--rock)">`;
+    h+=`<div style="flex:1"><div style="font-weight:700;font-size:15px;color:var(--text)">${f.name||f.email}</div><div style="font-size:11px;color:var(--text3)">${f.email}</div></div>`;
+    h+=`<div style="color:var(--rock);font-size:18px">›</div></div>`;});
   document.getElementById('frPickList').innerHTML=h;}
 async function selectFriend(email){
   cm('mFrPick');
