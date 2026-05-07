@@ -212,7 +212,9 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <!-- VÍAS --><div id="pv" class="page"><div class="hdr"><h1>VÍAS</h1><button class="bp btn" style="width:auto;padding:6px 12px;font-size:11px;border-radius:10px" onclick="addR()" id="btnAddR">+ Añadir</button></div>
 <div style="background:var(--bg2);border-radius:12px;padding:8px;border:1px solid rgba(255,255,255,.04);margin-bottom:8px"><div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span class="ct" style="margin:0;font-size:12px">GRADOS</span></div><div class="gsw" id="gPer" style="margin-bottom:4px"></div><div class="gsw" id="gS" style="margin-bottom:4px"></div><div class="gb" id="gB"></div></div>
 <div style="margin-bottom:10px"><input id="vQ" placeholder="🔍 Buscar vía, lugar, amigo, grado..." id="vQInput" oninput="drR()" style="width:100%;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:8px 14px;color:var(--text);font-size:12px;font-family:Nunito;outline:none"></div><div class="chs" id="rF"></div><div class="sb"><label>Ordenar:</label><select id="rS" onchange="drR()"><option value="date">Fecha ↓</option><option value="dateA">Fecha ↑</option><option value="grD">Grado ↓</option><option value="grA">Grado ↑</option><option value="lugar">Lugar</option><option value="amigo">Compañero</option></select></select></div><div id="rL"></div></div>
-<!-- MAPA --><div id="pm" class="page"><div class="hdr"><h1>MAPA</h1></div><div id="mapWeather" style="background:var(--bg2);border-radius:12px;padding:10px;margin-bottom:8px;display:none"><div style="display:flex;align-items:center;gap:6px;margin-bottom:6px"><span style="font-size:11px;font-weight:700;color:var(--text)">TIEMPO EN</span><span id="mwLocation" style="font-size:11px;color:var(--rock);font-weight:700;flex:1"></span><button onclick="saveWeatherSpot()" id="mwSaveBtn" style="background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:8px;color:var(--text2);font-size:10px;cursor:pointer;padding:4px 10px;font-family:'Nunito';font-weight:600">📌 Anclar</button><button onclick="setFavWeatherSpot()" id="mwFavBtn" style="background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:8px;color:var(--text2);font-size:10px;cursor:pointer;padding:4px 10px;font-family:'Nunito';font-weight:600">⭐ Inicio</button></div><div style="display:flex;gap:10px;justify-content:space-around;margin-bottom:8px"><div style="text-align:center"><div id="mwTemp" style="font-family:'Bebas Neue';font-size:28px;color:var(--green)"></div><div style="font-size:8px;color:var(--text3)">TEMP</div></div><div style="text-align:center"><div id="mwHum" style="font-family:'Bebas Neue';font-size:28px;color:var(--blue)"></div><div style="font-size:8px;color:var(--text3)">HUMEDAD</div></div><div style="text-align:center"><div id="mwRain" style="font-family:'Bebas Neue';font-size:28px;color:var(--purple)"></div><div style="font-size:8px;color:var(--text3)">LLUVIA</div></div><div style="text-align:center"><div id="mwWind" style="font-family:'Bebas Neue';font-size:28px;color:var(--yellow)"></div><div style="font-size:8px;color:var(--text3)">VIENTO</div></div></div><div id="mwForecast" style="display:flex;gap:4px;overflow-x:auto;padding-bottom:4px"></div><div id="mwHourly" style="display:none;margin-top:6px;overflow-x:auto"><div id="mwHourlyContent" style="display:flex;gap:4px"></div></div><div id="mwSaved" style="margin-top:6px;display:none"><div style="font-size:9px;color:var(--text3);margin-bottom:3px">SITIOS GUARDADOS</div><div id="mwSavedList" style="display:flex;gap:4px;overflow-x:auto"></div></div><div style="font-size:8px;color:var(--text3);text-align:center;margin-top:4px">Pulsa en el mapa para ver el tiempo de cualquier sitio</div></div><div style="display:flex;gap:0;margin-bottom:10px;background:var(--bg3);border-radius:10px;padding:2px" id="mapTbs"></div><div class="map-stats"><div class="st a"><div class="v" id="mTotal">0</div><div class="l">Vías</div></div><div class="st b"><div class="v" id="mEnc">0</div><div class="l">Enc</div></div><div class="st"><div class="v" style="color:var(--blue)" id="mZonas">0</div><div class="l">Zonas</div></div></div><div class="map-search" style="position:relative"><input id="mapQ" placeholder="🔍 Buscar zona o lugar..." oninput="searchMapPlace()"><button class="bp btn" style="width:auto;padding:8px 12px;font-size:11px;border-radius:10px" onclick="openNewCrag()">+ Zona</button><div id="mapSuggestions" style="display:none;position:absolute;top:100%;left:0;right:60px;background:var(--bg2);border:1px solid rgba(255,255,255,.1);border-radius:0 0 10px 10px;max-height:200px;overflow-y:auto;z-index:500"></div></div><div id="mapDiv"></div><div id="mapHint" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:400;text-align:center;display:none"><div style="background:rgba(0,0,0,.7);border-radius:14px;padding:12px 20px"><div style="font-size:14px;color:var(--rock);font-weight:700">📍 Pulsa en el mapa</div><div style="font-size:11px;color:var(--text3)">para ver el tiempo de cualquier sitio</div></div></div><div id="mapResults" style="display:none"></div><div id="mRt"></div></div>
+<!-- MAPA --><div id="pm" class="page"><div class="hdr"><h1>MAPA</h1></div><div id="mapWeather" style="background:var(--bg2);border-radius:12px;padding:10px;margin-bottom:8px;display:none"><div style="display:flex;align-items:center;gap:6px;margin-bottom:6px"><span style="font-size:11px;font-weight:700;color:var(--text)">TIEMPO EN</span><span id="mwLocation" style="font-size:11px;color:var(--rock);font-weight:700;flex:1"></span><button onclick="saveWeatherSpot()" id="mwSaveBtn" style="background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:8px;color:var(--text2);font-size:10px;cursor:pointer;padding:4px 10px;font-family:'Nunito';font-weight:600">📌 Anclar</button><button onclick="setFavWeatherSpot()" id="mwFavBtn" style="background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:8px;color:var(--text2);font-size:10px;cursor:pointer;padding:4px 10px;font-family:'Nunito';font-weight:600">⭐ Inicio</button></div><div style="display:flex;gap:10px;justify-content:space-around;margin-bottom:8px"><div style="text-align:center"><div id="mwTemp" style="font-family:'Bebas Neue';font-size:28px;color:var(--green)"></div><div style="font-size:8px;color:var(--text3)">TEMP</div></div><div style="text-align:center"><div id="mwHum" style="font-family:'Bebas Neue';font-size:28px;color:var(--blue)"></div><div style="font-size:8px;color:var(--text3)">HUMEDAD</div></div><div style="text-align:center"><div id="mwRain" style="font-family:'Bebas Neue';font-size:28px;color:var(--purple)"></div><div style="font-size:8px;color:var(--text3)">LLUVIA</div></div><div style="text-align:center"><div id="mwWind" style="font-family:'Bebas Neue';font-size:28px;color:var(--yellow)"></div><div style="font-size:8px;color:var(--text3)">VIENTO</div></div></div><div id="mwForecast" style="display:flex;gap:4px;overflow-x:auto;padding-bottom:4px"></div><div id="mwHourly" style="display:none;margin-top:6px;overflow-x:auto"><div id="mwHourlyContent" style="display:flex;gap:4px"></div></div><div id="mwSaved" style="margin-top:6px;display:none"><div style="font-size:9px;color:var(--text3);margin-bottom:3px">SITIOS GUARDADOS</div><div id="mwSavedList" style="display:flex;gap:4px;overflow-x:auto"></div></div><div style="font-size:8px;color:var(--text3);text-align:center;margin-top:4px">Pulsa en el mapa para ver el tiempo de cualquier sitio</div></div><div style="display:flex;gap:0;margin-bottom:10px;background:var(--bg3);border-radius:10px;padding:2px" id="mapTbs"></div><div class="map-stats"><div class="st a"><div class="v" id="mTotal">0</div><div class="l">Vías</div></div><div class="st b"><div class="v" id="mEnc">0</div><div class="l">Enc</div></div><div class="st"><div class="v" style="color:var(--blue)" id="mZonas">0</div><div class="l">Zonas</div></div></div><div class="map-search" style="position:relative"><input id="mapQ" placeholder="🔍 Buscar zona o lugar..." oninput="searchMapPlace()"><button class="bp btn" style="width:auto;padding:8px 12px;font-size:11px;border-radius:10px" onclick="openNewCrag()">+ Zona</button><div id="mapSuggestions" style="display:none;position:absolute;top:100%;left:0;right:60px;background:var(--bg2);border:1px solid rgba(255,255,255,.1);border-radius:0 0 10px 10px;max-height:200px;overflow-y:auto;z-index:500"></div></div><div id="pinBanner" style="display:none;background:var(--rock);border-radius:12px;padding:10px 14px;margin-bottom:8px;display:none">
+<div style="display:flex;align-items:center;gap:8px"><div style="flex:1"><div style="font-size:13px;font-weight:700;color:#000" id="pinBannerTitle">📍 Pulsa en el mapa para ubicar</div><div style="font-size:10px;color:rgba(0,0,0,.6)" id="pinBannerSub"></div></div><button onclick="cancelPin()" style="background:rgba(0,0,0,.2);border:none;color:#000;padding:4px 10px;border-radius:8px;font-size:11px;font-family:'Nunito';font-weight:600;cursor:pointer">Cancelar</button></div></div>
+<div id="mapDiv"></div><div id="mapHint" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:400;text-align:center;display:none"><div style="background:rgba(0,0,0,.7);border-radius:14px;padding:12px 20px"><div style="font-size:14px;color:var(--rock);font-weight:700">📍 Pulsa en el mapa</div><div style="font-size:11px;color:var(--text3)">para ver el tiempo de cualquier sitio</div></div></div><div id="mapResults" style="display:none"></div><div id="mRt"></div></div>
 <!-- ENTRENOS --><div id="pt" class="page"><div class="hdr"><h1>ENTRENOS</h1></div><div class="tbs" id="tT"></div><div id="tH"></div><div id="tP" style="display:none"><div id="wL"></div></div><div id="tProg" style="display:none">
 <div class="ct">GRÁFICOS RÁPIDOS</div>
 <div id="quickGraphs" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px">
@@ -1045,14 +1047,18 @@ async function searchSitio(input,sugId){
       results.forEach(p=>{
         const name=p.display_name.split(',')[0];
         const region=p.address?(p.address.state||p.address.region||p.address.country||''):'';
-        h+=`<div onclick="pickSitio('${input.id}','${sugId}','${name.replace(/'/g,"\\'")}',${p.lat},${p.lon})" style="padding:8px 12px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.04);font-size:12px;color:var(--text)">📍 ${name} <span style="color:var(--text3);font-size:10px">${region}</span></div>`;});}catch(e){}
+        const plat=parseFloat(p.lat).toFixed(6);const plng=parseFloat(p.lon).toFixed(6);
+        h+=`<div onclick="pickSitio('${input.id}','${sugId}','${name.replace(/'/g,"\\'")}',${plat},${plng})" style="padding:8px 12px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.04);font-size:12px;color:var(--text)">📍 ${name} <span style="color:var(--text3);font-size:10px">${region}</span></div>`;});}catch(e){}
     if(h){sg.innerHTML=h;sg.style.display='block';}else{sg.style.display='none';}
   },300);}
 function pickSitio(inputId,sugId,name,lat,lng){
   document.getElementById(inputId).value=name;
   document.getElementById(sugId).style.display='none';
+  const lt=parseFloat(lat)||0;const ln=parseFloat(lng)||0;
   const latEl=document.getElementById('iLat');const lngEl=document.getElementById('iLng');
-  if(latEl&&lngEl){latEl.value=lat||0;lngEl.value=lng||0;}}
+  if(latEl&&lngEl){latEl.value=lt;lngEl.value=ln;}
+  // Also store for quick session
+  if(inputId==='qsLugar'){window._qsLat=lt;window._qsLng=ln;}}
 
 async function saveRoute(data){if(!U)return;const col=db.collection('users').doc(U.uid).collection('routes');
   if(data.id&&data.id.length>5){await col.doc(data.id).set(data);const i=R.findIndex(r=>r.id===data.id);if(i>=0)R[i]=data;}
@@ -1753,11 +1759,14 @@ async function svR(){const int=parseInt(document.getElementById('iI').value)||1;
       const gd=await gr.json();
       if(gd.length){
         const lat2=parseFloat(gd[0].lat);const lng2=parseFloat(gd[0].lon);
-        // Update the route with coords
-        const saved=R.find(r=>r.sitio===d.sitio&&(!r.lat||r.lat===0));
-        if(saved&&saved.id){await db.collection('users').doc(U.uid).collection('routes').doc(saved.id).update({lat:lat2,lng:lng2});saved.lat=lat2;saved.lng=lng2;}
+        // Update all routes with this sitio that don't have coords
+        R.filter(r=>r.sitio===d.sitio&&(!r.lat||r.lat===0)).forEach(async r=>{
+          if(r.id){try{await db.collection('users').doc(U.uid).collection('routes').doc(r.id).update({lat:lat2,lng:lng2});r.lat=lat2;r.lng=lng2;}catch(e){}}});
       }else{
-        if(confirm(d.sitio+' no se encuentra. ¿Quieres ubicarlo en el mapa?')){go('map');}}
+        // Open map in pin placement mode
+        pendingPinSitio=d.sitio;
+        cm('mR1');go('map');
+        showPinBanner();return;}
     }catch(e){}}
   cm('mR1');drR();rH();}
 async function delR(){if(!eRt||!confirm(t('confirmDeleteRoute')))return;await deleteRoute(eRt);cm('mR1');drR();}
@@ -1918,8 +1927,32 @@ async function loadHomeWeather(){
     // Auto scroll to current hour
     setTimeout(()=>{const hw=document.getElementById('hwHourly');const nowEl=hw.querySelector('[style*="border:1px"]');if(nowEl)nowEl.scrollIntoView({inline:'center',behavior:'smooth'});},100);
   }catch(e){}}
+let pendingPinSitio=null;
+function showPinBanner(){
+  const el=document.getElementById('pinBanner');
+  el.style.display='block';
+  document.getElementById('pinBannerTitle').textContent='📍 Pulsa en el mapa para ubicar "'+pendingPinSitio+'"';
+  document.getElementById('pinBannerSub').textContent='Busca el sitio y pulsa para colocar el pin';}
+function cancelPin(){pendingPinSitio=null;document.getElementById('pinBanner').style.display='none';}
 function setupMapClick(){
   if(leafMap){leafMap.on('click',async function(e){
+    // Pin placement mode
+    if(pendingPinSitio){
+      const lat=e.latlng.lat;const lng=e.latlng.lng;
+      // Update all routes with this sitio
+      let updated=0;
+      for(const r of R){
+        if(r.sitio===pendingPinSitio&&(!r.lat||r.lat===0)){
+          if(r.id){try{await db.collection('users').doc(U.uid).collection('routes').doc(r.id).update({lat,lng});r.lat=lat;r.lng=lng;updated++;}catch(e2){}}}}
+      // Show confirmation marker
+      if(mwMarker)leafMap.removeLayer(mwMarker);
+      const icon=L.divIcon({className:'',html:`<div style="width:16px;height:16px;background:var(--green);border-radius:50%;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.4)"></div>`,iconSize:[16,16],iconAnchor:[8,8]});
+      mwMarker=L.marker([lat,lng],{icon}).addTo(leafMap);
+      document.getElementById('pinBanner').style.display='none';
+      pendingPinSitio=null;
+      drM();fetchWeather(lat,lng,R.find(r2=>r2.lat===lat)?.sitio||'');
+      return;}
+    // Normal click - weather
     let name=e.latlng.lat.toFixed(2)+', '+e.latlng.lng.toFixed(2);
     try{const r=await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${e.latlng.lat}&lon=${e.latlng.lng}&format=json&zoom=10`);
       const d=await r.json();if(d.address){name=d.address.city||d.address.town||d.address.village||d.address.county||name;}}catch(e2){}
