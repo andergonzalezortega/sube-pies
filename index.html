@@ -1486,8 +1486,11 @@ async function answerInv(id,status){if(!U)return;
             let f=woFolders.find(x=>x.name===fn);
             if(!f){const ref=await db.collection('users').doc(U.uid).collection('woFolders').add({name:fn});f={id:ref.id,name:fn};woFolders.push(f);}
             folderId=f.id;}
-          await saveWorkout({name:woName,steps:inv.workoutSteps,folder:folderId,plannedDate:inv.date});}}
-      await savePlan({date:inv.date,tipo:'entreno',notas:'Con '+inv.fromName,workoutName:inv.workoutName});
+          await saveWorkout({name:woName,steps:inv.workoutSteps,folder:folderId});
+          drTr();}}
+      // Only create plan if shared from Inicio (has date)
+      if(inv.date&&!inv.saveOnly){
+        await savePlan({date:inv.date,tipo:'entreno',notas:'Con '+inv.fromName,workoutName:inv.workoutName});}
     }else if(inv.type==='sharedRoute'&&inv.routeData){
       const rd={...inv.routeData};delete rd.id;
       rd.notas=(rd.notas?rd.notas+' · ':'')+'Compartida por '+inv.fromName;
@@ -2112,10 +2115,10 @@ async function shareWo(woId){const w=W.find(x=>x.id===woId);if(!w)return;
     const cid=getChatId(U.uid,fuid);
     const msg='🏋️ '+w.name+': '+w.steps.map(s=>s.stepType==='via'?'🧗 '+(s.grado||''):(s.nm||s.txt||'')).filter(Boolean).join(', ');
     await db.collection('chats').doc(cid).collection('messages').add({from:U.uid,text:msg,ts:firebase.firestore.FieldValue.serverTimestamp()});
-    // Also send as invite so they can save it
+    // Send as invite - saveOnly mode (no date assignment)
     await db.collection('users').doc(fuid).collection('invites').add({
-      from:U.uid,fromName:U.displayName||U.email,date:new Date().toISOString().split('T')[0],
-      tipo:'entreno',type:'sharedWorkout',
+      from:U.uid,fromName:U.displayName||U.email,date:'',
+      tipo:'entreno',type:'sharedWorkout',saveOnly:true,
       workoutName:w.name,workoutSteps:w.steps||[],
       status:'pending',ts:firebase.firestore.FieldValue.serverTimestamp()});
     alert('✓ Entreno compartido con '+(fr.name||fr.email));});}
