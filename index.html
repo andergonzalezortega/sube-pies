@@ -894,16 +894,10 @@ async function initNotifications(){
     messaging=firebase.messaging();
     console.log('FCM: registering sw...');
     let swReg;
-    try{swReg=await navigator.serviceWorker.register('/firebase-messaging-sw.js');
-      console.log('FCM: sw registered');}
-    catch(swErr){
-      // Try relative path
-      try{swReg=await navigator.serviceWorker.register('firebase-messaging-sw.js');
-        console.log('FCM: sw registered (relative)');}
-      catch(swErr2){console.error('FCM: sw register failed',swErr2);
-        // Use existing sw
-        swReg=await navigator.serviceWorker.ready;
-        console.log('FCM: using existing sw');}}
+    const swPaths=['./firebase-messaging-sw.js','/firebase-messaging-sw.js','firebase-messaging-sw.js'];
+    for(const sp of swPaths){
+      try{swReg=await navigator.serviceWorker.register(sp);console.log('FCM: sw registered at',sp);break;}catch(e){console.log('FCM: sw failed at',sp);}}
+    if(!swReg){try{swReg=await navigator.serviceWorker.ready;console.log('FCM: using existing sw');}catch(e){console.error('FCM: no sw available');return;}}
     console.log('FCM: getting token...');
     const token=await messaging.getToken({vapidKey:'BI-nNJsYj4BLLI-kw_CgnOQI-gizxB4SEMycTj0v4oq7_MSyU5pZ2Mw9yvP0oqSV6pLZ1doEpb_SjgNqELj2jao',serviceWorkerRegistration:swReg});
     console.log('FCM: token =',token?'OK ('+token.substring(0,20)+'...)':'NONE');
