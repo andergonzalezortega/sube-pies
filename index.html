@@ -256,7 +256,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:200px;backgro
 <div id="friendStoriesFeed" style="margin-bottom:8px"></div>
 </div>
 <div id="frFriendsTab">
-<div class="card"><div class="ct">AÑADIR AMIGO</div><div style="display:flex;gap:6px"><input id="frCode" placeholder="Código #1234 o email" style="flex:1;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px;color:var(--text);font-size:12px;font-family:Nunito;outline:none"><button class="bp btn" style="width:auto;padding:8px 14px;font-size:12px;border-radius:10px" onclick="addFriend()">+</button></div><div id="frMsg" style="font-size:10px;margin-top:4px"></div></div><button onclick="shareAppLink()" style="width:100%;padding:10px;margin-top:8px;margin-bottom:12px;background:#25D366;border:none;border-radius:12px;color:#fff;font-family:'Nunito';font-weight:700;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">📲 <span id="shareAppBtn">Compartir app</span></button>
+<div class="card"><div class="ct">AÑADIR AMIGO</div><div style="display:flex;gap:6px"><input id="frCode" placeholder="Código #1234 o email" style="flex:1;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px;color:var(--text);font-size:12px;font-family:Nunito;outline:none"><button class="bp btn" style="width:auto;padding:8px 14px;font-size:12px;border-radius:10px" onclick="addFriend()">+</button></div><div id="frMsg" style="font-size:10px;margin-top:4px"></div></div><button onclick="shareAppLink()" style="width:100%;padding:10px;margin-top:8px;margin-bottom:12px;background:var(--rock);border:none;border-radius:12px;color:#000;font-family:'Nunito';font-weight:700;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">📲 <span id="shareAppBtn">Compartir app</span></button>
 <div class="ct" style="margin-top:12px" id="ctMyFriends">MIS AMIGOS</div><div id="frRequests" style="margin-bottom:8px"></div><div id="frList"></div>
 </div></div>
 <!-- CHAT MODAL --><div id="mChat" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.85);z-index:250;backdrop-filter:blur(4px)">
@@ -1079,7 +1079,19 @@ let cY=new Date().getFullYear(),cMo=new Date().getMonth(),cSl=null,gM='cr',gPer=
 const PG={home:'ph',routes:'pv',map:'pm',train:'pt',friends:'pf',sync:'ps'},PK=Object.keys(PG);
 
 
-function go(id){Object.values(PG).forEach(p=>document.getElementById(p).classList.remove('on'));document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));document.getElementById(PG[id]).classList.add('on');document.querySelectorAll('.nb')[PK.indexOf(id)].classList.add('on');const fns={home:rH,routes:drR,map:drM,train:drTr,friends:drFr,sync:drS};if(fns[id])fns[id]();}
+function go(id){Object.values(PG).forEach(p=>document.getElementById(p).classList.remove('on'));document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));document.getElementById(PG[id]).classList.add('on');document.querySelectorAll('.nb')[PK.indexOf(id)].classList.add('on');const fns={home:rH,routes:drR,map:drM,train:drTr,friends:drFr,sync:drS};if(fns[id])fns[id]();
+  if(!history.state||history.state.page!==id)history.pushState({page:id},'',null);}
+window.addEventListener('popstate',function(e){
+  if(e.state&&e.state.page){go(e.state.page);}
+  else{
+    // Check if any modal is open
+    const modals=document.querySelectorAll('.mbg.sh');
+    if(modals.length){modals.forEach(m=>m.classList.remove('sh'));history.pushState({page:'current'},'',null);return;}
+    // If executor is open
+    if(document.getElementById('mExec').style.display==='block'){stopExec();history.pushState({page:'current'},'',null);return;}
+    // If story viewer is open
+    if(document.getElementById('storyViewer').style.display==='block'){closeStory();history.pushState({page:'current'},'',null);return;}
+    go('home');}});
 function drS(){const el=document.getElementById('sN');if(el)el.textContent=R.length+Tr.length+W.length;
   const ce=document.getElementById('ctExport');if(ce)ce.textContent=t('exportExcel');
   const cc=document.getElementById('ctCloud');if(cc)cc.textContent=t('cloudData');
@@ -1734,7 +1746,20 @@ async function svR(){const int=parseInt(document.getElementById('iI').value)||1;
     const nL=parseInt(document.getElementById('iNLargos').value)||2;d.nLargos=nL;
     const largos=[];for(let i=1;i<=nL;i++){const sel=document.getElementById('iLG'+i);largos.push(sel?sel.value:'6a');}
     d.largos=largos;d.grado=largos.reduce((a,b)=>G.indexOf(b)>G.indexOf(a)?b:a,largos[0]);}
-  if(eRt)d.id=eRt;await saveRoute(d);cm('mR1');drR();rH();}
+  if(eRt)d.id=eRt;await saveRoute(d);
+  // If roca and no coordinates, try to geocode
+  if(d.lugar==='roca'&&d.sitio&&(!d.lat||d.lat===0)&&(!d.lng||d.lng===0)){
+    try{const gr=await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(d.sitio)}&format=json&limit=1`);
+      const gd=await gr.json();
+      if(gd.length){
+        const lat2=parseFloat(gd[0].lat);const lng2=parseFloat(gd[0].lon);
+        // Update the route with coords
+        const saved=R.find(r=>r.sitio===d.sitio&&(!r.lat||r.lat===0));
+        if(saved&&saved.id){await db.collection('users').doc(U.uid).collection('routes').doc(saved.id).update({lat:lat2,lng:lng2});saved.lat=lat2;saved.lng=lng2;}
+      }else{
+        if(confirm(d.sitio+' no se encuentra. ¿Quieres ubicarlo en el mapa?')){go('map');}}
+    }catch(e){}}
+  cm('mR1');drR();rH();}
 async function delR(){if(!eRt||!confirm(t('confirmDeleteRoute')))return;await deleteRoute(eRt);cm('mR1');drR();}
 function cm(id){document.getElementById(id).classList.remove('sh');if(id==='mNC')document.getElementById('mapDiv').style.display='block';}
 
@@ -2619,6 +2644,10 @@ function rMsWeekAssign(){
   const start=document.getElementById('msStart').value;
   if(!start){alert('Pon fecha de inicio');msStep=0;rMsFases();return;}
   const startDate=new Date(start+'T12:00:00');
+  // Align to Monday of that week
+  const dayOfWeek=startDate.getDay();// 0=Sun,1=Mon...6=Sat
+  const mondayOffset=dayOfWeek===0?-6:1-dayOfWeek;
+  const weekStart=new Date(startDate);weekStart.setDate(weekStart.getDate()+mondayOffset);
   const dayNames=['Lu','Ma','Mi','Ju','Vi','Sa','Do'];
   let h=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><button onclick="msStep=0;rMsFases()" style="background:none;border:none;color:var(--blue);font-size:12px;cursor:pointer">← Volver</button><div style="font-size:13px;color:var(--green);font-weight:700">PASO 2 · Asignar entrenos</div></div>`;
   h+=`<div style="font-size:10px;color:var(--text3);margin-bottom:8px">Elige entrenos para cada día. + para más de uno.</div>`;
@@ -2631,7 +2660,7 @@ function rMsWeekAssign(){
       for(let d=0;d<7;d++){if(!Array.isArray(f.weekPlans[w][d]))f.weekPlans[w][d]=f.weekPlans[w][d]?[f.weekPlans[w][d]]:[];}}
     h+=`<div style="font-size:13px;font-weight:700;color:${f.color};margin:10px 0 4px;border-left:4px solid ${f.color};padding-left:8px">${f.name} · ${f.weeks} sem</div>`;
     for(let w=0;w<f.weeks;w++){
-      const ws2=new Date(startDate);ws2.setDate(ws2.getDate()+weekOffset*7);
+      const ws2=new Date(weekStart);ws2.setDate(ws2.getDate()+weekOffset*7);
       const we2=new Date(ws2);we2.setDate(we2.getDate()+6);
       const wl=ws2.toLocaleDateString('es-ES',{day:'numeric',month:'short'})+' – '+we2.toLocaleDateString('es-ES',{day:'numeric',month:'short'});
       h+=`<div style="background:var(--bg2);border-radius:10px;padding:8px;margin-bottom:6px;border:1px solid ${f.color}33">`;
@@ -2669,13 +2698,16 @@ async function svMeso(){
   try{const ref=await db.collection('users').doc(U.uid).collection('mesos').add(data);
     data.id=ref.id;mesos.push(data);
     const startDate=new Date(start+'T12:00:00');
+    const dayOfWeek=startDate.getDay();
+    const mondayOffset=dayOfWeek===0?-6:1-dayOfWeek;
+    const weekStart2=new Date(startDate);weekStart2.setDate(weekStart2.getDate()+mondayOffset);
     let weekOffset=0,planCount=0;
     for(const fase of fases){for(let w=0;w<fase.weeks;w++){
       for(let d=0;d<7;d++){
         const key=w+'-'+d;
         const wos=(fase.schedule[key]||'').split('|').filter(x=>x);
         for(const woName of wos){
-          const pd=new Date(startDate);pd.setDate(pd.getDate()+weekOffset*7+d);
+          const pd=new Date(weekStart2);pd.setDate(pd.getDate()+weekOffset*7+d);
           const ds=pd.toISOString().split('T')[0];
           await savePlan({date:ds,tipo:'entreno',lugar:'',notas:fase.name,workoutName:woName});planCount++;}}
       weekOffset++;}}
